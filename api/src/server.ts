@@ -4,6 +4,7 @@ import helmet from 'koa-helmet';
 import logger from 'koa-morgan';
 import { Model } from 'objection';
 import ErrorHandler from './components/error-handler';
+import CurrencyController from './modules/currency/currency-controller';
 import UserController from './modules/user/user-controller';
 import db from './services/db';
 
@@ -16,6 +17,7 @@ export function createApp() {
   app.use(logger('tiny'));
   app.use(ErrorHandler);
   UserController.register(app);
+  CurrencyController.register(app);
   return app;
 }
 

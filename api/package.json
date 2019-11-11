@@ -22,6 +22,7 @@
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "dotenv": "^8.2.0",
+    "fixer-api": "^2.0.2",
     "joi": "^14.3.1",
     "knex": "^0.20.1",
     "koa": "^2.11.0",
@@ -36,9 +37,11 @@
     "objection": "^1.6.11",
     "passport-jwt": "^4.0.0",
     "pg": "^7.12.1",
+    "redis": "^2.8.0",
     "rimraf": "^3.0.0",
     "ts-httpexceptions": "^4.1.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "xml2js": "^0.4.22"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -51,6 +54,8 @@
     "@types/koa-morgan": "^1.0.4",
     "@types/lodash": "^4.14.146",
     "@types/node": "^12.12.7",
+    "@types/redis": "^2.8.14",
+    "@types/xml2js": "^0.4.5",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.1",

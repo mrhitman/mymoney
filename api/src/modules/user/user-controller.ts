@@ -6,9 +6,9 @@ export class UserController extends Controller {
   protected path = '/users';
   protected provider: UserProvider;
 
-  constructor() {
+  constructor(provider?: UserProvider) {
     super();
-    this.provider = new UserProvider();
+    this.provider = provider || new UserProvider();
     this.route(['get', '/:?id', this.get]);
     this.route(['delete', '/:id', this.delete]);
     this.route(['post', '/create', this.create]);

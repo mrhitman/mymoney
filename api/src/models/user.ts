@@ -17,5 +17,4 @@ export class User extends Model {
   }
 }
 
-User.knex(db);
 export default User;

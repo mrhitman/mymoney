@@ -1,0 +1,28 @@
+version: "3.1"
+services:
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    environment:
+      REDIS_PASSWORD: pass
+      REDIS_USER: h
+  db:
+    image: postgres:10.8-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "hitman"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "mymoney"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    depends_on:
+      - db

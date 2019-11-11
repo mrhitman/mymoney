@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import db from '../services/db';
 
 export class User extends Model {
   public id: number;
@@ -16,4 +17,5 @@ export class User extends Model {
   }
 }
 
+User.knex(db);
 export default User;

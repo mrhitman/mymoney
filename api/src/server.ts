@@ -3,6 +3,7 @@ import Koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
 import logger from 'koa-morgan';
+import UserController from './modules/user/user-controller';
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ export function createApp() {
   app.use(helmet());
   app.use(bodyparser());
   app.use(logger('tiny'));
+  UserController.register(app);
   return app;
 }
 

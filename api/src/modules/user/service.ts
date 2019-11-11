@@ -1,9 +1,8 @@
 import { hash } from 'bcrypt';
-import User from 'src/models/user';
+import User from '../../models/user';
 import { BadRequest, NotFound } from 'ts-httpexceptions';
-import CreateUserDto from './dto/CreateUserDto';
-import UpdateUserDto from './dto/UpdateUserDto';
-import { userInfo } from 'os';
+import CreateUserDto from './dto/create-user';
+import UpdateUserDto from './dto/update-user';
 
 export class UserProvider {
   public async create(dto: CreateUserDto) {

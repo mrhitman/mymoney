@@ -1,6 +1,6 @@
 import { hash } from 'bcrypt';
-import User from '../../models/user';
 import { BadRequest, NotFound } from 'ts-httpexceptions';
+import User from '../../models/user';
 import CreateUserDto from './dto/create-user';
 import UpdateUserDto from './dto/update-user';
 
@@ -31,8 +31,12 @@ export class UserProvider {
     return user;
   }
 
-  public async get() {
-    return User.query();
+  public async get(id?: number) {
+    return id ? User.query().findById(id) : User.query();
+  }
+
+  public async delete(id: number) {
+    return User.query().deleteById(id);
   }
 }
 

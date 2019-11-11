@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import db from '../services/db';
 
 export class User extends Model {
   public id: number;

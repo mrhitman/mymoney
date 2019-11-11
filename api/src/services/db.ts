@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
 import Knex from 'knex';
-import { Model } from 'objection';
 
 dotenv.config();
 
-const knex = Knex({
+const db = Knex({
   client: 'postgres',
   connection: process.env.DATABASE_URL,
   pool: {
@@ -13,5 +12,4 @@ const knex = Knex({
   },
 });
 
-Model.knex(knex);
-export default knex;
+export default db;

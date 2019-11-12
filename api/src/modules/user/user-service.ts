@@ -1,7 +1,8 @@
-import { hash } from 'bcrypt';
+import { compareSync, hash } from 'bcrypt';
 import { BadRequest, NotFound } from 'ts-httpexceptions';
 import User from '../../models/user';
 import CreateUserDto from './dto/create-user';
+import LoginDto from './dto/login';
 import UpdateUserDto from './dto/update-user';
 
 export class UserProvider {
@@ -37,6 +38,23 @@ export class UserProvider {
 
   public async delete(id: number) {
     return User.query().deleteById(id);
+  }
+
+  public async login(dto: LoginDto) {
+    const { email, password } = dto;
+    const user = await User.query().findOne({ email });
+
+    if (!user) {
+      throw new BadRequest('Invalid email or password');
+    }
+
+    if (!compareSync(String(password), user.password)) {
+      throw new BadRequest('Invalid email or password');
+    }
+
+    return {
+      user,
+    };
   }
 }
 

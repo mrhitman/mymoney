@@ -11,8 +11,10 @@ export class UserController extends Controller {
     this.provider = provider || new UserProvider();
     this.route(['get', '/:id?', this.get]);
     this.route(['delete', '/:id', this.delete]);
-    this.route(['post', '/create', this.create]);
-    this.route(['patch', '/update', this.update]);
+    this.route(['post', '/', this.create]);
+    this.route(['post', '/login', this.login]);
+    this.route(['post', '/logout', this.logout]);
+    this.route(['patch', '/', this.update]);
   }
 
   public async get(ctx) {
@@ -40,6 +42,14 @@ export class UserController extends Controller {
 
   public async update(ctx) {
     ctx.body = await this.provider.update(ctx.request.body);
+  }
+
+  public async login(ctx) {
+    ctx.body = await this.provider.login(ctx.request.body);
+  }
+
+  public async logout(ctx) {
+    ctx.body = {};
   }
 }
 

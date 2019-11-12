@@ -10,6 +10,7 @@ import CurrencyController from './modules/currency/currency-controller';
 import UserController from './modules/user/user-controller';
 import WalletController from './modules/wallet/wallet-controller';
 import db from './services/db';
+import passport from 'koa-passport';
 
 Model.knex(db);
 
@@ -18,6 +19,7 @@ export function createApp() {
   app.use(helmet());
   app.use(bodyparser());
   app.use(logger('tiny'));
+  app.use(passport.initialize());
   app.use(ErrorHandler);
   UserController.register(app);
   WalletController.register(app);

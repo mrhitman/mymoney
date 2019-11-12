@@ -4,6 +4,7 @@ export interface CreateWalletDto {
   description: string;
   cardNumber: string;
   type: string;
+  pockets: any;
 }
 
 export default CreateWalletDto;

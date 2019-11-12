@@ -12,11 +12,11 @@ export class CurrencyController extends Controller {
     this.provider = provider || new CurrencyProvider();
     this.route(['get', '/info', this.getInfo]);
     this.route(['get', '/convert/:from/:to/:amount', this.convert]);
-    this.route(['get', '/:base?', this.get]);
+    this.route(['get', '/', this.get]);
   }
 
   public async get(ctx) {
-    ctx.body = await this.provider.latest(ctx.params.base);
+    ctx.body = await this.provider.latest();
   }
 
   public async getInfo(ctx) {

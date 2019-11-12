@@ -5,6 +5,11 @@ import { BadRequest } from 'ts-httpexceptions';
 
 type Method = 'get' | 'post' | 'delete' | 'patch' | 'update';
 type Handler = (ctx: Koa.Context) => Promise<void>;
+interface Middlewares {
+  before?: any[];
+  after?: any[];
+}
+
 export class Controller {
   protected router: Router;
   protected path = '/';
@@ -31,19 +36,28 @@ export class Controller {
       return true;
     }
 
-    throw new BadRequest('Invalid request', error.details.map(e => e.message));
+    throw new BadRequest(
+      'Invalid request',
+      error.details.map(e => e.message),
+    );
   }
 
   protected route(
     args:
       | [Method, string, Handler]
       | { method: Method; url: string; handler: Handler },
+    middlewares?: Middlewares,
   ) {
     if (!Array.isArray(args)) {
       this.route([args.method, args.url, args.handler]);
     } else {
       const [method, url, cb] = args;
-      this.router[method](this.path + url, cb.bind(this));
+      this.router[method](
+        ...(middlewares?.before || []),
+        this.path + url,
+        cb.bind(this),
+        ...(middlewares?.after || []),
+      );
     }
   }
 }

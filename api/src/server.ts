@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import Koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
@@ -8,7 +7,9 @@ import { Model } from 'objection';
 import ErrorHandler from './components/error-handler';
 import CurrencyController from './modules/currency/currency-controller';
 import UserController from './modules/user/user-controller';
+import WalletController from './modules/wallet/wallet-controller';
 import db from './services/db';
+dotenv.config();
 
 Model.knex(db);
 
@@ -19,6 +20,7 @@ export function createApp() {
   app.use(logger('tiny'));
   app.use(ErrorHandler);
   UserController.register(app);
+  WalletController.register(app);
   CurrencyController.register(app);
   return app;
 }

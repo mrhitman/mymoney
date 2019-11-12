@@ -14,7 +14,9 @@ export class CurrencyProvider {
     return response;
   }
 
-  // ISO_4217 standart
+  /**
+   * ISO_4217 standart
+   */
   async getIsoInfo() {
     const url = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml';
     const body = await axios.get(url);

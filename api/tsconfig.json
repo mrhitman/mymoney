@@ -4,8 +4,11 @@
     "lib": ["es2015", "dom"],
     "target": "es2018",
     "sourceMap": true,
-    "rootDir": "./src",
-    "baseUrl": "./src",
+    "rootDir": "src",
+    "baseUrl": "src",
+    "paths": {
+      "models": ["src/models"]
+    },
     "outDir": "dist",
     "incremental": true,
     "esModuleInterop": true

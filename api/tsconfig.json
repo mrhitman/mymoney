@@ -1,18 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
     "module": "commonjs",
-    "lib": ["es2015"],
+    "lib": ["es2015", "dom"],
     "target": "es2018",
     "sourceMap": true,
-    "rootDir": "src",
-    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "outDir": "dist",
     "incremental": true,
     "esModuleInterop": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/knexfile.ts"
-  ]
+  "exclude": ["node_modules", "dist", "src/knexfile.ts"]
 }

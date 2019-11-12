@@ -1,16 +1,16 @@
 import axios from 'axios';
-import fixer from 'fixer-api';
-import * as redis from '../../services/redis';
 import xml2js from 'xml2js';
+import fixer from '../../services/fixer';
+import redis from '../../services/redis';
 
 export class CurrencyProvider {
   async latest(base?: string) {
-    const rates = await redis.getAsync('rates');
+    const rates = await redis.get('rates');
     if (rates) {
       return JSON.parse(rates);
     }
     const response = await fixer.latest({ base });
-    await redis.setAsync('rates', JSON.stringify(response), 'EX', 3600);
+    await redis.set('rates', JSON.stringify(response), 'EX', 3600);
     return response;
   }
 

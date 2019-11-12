@@ -1,5 +1,5 @@
 import Controller from '../../components/controller';
-import UserProvider from './service';
+import UserProvider from './user-service';
 import joi from 'joi';
 
 export class UserController extends Controller {
@@ -9,7 +9,7 @@ export class UserController extends Controller {
   constructor(provider?: UserProvider) {
     super();
     this.provider = provider || new UserProvider();
-    this.route(['get', '/:?id', this.get]);
+    this.route(['get', '/:id?', this.get]);
     this.route(['delete', '/:id', this.delete]);
     this.route(['post', '/create', this.create]);
     this.route(['patch', '/update', this.update]);

@@ -7,7 +7,7 @@
     "build": "rimraf dist && tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "npm run build && node dist/server.js",
-    "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
+    "start:dev": "ts-node-dev --cls --watch -- src/server.ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -19,6 +19,7 @@
     "seed:make": "knex seed:make --cwd src --knexfile knexfile.ts -x ts"
   },
   "dependencies": {
+    "async-redis": "^1.1.7",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "dotenv": "^8.2.0",
@@ -37,9 +38,9 @@
     "objection": "^1.6.11",
     "passport-jwt": "^4.0.0",
     "pg": "^7.12.1",
-    "redis": "^2.8.0",
     "rimraf": "^3.0.0",
     "ts-httpexceptions": "^4.1.0",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.2",
     "xml2js": "^0.4.22"
   },
@@ -54,10 +55,8 @@
     "@types/koa-morgan": "^1.0.4",
     "@types/lodash": "^4.14.146",
     "@types/node": "^12.12.7",
-    "@types/redis": "^2.8.14",
     "@types/xml2js": "^0.4.5",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.4",
     "prettier": "^1.19.1",
     "ts-jest": "^24.1.0",
     "ts-node": "^8.5.0",

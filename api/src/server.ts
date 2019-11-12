@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import Koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import helmet from 'koa-helmet';

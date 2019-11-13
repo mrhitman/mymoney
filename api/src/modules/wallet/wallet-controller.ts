@@ -15,16 +15,18 @@ export class WalletController extends Controller {
 
   public async create(ctx) {
     this.validate(ctx, {
+      id: joi.string().required(),
       name: joi.string().required(),
       description: joi.string(),
       cardNumber: joi.string(),
+      pockets: joi.array(),
       type: joi.string(),
     });
-    ctx.body = await this.provider.create(ctx.body);
+    ctx.body = await this.provider.create(ctx.request.body);
   }
 
   public async update(ctx) {
-    ctx.body = await this.provider.update(ctx.body);
+    ctx.body = await this.provider.update(ctx.request.body);
   }
 }
 

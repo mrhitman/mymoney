@@ -6,6 +6,9 @@ import UpdateWalletDto from './dto/update-wallet';
 
 export class WalletProvider {
   public async create(dto: CreateWalletDto) {
+    if (await Wallet.query().findById(dto.id)) {
+      throw new BadRequest('Wallet already exists');
+    }
     const wallet = await Wallet.query().insert({
       ...dto,
       last_sync: new Date(),

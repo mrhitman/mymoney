@@ -4,7 +4,7 @@ import agent from 'supertest-koa-agent';
 describe('Currencies, ', () => {
   let app;
 
-  beforeEach(() => {
+  beforeAll(() => {
     app = agent(createApp());
   });
 

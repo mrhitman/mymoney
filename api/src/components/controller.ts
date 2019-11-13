@@ -44,9 +44,8 @@ export class Controller {
 
   protected route(
     args:
-      | [Method, string, Handler]
-      | { method: Method; url: string; handler: Handler },
-    middlewares?: Middlewares,
+      | [Method, string, Handler | Handler[]]
+      | { method: Method; url: string; handler: Handler | Handler[] },
   ) {
     if (!Array.isArray(args)) {
       this.route([args.method, args.url, args.handler]);
@@ -54,9 +53,7 @@ export class Controller {
       const [method, url, cb] = args;
       this.router[method](
         this.path + url,
-        ...(middlewares?.before || []),
-        cb.bind(this),
-        ...(middlewares?.after || []),
+        ...(Array.isArray(cb) ? cb : [cb]).map(c => c.bind(this)),
       );
     }
   }

@@ -27,6 +27,18 @@ export class WalletProvider {
     });
     return wallet;
   }
+
+  public async get(id?: string) {
+    return id ? Wallet.query().findById(id) : Wallet.query();
+  }
+
+  public async getUserId(user_id: number) {
+    return Wallet.query().where({ user_id });
+  }
+
+  public async delete(id: string) {
+    return Wallet.query().deleteById(id);
+  }
 }
 
 export default WalletProvider;

@@ -1,4 +1,5 @@
 import { compareSync, hash } from 'bcrypt';
+import { omit } from 'lodash';
 import { BadRequest, NotFound } from 'ts-httpexceptions';
 import User from '../../models/user';
 import CreateUserDto from './dto/create-user';
@@ -11,7 +12,7 @@ export class UserProvider {
       throw new BadRequest('User already exists');
     }
 
-    return User.query().insert({
+    const user = await User.query().insert({
       email: dto.email,
       first_name: dto.first_name,
       middle_name: dto.middle_name,
@@ -19,6 +20,7 @@ export class UserProvider {
       password: await hash(dto.password, 10),
       last_sync: new Date(),
     });
+    return omit(user, ['password']);
   }
 
   public async update(dto: UpdateUserDto) {
@@ -29,11 +31,15 @@ export class UserProvider {
     }
 
     await user.$query().update({ last_sync: new Date() });
-    return user;
+    return omit(user, ['password']);
   }
 
   public async get(id?: number) {
-    return id ? User.query().findById(id) : User.query();
+    return id
+      ? User.query()
+          .omit(['password'])
+          .findById(id)
+      : User.query().omit(['password']);
   }
 
   public async delete(id: number) {
@@ -53,7 +59,7 @@ export class UserProvider {
     }
 
     return {
-      user,
+      user: omit(user, ['password']),
     };
   }
 }

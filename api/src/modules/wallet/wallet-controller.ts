@@ -6,11 +6,13 @@ export class WalletController extends Controller {
   protected path = '/wallets';
   protected provider: WalletProvider;
 
-  constructor() {
+  constructor(provider?: WalletProvider) {
     super();
-    this.provider = new WalletProvider();
+    this.provider = provider || new WalletProvider();
     this.route(['post', '/', this.create]);
     this.route(['patch', '/', this.update]);
+    this.route(['get', '/:id?', this.get]);
+    this.route(['delete', '/:id', this.delete]);
   }
 
   public async create(ctx) {
@@ -27,6 +29,14 @@ export class WalletController extends Controller {
 
   public async update(ctx) {
     ctx.body = await this.provider.update(ctx.request.body);
+  }
+
+  public async get(ctx) {
+    ctx.body = await this.provider.get(ctx.params.id);
+  }
+
+  public async delete(ctx) {
+    ctx.body = await this.provider.delete(ctx.params.id);
   }
 }
 

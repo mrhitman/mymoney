@@ -5,7 +5,7 @@ import chance from 'chance';
 describe('Wallets, ', () => {
   let app;
 
-  beforeEach(() => {
+  beforeAll(() => {
     app = agent(createApp());
   });
 
@@ -13,6 +13,7 @@ describe('Wallets, ', () => {
     const response = await app.post('/wallets').send({
       id: chance().guid(),
       name: chance().name(),
+      type: chance().word({ length: 8 }),
       pockets: [
         {
           id: chance().guid(),
@@ -35,6 +36,7 @@ describe('Wallets, ', () => {
     const response = await app.post('/wallets').send({
       id: chance().guid(),
       name: chance().name(),
+      type: chance().word(),
       pockets: [
         {
           id: chance().guid(),

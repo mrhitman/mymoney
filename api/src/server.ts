@@ -18,7 +18,7 @@ export function createApp() {
   const app = new Koa();
   app.use(helmet());
   app.use(bodyparser());
-  app.use(logger('tiny'));
+  app.use(logger('dev'));
   app.use(passport.initialize());
   app.use(ErrorHandler);
   UserController.register(app);

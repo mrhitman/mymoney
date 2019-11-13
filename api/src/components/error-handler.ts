@@ -6,7 +6,9 @@ async function error_handler(ctx: Koa.Context, next: Koa.Next) {
   } catch (err) {
     ctx.status = err.statusCode || err.status || 500;
     ctx.body = err.body || err.message;
-    ctx.app.emit('error', err, ctx);
+    if (ctx.status >= 500) {
+      ctx.app.emit('error', err, ctx);
+    }
   }
 }
 

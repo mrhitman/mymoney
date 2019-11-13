@@ -75,6 +75,23 @@ export async function up(knex: Knex): Promise<any> {
     t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
   });
+  await knex.schema.createTable('budgets', t => {
+    t.uuid('id').primary();
+    t.integer('user_id')
+      .references('id')
+      .inTable('users')
+      .onDelete('CASCADE');
+    t.jsonb('outcomes');
+    t.jsonb('incomes');
+    t.jsonb('savings');
+    t.uuid('currency_id')
+      .references('id')
+      .inTable('currencies');
+    t.date('date');
+    t.date('deadline');
+    t.timestamp('last_sync');
+    t.timestamp('created_at').defaultTo(knex.fn.now());
+  });
 }
 
 export async function down(knex: Knex): Promise<any> {
@@ -82,5 +99,6 @@ export async function down(knex: Knex): Promise<any> {
   await knex.schema.dropTable('goals');
   await knex.schema.dropTable('wallets');
   await knex.schema.dropTable('categories');
+  await knex.schema.dropTable('budgets');
   await knex.schema.dropTable('currencies');
 }

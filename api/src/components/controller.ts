@@ -53,8 +53,8 @@ export class Controller {
     } else {
       const [method, url, cb] = args;
       this.router[method](
-        ...(middlewares?.before || []),
         this.path + url,
+        ...(middlewares?.before || []),
         cb.bind(this),
         ...(middlewares?.after || []),
       );

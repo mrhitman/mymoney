@@ -18,9 +18,13 @@ export class CurrencyProvider {
    * ISO_4217 standart
    */
   async getIsoInfo() {
+    const info = await redis.get('info');
+    if (info) {
+      return JSON.parse(info);
+    }
     const url = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml';
     const body = await axios.get(url);
-    return new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
       xml2js.parseString(body.data, { explicitArray: false }, (err, result) => {
         if (err) {
           return reject(err);
@@ -28,6 +32,9 @@ export class CurrencyProvider {
         resolve(result);
       });
     });
+
+    await redis.set('info', JSON.stringify(response), 'EX', 3600 * 24 * 30);
+    return response;
   }
 }
 

@@ -9,6 +9,8 @@ export class CategoryController extends Controller {
     super();
     this.provider = provider || new CategoryProvider();
   }
+
+  protected create() {}
 }
 
 export default CategoryController;

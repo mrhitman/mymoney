@@ -13,6 +13,7 @@ interface Middlewares {
 export class Controller {
   protected router: Router;
   protected path = '/';
+  protected rules = {};
 
   constructor() {
     this.router = Router();

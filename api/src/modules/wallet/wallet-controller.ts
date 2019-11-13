@@ -5,6 +5,28 @@ import joi from 'joi';
 export class WalletController extends Controller {
   protected path = '/wallets';
   protected provider: WalletProvider;
+  protected rules = {
+    basic: {
+      id: joi.string().required(),
+      name: joi.string(),
+      description: joi.string(),
+      cardNumber: joi.string(),
+      pockets: joi.array().items(
+        joi.object({
+          id: joi
+            .string()
+            .guid()
+            .required(),
+          amount: joi.number().required(),
+          currency_id: joi
+            .string()
+            .guid()
+            .required(),
+        }),
+      ),
+      type: joi.string(),
+    },
+  };
 
   constructor(provider?: WalletProvider) {
     super();
@@ -17,17 +39,14 @@ export class WalletController extends Controller {
 
   public async create(ctx) {
     this.validate(ctx, {
-      id: joi.string().required(),
+      ...this.rules.basic,
       name: joi.string().required(),
-      description: joi.string(),
-      cardNumber: joi.string(),
-      pockets: joi.array(),
-      type: joi.string(),
     });
     ctx.body = await this.provider.create(ctx.request.body);
   }
 
   public async update(ctx) {
+    this.validate(ctx, this.rules.basic);
     ctx.body = await this.provider.update(ctx.request.body);
   }
 

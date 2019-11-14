@@ -4,7 +4,8 @@ import Router from 'koa-router';
 import { BadRequest } from 'ts-httpexceptions';
 
 type Method = 'get' | 'post' | 'delete' | 'patch' | 'update';
-type Handler = (ctx: Koa.Context) => Promise<void>;
+type Handler = (ctx: Koa.Context) => Promise<void> | void;
+
 interface Middlewares {
   before?: any[];
   after?: any[];

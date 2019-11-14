@@ -1,13 +1,13 @@
 import Controller from '../../components/controller';
-import CategoryProvider from './category-service';
+import TransactionProvider from './transaction-service';
 
-export class CategoryController extends Controller {
-  protected path = '/categories';
-  protected provider: CategoryProvider;
+export class TransactionController extends Controller {
+  protected path = '/transactions';
+  protected provider: TransactionProvider;
 
-  constructor(provider?: CategoryProvider) {
+  constructor(provider?: TransactionProvider) {
     super();
-    this.provider = provider || new CategoryProvider();
+    this.provider = provider || new TransactionProvider();
     this.route(['post', '/', this.create]);
     this.route(['patch', '/', this.update]);
     this.route(['get', '/:id?', this.get]);
@@ -31,4 +31,4 @@ export class CategoryController extends Controller {
   }
 }
 
-export default CategoryController;
+export default TransactionController;

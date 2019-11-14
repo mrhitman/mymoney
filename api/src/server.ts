@@ -4,14 +4,15 @@ import Koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
 import logger from 'koa-morgan';
+import passport from 'koa-passport';
 import { Model } from 'objection';
 import ErrorHandler from './components/error-handler';
 import BudgetController from './modules/budget/budget-controller';
 import CurrencyController from './modules/currency/currency-controller';
+import TransactionController from './modules/transaction/transaction-controller';
 import UserController from './modules/user/user-controller';
 import WalletController from './modules/wallet/wallet-controller';
 import db from './services/db';
-import passport from 'koa-passport';
 
 Model.knex(db);
 
@@ -25,6 +26,7 @@ export function createApp() {
   UserController.register(app);
   WalletController.register(app);
   BudgetController.register(app);
+  TransactionController.register(app);
   CurrencyController.register(app);
   return app;
 }

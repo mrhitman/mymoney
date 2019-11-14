@@ -41,4 +41,22 @@ describe('Budgets, ', () => {
 
     expect(response.status).toEqual(200);
   });
+
+  it('create, fail', async () => {
+    const response = await app.post('/budgets').send({
+      id: chance().guid(),
+      currency_id: new chance(0).guid(),
+      incomes: [
+        {
+          id: chance().guid(),
+          category_id: chance().guid(),
+          currency_id: new chance(0).guid(),
+          goal_fail: 10000,
+          progress: chance().natural({ max: 1000 }),
+        },
+      ],
+    });
+
+    expect(response.status).toEqual(400);
+  });
 });

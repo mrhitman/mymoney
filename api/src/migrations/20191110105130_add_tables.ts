@@ -81,9 +81,9 @@ export async function up(knex: Knex): Promise<any> {
       .references('id')
       .inTable('users')
       .onDelete('CASCADE');
-    t.jsonb('outcomes');
-    t.jsonb('incomes');
-    t.jsonb('savings');
+    t.jsonb('outcomes').defaultTo([]);
+    t.jsonb('incomes').defaultTo([]);
+    t.jsonb('savings').defaultTo([]);
     t.uuid('currency_id')
       .references('id')
       .inTable('currencies');

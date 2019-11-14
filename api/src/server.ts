@@ -8,6 +8,7 @@ import passport from 'koa-passport';
 import { Model } from 'objection';
 import ErrorHandler from './components/error-handler';
 import BudgetController from './modules/budget/budget-controller';
+import CategoryController from './modules/category/category-controller';
 import CurrencyController from './modules/currency/currency-controller';
 import TransactionController from './modules/transaction/transaction-controller';
 import UserController from './modules/user/user-controller';
@@ -28,6 +29,7 @@ export function createApp() {
   BudgetController.register(app);
   TransactionController.register(app);
   CurrencyController.register(app);
+  CategoryController.register(app);
   return app;
 }
 

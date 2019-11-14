@@ -6,13 +6,29 @@ export class BudgetController extends Controller {
   protected path = '/budgets';
   protected provider: BudgetProvider;
   protected rules = {
+    category: {
+      id: joi
+        .string()
+        .guid()
+        .required(),
+      category_id: joi
+        .string()
+        .guid()
+        .required(),
+      currency_id: joi
+        .string()
+        .guid()
+        .required(),
+      goal: joi.number().required(),
+      progress: joi.number().required(),
+    },
     basic: {
       id: joi
         .string()
         .guid()
         .required(),
-      incomes: joi.array().items(joi.object()),
-      outcomes: joi.array().items(joi.object()),
+      incomes: joi.array().items(joi.object(this.rules.category)),
+      outcomes: joi.array().items(joi.object(this.rules.category)),
       savings: joi.array().items(joi.object()),
       currency_id: joi.string().guid(),
       date: joi.string().isoDate(),
@@ -30,7 +46,13 @@ export class BudgetController extends Controller {
   }
 
   protected async create(ctx) {
-    this.validate(ctx, this.rules.basic);
+    this.validate(ctx, {
+      ...this.rules.basic,
+      currency_id: joi
+        .string()
+        .guid()
+        .required(),
+    });
     ctx.body = await this.provider.create(ctx.request.body);
   }
 

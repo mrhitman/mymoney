@@ -1,4 +1,4 @@
-import { BadRequest } from 'ts-httpexceptions';
+import { BadRequest, Forbidden } from 'ts-httpexceptions';
 import Category from '../../models/category';
 import CreateCategoryDto from './dto/create-category';
 
@@ -19,20 +19,25 @@ export class CategoryProvider {
     if (!category) {
       throw new BadRequest('No such category');
     }
+    if (category.user_id !== dto.user_id) {
+      throw new Forbidden('Not your category');
+    }
     await category.$query().update({ ...dto, last_sync: new Date() });
     return category;
   }
 
-  public async get(id?: string) {
-    return id ? Category.query().findById(id) : Category.query();
+  public async get(user_id: number, id?: string) {
+    return id
+      ? Category.query()
+          .where({ user_id })
+          .findById(id)
+      : Category.query().where({ user_id });
   }
 
-  public async getByUserId(user_id: number) {
-    return Category.query().where({ user_id });
-  }
-
-  public async delete(id: string) {
-    return Category.query().deleteById(id);
+  public async delete(user_id: number, id: string) {
+    return Category.query()
+      .where({ user_id, id })
+      .deleteById(id);
   }
 }
 

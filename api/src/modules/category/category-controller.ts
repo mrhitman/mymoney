@@ -1,6 +1,6 @@
 import Controller from '../../components/controller';
-import jwt from '../../middlewares/jwt';
 import CategoryProvider from './category-service';
+import joi from 'joi';
 
 export class CategoryController extends Controller {
   protected path = '/categories';
@@ -16,20 +16,34 @@ export class CategoryController extends Controller {
   }
 
   protected async create(ctx) {
-    ctx.body = this.provider.create(ctx.request.body);
+    this.validate(ctx, {
+      id: joi
+        .string()
+        .guid()
+        .required(),
+      name: joi.string().required(),
+      type: joi.string(),
+      icon: joi.object(),
+    });
+    ctx.body = await this.provider.create({
+      ...ctx.request.body,
+      user_id: ctx.state.jwtdata.id,
+    });
   }
 
   protected async update(ctx) {
-    ctx.body = this.provider.update(ctx.request.body);
+    ctx.body = await this.provider.update({
+      ...ctx.request.body,
+      user_id: ctx.state.jwtdata.id,
+    });
   }
 
   protected async get(ctx) {
-    global.console.log(ctx.state.jwtdata);
-    ctx.body = this.provider.get(ctx.params.id);
+    ctx.body = await this.provider.get(ctx.state.jwtdata.id, ctx.params.id);
   }
 
   protected async delete(ctx) {
-    ctx.body = this.provider.get(ctx.params.id);
+    ctx.body = await this.provider.delete(ctx.state.jwtdata.id, ctx.params.id);
   }
 }
 

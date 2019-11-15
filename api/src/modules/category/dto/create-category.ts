@@ -3,6 +3,8 @@ export class CreateCategoryDto {
   name: string;
   user_id: number;
   parent_id: string;
+  icon: object;
+  type: string;
 }
 
 export default CreateCategoryDto;

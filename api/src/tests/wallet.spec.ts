@@ -1,6 +1,6 @@
-import { createApp } from '../server';
-import agent from 'supertest-koa-agent';
 import chance from 'chance';
+import agent from 'supertest-koa-agent';
+import { createApp } from '../server';
 import jwtHelper from './helpers/jwt';
 
 describe('Wallets, ', () => {

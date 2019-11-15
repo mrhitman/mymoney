@@ -28,8 +28,8 @@ export class WalletController extends Controller {
     },
   };
 
-  constructor(provider?: WalletProvider) {
-    super();
+  constructor(middlewares = [], provider?: WalletProvider) {
+    super(middlewares);
     this.provider = provider || new WalletProvider();
     this.route(['post', '/', this.create]);
     this.route(['patch', '/', this.update]);

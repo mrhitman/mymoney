@@ -14,6 +14,7 @@ import TransactionController from './modules/transaction/transaction-controller'
 import UserController from './modules/user/user-controller';
 import WalletController from './modules/wallet/wallet-controller';
 import db from './services/db';
+import jwt from './middlewares/jwt';
 
 Model.knex(db);
 
@@ -25,11 +26,11 @@ export function createApp() {
   app.use(passport.initialize());
   app.use(ErrorHandler);
   UserController.register(app);
-  WalletController.register(app);
-  BudgetController.register(app);
-  TransactionController.register(app);
+  WalletController.register(app, [jwt]);
+  BudgetController.register(app, [jwt]);
+  TransactionController.register(app, [jwt]);
   CurrencyController.register(app);
-  CategoryController.register(app);
+  CategoryController.register(app, [jwt]);
   return app;
 }
 

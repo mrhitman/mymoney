@@ -7,8 +7,8 @@ export class CurrencyController extends Controller {
   protected path = '/currencies';
   protected provider: CurrencyProvider;
 
-  constructor(provider?: CurrencyProvider) {
-    super();
+  constructor(middlewares = [], provider?: CurrencyProvider) {
+    super(middlewares);
     this.provider = provider || new CurrencyProvider();
     this.route(['get', '/info', this.getInfo]);
     this.route(['get', '/convert/:from/:to/:amount', this.convert]);

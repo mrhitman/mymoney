@@ -1,20 +1,21 @@
 import Controller from '../../components/controller';
 import UserProvider from './user-service';
 import joi from 'joi';
+import jwt from '../../middlewares/jwt';
 
 export class UserController extends Controller {
   protected path = '/users';
   protected provider: UserProvider;
 
-  constructor(provider?: UserProvider) {
-    super();
+  constructor(middlewares = [], provider?: UserProvider) {
+    super(middlewares);
     this.provider = provider || new UserProvider();
-    this.route(['get', '/:id?', this.get]);
-    this.route(['delete', '/:id', this.delete]);
+    this.route(['get', '/:id?', [jwt, this.get]]);
+    this.route(['delete', '/:id', [jwt, this.delete]]);
     this.route(['post', '/', this.create]);
     this.route(['post', '/login', this.login]);
     this.route(['post', '/logout', this.logout]);
-    this.route(['patch', '/', this.update]);
+    this.route(['patch', '/', [jwt, this.update]]);
   }
 
   public async get(ctx) {

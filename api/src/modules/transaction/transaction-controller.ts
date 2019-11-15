@@ -5,8 +5,8 @@ export class TransactionController extends Controller {
   protected path = '/transactions';
   protected provider: TransactionProvider;
 
-  constructor(provider?: TransactionProvider) {
-    super();
+  constructor(middlewares = [], provider?: TransactionProvider) {
+    super(middlewares);
     this.provider = provider || new TransactionProvider();
     this.route(['post', '/', this.create]);
     this.route(['patch', '/', this.update]);

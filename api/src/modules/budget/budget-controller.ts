@@ -51,8 +51,8 @@ export class BudgetController extends Controller {
     },
   };
 
-  constructor(provider?: BudgetProvider) {
-    super();
+  constructor(middlewares = [], provider?: BudgetProvider) {
+    super(middlewares);
     this.provider = provider || new BudgetProvider();
     this.route(['post', '/', this.create]);
     this.route(['patch', '/', this.update]);

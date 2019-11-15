@@ -1,7 +1,7 @@
 import { compareSync, hash } from 'bcrypt';
 import chance from 'chance';
 import jwt from 'jsonwebtoken';
-import { omit } from 'lodash';
+import { omit, find } from 'lodash';
 import { BadRequest, NotFound } from 'ts-httpexceptions';
 import RefreshToken from '../../models/refresh-token';
 import User from '../../models/user';
@@ -61,16 +61,28 @@ export class UserProvider {
       throw new BadRequest('Invalid email or password');
     }
 
-    const token = await RefreshToken.query().insert({
-      token: chance().guid(),
-      user_id: user.id,
-    });
-
+    const token = await this.getToken(user.id);
     return {
       user: omit(user, ['password']),
       token: jwt.sign({ id: user.id }, process.env.SALT, { expiresIn: '1h' }),
       refresh_token: token.token,
     };
+  }
+
+  protected async getToken(user_id: number) {
+    const token = await RefreshToken.query().findOne({ user_id });
+    if (token) {
+      token.$query().update({
+        token: chance().guid(),
+        user_id,
+      });
+      return token;
+    }
+
+    return await RefreshToken.query().insert({
+      token: chance().guid(),
+      user_id,
+    });
   }
 }
 

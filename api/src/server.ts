@@ -4,7 +4,6 @@ import Koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
 import logger from 'koa-morgan';
-import passport from 'koa-passport';
 import { Model } from 'objection';
 import ErrorHandler from './components/error-handler';
 import BudgetController from './modules/budget/budget-controller';
@@ -23,7 +22,6 @@ export function createApp() {
   app.use(helmet());
   app.use(bodyparser());
   app.use(logger('dev'));
-  app.use(passport.initialize());
   app.use(ErrorHandler);
   UserController.register(app);
   WalletController.register(app, [jwt]);

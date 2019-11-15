@@ -1,6 +1,9 @@
 import { compareSync, hash } from 'bcrypt';
+import chance from 'chance';
+import jwt from 'jsonwebtoken';
 import { omit } from 'lodash';
 import { BadRequest, NotFound } from 'ts-httpexceptions';
+import RefreshToken from '../../models/refresh-token';
 import User from '../../models/user';
 import CreateUserDto from './dto/create-user';
 import LoginDto from './dto/login';
@@ -58,8 +61,15 @@ export class UserProvider {
       throw new BadRequest('Invalid email or password');
     }
 
+    const token = await RefreshToken.query().insert({
+      token: chance().guid(),
+      user_id: user.id,
+    });
+
     return {
       user: omit(user, ['password']),
+      token: jwt.sign({ id: user.id }, process.env.SALT, { expiresIn: '1h' }),
+      refresh_token: token.token,
     };
   }
 }

@@ -46,6 +46,13 @@ export class UserController extends Controller {
   }
 
   public async login(ctx) {
+    this.validate(ctx, {
+      email: joi
+        .string()
+        .email()
+        .required(),
+      password: joi.string().required(),
+    });
     ctx.body = await this.provider.login(ctx.request.body);
   }
 

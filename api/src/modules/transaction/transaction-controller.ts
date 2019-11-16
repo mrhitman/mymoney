@@ -15,7 +15,10 @@ export class TransactionController extends Controller {
   }
 
   protected async create(ctx) {
-    ctx.body = this.provider.create(ctx.request.body);
+    ctx.body = this.provider.create({
+      ...ctx.request.body,
+      user_id: ctx.data.jwtdata.id,
+    });
   }
 
   protected async update(ctx) {
@@ -23,11 +26,11 @@ export class TransactionController extends Controller {
   }
 
   protected async get(ctx) {
-    ctx.body = this.provider.get(ctx.params.id);
+    ctx.body = this.provider.get(ctx.data.jwtdata.id, ctx.params.id);
   }
 
   protected async delete(ctx) {
-    ctx.body = this.provider.get(ctx.params.id);
+    ctx.body = this.provider.delete(ctx.data.jwtdata.id, ctx.params.id);
   }
 }
 

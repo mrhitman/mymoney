@@ -29,6 +29,9 @@ export function createApp() {
   TransactionController.register(app, [jwt]);
   CurrencyController.register(app);
   CategoryController.register(app, [jwt]);
+  app.use(ctx => {
+    ctx.body = new Date();
+  });
   return app;
 }
 

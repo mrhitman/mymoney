@@ -1,4 +1,4 @@
-import { BadRequest } from 'ts-httpexceptions';
+import { BadRequest, Forbidden } from 'ts-httpexceptions';
 import Budget from '../../models/budget';
 
 export class BudgetProvider {
@@ -18,20 +18,25 @@ export class BudgetProvider {
     if (!budget) {
       throw new BadRequest('No such budget');
     }
+    if (budget.user_id !== dto.user_id) {
+      throw new Forbidden('No your budget');
+    }
     await budget.$query().update({ ...dto, last_sync: new Date() });
     return budget;
   }
 
-  public async get(id?: string) {
-    return id ? Budget.query().findById(id) : Budget.query();
+  public async get(user_id: number, id?: string) {
+    return id
+      ? Budget.query()
+          .where({ user_id })
+          .findById(id)
+      : Budget.query().where({ user_id });
   }
 
-  public async getByUserId(user_id: number) {
-    return Budget.query().where({ user_id });
-  }
-
-  public async delete(id: string) {
-    return Budget.query().deleteById(id);
+  public async delete(user_id: number, id: string) {
+    return Budget.query()
+      .where({ user_id })
+      .deleteById(id);
   }
 }
 

@@ -57,7 +57,11 @@ export class UserController extends Controller {
   }
 
   public async logout(ctx) {
-    ctx.body = {};
+    ctx.body = await this.provider.logout(ctx.data.jwtdata.id);
+  }
+
+  public async refresh(ctx) {
+    ctx.body = await this.provider.refresh(ctx.data.jwtdata.id, ctx.token);
   }
 }
 

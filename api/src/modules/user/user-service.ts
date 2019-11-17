@@ -69,6 +69,23 @@ export class UserProvider {
     };
   }
 
+  public async logout(user_id: number) {
+    return RefreshToken.query()
+      .where({ user_id })
+      .delete();
+  }
+
+  public async refresh(user_id: number, token: string) {
+    const oldToken = await RefreshToken.query().findOne({ user_id, token });
+    if (!oldToken) {
+      throw new BadRequest('Cannot refresh token');
+    }
+    await oldToken.$query().update({
+      token: chance().guid(),
+    });
+    return oldToken;
+  }
+
   protected async getToken(user_id: number) {
     const token = await RefreshToken.query().findOne({ user_id });
     if (token) {

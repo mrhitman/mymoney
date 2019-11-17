@@ -80,7 +80,7 @@ export class BudgetController extends Controller {
   }
 
   protected async get(ctx) {
-    ctx.body = await this.provider.get(ctx.data.jwtdata, ctx.params.id);
+    ctx.body = await this.provider.get(ctx.data.jwtdata.id, ctx.params.id);
   }
 
   protected async delete(ctx) {

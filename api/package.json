@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\"",
-    "start": "npm run build && node dist/server.js",
+    "start:prod": "npm run build && node dist/server.js",
+    "start": "ts-node-dev --cls --watch -- src/server.ts",
     "start:dev": "ts-node-dev --cls --watch -- src/server.ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",

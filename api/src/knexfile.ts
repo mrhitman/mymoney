@@ -3,7 +3,7 @@ import * as knex from 'knex';
 
 config({ path: '../.env' });
 
-export = {
+const database = {
   test: {
     client: 'postgres',
     connection: process.env.DATABASE_URL,
@@ -39,3 +39,5 @@ export = {
   },
   timezone: 'UTC',
 } as knex.Config;
+
+export = database;

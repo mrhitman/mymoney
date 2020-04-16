@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
-import * as knex from 'knex';
+import Knex from 'knex';
+import { knexSnakeCaseMappers } from 'objection';
 
 config({ path: '../.env' });
 
@@ -10,7 +11,7 @@ const database = {
     charset: 'utf8',
     migrations: {
       extension: 'ts',
-      directory: 'migrations',
+      directory: 'database/migrations',
       tableName: 'migrations',
     },
     seeds: {
@@ -24,12 +25,12 @@ const database = {
     connection: process.env.DATABASE_URL,
     migrations: {
       extension: 'ts',
-      directory: 'migrations',
+      directory: 'database/migrations',
       tableName: 'migrations',
     },
     seeds: {
       extension: 'ts',
-      directory: 'seeds',
+      directory: 'database/seeds',
       tableName: 'seeds',
     },
   },
@@ -38,6 +39,7 @@ const database = {
     max: 16,
   },
   timezone: 'UTC',
-} as knex.Config;
+  ...knexSnakeCaseMappers()
+} as Knex.Config;
 
 export = database;

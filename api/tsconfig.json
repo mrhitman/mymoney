@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "lib": ["es2015", "dom"],
-    "target": "es2018",
-    "sourceMap": true,
-    "rootDir": "src",
-    "baseUrl": "src",
-    "paths": {
-      "models": ["src/models"]
-    },
-    "outDir": "dist",
-    "incremental": true,
-    "esModuleInterop": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "esModuleInterop": true
   },
-  "exclude": ["node_modules", "dist", "src/knexfile.ts"]
+  "exclude": ["node_modules", "dist"]
 }

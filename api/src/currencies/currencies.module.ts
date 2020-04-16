@@ -6,11 +6,14 @@ import { CurrenciesController } from './currencies.controller';
 import { CurrenciesService } from './currencies.service';
 
 @Module({
-  imports: [DatabaseModule, CacheModule.register({
-    store: redisStore,
-    url: process.env.REDIS_URL
-  })],
+  imports: [
+    DatabaseModule,
+    CacheModule.register({
+      store: redisStore,
+      url: process.env.REDIS_URL,
+    }),
+  ],
   controllers: [CurrenciesController],
-  providers: [CurrenciesService, Fixer]
+  providers: [CurrenciesService, Fixer],
 })
-export class CurrenciesModule { }
+export class CurrenciesModule {}

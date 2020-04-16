@@ -6,45 +6,44 @@ import xml2js from 'xml2js';
 
 @Injectable()
 export class CurrenciesService {
-    constructor(protected fixer: Fixer) {
+  constructor(protected fixer: Fixer) {}
+
+  public async findAll() {
+    const currencies = await Currency.query();
+    return currencies;
+  }
+
+  public async findOne(id: string) {
+    const currency = await Currency.query().findOne({ id });
+
+    if (!currency) {
+      throw new NotFoundException();
     }
 
-    public async findAll() {
-        const currencies = await Currency.query();
-        return currencies;
-    }
+    return currency;
+  }
 
-    public async findOne(id: string) {
-        const currency = await Currency.query().findOne({ id });
+  public async rates(base?: string) {
+    const response = await this.fixer.latest(base);
+    return response;
+  }
 
-        if (!currency) {
-            throw new NotFoundException();
+  /**
+   * ISO_4217 standart
+   * https://en.wikipedia.org/wiki/ISO_4217
+   */
+  async getIsoInfo() {
+    const url = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml';
+    const body = await axios.get(url);
+    const response = await new Promise((resolve, reject) => {
+      xml2js.parseString(body.data, { explicitArray: false }, (err, result) => {
+        if (err) {
+          return reject(err);
         }
+        resolve(result);
+      });
+    });
 
-        return currency;
-    }
-
-    public async rates(base?: string) {
-        const response = await this.fixer.latest(base);
-        return response;
-    }
-
-    /**
-     * ISO_4217 standart
-     * https://en.wikipedia.org/wiki/ISO_4217
-     */
-    async getIsoInfo() {
-        const url = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml';
-        const body = await axios.get(url);
-        const response = await new Promise((resolve, reject) => {
-            xml2js.parseString(body.data, { explicitArray: false }, (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
-
-        return response;
-    }
+    return response;
+  }
 }

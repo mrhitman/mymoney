@@ -10,8 +10,16 @@ import { CurrenciesModule } from './currencies/currencies.module';
 import { Fixer } from './fixer';
 
 @Module({
-  imports: [UsersModule, WalletsModule, CategoriesModule, BudgetsModule, GoalsModule, TransactionsModule, CurrenciesModule],
+  imports: [
+    UsersModule,
+    WalletsModule,
+    CategoriesModule,
+    BudgetsModule,
+    GoalsModule,
+    TransactionsModule,
+    CurrenciesModule,
+  ],
   controllers: [AppController],
   providers: [Fixer],
 })
-export class AppModule { }
+export class AppModule {}

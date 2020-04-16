@@ -39,7 +39,7 @@ const database = {
     max: 16,
   },
   timezone: 'UTC',
-  ...knexSnakeCaseMappers()
+  ...knexSnakeCaseMappers(),
 } as Knex.Config;
 
 export = database;

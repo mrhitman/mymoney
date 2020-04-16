@@ -1,31 +1,25 @@
 import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
-  await knex.schema.createTable('categories', t => {
+  await knex.schema.createTable('categories', (t) => {
     t.string('id').primary();
-    t.integer('user_id')
-      .references('id')
-      .inTable('users')
-      .onDelete('CASCADE');
+    t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('name');
     t.string('type');
     t.jsonb('icon');
     t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
   });
-  await knex.schema.createTable('currencies', t => {
+  await knex.schema.createTable('currencies', (t) => {
     t.string('id').primary();
     t.string('name');
     t.string('description');
     t.string('symbol');
     t.string('flagCode');
   });
-  await knex.schema.createTable('wallets', t => {
+  await knex.schema.createTable('wallets', (t) => {
     t.string('id').primary();
-    t.integer('user_id')
-      .references('id')
-      .inTable('users')
-      .onDelete('CASCADE');
+    t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('name', 64);
     t.string('description', 64);
     t.string('cardNumber', 64);
@@ -34,33 +28,23 @@ export async function up(knex: Knex): Promise<any> {
     t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
   });
-  await knex.schema.createTable('goals', t => {
+  await knex.schema.createTable('goals', (t) => {
     t.string('id').primary();
-    t.integer('user_id')
-      .references('id')
-      .inTable('users')
-      .onDelete('CASCADE');
+    t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('wallet_id')
       .references('id')
       .inTable('wallets')
       .onDelete('CASCADE');
-    t.string('currency_id')
-      .references('id')
-      .inTable('currencies');
+    t.string('currency_id').references('id').inTable('currencies');
     t.decimal('goal');
     t.decimal('progress');
     t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
   });
-  await knex.schema.createTable('transactions', t => {
+  await knex.schema.createTable('transactions', (t) => {
     t.string('id').primary();
-    t.integer('user_id')
-      .references('id')
-      .inTable('users')
-      .onDelete('CASCADE');
-    t.string('category_id')
-      .references('id')
-      .inTable('categories');
+    t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
+    t.string('category_id').references('id').inTable('categories');
     t.string('source_wallet_id')
       .references('id')
       .inTable('wallets')
@@ -75,18 +59,13 @@ export async function up(knex: Knex): Promise<any> {
     t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
   });
-  await knex.schema.createTable('budgets', t => {
+  await knex.schema.createTable('budgets', (t) => {
     t.string('id').primary();
-    t.integer('user_id')
-      .references('id')
-      .inTable('users')
-      .onDelete('CASCADE');
+    t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.jsonb('outcomes').defaultTo([]);
     t.jsonb('incomes').defaultTo([]);
     t.jsonb('savings').defaultTo([]);
-    t.string('currency_id')
-      .references('id')
-      .inTable('currencies');
+    t.string('currency_id').references('id').inTable('currencies');
     t.date('date');
     t.date('deadline');
     t.timestamp('last_sync');

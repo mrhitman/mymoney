@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
-  await knex.schema.createTable('users', t => {
+  await knex.schema.createTable('users', (t) => {
     t.increments('id').primary();
     t.string('first_name');
     t.string('middle_name');

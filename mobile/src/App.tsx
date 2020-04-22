@@ -1,10 +1,14 @@
-import React, {PureComponent} from "react";
-import {Text, View} from "react-native";
+import {NavigationContainer} from '@react-navigation/native';
+import React, {PureComponent} from 'react';
+import BottomNavigator from './navigation/BottomNavigator';
 
 class MyMoneyApp extends PureComponent {
-
   public render() {
-    return <View><Text>adas</Text></View>;
+    return (
+      <NavigationContainer>
+        <BottomNavigator />
+      </NavigationContainer>
+    );
   }
 }
 

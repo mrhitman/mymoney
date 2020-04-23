@@ -1,11 +1,13 @@
 import React, {PureComponent} from 'react';
-import {Text, View} from 'react-native';
+import {Button, View} from 'react-native-ui-lib';
 
 export class Settings extends PureComponent {
   render() {
     return (
-      <View>
-        <Text> textInComponent </Text>
+      <View useSafeArea>
+        <View flex top>
+          <Button label="THIS is button" />
+        </View>
       </View>
     );
   }

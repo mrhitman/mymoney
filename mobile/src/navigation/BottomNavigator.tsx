@@ -30,7 +30,7 @@ const BottomNavigator: FC = () => {
       />
       <Tab.Screen
         options={{
-          tabBarLabel: 'Operations',
+          tabBarLabel: 'Transactions',
           tabBarIcon: ({color, size}) => (
             <Icon
               type="FontAwesome"
@@ -40,7 +40,7 @@ const BottomNavigator: FC = () => {
             />
           ),
         }}
-        name="operations"
+        name="transactions"
         component={Settings}
       />
       <Tab.Screen

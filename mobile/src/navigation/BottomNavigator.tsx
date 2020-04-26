@@ -3,6 +3,7 @@ import React, {FC} from 'react';
 import Icon from '../misc/Icon';
 import Home from '../pages/Home';
 import Settings from '../pages/Settings';
+import Transactions from '../pages/Transactions';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,7 @@ const BottomNavigator: FC = () => {
           ),
         }}
         name="transactions"
-        component={Settings}
+        component={Transactions}
       />
       <Tab.Screen
         options={{

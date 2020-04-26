@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {View, Text} from 'react-native-ui-lib';
+import {Text, View} from 'react-native-ui-lib';
 import Icon from './Icon';
 
 interface CollapsableProps {
@@ -7,8 +7,15 @@ interface CollapsableProps {
   title: string;
 }
 
-export class Collapsable extends PureComponent<CollapsableProps> {
-  state = {
+interface CollapsableState {
+  closed: boolean;
+}
+
+export class Collapsable extends PureComponent<
+  CollapsableProps,
+  CollapsableState
+> {
+  state: CollapsableState = {
     closed: this.props.closed || false,
   };
 

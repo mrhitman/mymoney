@@ -5,9 +5,7 @@ export class Settings extends PureComponent {
   render() {
     return (
       <UI.View useSafeArea>
-        <UI.View flex top>
-          <UI.ActionBar/>
-        </UI.View>
+        <UI.View flex top />
       </UI.View>
     );
   }

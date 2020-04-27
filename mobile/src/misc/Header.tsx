@@ -24,15 +24,11 @@ export class Header extends PureComponent<HeaderProps> {
         row
         spread
         style={[styles[this.props.size || 'md'], this.props.style]}>
-        <View left center>
+        <View left top>
           {this.props.renderLeft && this.props.renderLeft()}
         </View>
-        <View center flexG>
-          {this.props.children}
-        </View>
-        <View right center>
-          {this.props.renderRight && this.props.renderRight()}
-        </View>
+        <View flexG>{this.props.children}</View>
+        <View right>{this.props.renderRight && this.props.renderRight()}</View>
       </View>
     );
   }

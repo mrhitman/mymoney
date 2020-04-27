@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {FC} from 'react';
 import Icon from '../misc/Icon';
+import Analytics from '../pages/Analytics';
 import Home from '../pages/Home';
 import Settings from '../pages/Settings';
 import Transactions from '../pages/Transactions';
@@ -52,7 +53,7 @@ const BottomNavigator: FC = () => {
           ),
         }}
         name="analytics"
-        component={Settings}
+        component={Analytics}
       />
       <Tab.Screen
         options={{

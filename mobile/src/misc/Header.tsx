@@ -2,12 +2,12 @@ import React, {PureComponent} from 'react';
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {View} from 'react-native-ui-lib';
 
-export type HeaderSize = 'sm' | 'md' | 'lg' | 'lg+';
+export type HeaderSize = 'sm' | 'md' | 'lg' | 'xlg';
 export enum HeaderSizes {
-  'sm' = 30,
-  'md' = 50,
-  'lg' = 70,
-  'lg+' = 100,
+  sm = 30,
+  md = 50,
+  lg = 70,
+  xlg = 110,
 }
 export interface HeaderProps {
   renderLeft?: () => React.ReactNode;
@@ -17,7 +17,7 @@ export interface HeaderProps {
 }
 
 export class Header extends PureComponent<HeaderProps> {
-  render() {
+  public render() {
     return (
       <View
         bg-dark70
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   lg: {
     height: HeaderSizes.lg,
   },
-  'lg+': {
-    height: HeaderSizes['lg+'],
+  xlg: {
+    height: HeaderSizes.xlg,
   },
 });
 

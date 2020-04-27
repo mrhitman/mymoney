@@ -1,25 +1,31 @@
 import React, {PureComponent} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import {IconProps} from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export type IconType =
+  | 'MaterialCommunityIcons'
   | 'MaterialIcons'
   | 'AntDesign'
   | 'FontAwesome'
   | 'Feather'
-  | 'Ionicons';
+  | 'Ionicons'
+  | 'Fontisto';
 
 export class Icon extends PureComponent<IconProps & {type: IconType}> {
   protected types = {
-    MaterialIcons: MaterialIcons,
+    MaterialIcons,
     AntDesign,
     Feather,
+    Fontisto,
     Ionicons,
-    FontAwesome: FontAwesomeIcons,
+    FontAwesome,
+    MaterialCommunityIcons,
   };
 
   public render() {

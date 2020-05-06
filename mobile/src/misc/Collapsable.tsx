@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {Text, View} from 'react-native-ui-lib';
-import Icon from './Icon';
+import Icon, {IconType} from './Icon';
 
 interface CollapsableProps {
   closed?: boolean;
@@ -32,7 +32,7 @@ export class Collapsable extends PureComponent<
           </Text>
           <View marginT-2>
             <Icon
-              type="Ionicons"
+              type={IconType.Ionicons}
               name={'ios-arrow-' + (this.state.closed ? 'down' : 'up')}
               size={16}
             />

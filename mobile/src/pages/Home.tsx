@@ -5,6 +5,7 @@ import {Header} from '../misc/Header';
 import Icon from '../misc/Icon';
 import {ScrollView} from 'react-native-gesture-handler';
 import Collapsable from '../misc/Collapsable';
+import {IconType} from '../misc/Icon';
 
 const data = [
   {
@@ -43,10 +44,10 @@ export class Home extends PureComponent {
           renderRight={() => (
             <UI.View row top flex marginT-8>
               <UI.View margin-8 marginR-10>
-                <Icon type="Feather" name="pie-chart" size={26} />
+                <Icon type={IconType.Feather} name="pie-chart" size={26} />
               </UI.View>
               <UI.View margin-8 marginR-20>
-                <Icon type="Feather" name="plus" size={26} />
+                <Icon type={IconType.Feather} name="plus" size={26} />
               </UI.View>
             </UI.View>
           )}
@@ -60,13 +61,12 @@ export class Home extends PureComponent {
                 width={120}
                 marginV-20
                 marginR-20
-                padding-8
-                spread>
-                <Icon type="AntDesign" name="bank" size={28} />
+                padding-8>
+                <Icon type={IconType.AntDesign} name="bank" size={28} />
                 <UI.Text text70L>Bank X</UI.Text>
                 <UI.Text text90L>18:34</UI.Text>
                 <UI.View right>
-                  <Icon type="FontAwesome" name="repeat" size={18} />
+                  <Icon type={IconType.FontAwesome} name="repeat" size={18} />
                 </UI.View>
               </UI.Card>
             ))}
@@ -80,7 +80,7 @@ export class Home extends PureComponent {
                 <UI.View key={item.id} spread row padding-4 bg-white>
                   <UI.View left row>
                     <UI.View margin-14 marginR-24>
-                      <Icon type="AntDesign" name="wallet" size={26} />
+                      <Icon type={IconType.AntDesign} name="wallet" size={26} />
                     </UI.View>
                     <UI.View>
                       <UI.Text text60>{item.title}</UI.Text>
@@ -100,7 +100,9 @@ export class Home extends PureComponent {
         <UI.View row top margin-8>
           <UI.Button
             link
-            iconSource={() => <Icon type="AntDesign" name="plus" size={30} />}
+            iconSource={() => (
+              <Icon type={IconType.AntDesign} name="plus" size={30} />
+            )}
           />
           <UI.Text margin-8 marginL-12 onPress={() => {}}>
             Add card, income, credit, ...

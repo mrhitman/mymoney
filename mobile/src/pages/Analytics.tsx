@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
-import UI from 'react-native-ui-lib';
 import {FlatList} from 'react-native';
+import UI from 'react-native-ui-lib';
 import Header from '../misc/Header';
-import Icon from '../misc/Icon';
+import Icon, {IconType} from '../misc/Icon';
 
 export class Analytics extends PureComponent {
   render() {
@@ -17,7 +17,7 @@ export class Analytics extends PureComponent {
           )}
           renderRight={() => (
             <UI.View margin-10>
-              <Icon type="Ionicons" name="ios-settings" size={28} />
+              <Icon type={IconType.Ionicons} name="ios-settings" size={28} />
             </UI.View>
           )}
         />
@@ -38,27 +38,27 @@ export class Analytics extends PureComponent {
             {
               id: 1,
               name: 'Budget',
-              icon: {name: 'dollar-bill', type: 'Foundation'},
+              icon: {name: 'dollar-bill', type: IconType.Foundation},
             },
             {
               id: 2,
               name: 'Outcomes by categories',
-              icon: {name: 'dollar-bill', type: 'Foundation'},
+              icon: {name: 'dollar-bill', type: IconType.Foundation},
             },
             {
               id: 3,
               name: 'Incomes by categories',
-              icon: {name: 'dollar-bill', type: 'Foundation'},
+              icon: {name: 'dollar-bill', type: IconType.Foundation},
             },
             {
               id: 4,
               name: 'Spends trend',
-              icon: {name: 'barchart', type: 'AntDesign'},
+              icon: {name: 'barchart', type: IconType.AntDesign},
             },
             {
               id: 5,
               name: 'Money movings',
-              icon: {name: 'dollar-bill', type: 'Foundation'},
+              icon: {name: 'dollar-bill', type: IconType.Foundation},
             },
           ]}
         />

@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
+import {FlatList} from 'react-native';
 import UI from 'react-native-ui-lib';
-import {FlatList, StyleSheet} from 'react-native';
 import Header from '../misc/Header';
-import Icon from '../misc/Icon';
+import Icon, {IconType} from '../misc/Icon';
 
 export class Transactions extends PureComponent {
   render() {
@@ -36,7 +36,7 @@ export class Transactions extends PureComponent {
                     outlineColor="grey"
                     iconSource={() => (
                       <Icon
-                        type="MaterialCommunityIcons"
+                        type={IconType.MaterialCommunityIcons}
                         name="filter-variant"
                         size={18}
                       />
@@ -56,10 +56,10 @@ export class Transactions extends PureComponent {
           renderRight={() => (
             <UI.View row top flex marginT-8>
               <UI.View margin-8 marginR-10>
-                <Icon type="Ionicons" name="ios-refresh" size={25} />
+                <Icon type={IconType.Ionicons} name="ios-refresh" size={25} />
               </UI.View>
               <UI.View margin-8 marginR-20>
-                <Icon type="Ionicons" name="ios-search" size={25} />
+                <Icon type={IconType.Ionicons} name="ios-search" size={25} />
               </UI.View>
             </UI.View>
           )}
@@ -81,7 +81,11 @@ export class Transactions extends PureComponent {
                     centerV
                     centerH
                     style={{height: 38}}>
-                    <Icon type="MaterialCommunityIcons" name="food" size={28} />
+                    <Icon
+                      type={IconType.MaterialCommunityIcons}
+                      name="food"
+                      size={28}
+                    />
                   </UI.View>
 
                   <UI.View marginL-10>

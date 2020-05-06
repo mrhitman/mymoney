@@ -10,16 +10,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export type IconType =
-  | 'MaterialCommunityIcons'
-  | 'MaterialIcons'
-  | 'AntDesign'
-  | 'EvilIcons'
-  | 'FontAwesome'
-  | 'Feather'
-  | 'Foundation'
-  | 'Ionicons'
-  | 'Fontisto';
+export enum IconType {
+  'MaterialCommunityIcons' = 'MaterialCommunityIcons',
+  'MaterialIcons' = 'MaterialIcons',
+  'AntDesign' = 'AntDesign',
+  'EvilIcons' = 'EvilIcons',
+  'FontAwesome' = 'FontAwesome',
+  'Feather' = 'Feather',
+  'Foundation' = 'Foundation',
+  'Ionicons' = 'Ionicons',
+  'Fontisto' = 'Fontisto',
+}
 
 export class Icon extends PureComponent<IconProps & {type: IconType}> {
   protected types = {

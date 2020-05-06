@@ -5,6 +5,7 @@ import Analytics from '../pages/Analytics';
 import Home from '../pages/Home';
 import Settings from '../pages/Settings';
 import Transactions from '../pages/Transactions';
+import {IconType} from '../misc/Icon';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +21,7 @@ const BottomNavigator: FC = () => {
           tabBarLabel: 'Accounts',
           tabBarIcon: ({color, size}) => (
             <Icon
-              type="MaterialIcons"
+              type={IconType.MaterialIcons}
               name="credit-card"
               color={color}
               size={size}
@@ -35,7 +36,7 @@ const BottomNavigator: FC = () => {
           tabBarLabel: 'Transactions',
           tabBarIcon: ({color, size}) => (
             <Icon
-              type="FontAwesome"
+              type={IconType.FontAwesome}
               name="exchange"
               color={color}
               size={size}
@@ -49,7 +50,12 @@ const BottomNavigator: FC = () => {
         options={{
           tabBarLabel: 'Analytics',
           tabBarIcon: ({color, size}) => (
-            <Icon type="AntDesign" name="linechart" color={color} size={size} />
+            <Icon
+              type={IconType.AntDesign}
+              name="linechart"
+              color={color}
+              size={size}
+            />
           ),
         }}
         name="analytics"
@@ -60,7 +66,7 @@ const BottomNavigator: FC = () => {
           tabBarLabel: 'More',
           tabBarIcon: ({color, size}) => (
             <Icon
-              type="MaterialIcons"
+              type={IconType.MaterialIcons}
               name="dehaze"
               color={color}
               size={size}

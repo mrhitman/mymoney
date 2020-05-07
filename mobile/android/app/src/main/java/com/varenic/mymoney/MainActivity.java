@@ -1,4 +1,4 @@
-package com.mymoney;
+package com.varenic.mymoney;
 
 import com.facebook.react.ReactActivity;
 

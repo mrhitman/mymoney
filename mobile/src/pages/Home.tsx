@@ -53,49 +53,49 @@ export class Home extends PureComponent {
           )}
         />
         <Collapsable title={'BANKS'}>
-          <UI.View row padding-6>
-            {[0, 1, 2].map((_, i) => (
-              <UI.Card
-                key={i}
-                height={120}
-                width={120}
-                marginV-20
-                marginR-20
-                padding-8>
-                <Icon type={IconType.AntDesign} name="bank" size={28} />
-                <UI.Text text70L>Bank X</UI.Text>
-                <UI.Text text90L>18:34</UI.Text>
-                <UI.View right>
-                  <Icon type={IconType.FontAwesome} name="repeat" size={18} />
-                </UI.View>
-              </UI.Card>
-            ))}
-          </UI.View>
+          <ScrollView horizontal>
+            <UI.View row padding-6>
+              {[0, 1, 2].map((_, i) => (
+                <UI.Card
+                  key={i}
+                  height={110}
+                  width={120}
+                  marginV-20
+                  marginR-20
+                  padding-8>
+                  <Icon type={IconType.AntDesign} name="bank" size={28} />
+                  <UI.Text text70L>Bank X</UI.Text>
+                  <UI.Text text90L>18:34</UI.Text>
+                  <UI.View right>
+                    <Icon type={IconType.FontAwesome} name="repeat" size={18} />
+                  </UI.View>
+                </UI.Card>
+              ))}
+            </UI.View>
+          </ScrollView>
         </Collapsable>
 
         <ScrollView>
-          <UI.View>
-            <FlatList
-              renderItem={({item}) => (
-                <UI.View key={item.id} spread row padding-4 bg-white>
-                  <UI.View left row>
-                    <UI.View margin-14 marginR-24>
-                      <Icon type={IconType.AntDesign} name="wallet" size={26} />
-                    </UI.View>
-                    <UI.View>
-                      <UI.Text text60>{item.title}</UI.Text>
-                      <UI.Text text80L>{item.title}</UI.Text>
-                    </UI.View>
+          <FlatList
+            renderItem={({item}) => (
+              <UI.View key={item.id} spread row padding-4 bg-white>
+                <UI.View left row>
+                  <UI.View margin-14 marginR-24>
+                    <Icon type={IconType.AntDesign} name="wallet" size={26} />
                   </UI.View>
-
-                  <UI.View right margin-8>
-                    <UI.Text text70>{item.amount} $</UI.Text>
+                  <UI.View>
+                    <UI.Text text60>{item.title}</UI.Text>
+                    <UI.Text text80L>{item.title}</UI.Text>
                   </UI.View>
                 </UI.View>
-              )}
-              data={data}
-            />
-          </UI.View>
+
+                <UI.View right margin-8>
+                  <UI.Text text70>{item.amount} $</UI.Text>
+                </UI.View>
+              </UI.View>
+            )}
+            data={data}
+          />
         </ScrollView>
         <UI.View row top margin-8>
           <UI.Button

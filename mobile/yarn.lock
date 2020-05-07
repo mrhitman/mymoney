@@ -2039,9 +2039,9 @@ commondir@^1.0.1:
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
 
 commons-validator-js@^1.0.237:
-  version "1.0.1560"
-  resolved "https://registry.yarnpkg.com/commons-validator-js/-/commons-validator-js-1.0.1560.tgz#2bac58b3d33d7643c135343e67bc381c79d89309"
-  integrity sha512-nWINH4a+TeHD56v+nO4fUuwHZk8Z6rmIBAigczhfrf9Q0JYawofAlAGLw6D8hNcH0wIIUnbt2diz1v38+Slk7A==
+  version "1.0.1561"
+  resolved "https://registry.yarnpkg.com/commons-validator-js/-/commons-validator-js-1.0.1561.tgz#2bb00d52f57e0deb1153a3e785f4b7e02d8fed8b"
+  integrity sha512-TIJB3rS599A7AgJAc4/tq3huAbXAvQK7YAgvClVEocAKyNVSICG08CRGGQPWlH8IgvXJSJZRwIGIHtlbJS/h8w==
   dependencies:
     bower-auto-release "^1.1.357"
     lodash.includes "^4.3.0"
@@ -6199,9 +6199,9 @@ stack-utils@^1.0.1:
   integrity sha512-MTX+MeG5U994cazkjd/9KNAapsHnibjMLnfXodlkXw76JEea0UiNzrqidzo1emMwk7w5Qhc9jd4Bn9TBb1MFwA==
 
 stacktrace-parser@^0.1.3:
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/stacktrace-parser/-/stacktrace-parser-0.1.9.tgz#11e6d61d42e8cfc87293143d0766408b7a87b00f"
-  integrity sha512-DRy03ljj0367Ud3OAJHD6eVS/+CvMK2u/djVYuU37fHYcYHoZ8tkFyhbRf7PNG1h3bWLsw+SNTSXrPFe07A7aQ==
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/stacktrace-parser/-/stacktrace-parser-0.1.10.tgz#29fb0cae4e0d0b85155879402857a1639eb6051a"
+  integrity sha512-KJP1OCML99+8fhOHxwwzyWrlUuVX5GQ0ZpJTd1DFXhdkrvg1szxfHhawXUZ3g9TkXORQd4/WG68jMlQZ2p8wlg==
   dependencies:
     type-fest "^0.7.1"
 

@@ -1,6 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {PureComponent} from 'react';
 import BottomNavigator from './navigation/BottomNavigator';
+import './Theme';
 
 console.disableYellowBox = true;
 

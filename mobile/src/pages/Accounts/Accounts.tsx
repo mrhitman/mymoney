@@ -1,11 +1,10 @@
 import React, {PureComponent} from 'react';
 import {FlatList} from 'react-native';
-import UI from 'react-native-ui-lib';
-import {Header} from '../misc/Header';
-import Icon from '../misc/Icon';
 import {ScrollView} from 'react-native-gesture-handler';
-import Collapsable from '../misc/Collapsable';
-import {IconType} from '../misc/Icon';
+import UI from 'react-native-ui-lib';
+import Collapsable from '../../misc/Collapsable';
+import Icon, {IconType} from '../../misc/Icon';
+import {Header} from './Header';
 
 const data = [
   {
@@ -19,41 +18,14 @@ const data = [
     amount: 935.7,
   },
 ];
-export class Home extends PureComponent {
+
+export class Accounts extends PureComponent {
   render() {
     return (
       <UI.View useSafeArea flex>
-        <Header
-          size="lg"
-          renderLeft={() => (
-            <UI.View row top flex marginT-8>
-              <UI.View margin-8 marginR-20>
-                <UI.Text text70BL>9.860 $</UI.Text>
-                <UI.Text text80L grey10>
-                  I have
-                </UI.Text>
-              </UI.View>
-              <UI.View margin-8>
-                <UI.Text text70BL>71.360 $</UI.Text>
-                <UI.Text text80L grey10>
-                  Available
-                </UI.Text>
-              </UI.View>
-            </UI.View>
-          )}
-          renderRight={() => (
-            <UI.View row top flex marginT-8>
-              <UI.View margin-8 marginR-10>
-                <Icon type={IconType.Feather} name="pie-chart" size={26} />
-              </UI.View>
-              <UI.View margin-8 marginR-20>
-                <Icon type={IconType.Feather} name="plus" size={26} />
-              </UI.View>
-            </UI.View>
-          )}
-        />
+        <Header />
         <Collapsable title={'BANKS'}>
-          <ScrollView horizontal>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <UI.View row padding-6>
               {[0, 1, 2].map((_, i) => (
                 <UI.Card
@@ -113,4 +85,4 @@ export class Home extends PureComponent {
   }
 }
 
-export default Home;
+export default Accounts;

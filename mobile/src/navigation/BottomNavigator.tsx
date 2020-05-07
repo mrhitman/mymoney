@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {FC} from 'react';
 import Icon from '../misc/Icon';
 import Analytics from '../pages/Analytics';
-import Home from '../pages/Home';
+import Accounts from '../pages/Accounts/Accounts';
 import Settings from '../pages/Settings';
 import Transactions from '../pages/Transactions';
 import {IconType} from '../misc/Icon';
@@ -29,7 +29,7 @@ const BottomNavigator: FC = () => {
           ),
         }}
         name="accounts"
-        component={Home}
+        component={Accounts}
       />
       <Tab.Screen
         options={{

@@ -2039,9 +2039,9 @@ commondir@^1.0.1:
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
 
 commons-validator-js@^1.0.237:
-  version "1.0.1561"
-  resolved "https://registry.yarnpkg.com/commons-validator-js/-/commons-validator-js-1.0.1561.tgz#2bb00d52f57e0deb1153a3e785f4b7e02d8fed8b"
-  integrity sha512-TIJB3rS599A7AgJAc4/tq3huAbXAvQK7YAgvClVEocAKyNVSICG08CRGGQPWlH8IgvXJSJZRwIGIHtlbJS/h8w==
+  version "1.0.1562"
+  resolved "https://registry.yarnpkg.com/commons-validator-js/-/commons-validator-js-1.0.1562.tgz#fef5ba2d59bc24f4c70bd7b5d22fab924b84c88e"
+  integrity sha512-/GX/A+c3IvCjSlpjtEZxZxf0sgrdVnVSDPfWNZVMuWH63fmPWKqUQ7cUk6I6nrVD+cpXRJpnLoSNxrJNtV2QJg==
   dependencies:
     bower-auto-release "^1.1.357"
     lodash.includes "^4.3.0"

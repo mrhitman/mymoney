@@ -2,8 +2,8 @@ import React, {PureComponent} from 'react';
 import {FlatList} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import UI from 'react-native-ui-lib';
-import Collapsable from '../../misc/Collapsable';
 import Icon, {IconType} from '../../misc/Icon';
+import Banks from './Banks';
 import {Header} from './Header';
 
 const data = [
@@ -24,28 +24,7 @@ export class Accounts extends PureComponent {
     return (
       <UI.View useSafeArea flex>
         <Header />
-        <Collapsable title={'BANKS'}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <UI.View row padding-6>
-              {[0, 1, 2].map((_, i) => (
-                <UI.Card
-                  key={i}
-                  height={110}
-                  width={120}
-                  marginV-20
-                  marginR-20
-                  padding-8>
-                  <Icon type={IconType.AntDesign} name="bank" size={28} />
-                  <UI.Text text70L>Bank X</UI.Text>
-                  <UI.Text text90L>18:34</UI.Text>
-                  <UI.View right>
-                    <Icon type={IconType.FontAwesome} name="repeat" size={18} />
-                  </UI.View>
-                </UI.Card>
-              ))}
-            </UI.View>
-          </ScrollView>
-        </Collapsable>
+        <Banks />
 
         <ScrollView>
           <FlatList

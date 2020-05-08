@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import UI from 'react-native-ui-lib';
-import {Header as CommonHeader} from '../../misc/Header';
+import CommonHeader from '../../misc/Header';
 import Icon, {IconType} from '../../misc/Icon';
 
 export class Header extends PureComponent {
@@ -28,7 +28,7 @@ export class Header extends PureComponent {
           <UI.View row top flex marginT-8>
             <UI.View margin-8 marginR-10>
               <UI.Button
-                backgroundColor="white"
+                backgroundColor={UI.Colors.grey50}
                 iconSource={() => (
                   <Icon type={IconType.Feather} name="pie-chart" size={26} />
                 )}
@@ -36,7 +36,7 @@ export class Header extends PureComponent {
             </UI.View>
             <UI.View margin-8 marginR-20>
               <UI.Button
-                backgroundColor="white"
+                backgroundColor={UI.Colors.grey50}
                 iconSource={() => (
                   <Icon type={IconType.Feather} name="plus" size={26} />
                 )}

@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
 import {FlatList} from 'react-native';
 import UI from 'react-native-ui-lib';
-import Header from '../misc/Header';
-import Icon, {IconType} from '../misc/Icon';
+import Header from '../../misc/Header';
+import Icon, {IconType} from '../../misc/Icon';
 import {
   GoogleSignin,
   GoogleSigninButton,

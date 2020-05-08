@@ -1,10 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {FC} from 'react';
 import Icon from '../misc/Icon';
-import Analytics from '../pages/Analytics';
+import Analytics from '../pages/Analytics/Analytics';
 import Accounts from '../pages/Accounts/Accounts';
 import Settings from '../pages/Settings';
-import Transactions from '../pages/Transactions';
+import Transactions from '../pages/Transactions/Transactions';
 import {IconType} from '../misc/Icon';
 
 const Tab = createBottomTabNavigator();

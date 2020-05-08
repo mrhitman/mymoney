@@ -1,6 +1,7 @@
-import {ThemeManager} from 'react-native-ui-lib';
+import {Colors, ThemeManager} from 'react-native-ui-lib';
 
 export function Init(theme: 'light' | 'dark' = 'light') {
+  InitColors();
   switch (theme) {
     case 'light':
       return InitLightTheme();
@@ -11,6 +12,12 @@ export function Init(theme: 'light' | 'dark' = 'light') {
   }
 }
 
+function InitColors() {
+  Colors.loadColors({
+    red400: '#ef5350',
+  });
+}
+
 function InitLightTheme() {
   ThemeManager.setComponentTheme('Card', {});
   ThemeManager.setComponentTheme('View', {
@@ -19,4 +26,5 @@ function InitLightTheme() {
   });
   ThemeManager.setComponentTheme('Text', {});
 }
+
 function InitDarkTheme() {}

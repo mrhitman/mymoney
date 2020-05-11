@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -20,6 +21,7 @@ export enum IconType {
   'Foundation' = 'Foundation',
   'Ionicons' = 'Ionicons',
   'Fontisto' = 'Fontisto',
+  'Entypo' = 'Entypo',
 }
 
 export class Icon extends PureComponent<IconProps & {type: IconType}> {
@@ -32,6 +34,7 @@ export class Icon extends PureComponent<IconProps & {type: IconType}> {
     Ionicons,
     EvilIcons,
     FontAwesome,
+    Entypo,
     MaterialCommunityIcons,
   };
 

@@ -1,11 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {FC} from 'react';
-import Icon from '../misc/Icon';
-import Analytics from '../pages/Analytics/Analytics';
+import Icon, {IconType} from '../misc/Icon';
 import Accounts from '../pages/Accounts/Accounts';
-import Settings from '../pages/Settings';
+import Analytics from '../pages/Analytics/Analytics';
+import More from '../pages/More/More';
 import Transactions from '../pages/Transactions/Transactions';
-import {IconType} from '../misc/Icon';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,7 +73,7 @@ const BottomNavigator: FC = () => {
           ),
         }}
         name="more"
-        component={Settings}
+        component={More}
       />
     </Tab.Navigator>
   );

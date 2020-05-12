@@ -4,6 +4,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Foundation from 'react-native-vector-icons/Foundation';
 import {IconProps} from 'react-native-vector-icons/Icon';
@@ -16,6 +17,7 @@ export enum IconType {
   'MaterialIcons' = 'MaterialIcons',
   'AntDesign' = 'AntDesign',
   'EvilIcons' = 'EvilIcons',
+  'FontAwesome5' = 'FontAwesome5',
   'FontAwesome' = 'FontAwesome',
   'Feather' = 'Feather',
   'Foundation' = 'Foundation',
@@ -30,6 +32,7 @@ export class Icon extends PureComponent<IconProps & {type: IconType}> {
     AntDesign,
     Feather,
     Fontisto,
+    FontAwesome5,
     Foundation,
     Ionicons,
     EvilIcons,

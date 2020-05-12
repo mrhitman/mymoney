@@ -3,8 +3,8 @@ import React, {FC} from 'react';
 import Icon, {IconType} from '../misc/Icon';
 import Accounts from '../pages/Accounts/Accounts';
 import Analytics from '../pages/Analytics/Analytics';
-import More from '../pages/More/More';
 import Transactions from '../pages/Transactions/Transactions';
+import More from './More';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,6 +12,7 @@ const BottomNavigator: FC = () => {
   return (
     <Tab.Navigator
       tabBarOptions={{
+        keyboardHidesTabBar: true,
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
       }}>

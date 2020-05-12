@@ -1,11 +1,12 @@
 import React, {PureComponent} from 'react';
 import {SectionList} from 'react-native';
-import UI from 'react-native-ui-lib';
+import UI, {Colors} from 'react-native-ui-lib';
 import Icon, {IconType} from '../../misc/Icon';
-import {Colors} from 'react-native-ui-lib';
+import {StackScreenProps} from '@react-navigation/stack';
 
 interface SectionData {
   title: string;
+  route?: string;
   icon: {
     type: IconType;
     name: string;
@@ -17,21 +18,27 @@ interface Section {
   data: SectionData[];
 }
 
+interface SectionProp {
+  item: SectionData;
+}
+
 const Sections: Section[] = [
   {
     data: [
       {
         title: 'Categories',
+        route: 'Categories',
         icon: {
           type: IconType.AntDesign,
           name: 'tagso',
         },
       },
       {
-        title: 'Icons',
+        title: 'Currencies',
+        route: 'Currencies',
         icon: {
-          type: IconType.Ionicons,
-          name: 'ios-images',
+          type: IconType.Fontisto,
+          name: 'money-symbol',
         },
       },
     ],
@@ -102,7 +109,7 @@ const Sections: Section[] = [
   },
 ];
 
-export class More extends PureComponent {
+export class More extends PureComponent<StackScreenProps<{}>> {
   public render() {
     return (
       <UI.View useSafeArea>
@@ -120,15 +127,20 @@ export class More extends PureComponent {
     return <UI.View margin-8 marginH-16 bg-dark70 padding-3 />;
   };
 
-  protected renderItem = (item: {item: SectionData}) => {
+  protected renderItem = (item: SectionProp) => {
     return (
-      <UI.View padding-12 row>
+      <UI.TouchableOpacity
+        padding-12
+        row
+        onPress={() => {
+          item.item.route && this.props.navigation.navigate(item.item.route);
+        }}>
         <UI.View margin-8 marginR-16 center>
           <Icon
             type={item.item.icon.type}
             name={item.item.icon.name}
-            size={24}
             color={item.item.icon.color}
+            size={24}
           />
         </UI.View>
         <UI.View center>
@@ -136,7 +148,7 @@ export class More extends PureComponent {
             {item.item.title}
           </UI.Text>
         </UI.View>
-      </UI.View>
+      </UI.TouchableOpacity>
     );
   };
 }

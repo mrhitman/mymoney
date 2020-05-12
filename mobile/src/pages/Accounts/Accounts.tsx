@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react';
 import {FlatList} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 import UI from 'react-native-ui-lib';
 import Icon, {IconType} from '../../misc/Icon';
 import Banks from './Banks';
@@ -26,28 +25,27 @@ export class Accounts extends PureComponent {
         <Header />
         <Banks />
 
-        <ScrollView>
-          <FlatList
-            renderItem={({item}) => (
-              <UI.View key={item.id} spread row padding-4 bg-white>
-                <UI.View left row>
-                  <UI.View margin-14 marginR-24>
-                    <Icon type={IconType.AntDesign} name="wallet" size={26} />
-                  </UI.View>
-                  <UI.View>
-                    <UI.Text text60>{item.title}</UI.Text>
-                    <UI.Text text80L>{item.title}</UI.Text>
-                  </UI.View>
+        <FlatList
+          scrollEnabled
+          renderItem={({item}) => (
+            <UI.View key={item.id} spread row padding-4 bg-white>
+              <UI.View left row>
+                <UI.View margin-14 marginR-24>
+                  <Icon type={IconType.AntDesign} name="wallet" size={26} />
                 </UI.View>
-
-                <UI.View right margin-8>
-                  <UI.Text text70>{item.amount} $</UI.Text>
+                <UI.View>
+                  <UI.Text text60>{item.title}</UI.Text>
+                  <UI.Text text80L>{item.title}</UI.Text>
                 </UI.View>
               </UI.View>
-            )}
-            data={data}
-          />
-        </ScrollView>
+
+              <UI.View right margin-8>
+                <UI.Text text70>{item.amount} $</UI.Text>
+              </UI.View>
+            </UI.View>
+          )}
+          data={data}
+        />
         <UI.View row top margin-8>
           <UI.Button
             link

@@ -54,6 +54,7 @@ const Sections: Section[] = [
       },
       {
         title: 'Account settings',
+        route: 'AccountSettings',
         icon: {
           type: IconType.MaterialCommunityIcons,
           name: 'account',

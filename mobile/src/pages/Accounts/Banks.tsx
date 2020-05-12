@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native';
 import UI from 'react-native-ui-lib';
 import Collapsable from '../../misc/Collapsable';
 import Icon, {IconType} from '../../misc/Icon';

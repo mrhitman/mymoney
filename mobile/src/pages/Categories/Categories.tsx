@@ -12,7 +12,11 @@ export class Categories extends PureComponent {
   public render() {
     return (
       <UI.View useSafeArea>
-        <CategoryTree categories={this.store.categories} />
+        <CategoryTree
+          categories={this.store.categories.filter(
+            (c) => ['TRANSFER_IN', 'TRANSFER_OUT'].indexOf(c.name) === -1,
+          )}
+        />
       </UI.View>
     );
   }

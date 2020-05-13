@@ -1,4 +1,5 @@
 import {types} from 'mobx-state-tree';
+import {IconType} from '../misc/Icon';
 import * as Colors from '../utils/colors';
 import {Icon} from './icon';
 import {CategoryType, CreateCategoryDto} from './types/category';
@@ -7,13 +8,14 @@ export const Category = types.model('Category', {
   id: types.identifier,
   name: types.string,
   description: types.optional(types.string, ''),
+  fixed: types.optional(types.boolean, false),
   type: types.optional(
     types.enumeration(Object.keys(CategoryType)),
     CategoryType.outcome,
   ),
   icon: types.optional(Icon, {
     name: 'piggy-bank',
-    type: 'FontAwesome5',
+    type: IconType.FontAwesome5,
   }),
   parent: types.maybe(types.reference(types.late(() => Category))),
 });

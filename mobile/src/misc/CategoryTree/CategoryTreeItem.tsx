@@ -2,10 +2,10 @@ import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {Component} from 'react';
 import {WithTranslation, withTranslation} from 'react-i18next';
-import {StyleSheet} from 'react-native';
 import UI from 'react-native-ui-lib';
 import {Category} from '../../store/category';
 import {getWidth} from '../../utils/index';
+import {CategoryIcon} from '../CategoryIcon';
 import {Icon, IconType} from '../Icon';
 
 interface CategoryTreeItemProps extends WithTranslation {
@@ -39,25 +39,13 @@ export class CategoryTreeItem extends Component<
           row
           margin-8
           onPress={() => this.setState({expanded: !this.state.expanded})}>
-          <UI.View
-            br60
-            bg-grey40
-            padding-8
-            center
-            style={[
-              {
-                backgroundColor: category.icon.backgroundColor,
-                marginLeft: this.getLeftOffset(),
-              },
-              styles.iconContainer,
-            ]}>
-            <Icon
-              type={category.icon.type}
-              name={category.icon.name}
-              color="white"
-              size={20}
-            />
-          </UI.View>
+          <CategoryIcon
+            category={category}
+            style={{
+              backgroundColor: category.icon.backgroundColor,
+              marginLeft: this.getLeftOffset(),
+            }}
+          />
           <UI.View centerV>
             <UI.Text marginL-16 text70R>
               {this.props.t(category.name)}
@@ -82,12 +70,5 @@ export class CategoryTreeItem extends Component<
     return getWidth(5) * this.props.deep + 8;
   }
 }
-
-const styles = StyleSheet.create({
-  iconContainer: {
-    width: 38,
-    height: 38,
-  },
-});
 
 export default observer(withTranslation()(CategoryTreeItem));

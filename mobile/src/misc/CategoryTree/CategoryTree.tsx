@@ -3,12 +3,12 @@ import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {Component} from 'react';
 import {withTranslation, WithTranslation} from 'react-i18next';
+import {ScrollView} from 'react-native';
 import UI from 'react-native-ui-lib';
 import {Category} from '../../store/category';
 import {getWidth} from '../../utils';
+import {CategoryIcon} from '../CategoryIcon';
 import CategoryTreeItem from './CategoryTreeItem';
-import {Icon} from '../Icon';
-import {ScrollView} from 'react-native';
 
 interface CategoryTreeListProps extends WithTranslation {
   categories: Instance<typeof Category>[];
@@ -43,30 +43,19 @@ export class CategoryTreeList extends Component<CategoryTreeListProps> {
         onPress={() => this.handlePress(category)}
         row
         margin-8>
-        <UI.View
-          br60
-          bg-grey40
-          padding-8
-          center
+        <CategoryIcon
+          category={category}
           style={{
-            width: 38,
-            height: 38,
             marginLeft: this.getLeftOffset(deep),
             backgroundColor: category.icon.backgroundColor,
-          }}>
-          <Icon
-            type={category.icon.type}
-            name={category.icon.name}
-            size={20}
-            color="white"
-          />
-        </UI.View>
+          }}
+        />
         <UI.View centerV>
           <UI.Text marginL-16 text70R>
             {this.props.t(category.name)}
           </UI.Text>
           <UI.Text marginL-16 text90L>
-            {this.props.t(category.description)}
+            {this.props.t(category.type)}
           </UI.Text>
         </UI.View>
       </UI.TouchableOpacity>

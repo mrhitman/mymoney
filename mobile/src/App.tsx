@@ -3,12 +3,13 @@ import {Provider} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {PureComponent} from 'react';
 import './i18n';
+import {IconType} from './misc/Icon';
 import BottomNavigator from './navigation/BottomNavigator';
-import {Category, defaultCategories} from './store/category';
+import {Category} from './store/category';
+import {Icon} from './store/icon';
 import {Store} from './store/store';
 import {Init} from './Theme';
-import {Icon} from './store/icon';
-import {IconType} from './misc/Icon';
+import {defaultCategories} from './utils/categories';
 
 console.disableYellowBox = true;
 

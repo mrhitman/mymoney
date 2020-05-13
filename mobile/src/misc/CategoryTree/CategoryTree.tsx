@@ -6,7 +6,7 @@ import {withTranslation, WithTranslation} from 'react-i18next';
 import UI from 'react-native-ui-lib';
 import {Category} from '../../store/category';
 import {getWidth} from '../../utils';
-import AccordionListItem from './AccordionListItem';
+import CategoryTreeItem from './CategoryTreeItem';
 import {Icon} from '../Icon';
 import {ScrollView} from 'react-native';
 
@@ -42,10 +42,24 @@ export class CategoryTreeList extends Component<CategoryTreeListProps> {
         key={category.id}
         onPress={() => this.handlePress(category)}
         row
-        {...{[`marginL-${this.getLeftOffset(deep) + 8}`]: true}}
         margin-8>
-        <UI.View br60 bg-grey40 padding-8>
-          <Icon type={category.icon.type} name={category.icon.name} size={20} />
+        <UI.View
+          br60
+          bg-grey40
+          padding-8
+          center
+          style={{
+            width: 38,
+            height: 38,
+            marginLeft: this.getLeftOffset(deep),
+            backgroundColor: category.icon.backgroundColor,
+          }}>
+          <Icon
+            type={category.icon.type}
+            name={category.icon.name}
+            size={20}
+            color="white"
+          />
         </UI.View>
         <UI.View centerV>
           <UI.Text marginL-16 text70R>
@@ -57,14 +71,12 @@ export class CategoryTreeList extends Component<CategoryTreeListProps> {
         </UI.View>
       </UI.TouchableOpacity>
     ) : (
-      <AccordionListItem
-        key={category.id}
-        title={this.props.t(category.name)}
-        description={this.props.t(category.description)}
-        {...{[`marginL-${this.getLeftOffset(deep) + 8}`]: true}}
+      <CategoryTreeItem
+        category={category}
+        deep={deep}
         onPress={() => this.handlePress(category)}>
         {children.map((c) => this.renderItem(c, deep + 1))}
-      </AccordionListItem>
+      </CategoryTreeItem>
     );
   };
 
@@ -80,7 +92,7 @@ export class CategoryTreeList extends Component<CategoryTreeListProps> {
   };
 
   protected getLeftOffset(deep: number) {
-    return getWidth(5) * deep;
+    return getWidth(5) * deep + 8;
   }
 }
 

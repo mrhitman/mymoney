@@ -1,6 +1,6 @@
 import {Colors, ThemeManager} from 'react-native-ui-lib';
 
-export function Init(theme: 'light' | 'dark' = 'light') {
+export function Init(theme: 'light' | 'dark' | 'light') {
   InitColors();
   switch (theme) {
     case 'light':
@@ -13,9 +13,7 @@ export function Init(theme: 'light' | 'dark' = 'light') {
 }
 
 function InitColors() {
-  Colors.loadColors({
-    red400: '#ef5350',
-  });
+  Colors.loadColors({});
 }
 
 function InitLightTheme() {

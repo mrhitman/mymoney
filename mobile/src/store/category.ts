@@ -1,5 +1,5 @@
 import {types} from 'mobx-state-tree';
-import {Colors} from 'react-native-ui-lib';
+import * as Colors from '../utils/colors';
 import {Icon} from './icon';
 import {CategoryType, CreateCategoryDto} from './types/category';
 
@@ -121,7 +121,7 @@ export const defaultCategories: CreateCategoryDto[] = [
     name: 'category_public_transport',
     icon: {
       type: 'Ionicons',
-      name: 'bus',
+      name: 'ios-bus',
       backgroundColor: Colors.yellow900,
     },
   },
@@ -170,7 +170,7 @@ export const defaultCategories: CreateCategoryDto[] = [
     parentId: '2d701d0e-cefe-49da-a57f-ffeeba8dfa51',
     icon: {
       type: 'Ionicons',
-      name: 'paper',
+      name: 'ios-paper',
       backgroundColor: Colors.teal500,
     },
   },

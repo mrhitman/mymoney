@@ -7,6 +7,7 @@ import UI from 'react-native-ui-lib';
 import Header from '../../misc/Header';
 import {Icon, IconType} from '../../misc/Icon';
 import {InjectedStore} from '../../types';
+import {LanguageAlias} from '../../store/account';
 
 export class AccountSettings extends PureComponent<
   StackScreenProps<{}> & InjectedStore
@@ -57,10 +58,20 @@ export class AccountSettings extends PureComponent<
             {
               id: 2,
               title: 'Application language',
-              value: 'English',
+              value: LanguageAlias[this.store.account.language],
               type: 'Default',
             },
-            {id: 3, title: 'Use PIN', value: false, type: 'switch'},
+            {
+              id: 3,
+              title: 'Use PIN',
+              value: this.store.account.usePassword,
+              type: 'switch',
+              handleChange: () => {
+                this.store.account.update({
+                  usePassword: !this.store.account.usePassword,
+                });
+              },
+            },
             {
               id: 4,
               title: 'Use fingerprint',

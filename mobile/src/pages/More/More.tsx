@@ -3,6 +3,7 @@ import {SectionList} from 'react-native';
 import UI, {Colors} from 'react-native-ui-lib';
 import Icon, {IconType} from '../../misc/Icon';
 import {StackScreenProps} from '@react-navigation/stack';
+import {getWidth, getHeight} from '../../utils/index';
 
 interface SectionData {
   title: string;
@@ -114,6 +115,26 @@ export class More extends PureComponent<StackScreenProps<{}>> {
   public render() {
     return (
       <UI.View useSafeArea>
+        <UI.View>
+          <UI.View padding-8 row>
+            <UI.Card
+              height={getHeight(20)}
+              width={getWidth(45)}
+              margin-8
+              padding-8>
+              <UI.Text>Full access</UI.Text>
+            </UI.Card>
+            <UI.View center flex margin-8>
+              <UI.Avatar
+                size={100}
+                source={{
+                  uri:
+                    'https://cdn.iconscout.com/icon/free/png-512/avatar-372-456324.png',
+                }}
+              />
+            </UI.View>
+          </UI.View>
+        </UI.View>
         <SectionList
           sections={Sections}
           keyExtractor={(item, index) => item.title + index}

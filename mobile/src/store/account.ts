@@ -5,6 +5,11 @@ export enum Language {
   ru = 'ru',
 }
 
+export const LanguageAlias: Record<string, string> = {
+  [Language.en]: 'English',
+  [Language.ru]: 'Русский',
+};
+
 export const Account = types
   .model('Account', {
     first_name: types.maybe(types.string),

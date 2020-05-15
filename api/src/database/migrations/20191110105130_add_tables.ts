@@ -3,12 +3,17 @@ import * as Knex from 'knex';
 export async function up(knex: Knex): Promise<any> {
   await knex.schema.createTable('categories', (t) => {
     t.string('id').primary();
+    t.string('parent').index();
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('name');
+    t.string('description');
     t.string('type');
+    t.boolean('is_fixed');
     t.jsonb('icon');
-    t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
+    t.timestamp('updated_at');
+    t.timestamp('deleted_at');
+    t.timestamp('sync_at');
   });
   await knex.schema.createTable('currencies', (t) => {
     t.string('id').primary();

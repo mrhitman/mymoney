@@ -8,6 +8,7 @@ import Header from '../../misc/Header';
 import {Icon, IconType} from '../../misc/Icon';
 import {InjectedStore} from '../../types';
 import {LanguageAlias} from '../../store/account';
+import Api from '../../utils/api';
 
 export class AccountSettings extends PureComponent<
   StackScreenProps<{}> & InjectedStore
@@ -54,6 +55,16 @@ export class AccountSettings extends PureComponent<
             </UI.View>
           )}
           data={[
+            {
+              id: 0,
+              title: 'Sync',
+              type: 'switch',
+              value: true,
+              handleChange: async () => {
+                const api = new Api();
+                await Promise.all(this.store.categories.map(api.sendCategory));
+              },
+            },
             {id: 1, title: 'Main currency', value: 'UAH', type: 'Default'},
             {
               id: 2,

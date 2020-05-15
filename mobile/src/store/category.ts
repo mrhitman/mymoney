@@ -7,7 +7,7 @@ export const Category = types.model('Category', {
   id: types.identifier,
   name: types.string,
   description: types.optional(types.string, ''),
-  fixed: types.optional(types.boolean, false),
+  isFixed: types.optional(types.boolean, false),
   type: types.optional(
     types.enumeration(Object.keys(CategoryType)),
     CategoryType.outcome,
@@ -17,4 +17,8 @@ export const Category = types.model('Category', {
     type: IconType.FontAwesome5,
   }),
   parent: types.maybe(types.reference(types.late(() => Category))),
+  createdAt: types.optional(types.Date, new Date()),
+  deletedAt: types.maybe(types.Date),
+  updatedAt: types.maybe(types.Date),
+  syncAt: types.maybe(types.Date),
 });

@@ -18,6 +18,7 @@
     "@react-navigation/bottom-tabs": "^5.2.7",
     "@react-navigation/native": "^5.1.6",
     "@react-navigation/stack": "^5.2.11",
+    "axios": "^0.19.2",
     "chance": "^1.1.4",
     "hermes-engine": "0.4.2-rc1",
     "i18next": "^19.4.4",

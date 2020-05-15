@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 
-interface Icon {
+export interface Icon {
   type: string;
   name: string;
   backgroundColor: string;

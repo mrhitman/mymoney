@@ -1,7 +1,7 @@
 import { IsBoolean, IsNumber, IsObject, IsString } from 'class-validator';
 import { Icon } from 'src/database/models/category.model';
 
-export class CreateCategoryDto {
+export class UpdateCategoryDto {
   @IsString()
   readonly id: string;
 
@@ -24,5 +24,8 @@ export class CreateCategoryDto {
   readonly parent: string;
 
   @IsNumber()
-  readonly createdAt: number;
+  readonly updatedAt: number;
+
+  @IsNumber()
+  readonly deletedAt: number;
 }

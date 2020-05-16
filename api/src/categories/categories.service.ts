@@ -6,11 +6,11 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
-  async getAll() {
+  public async getAll() {
     return Category.query();
   }
 
-  async getCategory(id: string) {
+  public async getCategory(id: string) {
     const category = await Category.query().findById(id);
 
     if (!category) {
@@ -20,7 +20,7 @@ export class CategoriesService {
     return category;
   }
 
-  async create(data: CreateCategoryDto) {
+  public async create(data: CreateCategoryDto) {
     await Category.query().insert({
       ...data,
       createdAt: DateTime.fromMillis(data.createdAt).toJSDate(),
@@ -28,7 +28,7 @@ export class CategoriesService {
     });
   }
 
-  async update(data: UpdateCategoryDto) {
+  public async update(data: UpdateCategoryDto) {
     const category = await this.getCategory(data.id);
 
     await category.$query().update({
@@ -40,7 +40,7 @@ export class CategoriesService {
     });
   }
 
-  async delete(id: string) {
+  public async delete(id: string) {
     const category = await this.getCategory(id);
 
     return category.$query().delete();

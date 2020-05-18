@@ -10,7 +10,6 @@ import { TransactionsModule } from '../transactions/transactions.module';
 import { UsersModule } from '../users/users.module';
 import { WalletsModule } from '../wallets/wallets.module';
 import { AppController } from './app.controller';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [

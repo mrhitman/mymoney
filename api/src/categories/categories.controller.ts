@@ -4,9 +4,9 @@ import {
   Delete,
   Get,
   Param,
-  Request,
   Patch,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -28,13 +28,16 @@ export class CategoriesController {
   }
 
   @Patch()
-  public async update(@Body() updateCategory: UpdateCategoryDto) {
-    await this.service.update(updateCategory);
+  public async update(
+    @Body() updateCategory: UpdateCategoryDto,
+    @Request() req,
+  ) {
+    await this.service.update(updateCategory, req.user);
   }
 
   @Delete('/:id')
-  public async delete(@Param() id: string) {
-    await this.service.delete(id);
+  public async delete(@Param() id: string, @Request() req) {
+    await this.service.delete(id, req.user);
   }
 
   @Get()

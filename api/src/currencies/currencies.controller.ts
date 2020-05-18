@@ -1,14 +1,17 @@
 import {
+  CacheInterceptor,
+  CacheTTL,
   Controller,
   Get,
   Param,
+  UseGuards,
   UseInterceptors,
-  CacheInterceptor,
-  CacheTTL,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrenciesService } from './currencies.service';
 
 @Controller('currencies')
+@UseGuards(JwtAuthGuard)
 export class CurrenciesController {
   constructor(protected service: CurrenciesService) {}
 

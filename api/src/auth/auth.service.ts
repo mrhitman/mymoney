@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { omit } from 'lodash';
@@ -38,6 +38,18 @@ export class AuthService {
 
   public async logout(user: User) {
     await RefreshToken.query().delete().where({ userId: user.id });
+  }
+
+  public async refresh(token: string) {
+    const refreshToken = await RefreshToken.query().where({ token }).first();
+
+    if (!refreshToken) {
+      throw new BadRequestException('Invalid refresh token');
+    }
+
+    const user = await this.usersService.findById(refreshToken.userId);
+
+    return this.login(user);
   }
 
   public async getUser(id: number) {

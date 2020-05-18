@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { DateTime } from 'luxon';
 import Category from 'src/database/models/category.model';
 import User from 'src/database/models/user.model';
@@ -11,11 +15,15 @@ export class CategoriesService {
     return Category.query().where({ user_id: user.id });
   }
 
-  public async getCategory(id: string) {
+  public async getCategory(id: string, userId: number) {
     const category = await Category.query().findById(id);
 
     if (!category) {
       throw new BadRequestException('No such category');
+    }
+
+    if (category.userId !== userId) {
+      throw new ForbiddenException('You are not access to this item');
     }
 
     return category;
@@ -30,8 +38,8 @@ export class CategoriesService {
     });
   }
 
-  public async update(data: UpdateCategoryDto) {
-    const category = await this.getCategory(data.id);
+  public async update(data: UpdateCategoryDto, user: User) {
+    const category = await this.getCategory(data.id, user.id);
 
     await category.$query().update({
       ...data,
@@ -42,8 +50,8 @@ export class CategoriesService {
     });
   }
 
-  public async delete(id: string) {
-    const category = await this.getCategory(id);
+  public async delete(id: string, user: User) {
+    const category = await this.getCategory(id, user.id);
 
     return category.$query().delete();
   }

@@ -10,6 +10,7 @@ export class CurrenciesService {
 
   public async findAll() {
     const currencies = await Currency.query();
+
     return currencies;
   }
 
@@ -25,6 +26,7 @@ export class CurrenciesService {
 
   public async rates(base?: string) {
     const response = await this.fixer.latest(base);
+
     return response;
   }
 

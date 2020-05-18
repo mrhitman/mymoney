@@ -8,6 +8,7 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { AppController } from './app/app.controller';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { Fixer } from './fixer';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Fixer } from './fixer';
     GoalsModule,
     TransactionsModule,
     CurrenciesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [Fixer],

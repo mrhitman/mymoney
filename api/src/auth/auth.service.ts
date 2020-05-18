@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { omit } from 'lodash';
+import RefreshToken from 'src/database/models/refresh-token.model';
 import User from 'src/database/models/user.model';
 import { UsersService } from 'src/users/users.service';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -23,9 +25,14 @@ export class AuthService {
 
   public async login(user: User) {
     const payload = { id: user.id };
+    const refreshToken = uuid();
+
+    await RefreshToken.query().delete().where({ userId: user.id });
+    await RefreshToken.query().insert({ userId: user.id, token: refreshToken });
 
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
+      refreshToken,
     };
   }
 }

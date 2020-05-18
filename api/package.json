@@ -53,6 +53,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "s": "^1.0.0",
+    "uuid": "^8.0.0",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
@@ -68,6 +69,7 @@
     "@types/passport-jwt": "^3.0.3",
     "@types/passport-local": "^1.0.33",
     "@types/supertest": "^2.0.8",
+    "@types/uuid": "^7.0.3",
     "@types/xml2js": "^0.4.5",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",

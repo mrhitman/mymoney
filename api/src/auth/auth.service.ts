@@ -35,4 +35,14 @@ export class AuthService {
       refreshToken,
     };
   }
+
+  public async logout(user: User) {
+    await RefreshToken.query().delete().where({ userId: user.id });
+  }
+
+  public async getUser(id: number) {
+    const user = await this.usersService.findById(id);
+
+    return omit(user, ['password']);
+  }
 }

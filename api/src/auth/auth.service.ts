@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcrypt';
 import { omit } from 'lodash';
+import User from 'src/database/models/user.model';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -10,16 +12,17 @@ export class AuthService {
     protected readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  public async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
+    const hash = await bcrypt.hash(password, 10);
 
-    if (user && user.password === password) {
+    if (user && bcrypt.compare(password, hash)) {
       return omit(user, ['password']);
     }
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  public async login(user: User) {
+    const payload = { id: user.id };
 
     return {
       access_token: this.jwtService.sign(payload),

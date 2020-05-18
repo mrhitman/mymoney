@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from '../users/users.module';
-import { WalletsModule } from '../wallets/wallets.module';
-import { CategoriesModule } from '../categories/categories.module';
+import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { AuthModule } from '../auth/auth.module';
 import { BudgetsModule } from '../budgets/budgets.module';
-import { GoalsModule } from '../goals/goals.module';
-import { TransactionsModule } from '../transactions/transactions.module';
-import { AppController } from './app.controller';
+import { CategoriesModule } from '../categories/categories.module';
 import { CurrenciesModule } from '../currencies/currencies.module';
 import { Fixer } from '../fixer';
-import { AuthModule } from '../auth/auth.module';
+import { GoalsModule } from '../goals/goals.module';
+import { TransactionsModule } from '../transactions/transactions.module';
+import { UsersModule } from '../users/users.module';
+import { WalletsModule } from '../wallets/wallets.module';
+import { AppController } from './app.controller';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [

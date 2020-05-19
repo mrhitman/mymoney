@@ -1,6 +1,6 @@
 {
   "name": "common",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "main": "store.ts",
   "license": "MIT",
   "private": true,

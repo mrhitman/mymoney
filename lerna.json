@@ -1,5 +1,10 @@
 {
-  "packages": ["api", "mobile", "dashboard", "common"],
+  "packages": [
+    "api",
+    "common",
+    "dashboard",
+    "mobile"
+  ],
   "npmClient": "yarn",
-  "version": "0.1.0"
+  "version": "0.1.1"
 }

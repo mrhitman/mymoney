@@ -1,5 +1,5 @@
 import { CacheModule } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import redisStore from 'cache-manager-redis-store';
 import { AuthService } from 'src/auth/auth.service';
@@ -21,14 +21,12 @@ describe('Currencies Controller', () => {
           store: redisStore,
           url: process.env.REDIS_URL,
         }),
+        JwtModule.register({
+          secret: 'test_secret',
+          signOptions: { expiresIn: 3600 },
+        }),
       ],
-      providers: [
-        AuthService,
-        UsersService,
-        JwtService,
-        CurrenciesService,
-        Fixer,
-      ],
+      providers: [AuthService, UsersService, CurrenciesService, Fixer],
     }).compile();
 
     controller = module.get<CurrenciesController>(CurrenciesController);

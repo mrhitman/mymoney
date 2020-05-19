@@ -1,0 +1,11 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "main": "store.ts",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "mobx-state-tree": "^3.16.0",
+    "typescript": "^3.9.2"
+  }
+}

@@ -1,13 +1,13 @@
 import {NavigationContainer} from '@react-navigation/native';
+import {Category} from 'common/category';
+import {Icon} from 'common/icon';
+import {Store} from 'common/store';
+import {IconType} from 'common/types/icon';
 import {Provider} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {PureComponent} from 'react';
 import './i18n';
-import {IconType} from './misc/Icon';
 import BottomNavigator from './navigation/BottomNavigator';
-import {Category} from './store/category';
-import {Icon} from './store/icon';
-import {Store} from './store/store';
 import {Init} from './Theme';
 import {defaultCategories} from './utils/categories';
 

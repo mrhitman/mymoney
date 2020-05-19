@@ -1,9 +1,10 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import {IconType} from 'common/types/icon';
 import {inject, observer} from 'mobx-react';
 import React, {PureComponent} from 'react';
 import UI from 'react-native-ui-lib';
 import Header from '../../misc/Header';
-import Icon, {IconType} from '../../misc/Icon';
+import Icon from '../../misc/Icon';
 import {InjectedStore} from '../../types';
 
 export class Currencies extends PureComponent<

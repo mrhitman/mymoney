@@ -1,9 +1,9 @@
+import {Category} from 'common/category';
 import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {PureComponent} from 'react';
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import UI from 'react-native-ui-lib';
-import {Category} from '../store/category';
 import Icon from './Icon';
 
 interface CategoryIconProps {

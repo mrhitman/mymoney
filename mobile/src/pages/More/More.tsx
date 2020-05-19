@@ -1,9 +1,10 @@
+import {StackScreenProps} from '@react-navigation/stack';
+import {IconType} from 'common/types/icon';
 import React, {PureComponent} from 'react';
 import {SectionList} from 'react-native';
 import UI, {Colors} from 'react-native-ui-lib';
-import Icon, {IconType} from '../../misc/Icon';
-import {StackScreenProps} from '@react-navigation/stack';
-import {getWidth, getHeight} from '../../utils/index';
+import Icon from '../../misc/Icon';
+import {getHeight, getWidth} from '../../utils/index';
 
 interface SectionData {
   title: string;

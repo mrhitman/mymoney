@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {IconType} from 'common/types/icon';
 import React, {FC} from 'react';
-import Icon, {IconType} from '../misc/Icon';
+import Icon from '../misc/Icon';
 import Accounts from '../pages/Accounts/Accounts';
 import Analytics from '../pages/Analytics/Analytics';
 import Transactions from '../pages/Transactions/Transactions';

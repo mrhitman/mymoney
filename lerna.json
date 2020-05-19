@@ -1,5 +1,5 @@
 {
-  "packages": ["api", "mobile", "dashboard"],
+  "packages": ["api", "mobile", "dashboard", "common"],
   "npmClient": "yarn",
   "version": "0.1.0"
 }

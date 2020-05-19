@@ -1,6 +1,7 @@
+import {IconType} from 'common/types/icon';
 import React, {PureComponent} from 'react';
 import {Text, View} from 'react-native-ui-lib';
-import Icon, {IconType} from './Icon';
+import Icon from './Icon';
 
 interface CollapsableProps {
   closed?: boolean;

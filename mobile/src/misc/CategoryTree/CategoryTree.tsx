@@ -1,3 +1,4 @@
+import {Category} from 'common/category';
 import {get} from 'lodash';
 import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
@@ -5,7 +6,6 @@ import React, {Component} from 'react';
 import {withTranslation, WithTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native';
 import UI from 'react-native-ui-lib';
-import {Category} from '../../store/category';
 import {getWidth} from '../../utils';
 import {CategoryIcon} from '../CategoryIcon';
 import CategoryTreeItem from './CategoryTreeItem';

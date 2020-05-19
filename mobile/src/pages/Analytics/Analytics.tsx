@@ -1,13 +1,14 @@
-import React, {PureComponent} from 'react';
-import {FlatList} from 'react-native';
-import UI from 'react-native-ui-lib';
-import Header from '../../misc/Header';
-import Icon, {IconType} from '../../misc/Icon';
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-community/google-signin';
+import {IconType} from 'common/types/icon';
+import React, {PureComponent} from 'react';
+import {FlatList} from 'react-native';
+import UI from 'react-native-ui-lib';
+import Header from '../../misc/Header';
+import Icon from '../../misc/Icon';
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/drive.readonly'],

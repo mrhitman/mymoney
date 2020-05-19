@@ -1,12 +1,13 @@
+import {Category} from 'common/category';
+import {IconType} from 'common/types/icon';
 import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {Component} from 'react';
 import {WithTranslation, withTranslation} from 'react-i18next';
 import UI from 'react-native-ui-lib';
-import {Category} from '../../store/category';
 import {getWidth} from '../../utils/index';
 import {CategoryIcon} from '../CategoryIcon';
-import {Icon, IconType} from '../Icon';
+import {Icon} from '../Icon';
 
 interface CategoryTreeItemProps extends WithTranslation {
   expanded?: boolean;

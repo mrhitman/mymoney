@@ -1,7 +1,8 @@
+import {IconType} from 'common/types/icon';
 import React, {PureComponent} from 'react';
 import {FlatList} from 'react-native';
 import UI from 'react-native-ui-lib';
-import Icon, {IconType} from '../../misc/Icon';
+import Icon from '../../misc/Icon';
 import Header from './Header';
 
 export class Transactions extends PureComponent {

@@ -1,11 +1,12 @@
+import {StackScreenProps} from '@react-navigation/stack';
+import {IconType} from 'common/types/icon';
 import {inject, observer} from 'mobx-react';
 import React, {PureComponent} from 'react';
 import UI from 'react-native-ui-lib';
 import CategoryTree from '../../misc/CategoryTree/CategoryTree';
 import Header from '../../misc/Header';
-import Icon, {IconType} from '../../misc/Icon';
+import Icon from '../../misc/Icon';
 import {InjectedStore} from '../../types';
-import {StackScreenProps} from '@react-navigation/stack';
 
 export class Categories extends PureComponent<
   StackScreenProps<{}> & Partial<InjectedStore>

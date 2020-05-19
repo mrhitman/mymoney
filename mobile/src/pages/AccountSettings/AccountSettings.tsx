@@ -1,14 +1,15 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import {LanguageAlias} from 'common/account';
 import {inject, observer} from 'mobx-react';
 import React, {PureComponent} from 'react';
 import {StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import UI from 'react-native-ui-lib';
 import Header from '../../misc/Header';
-import {Icon, IconType} from '../../misc/Icon';
+import {Icon} from '../../misc/Icon';
 import {InjectedStore} from '../../types';
-import {LanguageAlias} from '../../store/account';
 import Api from '../../utils/api';
+import {IconType} from 'common/types/icon';
 
 export class AccountSettings extends PureComponent<
   StackScreenProps<{}> & InjectedStore

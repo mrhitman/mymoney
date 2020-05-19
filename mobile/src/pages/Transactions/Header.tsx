@@ -1,7 +1,8 @@
+import {IconType} from 'common/types/icon';
 import React, {PureComponent} from 'react';
 import UI from 'react-native-ui-lib';
 import HeaderCommon from '../../misc/Header';
-import Icon, {IconType} from '../../misc/Icon';
+import Icon from '../../misc/Icon';
 
 export class Header extends PureComponent {
   render() {

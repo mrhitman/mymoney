@@ -8,12 +8,12 @@ import {
   Label,
   Position,
   Toaster,
-} from "@blueprintjs/core";
-import { Formik } from "formik";
-import React, { PureComponent } from "react";
-import api from "../utils/api";
+} from '@blueprintjs/core';
+import { Formik } from 'formik';
+import React, { PureComponent } from 'react';
+import api from '../utils/api';
 
-interface LoginFormValues {
+export interface LoginFormValues {
   username: string;
   password: string;
   remember: boolean;
@@ -26,8 +26,8 @@ export class LoginForm extends PureComponent {
     return (
       <Formik
         initialValues={{
-          username: "",
-          password: "",
+          username: '',
+          password: '',
           remember: false,
         }}
         onSubmit={this.handleSubmit}
@@ -42,7 +42,7 @@ export class LoginForm extends PureComponent {
                 large
                 type="text"
                 value={bag.values.username}
-                onChange={bag.handleChange("username")}
+                onChange={bag.handleChange('username')}
               />
 
               <Label htmlFor="password">Password</Label>
@@ -52,7 +52,7 @@ export class LoginForm extends PureComponent {
                 large
                 type="password"
                 value={bag.values.password}
-                onChange={bag.handleChange("password")}
+                onChange={bag.handleChange('password')}
               />
 
               <Checkbox>Remember me</Checkbox>
@@ -73,13 +73,13 @@ export class LoginForm extends PureComponent {
     try {
       const response = await api.login(values.username, values.password);
       this.toaster.current?.show({
-        message: "Welcome " + response.accessToken,
+        message: 'Welcome ' + response.accessToken,
         intent: Intent.SUCCESS,
       });
     } catch (e) {
       if (e.response.status === 401) {
         this.toaster.current?.show({
-          message: "No such user or invalid password",
+          message: 'No such user or invalid password',
           intent: Intent.WARNING,
         });
       }

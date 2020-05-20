@@ -1,23 +1,16 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.css";
-import Login from "./Login/Login";
+import React from 'react';
+import { Provider } from 'mobx-react';
+import './App.css';
+import Routes from './Routes/Routes';
+import { Store } from './store/Store';
 
+const store = Store.create();
 class App extends React.PureComponent {
   public render() {
     return (
-      <Router>
-        <div className="App">
-          <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/">
-              <div>Home</div>
-            </Route>
-          </Switch>
-        </div>
-      </Router>
+      <Provider store={store}>
+        <Routes />
+      </Provider>
     );
   }
 }

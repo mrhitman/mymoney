@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react";
-import LoginForm from "./LoginForm";
+import React, { PureComponent } from 'react';
+import LoginForm from './LoginForm';
 
 export class Login extends PureComponent {
   render() {

@@ -1,9 +1,16 @@
+import { inject, observer } from 'mobx-react';
+import { IReactComponent } from 'mobx-react/dist/types/IReactComponent';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
+import { InjectedStore } from '../store/Store';
 import LoginForm from './LoginForm';
 
-export const Login: React.FC = () => {
+export const Login: React.FC<Partial<InjectedStore>> = (props) => {
   const history = useHistory();
+
+  if (props.store?.isLoggined) {
+    return <Redirect to="/" exact />;
+  }
 
   return (
     <div className="login">
@@ -12,4 +19,4 @@ export const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default inject('store')(observer<IReactComponent>(Login));

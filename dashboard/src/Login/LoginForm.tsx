@@ -9,9 +9,9 @@ import {
   Position,
   Toaster,
 } from "@blueprintjs/core";
-import axios from "axios";
 import { Formik } from "formik";
 import React, { PureComponent } from "react";
+import api from "../utils/api";
 
 interface LoginFormValues {
   username: string;
@@ -71,9 +71,9 @@ export class LoginForm extends PureComponent {
 
   protected handleSubmit = async (values: LoginFormValues) => {
     try {
-      const response = await axios.post("http://localhost:3000/login", values);
+      const response = await api.login(values.username, values.password);
       this.toaster.current?.show({
-        message: "Welcome " + response.data.accessToken,
+        message: "Welcome " + response.accessToken,
         intent: Intent.SUCCESS,
       });
     } catch (e) {

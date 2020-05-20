@@ -2,14 +2,14 @@ import axios, { AxiosInstance } from 'axios';
 import { LoginResponse, RefreshResponse } from 'common/responses';
 
 interface ApiParams {
-  accessToken?: string;
-  refreshToken?: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
   client?: AxiosInstance;
 }
 
 export class Api {
-  protected accessToken?: string;
-  protected refreshToken?: string;
+  protected accessToken?: string | null;
+  protected refreshToken?: string | null;
   public readonly client: AxiosInstance;
 
   constructor(options: ApiParams = {}) {
@@ -56,10 +56,6 @@ export class Api {
         return this.client(newRequest);
       },
     );
-  }
-
-  public get isLoggined() {
-    return Boolean(this.accessToken && this.refreshToken);
   }
 
   public async login(username: string, password: string) {

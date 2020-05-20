@@ -1,12 +1,11 @@
 import { inject, observer } from 'mobx-react';
-import { IReactComponent } from 'mobx-react/dist/types/IReactComponent';
-import React, { PureComponent } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Login from '../Login/Login';
 import { InjectedStore } from '../store/Store';
-import LogginedRoutes from './LogginedRoutes';
-import NotLogginedRoutes from './NotLogginedRoutes';
+import PrivateRoute from './PrivateRoute';
 
-export class Routes extends PureComponent {
+class Routes extends React.Component {
   public get store() {
     return (this.props as InjectedStore).store;
   }
@@ -15,11 +14,21 @@ export class Routes extends PureComponent {
     return (
       <Router>
         <div className="App">
-          {this.store.isLoggined ? <LogginedRoutes /> : <NotLogginedRoutes />}
+          <PrivateRoute path="/" exact>
+            <div>Home</div>
+          </PrivateRoute>
+
+          <Route path="/login">
+            <Login />
+          </Route>
+
+          <Route path="/register">
+            <div>register</div>
+          </Route>
         </div>
       </Router>
     );
   }
 }
 
-export default inject('store')(observer<IReactComponent>(Routes));
+export default inject('store')(observer(Routes));

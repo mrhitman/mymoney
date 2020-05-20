@@ -10,8 +10,9 @@ import {
   Toaster,
 } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import React, { PureComponent } from 'react';
-import api from '../utils/api';
+import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { InjectedStore } from '../store/Store';
 
 export interface LoginFormValues {
   username: string;
@@ -19,8 +20,18 @@ export interface LoginFormValues {
   remember: boolean;
 }
 
-export class LoginForm extends PureComponent {
+interface LoginFormProps {
+  afterLogin: () => void;
+}
+
+class LoginForm extends React.Component<
+  LoginFormProps & Partial<InjectedStore>
+> {
   private toaster = React.createRef<Toaster>();
+
+  public get store() {
+    return (this.props as InjectedStore).store;
+  }
 
   public render() {
     return (
@@ -71,11 +82,12 @@ export class LoginForm extends PureComponent {
 
   protected handleSubmit = async (values: LoginFormValues) => {
     try {
-      const response = await api.login(values.username, values.password);
+      const response = await this.store.login(values);
       this.toaster.current?.show({
         message: 'Welcome ' + response.accessToken,
         intent: Intent.SUCCESS,
       });
+      this.props.afterLogin();
     } catch (e) {
       if (e.response.status === 401) {
         this.toaster.current?.show({
@@ -94,4 +106,4 @@ export class LoginForm extends PureComponent {
   };
 }
 
-export default LoginForm;
+export default inject('store')(observer(LoginForm));

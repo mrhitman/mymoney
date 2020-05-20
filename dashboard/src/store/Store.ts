@@ -1,6 +1,6 @@
-import { types, Instance } from 'mobx-state-tree';
-import api from '../utils/api';
+import { flow, Instance, types } from 'mobx-state-tree';
 import { LoginFormValues } from '../Login/LoginForm';
+import api from '../utils/api';
 
 export type InjectedStore = {
   store: Instance<typeof Store>;
@@ -8,22 +8,25 @@ export type InjectedStore = {
 
 export const Store = types
   .model('Store', {
-    isLoggined: types.optional(types.boolean, api.isLoggined),
+    isLoggined: types.optional(
+      types.boolean,
+      !!localStorage.getItem('accessToken'),
+    ),
   })
   .actions((self) => {
-    async function login(values: LoginFormValues) {
-      const response = await api.login(values.username, values.password);
+    function* login(values: LoginFormValues) {
+      const response = yield api.login(values.username, values.password);
       self.isLoggined = true;
       return response;
     }
 
-    async function logout() {
-      await api.logout();
+    function* logout() {
+      yield api.logout();
       self.isLoggined = false;
     }
 
     return {
-      login,
-      logout,
+      login: flow(login),
+      logout: flow(logout),
     };
   });

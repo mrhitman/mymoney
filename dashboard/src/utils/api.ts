@@ -1,8 +1,8 @@
 import { Api } from '../services/Api';
 
 const api = new Api({
-  accessToken: localStorage.getItem('accessToken') || undefined,
-  refreshToken: localStorage.getItem('refreshToken') || undefined,
+  accessToken: localStorage.getItem('accessToken'),
+  refreshToken: localStorage.getItem('refreshToken'),
 });
 
 export default api;

@@ -3,8 +3,6 @@
   "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.26.1",
-    "@blueprintjs/table": "^3.8.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -46,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "@types/antd": "^1.0.0",
     "@types/react-router-dom": "^5.1.5"
   }
 }

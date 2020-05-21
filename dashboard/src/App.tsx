@@ -1,5 +1,6 @@
 import React from "react";
 import { Provider } from "mobx-react";
+import "antd/dist/antd.css";
 import "./App.css";
 import Routes from "./Routes/Routes";
 import { Store } from "./store/Store";

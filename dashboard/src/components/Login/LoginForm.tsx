@@ -1,14 +1,4 @@
-import {
-  Button,
-  Checkbox,
-  ControlGroup,
-  FormGroup,
-  InputGroup,
-  Intent,
-  Label,
-  Position,
-  Toaster,
-} from "@blueprintjs/core";
+import { Button, Checkbox, Input, Form } from "antd";
 import { Formik } from "formik";
 import { inject, observer } from "mobx-react";
 import React from "react";
@@ -24,11 +14,17 @@ interface LoginFormProps {
   afterLogin: () => void;
 }
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
+
 class LoginForm extends React.Component<
   LoginFormProps & Partial<InjectedStore>
 > {
-  private toaster = React.createRef<Toaster>();
-
   public get store() {
     return (this.props as InjectedStore).store;
   }
@@ -43,38 +39,45 @@ class LoginForm extends React.Component<
         }}
         onSubmit={this.handleSubmit}
         render={(bag) => (
-          <FormGroup>
-            <ControlGroup vertical>
-              <Toaster position={Position.TOP} ref={this.toaster} />
-              <Label htmlFor="email">Email</Label>
-              <InputGroup
-                id="email"
-                name="email"
-                large
-                type="text"
-                value={bag.values.username}
-                onChange={bag.handleChange("username")}
-              />
+          <Form
+            {...layout}
+            initialValues={bag.values}
+            onFinish={bag.submitForm}
+            onChange={bag.handleChange}
+          >
+            <Form.Item
+              label="Email"
+              name="username"
+              initialValue={bag.values.username}
+              rules={[{ required: true, message: "Please input your email!" }]}
+            >
+              <Input />
+            </Form.Item>
 
-              <Label htmlFor="password">Password</Label>
-              <InputGroup
-                id="password"
-                name="password"
-                large
-                type="password"
-                value={bag.values.password}
-                onChange={bag.handleChange("password")}
-              />
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
 
+            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
               <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+
+            <Form.Item {...tailLayout}>
               <Button
-                large
-                text="Submit"
-                type="submit"
-                onClick={() => bag.handleSubmit()}
-              />
-            </ControlGroup>
-          </FormGroup>
+                type="primary"
+                htmlType="submit"
+                onSubmit={bag.handleSubmit}
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
         )}
       />
     );
@@ -82,27 +85,9 @@ class LoginForm extends React.Component<
 
   protected handleSubmit = async (values: LoginFormValues) => {
     try {
-      const response = await this.store.login(values);
-      this.toaster.current?.show({
-        message: "Welcome " + response.accessToken,
-        intent: Intent.SUCCESS,
-      });
+      await this.store.login(values);
       this.props.afterLogin();
-    } catch (e) {
-      if (e.response.status === 401) {
-        this.toaster.current?.show({
-          message: "No such user or invalid password",
-          intent: Intent.WARNING,
-        });
-      }
-
-      if (e.response.status === 500) {
-        this.toaster.current?.show({
-          message: "Server isn't working at the moment",
-          intent: Intent.WARNING,
-        });
-      }
-    }
+    } catch (e) {}
   };
 }
 

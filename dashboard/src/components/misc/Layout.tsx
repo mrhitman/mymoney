@@ -1,8 +1,8 @@
-import { inject, observer } from "mobx-react";
-import React, { PureComponent } from "react";
-import { Redirect } from "react-router-dom";
-import { InjectedStore } from "../../store/Store";
-import Header, { ActivePage } from "./Header";
+import { inject, observer } from 'mobx-react';
+import React, { PureComponent } from 'react';
+import { Redirect } from 'react-router-dom';
+import { InjectedStore } from '../../store/Store';
+import Header, { ActivePage } from './Header';
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -48,12 +48,12 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
 
   protected logout = async () => {
     await this.store.logout();
-    this.setState({ redirect: "/login" });
+    this.setState({ redirect: '/login' });
   };
 
   protected navigate = async (page: ActivePage) => {
-    this.setState({ redirect: page ? `/${page}` : "/" });
+    this.setState({ redirect: page ? `/${page}` : '/' });
   };
 }
 
-export default inject("store")(observer(Layout));
+export default inject('store')(observer(Layout));

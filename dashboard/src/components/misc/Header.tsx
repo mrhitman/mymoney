@@ -1,13 +1,24 @@
-import { Button } from "antd";
-import React, { PureComponent } from "react";
+import {
+  BookOutlined,
+  CalendarOutlined,
+  InfoCircleOutlined,
+  LineChartOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
+import { Menu, Space } from 'antd';
+import SubMenu from 'antd/lib/menu/SubMenu';
+import React, { PureComponent } from 'react';
 
 export type ActivePage =
-  | "info"
-  | "accounting"
-  | "planning"
-  | "scheduler"
-  | "analysis"
-  | "settings"
+  | 'info'
+  | 'accounting'
+  | 'planning'
+  | 'scheduler'
+  | 'analysis'
+  | 'settings'
+  | 'categories'
   | undefined;
 
 interface HeaderProps {
@@ -22,16 +33,63 @@ export class Header extends PureComponent<HeaderProps> {
 
     return (
       <div>
-        <Button onClick={() => handleNavigate("info")} />
-        <Button onClick={() => handleNavigate("accounting")} />
-        <Button onClick={() => handleNavigate("planning")} />
-        <Button onClick={() => handleNavigate("scheduler")} />
-        <Button onClick={() => handleNavigate("analysis")} />
-        <Button onClick={() => handleNavigate("settings")} />
-        <Button onClick={handleLogout} />
+        <Menu
+          mode="horizontal"
+          selectedKeys={activePage ? [activePage] : activePage}
+        >
+          <Menu.Item
+            key="info"
+            icon={<InfoCircleOutlined />}
+            onClick={this.navigate('info')}
+          >
+            Info
+          </Menu.Item>
+          <Menu.Item
+            key="planning"
+            icon={<WalletOutlined />}
+            onClick={this.navigate('planning')}
+          >
+            Accounting
+          </Menu.Item>
+          <SubMenu icon={<BookOutlined />} title="Planning">
+            <Menu.Item key="operations">Transactions</Menu.Item>
+            <Menu.Item key="categories" onClick={this.navigate('categories')}>
+              Categories
+            </Menu.Item>
+          </SubMenu>
+          <Menu.Item
+            key="scheduler"
+            icon={<CalendarOutlined />}
+            onClick={this.navigate('scheduler')}
+          >
+            Scheduler
+          </Menu.Item>
+          <Menu.Item
+            key="analysis"
+            icon={<LineChartOutlined />}
+            onClick={this.navigate('analysis')}
+          >
+            Analytics
+          </Menu.Item>
+          <Menu.Item
+            key="settings"
+            icon={<SettingOutlined />}
+            onClick={this.navigate('settings')}
+          />
+          <Menu.Item
+            key="logout"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          />
+        </Menu>
       </div>
     );
   }
+
+  protected navigate = (page: ActivePage) => {
+    const { activePage, handleNavigate } = this.props;
+    return () => activePage !== page && handleNavigate(page);
+  };
 }
 
 export default Header;

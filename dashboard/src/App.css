@@ -1,6 +1,6 @@
-@import '~normalize.css';
-@import '~@blueprintjs/core/lib/css/blueprint.css';
-@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 html,
 body {
@@ -25,4 +25,23 @@ body {
   justify-content: center;
   justify-items: center;
   align-items: center;
+}
+
+.layout {
+  display: flex;
+  flex-direction: row;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left_menu {
+  width: 300px;
+}
+
+.content {
+  width: 100%;
+}
+
+div {
+  border: 0px solid red;
 }

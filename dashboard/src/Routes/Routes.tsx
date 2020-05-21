@@ -1,9 +1,10 @@
-import { inject, observer } from 'mobx-react';
-import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Login from '../Login/Login';
-import { InjectedStore } from '../store/Store';
-import PrivateRoute from './PrivateRoute';
+import {inject, observer} from "mobx-react";
+import React from "react";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import Login from "../Login/Login";
+import {InjectedStore} from "../store/Store";
+import PrivateRoute from "./PrivateRoute";
+import Layout from "../misc/Layout";
 
 class Routes extends React.Component {
   public get store() {
@@ -13,22 +14,22 @@ class Routes extends React.Component {
   public render() {
     return (
       <Router>
-        <div className="App">
-          <PrivateRoute path="/" exact>
+        <PrivateRoute path="/" exact>
+          <Layout>
             <div>Home</div>
-          </PrivateRoute>
+          </Layout>
+        </PrivateRoute>
 
-          <Route path="/login">
-            <Login />
-          </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
 
-          <Route path="/register">
-            <div>register</div>
-          </Route>
-        </div>
+        <Route path="/register">
+          <div>register</div>
+        </Route>
       </Router>
     );
   }
 }
 
-export default inject('store')(observer(Routes));
+export default inject("store")(observer(Routes));

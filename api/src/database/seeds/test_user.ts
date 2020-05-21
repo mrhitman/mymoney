@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
 import bcrypt from 'bcrypt';
+import chance from 'chance';
 import { defaultCategories } from 'common/utils/categories';
 import * as Knex from 'knex';
-import chance from 'chance';
-
-console.log(chance);
 
 export async function seed(knex: Knex): Promise<any> {
   await knex('users').del();
   await knex('categories').del();
   const password = await bcrypt.hash('1', 10);
-  const [first_name, middle_name, last_name] = chance().name({ middle_initial: true }).split(' ');
+  const [first_name, middle_name, last_name] = chance()
+    .name({ middle_initial: true })
+    .split(' ');
   await knex('users').insert({
     first_name,
     middle_name,
@@ -36,22 +36,26 @@ export async function seed(knex: Knex): Promise<any> {
           user_id: id,
         })
         .into('categories'),
-    )
+    ),
   );
-  await knex.insert({
-    id: chance().guid(),
-    user_id: id,
-    name: 'TEST_WALLET 1',
-    description: 'TEST_DESCRIPTION',
-    type: 'fiat',
-    pockets: '[]'
-  }).into('wallets');
-  await knex.insert({
-    id: chance().guid(),
-    user_id: id,
-    name: 'TEST_WALLET 2',
-    description: 'TEST_DESCRIPTION',
-    type: 'credit',
-    pockets: '[]'
-  }).into('wallets');
+  await knex
+    .insert({
+      id: chance().guid(),
+      user_id: id,
+      name: 'TEST_WALLET 1',
+      description: 'TEST_DESCRIPTION',
+      type: 'fiat',
+      pockets: '[]',
+    })
+    .into('wallets');
+  await knex
+    .insert({
+      id: chance().guid(),
+      user_id: id,
+      name: 'TEST_WALLET 2',
+      description: 'TEST_DESCRIPTION',
+      type: 'credit',
+      pockets: '[]',
+    })
+    .into('wallets');
 }

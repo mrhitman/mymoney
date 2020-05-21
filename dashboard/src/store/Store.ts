@@ -1,9 +1,13 @@
+import {
+  GetCategoryResponse,
+  GetWalletResponse,
+  LoginResponse,
+} from 'common/responses';
 import { flow, Instance, types } from 'mobx-state-tree';
-import { GetCategoriesResponse, LoginResponse } from 'common/responses';
 import { LoginFormValues } from '../components/Login/LoginForm';
 import api from '../utils/api';
-import { GetCategoryResponse } from '../../../common/responses';
 
+export type Entity = 'categories' | 'wallets';
 export type InjectedStore = {
   store: Instance<typeof Store>;
 };
@@ -33,9 +37,16 @@ export const Store = types
       return response.data as GetCategoryResponse[];
     }
 
+    function* getWallets() {
+      const response = yield api.client.get('/wallets');
+
+      return response.data as GetWalletResponse[];
+    }
+
     return {
       login: flow(login),
       logout: flow(logout),
       getCategories: flow(getCategories),
+      getWallets: flow(getWallets),
     };
   });

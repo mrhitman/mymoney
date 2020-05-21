@@ -29,7 +29,7 @@ interface HeaderProps {
 
 export class Header extends PureComponent<HeaderProps> {
   public render() {
-    const { activePage, handleLogout, handleNavigate } = this.props;
+    const { activePage, handleLogout } = this.props;
 
     return (
       <Menu

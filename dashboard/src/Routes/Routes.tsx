@@ -1,12 +1,12 @@
-import { inject, observer } from "mobx-react";
-import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import Categories from "../components/Accounting/Categories";
-import Info from "../components/Info/Info";
-import Login from "../components/Login/Login";
-import Layout from "../components/misc/Layout";
-import { InjectedStore } from "../store/Store";
-import PrivateRoute from "./PrivateRoute";
+import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Categories from '../components/Accounting/Categories';
+import Info from '../components/Info/Info';
+import Login from '../components/Login/Login';
+import Layout from '../components/misc/Layout';
+import { InjectedStore } from '../store/Store';
+import PrivateRoute from './PrivateRoute';
 
 class Routes extends React.Component {
   public get store() {
@@ -76,4 +76,4 @@ class Routes extends React.Component {
   }
 }
 
-export default inject("store")(observer(Routes));
+export default inject('store')(observer(Routes));

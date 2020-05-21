@@ -1,9 +1,10 @@
+import { Layout as AntdLayout } from 'antd';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { InjectedStore } from '../../store/Store';
+import Wallets from '../Wallets/Wallets';
 import MenuHeader, { ActivePage } from './Header';
-import { Layout as AntdLayout } from 'antd';
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -41,7 +42,10 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
               handleNavigate={this.navigate}
             />
           </AntdLayout.Header>
-          <AntdLayout.Content>{this.props.children}</AntdLayout.Content>
+          <AntdLayout.Content>
+            <Wallets />
+            {this.props.children}
+          </AntdLayout.Content>
           <AntdLayout.Footer />
         </AntdLayout>
       </AntdLayout>

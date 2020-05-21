@@ -7,7 +7,7 @@ import {
   SettingOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
-import { Menu, Space } from 'antd';
+import { Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import React, { PureComponent } from 'react';
 
@@ -32,57 +32,56 @@ export class Header extends PureComponent<HeaderProps> {
     const { activePage, handleLogout, handleNavigate } = this.props;
 
     return (
-      <div>
-        <Menu
-          mode="horizontal"
-          selectedKeys={activePage ? [activePage] : activePage}
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        selectedKeys={activePage ? [activePage] : activePage}
+      >
+        <Menu.Item
+          key="info"
+          icon={<InfoCircleOutlined />}
+          onClick={this.navigate('info')}
         >
-          <Menu.Item
-            key="info"
-            icon={<InfoCircleOutlined />}
-            onClick={this.navigate('info')}
-          >
-            Info
+          Info
+        </Menu.Item>
+        <Menu.Item
+          key="planning"
+          icon={<WalletOutlined />}
+          onClick={this.navigate('planning')}
+        >
+          Accounting
+        </Menu.Item>
+        <SubMenu icon={<BookOutlined />} title="Planning">
+          <Menu.Item key="operations">Transactions</Menu.Item>
+          <Menu.Item key="categories" onClick={this.navigate('categories')}>
+            Categories
           </Menu.Item>
-          <Menu.Item
-            key="planning"
-            icon={<WalletOutlined />}
-            onClick={this.navigate('planning')}
-          >
-            Accounting
-          </Menu.Item>
-          <SubMenu icon={<BookOutlined />} title="Planning">
-            <Menu.Item key="operations">Transactions</Menu.Item>
-            <Menu.Item key="categories" onClick={this.navigate('categories')}>
-              Categories
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item
-            key="scheduler"
-            icon={<CalendarOutlined />}
-            onClick={this.navigate('scheduler')}
-          >
-            Scheduler
-          </Menu.Item>
-          <Menu.Item
-            key="analysis"
-            icon={<LineChartOutlined />}
-            onClick={this.navigate('analysis')}
-          >
-            Analytics
-          </Menu.Item>
-          <Menu.Item
-            key="settings"
-            icon={<SettingOutlined />}
-            onClick={this.navigate('settings')}
-          />
-          <Menu.Item
-            key="logout"
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-          />
-        </Menu>
-      </div>
+        </SubMenu>
+        <Menu.Item
+          key="scheduler"
+          icon={<CalendarOutlined />}
+          onClick={this.navigate('scheduler')}
+        >
+          Scheduler
+        </Menu.Item>
+        <Menu.Item
+          key="analysis"
+          icon={<LineChartOutlined />}
+          onClick={this.navigate('analysis')}
+        >
+          Analytics
+        </Menu.Item>
+        <Menu.Item
+          key="settings"
+          icon={<SettingOutlined />}
+          onClick={this.navigate('settings')}
+        />
+        <Menu.Item
+          key="logout"
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+        />
+      </Menu>
     );
   }
 

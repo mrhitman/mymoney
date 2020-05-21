@@ -1,17 +1,18 @@
-import { flow, Instance, types } from "mobx-state-tree";
-import { GetCategoriesResponse, LoginResponse } from "common/responses";
-import { LoginFormValues } from "../components/Login/LoginForm";
-import api from "../utils/api";
+import { flow, Instance, types } from 'mobx-state-tree';
+import { GetCategoriesResponse, LoginResponse } from 'common/responses';
+import { LoginFormValues } from '../components/Login/LoginForm';
+import api from '../utils/api';
+import { GetCategoryResponse } from '../../../common/responses';
 
 export type InjectedStore = {
   store: Instance<typeof Store>;
 };
 
 export const Store = types
-  .model("Store", {
+  .model('Store', {
     isAuthorized: types.optional(
       types.boolean,
-      !!localStorage.getItem("accessToken")
+      !!localStorage.getItem('accessToken'),
     ),
   })
   .actions((self) => {
@@ -27,9 +28,9 @@ export const Store = types
     }
 
     function* getCategories() {
-      const response = yield api.client.get("/categories");
+      const response = yield api.client.get('/categories');
 
-      return response.data as GetCategoriesResponse;
+      return response.data as GetCategoryResponse[];
     }
 
     return {

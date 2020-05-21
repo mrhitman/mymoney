@@ -8,11 +8,11 @@ import {
   Label,
   Position,
   Toaster,
-} from '@blueprintjs/core';
-import { Formik } from 'formik';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
-import { InjectedStore } from '../store/Store';
+} from "@blueprintjs/core";
+import { Formik } from "formik";
+import { inject, observer } from "mobx-react";
+import React from "react";
+import { InjectedStore } from "../../store/Store";
 
 export interface LoginFormValues {
   username: string;
@@ -37,8 +37,8 @@ class LoginForm extends React.Component<
     return (
       <Formik
         initialValues={{
-          username: '',
-          password: '',
+          username: "",
+          password: "",
           remember: false,
         }}
         onSubmit={this.handleSubmit}
@@ -53,7 +53,7 @@ class LoginForm extends React.Component<
                 large
                 type="text"
                 value={bag.values.username}
-                onChange={bag.handleChange('username')}
+                onChange={bag.handleChange("username")}
               />
 
               <Label htmlFor="password">Password</Label>
@@ -63,7 +63,7 @@ class LoginForm extends React.Component<
                 large
                 type="password"
                 value={bag.values.password}
-                onChange={bag.handleChange('password')}
+                onChange={bag.handleChange("password")}
               />
 
               <Checkbox>Remember me</Checkbox>
@@ -84,14 +84,14 @@ class LoginForm extends React.Component<
     try {
       const response = await this.store.login(values);
       this.toaster.current?.show({
-        message: 'Welcome ' + response.accessToken,
+        message: "Welcome " + response.accessToken,
         intent: Intent.SUCCESS,
       });
       this.props.afterLogin();
     } catch (e) {
       if (e.response.status === 401) {
         this.toaster.current?.show({
-          message: 'No such user or invalid password',
+          message: "No such user or invalid password",
           intent: Intent.WARNING,
         });
       }
@@ -106,4 +106,4 @@ class LoginForm extends React.Component<
   };
 }
 
-export default inject('store')(observer(LoginForm));
+export default inject("store")(observer(LoginForm));

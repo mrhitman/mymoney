@@ -1,5 +1,5 @@
 import {CategoryType, CreateCategoryDto} from 'common/types/category';
-import * as Colors from '../utils/colors';
+import * as Colors from './colors';
 
 export const defaultCategories: CreateCategoryDto[] = [
   {

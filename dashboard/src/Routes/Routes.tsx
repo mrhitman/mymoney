@@ -1,8 +1,10 @@
 import { inject, observer } from "mobx-react";
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Login from "../Login/Login";
-import Layout from "../misc/Layout";
+import Categories from "../components/Accounting/Categories";
+import Info from "../components/Info/Info";
+import Login from "../components/Login/Login";
+import Layout from "../components/misc/Layout";
 import { InjectedStore } from "../store/Store";
 import PrivateRoute from "./PrivateRoute";
 
@@ -22,13 +24,19 @@ class Routes extends React.Component {
 
         <PrivateRoute path="/info" exact>
           <Layout activePage="info">
-            <div>info</div>
+            <Info />
           </Layout>
         </PrivateRoute>
 
         <PrivateRoute path="/accounting" exact>
           <Layout activePage="accounting">
             <div>accounting</div>
+          </Layout>
+        </PrivateRoute>
+
+        <PrivateRoute path="/categories" exact>
+          <Layout activePage="accounting">
+            <Categories />
           </Layout>
         </PrivateRoute>
 

@@ -1,7 +1,7 @@
 import { inject, observer } from "mobx-react";
 import React, { PureComponent } from "react";
 import { Redirect } from "react-router-dom";
-import { InjectedStore } from "../store/Store";
+import { InjectedStore } from "../../store/Store";
 import Header, { ActivePage } from "./Header";
 
 interface LayoutProps extends Partial<InjectedStore> {
@@ -30,7 +30,7 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
 
     return (
       <div>
-        <div className="layout">
+        <div className="layout header">
           <Header
             activePage={activePage}
             handleLogout={this.logout}

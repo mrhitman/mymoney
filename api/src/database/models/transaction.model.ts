@@ -9,8 +9,10 @@ export class Transaction extends Model {
   public fine: number;
   public amount: number;
   public date: Date;
-  public lastSync: Date;
+  public syncAt: Date;
   public createdAt: Date;
+  public updatedAt: Date;
+  public deletedAt: Date;
 
   static get tableName() {
     return 'transactions';

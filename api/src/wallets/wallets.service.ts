@@ -5,6 +5,6 @@ import Wallet from 'src/database/models/wallet.model';
 @Injectable()
 export class WalletsService {
   public async getAll(user: User) {
-    return Wallet.query().where({ user_id: user.id });
+    return Wallet.query().where({ userId: user.id });
   }
 }

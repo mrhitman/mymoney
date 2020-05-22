@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { AuthModule } from '../auth/auth.module';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { CategoriesModule } from '../categories/categories.module';

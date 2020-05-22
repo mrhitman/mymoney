@@ -60,9 +60,11 @@ export async function up(knex: Knex): Promise<any> {
       .onDelete('CASCADE');
     t.decimal('fine');
     t.decimal('amount');
-    t.date('date');
-    t.timestamp('last_sync');
+    t.timestamp('date');
     t.timestamp('created_at').defaultTo(knex.fn.now());
+    t.timestamp('updated_at');
+    t.timestamp('deleted_at');
+    t.timestamp('sync_at');
   });
   await knex.schema.createTable('budgets', (t) => {
     t.string('id').primary();

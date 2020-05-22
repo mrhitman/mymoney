@@ -32,3 +32,21 @@ body {
   margin: 16px 28px 16px 0;
   float: left;
 }
+
+.wallet-header {
+  text-transform: uppercase;
+}
+.wallet-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.wallet-name {
+  font-weight: bold;
+}
+.wallet-amount {
+  font-weight: bolder;
+}
+.wallet-total {
+  font-weight: bolder;
+}

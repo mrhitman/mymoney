@@ -7,6 +7,12 @@ import { Store } from "./store/Store";
 
 const store = Store.create();
 class App extends React.PureComponent {
+  public componentDidMount = async () => {
+    if (store.isAuthorized) {
+      await store.init();
+    }
+  };
+
   public render() {
     return (
       <Provider store={store}>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import Currency from 'src/database/models/currency.model';
 import { Fixer } from 'src/fixer';
 import xml2js from 'xml2js';
+import { GetRateResponse } from 'common/responses';
 
 @Injectable()
 export class CurrenciesService {
@@ -27,7 +28,7 @@ export class CurrenciesService {
   public async rates(base?: string) {
     const response = await this.fixer.latest(base);
 
-    return response;
+    return response as GetRateResponse;
   }
 
   /**

@@ -31,14 +31,19 @@ export class CurrenciesController {
 
   @Get()
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(60)
+  @CacheTTL(3600)
   public async findAll() {
-    return this.service.findAll();
+    const currencies = await this.service.findAll();
+    const rates = await this.service.rates();
+
+    return currencies.map((currency) => {
+      return { ...currency, rate: rates.rates[currency.name] };
+    });
   }
 
   @Get('/:id')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(60)
+  @CacheTTL(3600)
   public async findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }

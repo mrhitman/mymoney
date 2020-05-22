@@ -1,8 +1,9 @@
-import { List } from 'antd';
-import { GetWalletResponse } from 'common/responses';
-import { inject, observer } from 'mobx-react';
-import React, { PureComponent } from 'react';
-import { InjectedStore } from '../../store/Store';
+import { List } from "antd";
+import { GetWalletResponse } from "common/responses";
+import { sumBy } from "lodash";
+import { inject, observer } from "mobx-react";
+import React, { PureComponent } from "react";
+import { InjectedStore } from "../../store/Store";
 
 interface WalletsState {
   wallets: GetWalletResponse[];
@@ -27,11 +28,38 @@ class Wallets extends PureComponent<Partial<InjectedStore>, WalletsState> {
     return (
       <List
         bordered
+        header={<div className="wallet-header">Wallets</div>}
+        footer={
+          <div className="wallet-footer">
+            <div>Total: </div>
+            <div className="wallet-total">{this.getTotal() + " ₴"}</div>
+          </div>
+        }
         dataSource={this.state.wallets}
-        renderItem={(wallet) => <List.Item>{wallet.name}</List.Item>}
+        renderItem={this.renderItem}
       />
     );
   }
+
+  protected getTotal = () => {
+    return this.state.wallets.reduce(
+      (acc, wallet) => this.getWalletSum(wallet) + acc,
+      0
+    );
+  };
+
+  protected getWalletSum = (wallet: GetWalletResponse) => {
+    return sumBy(wallet.pockets, (pocket) => {
+      return this.store.rates.exchange("UAH", "UAH", pocket.amount);
+    });
+  };
+
+  protected renderItem = (wallet: GetWalletResponse) => (
+    <List.Item>
+      <div className="wallet-name">{wallet.name}</div>
+      <div className="wallet-amount">{(Math.random() * 5000).toFixed(2)} ₴</div>
+    </List.Item>
+  );
 }
 
-export default inject('store')(observer(Wallets));
+export default inject("store")(observer(Wallets));

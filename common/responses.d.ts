@@ -1,34 +1,28 @@
-import { Icon } from 'common/icon';
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface Pocket {
   id: string;
   amount: number;
   currencyId: string;
 }
 
-export interface GetWalletResponse {
-  public id: string;
-  public userId: number;
-  public name: string;
-  public description: string;
-  public cardNumber: string;
-  public type: string;
-  public pockets: Pocket[];
-  public lastSync: Date;
-  public createdAt: Date;
+export interface Wallet {
+  id: string;
+  userId: number;
+  name: string;
+  description: string;
+  cardNumber: string;
+  type: string;
+  pockets: Pocket[];
+  lastSync: Date;
+  createdAt: Date;
 }
 
-export interface GetCategoryResponse {
+export interface Category {
   id: string;
   name: string;
   userId: number;
   parent: string;
   type: string;
-  icon: Icon;
+  icon: any;
   isFixed: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -36,4 +30,29 @@ export interface GetCategoryResponse {
   syncAt: Date;
 }
 
+export interface Currency {
+  id: string;
+  name: string;
+  description: string;
+  symbol: string;
+  flagCode: string;
+  rate: number;
+}
+
+export interface GetCurrencyResponse extends Currency {}
+
+export interface GetRateResponse {
+  success: boolean;
+  timestamp: number;
+  base: string;
+  date: string;
+  rates: Record<string, number>;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+}
 export interface RefreshResponse extends LoginResponse {}
+export interface GetCategoryResponse extends Category {}
+export interface GetWalletResponse extends Wallet {}

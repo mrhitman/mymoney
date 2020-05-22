@@ -1,10 +1,11 @@
 import { List } from 'antd';
+import { GetWalletResponse } from 'common/responses';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { InjectedStore } from '../../store/Store';
 
 interface WalletsState {
-  wallets: any[];
+  wallets: GetWalletResponse[];
 }
 
 class Wallets extends PureComponent<Partial<InjectedStore>, WalletsState> {
@@ -18,6 +19,7 @@ class Wallets extends PureComponent<Partial<InjectedStore>, WalletsState> {
 
   public componentDidMount = async () => {
     const wallets = await this.store.getWallets();
+
     this.setState({ wallets });
   };
 

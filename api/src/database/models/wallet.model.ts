@@ -14,8 +14,10 @@ export class Wallet extends Model {
   public cardNumber: string;
   public type: string;
   public pockets: Pocket[];
-  public lastSync: Date;
+  public syncAt: Date;
   public createdAt: Date;
+  public updatedAt: Date;
+  public deletedAt: Date;
 
   static get tableName() {
     return 'wallets';

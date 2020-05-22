@@ -30,8 +30,10 @@ export async function up(knex: Knex): Promise<any> {
     t.string('cardNumber', 64);
     t.string('type', 32);
     t.jsonb('pockets');
-    t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
+    t.timestamp('updated_at');
+    t.timestamp('deleted_at');
+    t.timestamp('sync_at');
   });
   await knex.schema.createTable('goals', (t) => {
     t.string('id').primary();

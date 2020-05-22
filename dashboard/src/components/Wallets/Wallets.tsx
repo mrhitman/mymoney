@@ -1,65 +1,60 @@
-import { List } from "antd";
-import { GetWalletResponse } from "common/responses";
-import { sumBy } from "lodash";
-import { inject, observer } from "mobx-react";
-import React, { PureComponent } from "react";
-import { InjectedStore } from "../../store/Store";
-
-interface WalletsState {
-  wallets: GetWalletResponse[];
-}
-
-class Wallets extends PureComponent<Partial<InjectedStore>, WalletsState> {
-  public state: WalletsState = {
-    wallets: [],
-  };
-
+import { Collapse } from 'antd';
+import { sumBy, map, reduce } from 'lodash';
+import { inject, observer } from 'mobx-react';
+import React, { PureComponent } from 'react';
+import { InjectedStore } from '../../store/Store';
+class Wallets extends PureComponent<Partial<InjectedStore>> {
   public get store() {
     return this.props.store!;
   }
 
   public componentDidMount = async () => {
-    const wallets = await this.store.getWallets();
-
-    this.setState({ wallets });
+    const store = this.store;
+    await store.loadCategories();
+    await store.loadCurrencies();
+    await store.loadWallets();
   };
 
   public render() {
-    return (
-      <List
-        bordered
-        header={<div className="wallet-header">Wallets</div>}
-        footer={
-          <div className="wallet-footer">
-            <div>Total: </div>
-            <div className="wallet-total">{this.getTotal() + " ₴"}</div>
-          </div>
-        }
-        dataSource={this.state.wallets}
-        renderItem={this.renderItem}
-      />
-    );
+    return <Collapse>{map(this.store.wallets, this.renderWallet)}</Collapse>;
   }
 
   protected getTotal = () => {
-    return this.state.wallets.reduce(
+    return reduce(
+      this.store.wallets,
       (acc, wallet) => this.getWalletSum(wallet) + acc,
-      0
+      0,
     );
   };
 
-  protected getWalletSum = (wallet: GetWalletResponse) => {
-    return sumBy(wallet.pockets, (pocket) => {
-      return this.store.rates.exchange("UAH", "UAH", pocket.amount);
+  protected getWalletSum = (wallet: any) => {
+    return sumBy(wallet.pockets, (pocket: any) => {
+      return this.store.rates.exchange('UAH', 'UAH', pocket.amount);
     });
   };
 
-  protected renderItem = (wallet: GetWalletResponse) => (
-    <List.Item>
-      <div className="wallet-name">{wallet.name}</div>
-      <div className="wallet-amount">{(Math.random() * 5000).toFixed(2)} ₴</div>
-    </List.Item>
+  protected renderWallet = (wallet: any) => (
+    <Collapse.Panel
+      header={
+        <div className="wallet-footer">
+          <div>{wallet.name}</div>
+          <div className="wallet-total">{this.getTotal() + ' ₴'}</div>
+        </div>
+      }
+      key={wallet.id}
+    >
+      {wallet.pockets.map(this.renderPocket)}
+    </Collapse.Panel>
   );
+
+  protected renderPocket = (pocket: any) => {
+    return (
+      <>
+        <div className="wallet-name">{pocket.currencyId}</div>
+        <div className="wallet-amount">{pocket.amount} ₴</div>
+      </>
+    );
+  };
 }
 
-export default inject("store")(observer(Wallets));
+export default inject('store')(observer(Wallets));

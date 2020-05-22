@@ -1,29 +1,33 @@
-import { Currency } from "common/currency";
+import { Category } from 'common/category';
+import { Currency } from 'common/currency';
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
-} from "common/responses";
-import { flow, Instance, types } from "mobx-state-tree";
-import { LoginFormValues } from "../components/Login/LoginForm";
-import api from "../utils/api";
-import { Rate } from "./Rate";
+} from 'common/responses';
+import { Wallet } from 'common/wallet';
+import { flow, Instance, types } from 'mobx-state-tree';
+import { LoginFormValues } from '../components/Login/LoginForm';
+import api from '../utils/api';
+import { Rate } from './Rate';
 
-export type Entity = "categories" | "wallets";
+export type Entity = 'categories' | 'wallets';
 export type InjectedStore = {
   store: Instance<typeof Store>;
 };
 
 export const Store = types
-  .model("Store", {
+  .model('Store', {
     isAuthorized: types.optional(
       types.boolean,
-      !!localStorage.getItem("accessToken")
+      !!localStorage.getItem('accessToken'),
     ),
     rates: types.optional(Rate, { rates: [] }),
     currencies: types.optional(types.array(Currency), []),
+    categories: types.optional(types.array(Category), []),
+    wallets: types.optional(types.array(Wallet), []),
   })
   .actions((self) => {
     function* login(values: LoginFormValues) {
@@ -38,26 +42,26 @@ export const Store = types
       self.isAuthorized = false;
     }
 
-    function* getCategories() {
-      const response = yield api.client.get("/categories");
-
-      return response.data as GetCategoryResponse[];
-    }
-
-    function* getWallets() {
-      const response = yield api.client.get("/wallets");
-
-      return response.data as GetWalletResponse[];
-    }
-
     function* loadCurrencies() {
-      const response = yield api.client.get("/currencies");
+      const response = yield api.client.get('/currencies');
 
       return response.data as GetCurrencyResponse[];
     }
 
+    function* loadWallets() {
+      const response = yield api.client.get('/wallets');
+
+      return response.data as GetWalletResponse[];
+    }
+
+    function* loadCategories() {
+      const response = yield api.client.get('/categories');
+
+      return response.data as GetCategoryResponse[];
+    }
+
     function* loadRates() {
-      const response = yield api.client.get("/currencies/rates");
+      const response = yield api.client.get('/currencies/rates');
 
       const data = response.data as GetRateResponse;
 
@@ -75,10 +79,10 @@ export const Store = types
     return {
       login: flow(login),
       logout: flow(logout),
-      getCategories: flow(getCategories),
-      getWallets: flow(getWallets),
       loadRates: flow(loadRates),
       loadCurrencies: flow(loadCurrencies),
+      loadCategories: flow(loadCategories),
+      loadWallets: flow(loadWallets),
       init: flow(init),
     };
   });

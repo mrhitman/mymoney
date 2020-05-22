@@ -46,9 +46,17 @@ export async function seed(knex: Knex): Promise<any> {
       description: 'TEST_DESCRIPTION',
       type: 'fiat',
       pockets: JSON.stringify([
-        { id: 1, amount: 2000, currencyId: '096225f7-d38e-5650-8b9f-a19034a5fe6e' },
-        { id: 1, amount: 300, currencyId: '040864eb-a01d-5660-8b23-d26ab5088233' }
-      ])
+        {
+          id: 1,
+          amount: 2000,
+          currencyId: '096225f7-d38e-5650-8b9f-a19034a5fe6e',
+        },
+        {
+          id: 1,
+          amount: 300,
+          currencyId: '040864eb-a01d-5660-8b23-d26ab5088233',
+        },
+      ]),
     })
     .into('wallets');
   await knex

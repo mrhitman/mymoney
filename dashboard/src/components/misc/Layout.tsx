@@ -1,10 +1,10 @@
-import { Layout as AntdLayout } from "antd";
-import { inject, observer } from "mobx-react";
-import React, { PureComponent } from "react";
-import { Redirect } from "react-router-dom";
-import { InjectedStore } from "../../store/Store";
-import Wallets from "../Wallets/Wallets";
-import MenuHeader, { ActivePage } from "./Header";
+import { Layout as AntdLayout } from 'antd';
+import { inject, observer } from 'mobx-react';
+import React, { PureComponent } from 'react';
+import { Redirect } from 'react-router-dom';
+import { InjectedStore } from '../../store/Store';
+import Wallets from '../Wallets/Wallets';
+import MenuHeader, { ActivePage } from './Header';
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -43,7 +43,7 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
             />
           </AntdLayout.Header>
           <AntdLayout.Content>
-            <div style={{ maxWidth: 250, float: "left", marginRight: 10 }}>
+            <div style={{ maxWidth: 300, marginRight: 10 }}>
               <Wallets />
             </div>
             {this.props.children}
@@ -58,13 +58,13 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
     try {
       await this.store.logout();
     } finally {
-      this.setState({ redirect: "/login" });
+      this.setState({ redirect: '/login' });
     }
   };
 
   protected navigate = async (page: ActivePage) => {
-    this.setState({ redirect: page ? `/${page}` : "/" });
+    this.setState({ redirect: page ? `/${page}` : '/' });
   };
 }
 
-export default inject("store")(observer(Layout));
+export default inject('store')(observer(Layout));

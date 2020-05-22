@@ -1,5 +1,5 @@
-import {types, Instance} from 'mobx-state-tree';
-import {Currency} from './currency';
+import { types, Instance } from 'mobx-state-tree';
+import { Currency } from './currency';
 
 interface UpdatePocketDto {
   amount: number;
@@ -17,5 +17,5 @@ export const Pocket = types
       self.amount = args.amount;
       self.currency = args.currency;
     }
-    return {update};
+    return { update };
   });

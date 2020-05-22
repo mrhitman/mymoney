@@ -1,20 +1,18 @@
-import { types } from "mobx-state-tree";
-import { Icon } from "./icon";
-import { CategoryType } from "./types/category";
-import { IconType } from "./types/icon";
+import { types } from 'mobx-state-tree';
+import { Icon } from './icon';
 
-export const Category = types.model("Category", {
+export const Category = types.model('Category', {
   id: types.identifier,
   name: types.string,
-  description: types.optional(types.string, ""),
+  description: types.optional(types.string, ''),
   isFixed: types.optional(types.boolean, false),
   type: types.optional(
-    types.enumeration(Object.keys(CategoryType)),
-    CategoryType.outcome
+    types.enumeration(['income', 'outcome', 'transfer']),
+    'outcome',
   ),
   icon: types.optional(Icon, {
-    name: "piggy-bank",
-    type: IconType.FontAwesome5,
+    name: 'piggy-bank',
+    type: 'FontAwesome5',
   }),
   parent: types.maybe(types.reference(types.late(() => Category))),
   createdAt: types.optional(types.Date, new Date()),

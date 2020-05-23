@@ -7,5 +7,11 @@
   "dependencies": {
     "mobx-state-tree": "^3.16.0",
     "typescript": "^3.9.2"
+  },
+  "scripts": {
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf ./dist",
+    "compile": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "yarn build"
   }
 }

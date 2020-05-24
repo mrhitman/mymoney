@@ -47,7 +47,6 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
               style={{
                 maxWidth: 300,
                 marginRight: 10,
-                border: '1px solid red',
               }}
             >
               <Wallets />

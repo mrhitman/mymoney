@@ -4,10 +4,14 @@
   "main": "index.js",
   "author": "One <kabalx47@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "lerna": "^3.20.2"
+  "scripts": {
+    "start:api": "cd api && docker-compose restart && yarn start:dev",
+    "stop:api:services": "docker-compose down",
+    "start:api:services": "docker-compose up -d",
+    "start:dashboard": "cd dashboard && yarn start",
+    "start": "concurrently \"yarn start:api\" \"yarn start:dashboard\""
   },
-  "dependencies": {
-    "antd": "^4.2.4"
+  "devDependencies": {
+    "concurrently": "^5.2.0"
   }
 }

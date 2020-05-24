@@ -1,8 +1,8 @@
 import { Collapse } from 'antd';
 import { Pocket, Wallet } from 'common';
-import { map, reduce, sumBy } from 'lodash';
+import { sumBy } from 'lodash';
 import { inject, observer } from 'mobx-react';
-import { Instance, cast } from 'mobx-state-tree';
+import { Instance } from 'mobx-state-tree';
 import React, { PureComponent } from 'react';
 import { InjectedStore } from '../../store/Store';
 
@@ -13,9 +13,11 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
 
   public componentDidMount = async () => {
     const store = this.store;
-    await store.loadCategories();
-    await store.loadCurrencies();
-    await store.loadWallets();
+    await Promise.all([
+      store.loadCategories(),
+      store.loadCurrencies(),
+      store.loadWallets(),
+    ]);
   };
 
   public render() {
@@ -23,17 +25,15 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
   }
 
   protected getTotal = () => {
-    return reduce(
-      this.store.wallets as Instance<typeof Wallet>[],
-      (acc, wallet) => this.getWalletSum(wallet) + acc,
-      0,
-    );
+    return this.store.wallets
+      .reduce((acc, wallet) => this.getWalletSum(wallet) + acc, 0)
+      .toFixed(1);
   };
 
-  protected getWalletSum = (wallet: Instance<typeof Wallet>) => {
-    return sumBy(wallet.pockets as Instance<typeof Pocket>[], (pocket) => {
-      return this.store.rates.exchange('UAH', 'UAH', pocket.amount);
-    });
+  protected getWalletSum = (wallet: Instance<typeof Wallet>): number => {
+    return sumBy(wallet.pockets, (pocket) =>
+      this.store.rates.exchange(pocket.currency.name, 'UAH', pocket.amount),
+    );
   };
 
   protected renderWallet = (wallet: Instance<typeof Wallet>) => (
@@ -41,12 +41,14 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
       header={
         <div className="wallet-footer">
           <div>{wallet.name}</div>
-          <div className="wallet-total">{this.getTotal() + ' ₴'}</div>
+          <div className="wallet-total">
+            {this.getWalletSum(wallet).toFixed(1) + ' ₴'}
+          </div>
         </div>
       }
       key={wallet.id}
     >
-      {map(wallet.pockets, this.renderPocket)}
+      {wallet.pockets.map(this.renderPocket)}
     </Collapse.Panel>
   );
 

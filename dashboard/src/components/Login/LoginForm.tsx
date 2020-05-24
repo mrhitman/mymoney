@@ -1,8 +1,8 @@
-import { Button, Checkbox, Input, Form } from "antd";
-import { Formik } from "formik";
-import { inject, observer } from "mobx-react";
-import React from "react";
-import { InjectedStore } from "../../store/Store";
+import { Button, Checkbox, Input, Form } from 'antd';
+import { Formik } from 'formik';
+import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { InjectedStore } from '../../store/Store';
 
 export interface LoginFormValues {
   username: string;
@@ -18,6 +18,7 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
+
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
@@ -33,8 +34,8 @@ class LoginForm extends React.Component<
     return (
       <Formik
         initialValues={{
-          username: "",
-          password: "",
+          username: '',
+          password: '',
           remember: false,
         }}
         onSubmit={this.handleSubmit}
@@ -49,7 +50,7 @@ class LoginForm extends React.Component<
               label="Email"
               name="username"
               initialValue={bag.values.username}
-              rules={[{ required: true, message: "Please input your email!" }]}
+              rules={[{ required: true, message: 'Please input your email!' }]}
             >
               <Input />
             </Form.Item>
@@ -58,7 +59,7 @@ class LoginForm extends React.Component<
               label="Password"
               name="password"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: 'Please input your password!' },
               ]}
             >
               <Input.Password />
@@ -92,4 +93,4 @@ class LoginForm extends React.Component<
   };
 }
 
-export default inject("store")(observer(LoginForm));
+export default inject('store')(observer(LoginForm));

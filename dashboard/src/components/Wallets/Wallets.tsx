@@ -1,10 +1,11 @@
 import { Collapse } from 'antd';
-import { Pocket, Wallet } from 'common';
 import { sumBy } from 'lodash';
 import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
 import React, { PureComponent } from 'react';
+import { Pocket } from '../../store/pocket';
 import { InjectedStore } from '../../store/Store';
+import { Wallet } from '../../store/wallet';
 
 class Wallets extends PureComponent<Partial<InjectedStore>> {
   public get store() {

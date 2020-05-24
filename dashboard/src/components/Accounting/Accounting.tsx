@@ -1,6 +1,6 @@
-import { inject, observer } from "mobx-react";
-import React, { PureComponent } from "react";
-import { InjectedStore } from "../../store/Store";
+import { inject, observer } from 'mobx-react';
+import React, { PureComponent } from 'react';
+import { InjectedStore } from '../../store/Store';
 
 export class Accounting extends PureComponent<Partial<InjectedStore>> {
   public get store() {
@@ -12,4 +12,4 @@ export class Accounting extends PureComponent<Partial<InjectedStore>> {
   }
 }
 
-export default inject("store")(observer(Accounting));
+export default inject('store')(observer(Accounting));

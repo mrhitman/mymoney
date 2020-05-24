@@ -1,4 +1,3 @@
-import { red400 } from 'common/utils/colors';
 import { types } from 'mobx-state-tree';
 import { Icon } from './icon';
 import { Pocket } from './pocket';
@@ -12,7 +11,7 @@ export const Wallet = types.model('Wallet', {
     type: 'Feather',
     name: 'target',
     color: 'white',
-    backgroundColor: red400,
+    backgroundColor: '#ef5350',
   }),
   allowNegativeBalance: types.optional(types.boolean, true),
   type: types.string,

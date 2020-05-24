@@ -3,9 +3,10 @@ import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { InjectedStore } from '../../store/Store';
+import Rates from '../Rates/Rates';
+import AddTransaction from '../Transactions/AddTransaction';
 import Wallets from '../Wallets/Wallets';
 import MenuHeader, { ActivePage } from './Header';
-import Rates from '../Rates/Rates';
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -50,6 +51,7 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
                 marginRight: 10,
               }}
             >
+              <AddTransaction />
               <Wallets />
               <Rates />
             </div>

@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from "axios";
-import { LoginResponse, RefreshResponse } from "common/responses";
+import axios, { AxiosInstance } from 'axios';
+import { LoginResponse, RefreshResponse } from '../store/responses';
 
 interface ApiParams {
   accessToken?: string | null;
@@ -14,7 +14,7 @@ export class Api {
 
   constructor(options: ApiParams = {}) {
     this.client =
-      options.client || axios.create({ baseURL: "http://localhost:3000" });
+      options.client || axios.create({ baseURL: 'http://localhost:3000' });
     this.accessToken = options.accessToken;
     this.refreshToken = options.refreshToken;
 
@@ -32,7 +32,7 @@ export class Api {
         newConfig.headers.Authorization = `Bearer ${this.accessToken}`;
         return newConfig;
       },
-      (e) => Promise.reject(e)
+      (e) => Promise.reject(e),
     );
 
     this.client.interceptors.response.use(
@@ -62,31 +62,31 @@ export class Api {
           retry: true,
         };
         return this.client(newRequest);
-      }
+      },
     );
   }
 
   public async login(username: string, password: string) {
-    const response = await this.client.post<LoginResponse>("login", {
+    const response = await this.client.post<LoginResponse>('login', {
       username,
       password,
     });
 
     this.accessToken = response.data.accessToken;
     this.refreshToken = response.data.refreshToken;
-    localStorage.setItem("accessToken", this.accessToken);
-    localStorage.setItem("refreshToken", this.refreshToken);
+    localStorage.setItem('accessToken', this.accessToken);
+    localStorage.setItem('refreshToken', this.refreshToken);
     return response.data;
   }
 
   public async logout() {
-    await this.client.post("logout");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    await this.client.post('logout');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
 
   public async refresh() {
-    const response = await this.client.post<RefreshResponse>("refresh", {
+    const response = await this.client.post<RefreshResponse>('refresh', {
       token: this.refreshToken,
     });
 

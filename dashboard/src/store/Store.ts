@@ -1,3 +1,6 @@
+import { uniqBy } from 'lodash';
+import { cast, flow, Instance, types } from 'mobx-state-tree';
+import { LoginFormValues } from '../components/Login/LoginForm';
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -5,10 +8,7 @@ import {
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
-} from 'common/responses';
-import { uniqBy } from 'lodash';
-import { cast, flow, Instance, types } from 'mobx-state-tree';
-import { LoginFormValues } from '../components/Login/LoginForm';
+} from '../store/responses';
 import api from '../utils/api';
 import { Account } from './account';
 import { Category } from './category';

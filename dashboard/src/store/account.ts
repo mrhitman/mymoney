@@ -1,4 +1,4 @@
-import {types, Instance} from 'mobx-state-tree';
+import { types, Instance } from 'mobx-state-tree';
 
 export enum Language {
   en = 'en',
@@ -10,24 +10,26 @@ export const LanguageAlias: Record<string, string> = {
   [Language.ru]: 'Русский',
 };
 
+export const AccountSettings = types.model('AccountSettings', {
+  language: types.optional(
+    types.enumeration(Object.keys(Language)),
+    Language.en,
+  ),
+  primaryCurrencyName: types.optional(types.string, 'UAH'),
+  usePassword: types.optional(types.boolean, false),
+  useFingerprint: types.optional(types.boolean, false),
+  password: types.optional(types.string, '0000'),
+  lockDownTime: types.optional(types.integer, 180),
+  dateFormat: types.optional(types.string, 'yyyy LLL dd'),
+});
+
 export const Account = types
   .model('Account', {
-    first_name: types.maybe(types.string),
-    middle_name: types.maybe(types.string),
-    last_name: types.maybe(types.string),
+    firstName: types.maybe(types.string),
+    middleName: types.maybe(types.string),
+    lastName: types.maybe(types.string),
     email: types.maybe(types.string),
-    token: types.maybe(types.string),
-    refresh_token: types.maybe(types.string),
-    language: types.optional(
-      types.enumeration(Object.keys(Language)),
-      Language.en,
-    ),
-    primaryCurrencyName: types.optional(types.string, 'UAH'),
-    usePassword: types.optional(types.boolean, false),
-    useFingerprint: types.optional(types.boolean, false),
-    password: types.optional(types.string, '0000'),
-    lockDownTime: types.optional(types.integer, 180),
-    dateFormat: types.optional(types.string, 'yyyy LLL dd'),
+    settings: AccountSettings,
   })
   .actions((self) => {
     function update(args: Partial<Instance<typeof Account>>) {
@@ -37,5 +39,5 @@ export const Account = types
       }
     }
 
-    return {update};
+    return { update };
   });

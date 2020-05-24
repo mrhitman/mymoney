@@ -8,9 +8,10 @@ export class User extends Model {
   public email: string;
   public password: string;
   public settings: any;
-  public lastSync: Date;
-  public data: any;
+  public syncAt: Date;
   public createdAt: Date;
+  public updatedAt: Date;
+  public deletedAt: Date;
 
   static get tableName() {
     return 'users';

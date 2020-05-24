@@ -7,6 +7,7 @@ import Login from '../components/Login/Login';
 import Layout from '../components/misc/Layout';
 import { InjectedStore } from '../store/Store';
 import PrivateRoute from './PrivateRoute';
+import Settings from '../components/Settings/Settings';
 
 class Routes extends React.Component {
   public get store() {
@@ -60,7 +61,7 @@ class Routes extends React.Component {
 
         <PrivateRoute path="/settings" exact>
           <Layout activePage="settings">
-            <div>settings</div>
+            <Settings />
           </Layout>
         </PrivateRoute>
 

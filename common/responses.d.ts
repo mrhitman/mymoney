@@ -53,6 +53,24 @@ export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
 }
+export interface GetProfileResponse {
+  id: number;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+  settings: {
+    useFingerprint?: boolean;
+    usePassword?: boolean;
+    password?: string;
+    primaryCurrencyName?: string;
+    dateFormat?: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+  syncAt: Date;
+}
 export interface RefreshResponse extends LoginResponse {}
 export interface GetCategoryResponse extends Category {}
 export interface GetWalletResponse extends Wallet {}

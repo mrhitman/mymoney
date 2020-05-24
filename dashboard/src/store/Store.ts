@@ -1,6 +1,7 @@
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
+  GetProfileResponse,
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
@@ -9,6 +10,7 @@ import { uniqBy } from 'lodash';
 import { cast, flow, Instance, types } from 'mobx-state-tree';
 import { LoginFormValues } from '../components/Login/LoginForm';
 import api from '../utils/api';
+import { Account } from './account';
 import { Category } from './category';
 import { Currency } from './currency';
 import { Rate } from './Rate';
@@ -22,6 +24,7 @@ export const Store = types
       types.boolean,
       !!localStorage.getItem('accessToken'),
     ),
+    account: types.maybe(Account),
     rates: types.optional(Rate, { rates: [] }),
     currencies: types.optional(types.array(Currency), []),
     categories: types.optional(types.array(Category), []),
@@ -38,6 +41,12 @@ export const Store = types
       localStorage.clear();
       yield api.logout();
       self.isAuthorized = false;
+    }
+
+    function* loadProfile() {
+      const response = yield api.client.get('/profile');
+      const data = response.data as GetProfileResponse;
+      self.account = cast(data);
     }
 
     function* loadCurrencies(force: boolean = false) {
@@ -73,11 +82,11 @@ export const Store = types
             description: item.description,
             type: item.type,
             pockets: item.pockets.map((p) =>
-              cast({
+              cast<any>({
                 id: p.id,
                 amount: p.amount,
                 currency: p.currencyId,
-              } as any),
+              }),
             ),
           }),
         );
@@ -123,6 +132,7 @@ export const Store = types
 
     return {
       login: flow(login),
+      loadProfile: flow(loadProfile),
       logout: flow(logout),
       loadRates: flow(loadRates),
       loadCurrencies: flow(loadCurrencies),

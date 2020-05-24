@@ -1,5 +1,6 @@
-import { Category } from 'common/category';
-import { Currency } from 'common/currency';
+import { Category } from './category';
+import { Currency } from './currency';
+import { Wallet } from './wallet';
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -7,16 +8,13 @@ import {
   GetWalletResponse,
   LoginResponse,
 } from 'common/responses';
-import { Wallet } from 'common/wallet';
-import { flow, Instance, types } from 'mobx-state-tree';
+import { find, uniqBy } from 'lodash';
+import { flow, Instance, types, cast } from 'mobx-state-tree';
 import { LoginFormValues } from '../components/Login/LoginForm';
 import api from '../utils/api';
 import { Rate } from './Rate';
 
 export type Entity = 'categories' | 'wallets';
-export type InjectedStore = {
-  store: Instance<typeof Store>;
-};
 
 export const Store = types
   .model('Store', {
@@ -44,29 +42,68 @@ export const Store = types
 
     function* loadCurrencies() {
       const response = yield api.client.get('/currencies');
+      const data = response.data as GetCurrencyResponse[];
 
-      return response.data as GetCurrencyResponse[];
+      self.currencies = cast([]);
+      for (let item of uniqBy(data, 'id')) {
+        self.currencies.push(
+          cast({
+            id: item.id,
+            name: item.name,
+            rate: item.rate,
+          }),
+        );
+      }
     }
 
     function* loadWallets() {
       const response = yield api.client.get('/wallets');
+      const data = response.data as GetWalletResponse[];
 
-      return response.data as GetWalletResponse[];
+      self.wallets = cast([]);
+      for (let item of data) {
+        self.wallets.push(
+          Wallet.create({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            type: item.type,
+            pockets: item.pockets.map((p) =>
+              cast({
+                id: p.id,
+                amount: p.amount,
+                currency: p.currencyId,
+              } as any),
+            ),
+          }),
+        );
+      }
     }
 
     function* loadCategories() {
       const response = yield api.client.get('/categories');
+      const data = response.data as GetCategoryResponse[];
 
-      return response.data as GetCategoryResponse[];
+      self.categories = cast([]);
+      for (let item of data) {
+        self.categories.push(
+          cast({
+            id: item.id,
+            name: item.name,
+            type: item.type ? item.type : undefined,
+            parent: item.parent ? item.parent : undefined,
+          }),
+        );
+      }
     }
 
     function* loadRates() {
       const response = yield api.client.get('/currencies/rates');
-
       const data = response.data as GetRateResponse;
 
+      self.rates.rates = cast([]);
       for (let name in data.rates) {
-        self.rates.rates.push({ name, rate: data.rates[name] });
+        self.rates.rates.push(cast({ name, rate: data.rates[name] }));
       }
 
       return data;
@@ -86,3 +123,7 @@ export const Store = types
       init: flow(init),
     };
   });
+
+export type InjectedStore = {
+  store: Instance<typeof Store>;
+};

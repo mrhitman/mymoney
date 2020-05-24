@@ -1,8 +1,11 @@
 import { Collapse } from 'antd';
-import { sumBy, map, reduce } from 'lodash';
+import { Pocket, Wallet } from 'common';
+import { map, reduce, sumBy } from 'lodash';
 import { inject, observer } from 'mobx-react';
+import { Instance, cast } from 'mobx-state-tree';
 import React, { PureComponent } from 'react';
 import { InjectedStore } from '../../store/Store';
+
 class Wallets extends PureComponent<Partial<InjectedStore>> {
   public get store() {
     return this.props.store!;
@@ -16,24 +19,24 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
   };
 
   public render() {
-    return <Collapse>{map(this.store.wallets, this.renderWallet)}</Collapse>;
+    return <Collapse>{this.store.wallets.map(this.renderWallet)}</Collapse>;
   }
 
   protected getTotal = () => {
     return reduce(
-      this.store.wallets,
+      this.store.wallets as Instance<typeof Wallet>[],
       (acc, wallet) => this.getWalletSum(wallet) + acc,
       0,
     );
   };
 
-  protected getWalletSum = (wallet: any) => {
-    return sumBy(wallet.pockets, (pocket: any) => {
+  protected getWalletSum = (wallet: Instance<typeof Wallet>) => {
+    return sumBy(wallet.pockets as Instance<typeof Pocket>[], (pocket) => {
       return this.store.rates.exchange('UAH', 'UAH', pocket.amount);
     });
   };
 
-  protected renderWallet = (wallet: any) => (
+  protected renderWallet = (wallet: Instance<typeof Wallet>) => (
     <Collapse.Panel
       header={
         <div className="wallet-footer">
@@ -43,16 +46,22 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
       }
       key={wallet.id}
     >
-      {wallet.pockets.map(this.renderPocket)}
+      {map(wallet.pockets, this.renderPocket)}
     </Collapse.Panel>
   );
 
-  protected renderPocket = (pocket: any) => {
+  protected renderPocket = (pocket: Instance<typeof Pocket>) => {
     return (
-      <>
-        <div className="wallet-name">{pocket.currencyId}</div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div className="wallet-name">{pocket.currency.name}</div>
         <div className="wallet-amount">{pocket.amount} ₴</div>
-      </>
+      </div>
     );
   };
 }

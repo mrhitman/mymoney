@@ -1,7 +1,7 @@
 {
   "name": "common",
   "version": "0.1.1",
-  "main": "store.ts",
+  "main": "index.ts",
   "license": "MIT",
   "private": true,
   "dependencies": {

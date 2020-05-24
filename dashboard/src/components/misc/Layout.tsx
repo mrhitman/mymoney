@@ -43,7 +43,13 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
             />
           </AntdLayout.Header>
           <AntdLayout.Content>
-            <div style={{ maxWidth: 300, marginRight: 10 }}>
+            <div
+              style={{
+                maxWidth: 300,
+                marginRight: 10,
+                border: '1px solid red',
+              }}
+            >
               <Wallets />
             </div>
             {this.props.children}

@@ -1,6 +1,3 @@
-import { Category } from './category';
-import { Currency } from './currency';
-import { Wallet } from './wallet';
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -8,11 +5,14 @@ import {
   GetWalletResponse,
   LoginResponse,
 } from 'common/responses';
-import { find, uniqBy } from 'lodash';
-import { flow, Instance, types, cast } from 'mobx-state-tree';
+import { uniqBy } from 'lodash';
+import { cast, flow, Instance, types } from 'mobx-state-tree';
 import { LoginFormValues } from '../components/Login/LoginForm';
 import api from '../utils/api';
+import { Category } from './category';
+import { Currency } from './currency';
 import { Rate } from './Rate';
+import { Wallet } from './wallet';
 
 export type Entity = 'categories' | 'wallets';
 
@@ -40,9 +40,13 @@ export const Store = types
       self.isAuthorized = false;
     }
 
-    function* loadCurrencies() {
+    function* loadCurrencies(force: boolean = false) {
       const response = yield api.client.get('/currencies');
       const data = response.data as GetCurrencyResponse[];
+
+      if (self.currencies.length && !force) {
+        return;
+      }
 
       self.currencies = cast([]);
       for (let item of uniqBy(data, 'id')) {
@@ -97,9 +101,13 @@ export const Store = types
       }
     }
 
-    function* loadRates() {
+    function* loadRates(force: boolean = false) {
       const response = yield api.client.get('/currencies/rates');
       const data = response.data as GetRateResponse;
+
+      if (self.currencies.length && !force) {
+        return;
+      }
 
       self.rates.rates = cast([]);
       for (let name in data.rates) {

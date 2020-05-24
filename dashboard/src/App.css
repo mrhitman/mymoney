@@ -36,7 +36,8 @@ body {
 .wallet-header {
   text-transform: uppercase;
 }
-.wallet-footer {
+.wallet-footer,
+.row-item {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

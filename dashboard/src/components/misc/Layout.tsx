@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { InjectedStore } from '../../store/Store';
 import Wallets from '../Wallets/Wallets';
 import MenuHeader, { ActivePage } from './Header';
+import Rates from '../Rates/Rates';
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -50,6 +51,7 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
               }}
             >
               <Wallets />
+              <Rates />
             </div>
             {this.props.children}
           </AntdLayout.Content>

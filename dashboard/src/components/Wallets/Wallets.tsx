@@ -54,13 +54,7 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
 
   protected renderPocket = (pocket: Instance<typeof Pocket>) => {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
+      <div className="row-item">
         <div className="wallet-name">{pocket.currency.name}</div>
         <div className="wallet-amount">{pocket.amount} ₴</div>
       </div>

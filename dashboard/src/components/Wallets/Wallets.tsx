@@ -1,11 +1,11 @@
-import { Collapse } from 'antd';
-import { sumBy } from 'lodash';
-import { inject, observer } from 'mobx-react';
-import { Instance } from 'mobx-state-tree';
-import React, { PureComponent } from 'react';
-import { Pocket } from '../../store/pocket';
-import { InjectedStore } from '../../store/Store';
-import { Wallet } from '../../store/wallet';
+import { Collapse } from "antd";
+import { Pocket } from "common/pocket";
+import { Wallet } from "common/wallet";
+import { sumBy } from "lodash";
+import { inject, observer } from "mobx-react";
+import { Instance } from "mobx-state-tree";
+import React, { PureComponent } from "react";
+import { InjectedStore } from "../../store/Store";
 
 class Wallets extends PureComponent<Partial<InjectedStore>> {
   public get store() {
@@ -33,7 +33,7 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
 
   protected getWalletSum = (wallet: Instance<typeof Wallet>): number => {
     return sumBy(wallet.pockets, (pocket) =>
-      this.store.rates.exchange(pocket.currency.name, 'UAH', pocket.amount),
+      this.store.rates.exchange(pocket.currency.name, "UAH", pocket.amount)
     );
   };
 
@@ -43,7 +43,7 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
         <div className="wallet-footer">
           <div>{wallet.name}</div>
           <div className="wallet-total">
-            {this.getWalletSum(wallet).toFixed(1) + ' ₴'}
+            {this.getWalletSum(wallet).toFixed(1) + " ₴"}
           </div>
         </div>
       }
@@ -63,4 +63,4 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
   };
 }
 
-export default inject('store')(observer(Wallets));
+export default inject("store")(observer(Wallets));

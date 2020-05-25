@@ -8,7 +8,7 @@ import {
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
-} from "../store/responses";
+} from "common/responses";
 import api from "../utils/api";
 import { Account } from "common/account";
 import { Category } from "common/category";

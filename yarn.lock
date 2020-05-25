@@ -6228,6 +6228,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"customize-cra@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "customize-cra@npm:0.9.1"
+  dependencies:
+    lodash.flow: ^3.5.0
+  checksum: 7e4a20466d5d6694da2d8b878cb46d6a78d7ee854e0d5531d1c42f26eed521b31dcbe6a1a8ba304c858c51ed330d219b74bad85a73b67f11f77470ddf6cab8ba
+  languageName: node
+  linkType: hard
+
 "cyclist@npm:^1.0.1":
   version: 1.0.1
   resolution: "cyclist@npm:1.0.1"
@@ -6271,6 +6280,7 @@ __metadata:
     "@types/uuid": ^8.0.0
     axios: ^0.19.2
     common: "workspace:common"
+    customize-cra: ^0.9.1
     formik: ^2.1.4
     lodash: ^4.17.15
     mobx: ^5.15.4
@@ -11398,6 +11408,13 @@ fsevents@^1.2.7:
   version: 4.4.0
   resolution: "lodash.flatten@npm:4.4.0"
   checksum: f22a7f6f163256d87345b07c76122e03d03abbf943b6c3aa5e5fafb7d5bce765013aedfc2aae7e649af0907287a2cf85de24237dbdd3ecd485a77d56e070b54c
+  languageName: node
+  linkType: hard
+
+"lodash.flow@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "lodash.flow@npm:3.5.0"
+  checksum: 52204602c6ec53e78497387751bf2cf432a9db7b0982e62b01b489be847b68efde8f7efed6fbeaeaeb66d7c7bd171d389c32d548908eafc00958bba8d462e55a
   languageName: node
   linkType: hard
 

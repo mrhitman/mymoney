@@ -4,12 +4,21 @@
   "main": "index.js",
   "author": "One <kabalx47@gmail.com>",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "start:api": "cd api && docker-compose restart && yarn start:dev",
     "stop:api:services": "docker-compose down",
     "start:api:services": "docker-compose up -d",
     "start:dashboard": "cd dashboard && yarn start",
     "start": "concurrently \"yarn start:api\" \"yarn start:dashboard\""
+  },
+  "workspaces": {
+    "nohoist": "**/*",
+    "packages": [
+      "api",
+      "dashboard",
+      "common"
+    ]
   },
   "devDependencies": {
     "concurrently": "^5.2.0"

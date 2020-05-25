@@ -1,6 +1,6 @@
-import { uniqBy } from 'lodash';
-import { cast, flow, Instance, types } from 'mobx-state-tree';
-import { LoginFormValues } from '../components/Login/LoginForm';
+import { uniqBy } from "lodash";
+import { cast, flow, Instance, types } from "mobx-state-tree";
+import { LoginFormValues } from "../components/Login/LoginForm";
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -8,21 +8,21 @@ import {
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
-} from '../store/responses';
-import api from '../utils/api';
-import { Account } from './account';
-import { Category } from './category';
-import { Currency } from './currency';
-import { Rate } from './Rate';
-import { Wallet } from './wallet';
+} from "../store/responses";
+import api from "../utils/api";
+import { Account } from "common/account";
+import { Category } from "common/category";
+import { Currency } from "common/currency";
+import { Rate } from "./Rate";
+import { Wallet } from "./wallet";
 
-export type Entity = 'categories' | 'wallets';
+export type Entity = "categories" | "wallets";
 
 export const Store = types
-  .model('Store', {
+  .model("Store", {
     isAuthorized: types.optional(
       types.boolean,
-      !!localStorage.getItem('accessToken'),
+      !!localStorage.getItem("accessToken")
     ),
     account: types.maybe(Account),
     rates: types.optional(Rate, { rates: [] }),
@@ -44,13 +44,13 @@ export const Store = types
     }
 
     function* loadProfile() {
-      const response = yield api.client.get('/profile');
+      const response = yield api.client.get("/profile");
       const data = response.data as GetProfileResponse;
       self.account = cast(data);
     }
 
     function* loadCurrencies(force: boolean = false) {
-      const response = yield api.client.get('/currencies');
+      const response = yield api.client.get("/currencies");
       const data = response.data as GetCurrencyResponse[];
 
       if (self.currencies.length && !force) {
@@ -58,19 +58,19 @@ export const Store = types
       }
 
       self.currencies = cast([]);
-      for (let item of uniqBy(data, 'id')) {
+      for (let item of uniqBy(data, "id")) {
         self.currencies.push(
           cast({
             id: item.id,
             name: item.name,
             rate: item.rate,
-          }),
+          })
         );
       }
     }
 
     function* loadWallets() {
-      const response = yield api.client.get('/wallets');
+      const response = yield api.client.get("/wallets");
       const data = response.data as GetWalletResponse[];
 
       self.wallets = cast([]);
@@ -86,15 +86,15 @@ export const Store = types
                 id: p.id,
                 amount: p.amount,
                 currency: p.currencyId,
-              }),
+              })
             ),
-          }),
+          })
         );
       }
     }
 
     function* loadCategories() {
-      const response = yield api.client.get('/categories');
+      const response = yield api.client.get("/categories");
       const data = response.data as GetCategoryResponse[];
 
       self.categories = cast([]);
@@ -105,13 +105,13 @@ export const Store = types
             name: item.name,
             type: item.type ? item.type : undefined,
             parent: item.parent ? item.parent : undefined,
-          }),
+          })
         );
       }
     }
 
     function* loadRates(force: boolean = false) {
-      const response = yield api.client.get('/currencies/rates');
+      const response = yield api.client.get("/currencies/rates");
       const data = response.data as GetRateResponse;
 
       if (self.currencies.length && !force) {

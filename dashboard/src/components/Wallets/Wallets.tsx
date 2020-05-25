@@ -1,6 +1,5 @@
 import { Collapse } from "antd";
-import { Pocket } from "common/pocket";
-import { Wallet } from "common/wallet";
+import { Pocket, Wallet } from "common";
 import { sumBy } from "lodash";
 import { inject, observer } from "mobx-react";
 import { Instance } from "mobx-state-tree";

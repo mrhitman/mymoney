@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcrypt';
 import chance from 'chance';
-import { defaultCategories } from 'common/utils/categories';
+import { defaultCategories } from 'common/src/utils/categories';
 import * as Knex from 'knex';
 
 export async function seed(knex: Knex): Promise<any> {

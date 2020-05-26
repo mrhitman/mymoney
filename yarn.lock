@@ -3818,7 +3818,7 @@ __metadata:
     cache-manager-redis-store: ^2.0.0
     chance: ^1.1.5
     class-validator: ^0.12.2
-    common: ^0.1.1
+    common: "workspace:common"
     config: ^3.3.1
     dotenv: ^8.2.0
     eslint: ^6.8.0
@@ -5523,7 +5523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"common@^0.1.1, common@workspace:common":
+"common@workspace:common":
   version: 0.0.0-use.local
   resolution: "common@workspace:common"
   dependencies:

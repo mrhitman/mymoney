@@ -1,4 +1,4 @@
-import { Account, Category, Currency, Wallet } from "common";
+import { Account, Category, Currency, Wallet } from 'common';
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -6,21 +6,26 @@ import {
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
-} from "common/responses";
-import { uniqBy } from "lodash";
-import { cast, flow, Instance, types } from "mobx-state-tree";
-import { LoginFormValues } from "../components/Login/LoginForm";
-import api from "../utils/api";
-import { Rate } from "./Rate";
+} from 'common/responses';
+import { uniqBy } from 'lodash';
+import { cast, flow, Instance, types } from 'mobx-state-tree';
+import { LoginFormValues } from '../components/Login/LoginForm';
+import { Api } from '../services/Api';
+import { Rate } from './Rate';
 
-export type Entity = "categories" | "wallets";
+const accessToken = localStorage.getItem('accessToken');
+const refreshToken = localStorage.getItem('refreshToken');
+
+const api = new Api({
+  accessToken,
+  refreshToken,
+});
+
+export type Entity = 'categories' | 'wallets';
 
 export const Store = types
-  .model("Store", {
-    isAuthorized: types.optional(
-      types.boolean,
-      !!localStorage.getItem("accessToken")
-    ),
+  .model('Store', {
+    isAuthorized: types.optional(types.boolean, !!accessToken),
     account: types.maybe(Account),
     rates: types.optional(Rate, { rates: [] }),
     currencies: types.optional(types.array(Currency), []),
@@ -41,13 +46,13 @@ export const Store = types
     }
 
     function* loadProfile() {
-      const response = yield api.client.get("/profile");
+      const response = yield api.client.get('/profile');
       const data = response.data as GetProfileResponse;
       self.account = cast(data);
     }
 
     function* loadCurrencies(force: boolean = false) {
-      const response = yield api.client.get("/currencies");
+      const response = yield api.client.get('/currencies');
       const data = response.data as GetCurrencyResponse[];
 
       if (self.currencies.length && !force) {
@@ -55,19 +60,19 @@ export const Store = types
       }
 
       self.currencies = cast([]);
-      for (let item of uniqBy(data, "id")) {
+      for (let item of uniqBy(data, 'id')) {
         self.currencies.push(
           cast({
             id: item.id,
             name: item.name,
             rate: item.rate,
-          })
+          }),
         );
       }
     }
 
     function* loadWallets() {
-      const response = yield api.client.get("/wallets");
+      const response = yield api.client.get('/wallets');
       const data = response.data as GetWalletResponse[];
 
       self.wallets = cast([]);
@@ -83,15 +88,15 @@ export const Store = types
                 id: p.id,
                 amount: p.amount,
                 currency: p.currencyId,
-              })
+              }),
             ),
-          })
+          }),
         );
       }
     }
 
     function* loadCategories() {
-      const response = yield api.client.get("/categories");
+      const response = yield api.client.get('/categories');
       const data = response.data as GetCategoryResponse[];
 
       self.categories = cast([]);
@@ -102,13 +107,13 @@ export const Store = types
             name: item.name,
             type: item.type ? item.type : undefined,
             parent: item.parent ? item.parent : undefined,
-          })
+          }),
         );
       }
     }
 
     function* loadRates(force: boolean = false) {
-      const response = yield api.client.get("/currencies/rates");
+      const response = yield api.client.get('/currencies/rates');
       const data = response.data as GetRateResponse;
 
       if (self.currencies.length && !force) {

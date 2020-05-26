@@ -16,7 +16,7 @@ import { Rate } from './Rate';
 const accessToken = localStorage.getItem('accessToken');
 const refreshToken = localStorage.getItem('refreshToken');
 
-const api = new Api({
+export const api = new Api({
   accessToken,
   refreshToken,
 });
@@ -40,8 +40,12 @@ export const Store = types
     }
 
     function* logout() {
-      localStorage.clear();
+      exit();
       yield api.logout();
+    }
+
+    function exit() {
+      localStorage.clear();
       self.isAuthorized = false;
     }
 
@@ -133,6 +137,7 @@ export const Store = types
     }
 
     return {
+      exit,
       login: flow(login),
       loadProfile: flow(loadProfile),
       logout: flow(logout),

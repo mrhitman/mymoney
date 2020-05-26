@@ -10,7 +10,7 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
+export class AddIncomeForm extends PureComponent<Partial<InjectedStore>> {
   public get store() {
     return this.props.store!;
   }
@@ -26,7 +26,7 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
           date: moment(),
           fromWalletId: undefined,
           toWalletId: undefined,
-          type: 'outcome',
+          type: 'income',
           fine: 0,
           amount: 0,
           description: '',
@@ -103,4 +103,4 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
   protected handleSubmit = () => {};
 }
 
-export default inject('store')(observer(AddOutcomeForm));
+export default inject('store')(observer(AddIncomeForm));

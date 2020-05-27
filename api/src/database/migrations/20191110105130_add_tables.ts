@@ -52,6 +52,7 @@ export async function up(knex: Knex): Promise<any> {
     t.string('id').primary();
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('category_id').references('id').inTable('categories');
+    t.string('currency_id').references('id').inTable('currencies');
     t.string('source_wallet_id')
       .references('id')
       .inTable('wallets')
@@ -62,6 +63,8 @@ export async function up(knex: Knex): Promise<any> {
       .onDelete('CASCADE');
     t.decimal('fine');
     t.decimal('amount');
+    t.string('type');
+    t.string('description');
     t.timestamp('date');
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at');

@@ -1,25 +1,44 @@
 import { DatePicker, Form, Input, Select } from "antd";
-import { Formik } from "formik";
+import { Category, Currency } from "common";
+import { Formik, FormikProps } from "formik";
+import { omit } from "lodash";
 import { inject, observer } from "mobx-react";
+import { Instance } from "mobx-state-tree";
 import moment from "moment";
 import React, { PureComponent } from "react";
-import { InjectedStore } from "../../store/Store";
+import { api, InjectedStore } from "../../store/Store";
 
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
 
-interface AddOutcomeFormState {
+export interface AddTransactionValues {
+  currency?: Instance<typeof Currency>;
+  category?: Instance<typeof Category>;
+  date: moment.Moment;
+  fromWalletId?: string;
+  toWalletId?: string;
+  type: "outcome" | "income" | "transfer";
+  fine?: number;
+  amount?: number;
+  description: string;
+}
+
+interface AddTransactionFormProps {
+  onInit: (bag: FormikProps<AddTransactionValues>) => void;
+}
+
+interface AddTransactionFormState {
   filterCurrency?: string;
   filterCategory?: string;
 }
 
-export class AddOutcomeForm extends PureComponent<
-  Partial<InjectedStore>,
-  AddOutcomeFormState
+export class AddTransactionForm extends PureComponent<
+  AddTransactionFormProps & Partial<InjectedStore>,
+  AddTransactionFormState
 > {
-  public state: AddOutcomeFormState = {
+  public state: AddTransactionFormState = {
     filterCurrency: undefined,
     filterCategory: undefined,
   };
@@ -36,6 +55,7 @@ export class AddOutcomeForm extends PureComponent<
           currency: store.currencies.find(
             (c) => c.name === store.account?.settings.primaryCurrencyName
           ),
+          category: undefined,
           date: moment(),
           fromWalletId: undefined,
           toWalletId: undefined,
@@ -46,7 +66,7 @@ export class AddOutcomeForm extends PureComponent<
         }}
         onSubmit={this.handleSubmit}
         render={(bag) => (
-          <Form {...layout}>
+          <Form {...layout} onSubmitCapture={bag.handleSubmit}>
             <Form.Item
               label="Amount"
               name="amount"
@@ -57,6 +77,7 @@ export class AddOutcomeForm extends PureComponent<
                 placeholder="0"
                 prefix={bag.values.currency?.symbol || "$"}
                 suffix={bag.values.currency?.name}
+                onChange={bag.handleChange("amount")}
               />
             </Form.Item>
             <Form.Item
@@ -96,7 +117,10 @@ export class AddOutcomeForm extends PureComponent<
               </Select>
             </Form.Item>
             <Form.Item label="Operation Type">
-              <Select value={bag.values.type}>
+              <Select
+                value={bag.values.type}
+                onChange={bag.handleChange("type")}
+              >
                 <Select.Option value="income">Income</Select.Option>
                 <Select.Option value="outcome">Outcome</Select.Option>
                 <Select.Option value="transfer">Transfer</Select.Option>
@@ -106,18 +130,27 @@ export class AddOutcomeForm extends PureComponent<
               <Select
                 showSearch
                 filterOption={false}
+                onChange={(id) =>
+                  bag.setFieldValue(
+                    "category",
+                    store.categories.find((c) => c.id === id)
+                  )
+                }
                 onSearch={(filter) => this.setState({ filterCategory: filter })}
               >
-                {this.categories.map((category) => (
-                  <Select.Option key={category.id} value={category.id}>
-                    {category.name}
-                  </Select.Option>
-                ))}
+                {this.categories
+                  .filter((category) => category.type === bag.values.type)
+                  .map((category) => (
+                    <Select.Option key={category.id} value={category.id}>
+                      {category.name}
+                    </Select.Option>
+                  ))}
               </Select>
             </Form.Item>
             <Form.Item label="Description">
               <Input.TextArea />
             </Form.Item>
+            {this.props.onInit(bag)}
           </Form>
         )}
       />
@@ -142,9 +175,12 @@ export class AddOutcomeForm extends PureComponent<
     return this.store.categories
       .filter(
         (category) =>
-          !["TRANSFER_IN", "TRANSFER_OUT", "TRANSFER_SYS"].includes(
-            category.name
-          )
+          ![
+            "TRANSFER_IN",
+            "TRANSFER_OUT",
+            "TRANSFER_SYS",
+            "SYSTEM_EMPTY",
+          ].includes(category.name)
       )
       .filter((category) => {
         const filter = this.state.filterCategory?.toLowerCase();
@@ -157,7 +193,16 @@ export class AddOutcomeForm extends PureComponent<
       });
   }
 
-  protected handleSubmit = () => {};
+  protected handleSubmit = (values: AddTransactionValues) => {
+    api.client.post("/transactions", {
+      ...omit(values, ["category", "currency"]),
+      amount: Number(values.amount),
+      createdAt: moment().unix(),
+      date: values.date.unix(),
+      categoryId: values.category?.id,
+      currencyId: values.currency?.id,
+    });
+  };
 }
 
-export default inject("store")(observer(AddOutcomeForm));
+export default inject("store")(observer(AddTransactionForm));

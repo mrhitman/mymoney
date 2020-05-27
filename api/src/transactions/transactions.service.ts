@@ -6,6 +6,7 @@ import {
 import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
+import { v4 as uuid } from 'uuid';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
@@ -32,6 +33,7 @@ export class TransactionsService {
   public async create(data: CreateTransactionDto, user: User) {
     await Transaction.query().insert({
       ...data,
+      id: uuid(),
       userId: user.id,
       date: DateTime.fromMillis(data.date).toJSDate(),
       createdAt: DateTime.fromMillis(data.createdAt).toJSDate(),

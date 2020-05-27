@@ -37,7 +37,7 @@
     "cache-manager-redis-store": "^2.0.0",
     "chance": "^1.1.5",
     "class-validator": "^0.12.2",
-    "common": "workspace:common",
+    "common": "^0.1.1",
     "config": "^3.3.1",
     "dotenv": "^8.2.0",
     "fixer-api": "^2.1.1",

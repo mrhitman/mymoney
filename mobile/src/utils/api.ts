@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from 'axios';
 import {SnapshotOrInstance} from 'mobx-state-tree';
-import {Category} from 'common/category';
+import {Category} from 'common';
 
 export class Api {
   private client: AxiosInstance;

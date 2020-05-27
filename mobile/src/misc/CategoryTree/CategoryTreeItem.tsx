@@ -1,5 +1,5 @@
-import {Category} from 'common/category';
-import {IconType} from 'common/types/icon';
+import {Category} from 'common';
+import {IconType} from 'common/src/types/icon';
 import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {Component} from 'react';

@@ -1,5 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {IconType} from 'common/types/icon';
+import {IconType} from 'common/src/types/icon';
 import {inject, observer} from 'mobx-react';
 import React, {PureComponent} from 'react';
 import UI from 'react-native-ui-lib';

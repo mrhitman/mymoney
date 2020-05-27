@@ -1,5 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {IconType} from 'common/types/icon';
+import {IconType} from 'common/src/types/icon';
 import React, {PureComponent} from 'react';
 import {SectionList} from 'react-native';
 import UI, {Colors} from 'react-native-ui-lib';

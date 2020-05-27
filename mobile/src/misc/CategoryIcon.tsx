@@ -1,4 +1,4 @@
-import {Category} from 'common/category';
+import {Category} from 'common';
 import {observer} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {PureComponent} from 'react';

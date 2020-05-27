@@ -1,4 +1,4 @@
-import {IconType} from 'common/types/icon';
+import {IconType} from 'common/src/types/icon';
 import React, {PureComponent} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';

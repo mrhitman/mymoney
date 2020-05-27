@@ -1,4 +1,4 @@
-import {IconType} from 'common/types/icon';
+import {IconType} from 'common/src/types/icon';
 import React, {PureComponent} from 'react';
 import {FlatList} from 'react-native';
 import UI from 'react-native-ui-lib';

@@ -1,8 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
-import {Category} from 'common/category';
-import {Icon} from 'common/icon';
-import {Store} from 'common/store';
-import {IconType} from 'common/types/icon';
+import {Category, Icon, Store} from 'common';
+import {IconType} from 'common/src/types/icon';
 import {Provider} from 'mobx-react';
 import {Instance} from 'mobx-state-tree';
 import React, {PureComponent} from 'react';

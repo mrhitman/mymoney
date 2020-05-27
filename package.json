@@ -13,14 +13,18 @@
     "start": "concurrently \"yarn start:api\" \"yarn start:dashboard\""
   },
   "workspaces": {
-    "nohoist": "**/*",
+    "nohoist": [
+      "**"
+    ],
     "packages": [
       "api",
       "dashboard",
-      "common"
+      "common",
+      "mobile"
     ]
   },
   "devDependencies": {
-    "concurrently": "^5.2.0"
+    "concurrently": "^5.2.0",
+    "lerna": "^3.20.2"
   }
 }

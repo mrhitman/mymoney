@@ -1,5 +1,6 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {LanguageAlias} from 'common/account';
+import {LanguageAlias} from 'common';
+import {IconType} from 'common/src/types/icon';
 import {inject, observer} from 'mobx-react';
 import React, {PureComponent} from 'react';
 import {StyleSheet} from 'react-native';
@@ -9,7 +10,6 @@ import Header from '../../misc/Header';
 import {Icon} from '../../misc/Icon';
 import {InjectedStore} from '../../types';
 import Api from '../../utils/api';
-import {IconType} from 'common/types/icon';
 
 export class AccountSettings extends PureComponent<
   StackScreenProps<{}> & InjectedStore

@@ -69,6 +69,7 @@ export const Store = types
           id: item.id,
           name: item.name,
           rate: item.rate,
+          symbol: item.symbol,
           description: item.description,
           CtryNm: item.CtryNm,
           CcyNbr: item.CcyNbr,

@@ -40,7 +40,10 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
               initialValue={bag.values.amount}
               rules={[{ required: true, message: "Input amount" }]}
             >
-              <Input prefix="$" suffix={bag.values.currency?.name} />
+              <Input
+                prefix={bag.values.currency?.symbol || "$"}
+                suffix={bag.values.currency?.name}
+              />
             </Form.Item>
             <Form.Item
               label="Date"

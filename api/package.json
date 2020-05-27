@@ -19,6 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "reset:db": "yarn migrate:down && yarn migrate && yarn seed",
     "migrate": "knex migrate:latest --cwd src --knexfile knexfile.ts",
     "migrate:down": "knex migrate:rollback --cwd src --knexfile knexfile.ts",
     "migrate:make": "knex migrate:make --cwd src --knexfile knexfile.ts -x ts",

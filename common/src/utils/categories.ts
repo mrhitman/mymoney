@@ -12,6 +12,15 @@ export const defaultCategories: CreateCategoryDto[] = [
     name: "TRANSFER_OUT",
   },
   {
+    id: "39da1fbc-1937-41b2-a46f-d2dce9a1f788",
+    name: "SYSTEM_EMPTY",
+    type: CategoryType.income,
+  },
+  {
+    id: "07c0ba04-d1a2-4a17-b526-ac7bb80e78b1",
+    name: "SYSTEM_EMPTY"
+  },
+  {
     id: "bec3812e-5eb6-495f-b021-58bc39184cc7",
     name: "TRANSFER_SYS",
     type: CategoryType.transfer,

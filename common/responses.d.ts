@@ -37,6 +37,11 @@ export interface Currency {
   symbol: string;
   flagCode: string;
   rate: number;
+  CtryNm: string;
+  Ccy: string;
+  CcyNm: string;
+  CcyNbr: number;
+  CcyMnrUnts: number;
 }
 
 export interface GetCurrencyResponse extends Currency {}

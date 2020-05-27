@@ -1,9 +1,9 @@
-import { DatePicker, Form, Input, Select } from 'antd';
-import { Formik } from 'formik';
-import { inject, observer } from 'mobx-react';
-import moment from 'moment';
-import React, { PureComponent } from 'react';
-import { InjectedStore } from '../../store/Store';
+import { DatePicker, Form, Input, Select } from "antd";
+import { Formik } from "formik";
+import { inject, observer } from "mobx-react";
+import moment from "moment";
+import React, { PureComponent } from "react";
+import { InjectedStore } from "../../store/Store";
 
 const layout = {
   labelCol: { span: 8 },
@@ -21,15 +21,15 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
       <Formik
         initialValues={{
           currency: store.currencies.find(
-            (c) => c.name === store.account?.settings.primaryCurrencyName,
+            (c) => c.name === store.account?.settings.primaryCurrencyName
           ),
           date: moment(),
           fromWalletId: undefined,
           toWalletId: undefined,
-          type: 'outcome',
+          type: "outcome",
           fine: 0,
           amount: 0,
-          description: '',
+          description: "",
         }}
         onSubmit={this.handleSubmit}
         render={(bag) => (
@@ -38,14 +38,14 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
               label="Amount"
               name="amount"
               initialValue={bag.values.amount}
-              rules={[{ required: true, message: 'Input amount' }]}
+              rules={[{ required: true, message: "Input amount" }]}
             >
               <Input prefix="$" suffix={bag.values.currency?.name} />
             </Form.Item>
             <Form.Item
               label="Date"
               initialValue={bag.values.date}
-              rules={[{ required: true, message: 'Input trx date' }]}
+              rules={[{ required: true, message: "Input trx date" }]}
             >
               <DatePicker showTime defaultValue={bag.values.date} />
             </Form.Item>
@@ -54,14 +54,14 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
                 value={bag.values.currency?.id}
                 onChange={(id) =>
                   bag.setFieldValue(
-                    'currency',
-                    store.currencies.find((c) => c.id === id),
+                    "currency",
+                    store.currencies.find((c) => c.id === id)
                   )
                 }
               >
                 {store.currencies.map((currency) => (
                   <Select.Option key={currency.id} value={currency.id}>
-                    {currency.name}
+                    {currency.country} ({currency.name})
                   </Select.Option>
                 ))}
               </Select>
@@ -103,4 +103,4 @@ export class AddOutcomeForm extends PureComponent<Partial<InjectedStore>> {
   protected handleSubmit = () => {};
 }
 
-export default inject('store')(observer(AddOutcomeForm));
+export default inject("store")(observer(AddOutcomeForm));

@@ -5,6 +5,23 @@ import { Fixer } from 'src/fixer';
 import xml2js from 'xml2js';
 import { GetRateResponse } from 'common/responses';
 
+interface InfoResponse {
+  ISO_4217: {
+    $: {
+      Pblshd: string;
+    };
+    CcyTbl: {
+      CcyNtry: Array<{
+        CtryNm: string;
+        CcyNm: string;
+        Ccy: string;
+        CcyNbr: number;
+        CcyMnrUnts: number;
+      }>;
+    };
+  };
+}
+
 @Injectable()
 export class CurrenciesService {
   constructor(protected fixer: Fixer) {}
@@ -35,7 +52,7 @@ export class CurrenciesService {
    * ISO_4217 standart
    * https://en.wikipedia.org/wiki/ISO_4217
    */
-  async getIsoInfo() {
+  public async getIsoInfo(): Promise<any> {
     const url = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml';
     const body = await axios.get(url);
     const response = await new Promise((resolve, reject) => {
@@ -47,6 +64,6 @@ export class CurrenciesService {
       });
     });
 
-    return response;
+    return response as InfoResponse;
   }
 }

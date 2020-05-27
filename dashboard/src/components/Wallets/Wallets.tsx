@@ -13,11 +13,9 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
 
   public componentDidMount = async () => {
     const store = this.store;
-    await Promise.all([
-      store.loadCategories(),
-      store.loadCurrencies(),
-      store.loadWallets(),
-    ]);
+    await store.loadCurrencies();
+    await store.loadCategories();
+    await store.loadWallets();
   };
 
   public render() {

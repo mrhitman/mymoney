@@ -1,4 +1,4 @@
-import { Account, Category, Currency, Wallet } from "common";
+import { Account, Category, Transaction, Currency, Wallet } from "common";
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -31,6 +31,7 @@ export const Store = types
     currencies: types.optional(types.array(Currency), []),
     categories: types.optional(types.array(Category), []),
     wallets: types.optional(types.array(Wallet), []),
+    transactions: types.optional(types.array(Transaction), []),
   })
   .actions((self) => {
     function* login(values: LoginFormValues) {
@@ -55,6 +56,23 @@ export const Store = types
       self.account = cast(data);
     }
 
+    function* loadTransactions() {
+      const response = yield api.client.get("/transactions");
+      const data = response.data as any;
+
+      self.transactions = cast([]);
+      for (let item of data) {
+        self.transactions.push({
+          id: item.id,
+          currency: item.currencyId,
+          category: item.categoryId,
+          type: item.type,
+          amount: Number(item.amount),
+          date: new Date(item.date),
+        });
+      }
+    }
+
     function* loadCurrencies(force: boolean = false) {
       const response = yield api.client.get("/currencies");
       const data = response.data as GetCurrencyResponse[];
@@ -64,7 +82,7 @@ export const Store = types
       }
 
       self.currencies = cast([]);
-      for (let item of uniqBy(data, "id")) {
+      for (let item of data) {
         self.currencies.push({
           id: item.id,
           name: item.name,
@@ -145,6 +163,7 @@ export const Store = types
       loadCurrencies: flow(loadCurrencies),
       loadCategories: flow(loadCategories),
       loadWallets: flow(loadWallets),
+      loadTransactions: flow(loadTransactions),
       init: flow(init),
     };
   });

@@ -427,6 +427,7 @@ export async function seed(knex: Knex): Promise<any> {
           ['3e0bee0d-9a29-5877-b55f-0d75684af542', 'MKD', 'ден', 'Denar'],
           ['c9af12c3-cc26-5c8d-a4e2-a6025e053270', 'MMK', 'K', 'Kyat'],
           ['fdf51059-fe96-501a-9dcb-0acd62f8cd12', 'MNT', '₮', 'Tugrik'],
+          ['49f4c6c4-e626-4288-9fa7-b24024425401', 'LSL', 'L', 'Lesotho loti'],
           [
             '09b5a773-8024-50a5-a418-4a7d1e627bf8',
             'MOP',

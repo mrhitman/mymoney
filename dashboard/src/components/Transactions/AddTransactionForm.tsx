@@ -17,7 +17,7 @@ export interface AddTransactionValues {
   currency?: Instance<typeof Currency>;
   category?: Instance<typeof Category>;
   date: moment.Moment;
-  fromWalletId?: string;
+  sourceWalletId?: string;
   toWalletId?: string;
   type: "outcome" | "income" | "transfer";
   fine?: number;
@@ -57,7 +57,7 @@ export class AddTransactionForm extends PureComponent<
           ),
           category: undefined,
           date: moment(),
-          fromWalletId: undefined,
+          sourceWalletId: undefined,
           toWalletId: undefined,
           type: "outcome",
           fine: undefined,
@@ -111,7 +111,10 @@ export class AddTransactionForm extends PureComponent<
               </Select>
             </Form.Item>
             <Form.Item label="Wallet">
-              <Select>
+              <Select
+                value={bag.values.sourceWalletId}
+                onChange={bag.handleChange("sourceWalletId")}
+              >
                 {store.wallets.map((wallet) => (
                   <Select.Option key={wallet.id} value={wallet.id}>
                     {wallet.name}

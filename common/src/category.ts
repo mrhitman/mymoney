@@ -1,7 +1,7 @@
-import { types } from "mobx-state-tree";
+import { IAnyType, Instance, types } from "mobx-state-tree";
 import { Icon } from "./icon";
 
-export const Category = types.model("Category", {
+export const Category = (types.model("Category", {
   id: types.identifier,
   name: types.string,
   description: types.optional(types.string, ""),
@@ -19,4 +19,18 @@ export const Category = types.model("Category", {
   deletedAt: types.maybe(types.Date),
   updatedAt: types.maybe(types.Date),
   syncAt: types.maybe(types.Date),
-}) as any;
+}) as any) as CategoryLike;
+
+interface CategoryLike extends IAnyType {
+  id: string;
+  name: string;
+  description: string;
+  isFixed: boolean;
+  type: string;
+  icon: Instance<typeof Icon>;
+  parent: CategoryLike;
+  createdAt: Date;
+  deletedAt: Date;
+  updatedAt: Date;
+  syncAt: Date;
+}

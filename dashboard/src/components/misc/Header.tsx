@@ -6,19 +6,19 @@ import {
   LogoutOutlined,
   SettingOutlined,
   WalletOutlined,
-} from '@ant-design/icons';
-import { Menu } from 'antd';
-import SubMenu from 'antd/lib/menu/SubMenu';
-import React, { PureComponent } from 'react';
+} from "@ant-design/icons";
+import { Menu } from "antd";
+import SubMenu from "antd/lib/menu/SubMenu";
+import React, { PureComponent } from "react";
 
 export type ActivePage =
-  | 'info'
-  | 'accounting'
-  | 'planning'
-  | 'scheduler'
-  | 'analysis'
-  | 'settings'
-  | 'categories'
+  | "info"
+  | "accounting"
+  | "planning"
+  | "scheduler"
+  | "analysis"
+  | "settings"
+  | "categories"
   | undefined;
 
 interface HeaderProps {
@@ -40,41 +40,41 @@ export class Header extends PureComponent<HeaderProps> {
         <Menu.Item
           key="info"
           icon={<InfoCircleOutlined />}
-          onClick={this.navigate('info')}
+          onClick={this.navigate("info")}
         >
           Info
         </Menu.Item>
         <Menu.Item
-          key="planning"
+          key="accounting"
           icon={<WalletOutlined />}
-          onClick={this.navigate('planning')}
+          onClick={this.navigate("accounting")}
         >
           Accounting
         </Menu.Item>
         <SubMenu icon={<BookOutlined />} title="Planning">
           <Menu.Item key="operations">Transactions</Menu.Item>
-          <Menu.Item key="categories" onClick={this.navigate('categories')}>
+          <Menu.Item key="categories" onClick={this.navigate("categories")}>
             Categories
           </Menu.Item>
         </SubMenu>
         <Menu.Item
           key="scheduler"
           icon={<CalendarOutlined />}
-          onClick={this.navigate('scheduler')}
+          onClick={this.navigate("scheduler")}
         >
           Scheduler
         </Menu.Item>
         <Menu.Item
           key="analysis"
           icon={<LineChartOutlined />}
-          onClick={this.navigate('analysis')}
+          onClick={this.navigate("analysis")}
         >
           Analytics
         </Menu.Item>
         <Menu.Item
           key="settings"
           icon={<SettingOutlined />}
-          onClick={this.navigate('settings')}
+          onClick={this.navigate("settings")}
         />
         <Menu.Item
           key="logout"

@@ -39,8 +39,10 @@ body {
 .wallet-footer,
 .row-item {
   display: flex;
+  margin-top: 4px;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-end;
 }
 .wallet-name {
   font-weight: bold;

@@ -1,12 +1,12 @@
-import { Layout as AntdLayout } from 'antd';
-import { inject, observer } from 'mobx-react';
-import React, { PureComponent } from 'react';
-import { Redirect } from 'react-router-dom';
-import { InjectedStore } from '../../store/Store';
-import Rates from '../Rates/Rates';
-import AddTransaction from '../Transactions/AddTransaction';
-import Wallets from '../Wallets/Wallets';
-import MenuHeader, { ActivePage } from './Header';
+import { Layout as AntdLayout, Row, Col } from "antd";
+import { inject, observer } from "mobx-react";
+import React, { PureComponent } from "react";
+import { Redirect } from "react-router-dom";
+import { InjectedStore } from "../../store/Store";
+import Rates from "../Rates/Rates";
+import AddTransaction from "../Transactions/AddTransaction";
+import Wallets from "../Wallets/Wallets";
+import MenuHeader, { ActivePage } from "./Header";
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -34,7 +34,7 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
 
     return (
       <AntdLayout>
-        <AntdLayout.Sider collapsible defaultCollapsed width={180} />
+        <AntdLayout.Sider collapsible width={180} />
         <AntdLayout>
           <AntdLayout.Header>
             <div className="logo" />
@@ -45,17 +45,15 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
             />
           </AntdLayout.Header>
           <AntdLayout.Content>
-            <div
-              style={{
-                maxWidth: 300,
-                marginRight: 10,
-              }}
-            >
-              <AddTransaction />
-              <Wallets />
-              <Rates />
-            </div>
-            {this.props.children}
+            <Row gutter={[16, 16]}>
+              <Col span={6}>
+                <AddTransaction />
+                <Wallets />
+                <Rates />
+              </Col>
+              <Col span={17}>{this.props.children}</Col>
+              <Col />
+            </Row>
           </AntdLayout.Content>
           <AntdLayout.Footer />
         </AntdLayout>
@@ -67,13 +65,13 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
     try {
       await this.store.logout();
     } finally {
-      this.setState({ redirect: '/login' });
+      this.setState({ redirect: "/login" });
     }
   };
 
   protected navigate = async (page: ActivePage) => {
-    this.setState({ redirect: page ? `/${page}` : '/' });
+    this.setState({ redirect: page ? `/${page}` : "/" });
   };
 }
 
-export default inject('store')(observer(Layout));
+export default inject("store")(observer(Layout));

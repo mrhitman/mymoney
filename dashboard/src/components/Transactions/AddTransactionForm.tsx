@@ -93,6 +93,9 @@ export class AddTransactionForm extends PureComponent<
                 filterOption={false}
                 value={bag.values.currency?.id}
                 onSearch={(filter) => this.setState({ filterCurrency: filter })}
+                onDropdownVisibleChange={() =>
+                  this.setState({ filterCurrency: undefined })
+                }
                 onChange={(id) =>
                   bag.setFieldValue(
                     "currency",
@@ -137,6 +140,9 @@ export class AddTransactionForm extends PureComponent<
                   )
                 }
                 onSearch={(filter) => this.setState({ filterCategory: filter })}
+                onDropdownVisibleChange={() =>
+                  this.setState({ filterCategory: undefined })
+                }
               >
                 {this.categories
                   .filter((category) => category.type === bag.values.type)

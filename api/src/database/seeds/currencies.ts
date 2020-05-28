@@ -444,8 +444,8 @@ export async function seed(knex: Knex): Promise<any> {
           [
             '1bed0f51-7436-5fff-bea3-a8ea67577176',
             'MWK',
-            'Malawian kwacha',
             'K',
+            'Malawian kwacha',
           ],
           ['816f0d97-4a4d-5ae0-8c16-58cffd3b46e2', 'MXN', '$', 'Mexican peso'],
           [

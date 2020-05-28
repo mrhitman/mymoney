@@ -81,7 +81,7 @@ export class AddOutcomeForm extends PureComponent<
               >
                 {this.currencies.map((currency) => (
                   <Select.Option key={currency.id} value={currency.id}>
-                    {currency.country} ({currency.name})
+                    {currency.description} ({currency.name})
                   </Select.Option>
                 ))}
               </Select>
@@ -132,7 +132,7 @@ export class AddOutcomeForm extends PureComponent<
         return true;
       }
 
-      return `${currency.country} (${currency.name})`
+      return `${currency.description} (${currency.name})`
         .toLowerCase()
         .includes(filter);
     });

@@ -35,28 +35,12 @@ export class CurrenciesController {
   public async findAll() {
     const currencies = await this.service.findAll();
     const rates = await this.service.rates();
-    const info = await this.service.getIsoInfo();
 
     return currencies
-      .map((currency) => {
-        const data = info.ISO_4217.CcyTbl.CcyNtry.find(
-          (ccy) => ccy.Ccy === currency.name,
-        );
-
-        if (!data) {
-          return;
-        }
-
-        return {
-          ...currency,
-          rate: rates.rates[currency.name],
-          CtryNm: data.CtryNm,
-          Ccy: data.Ccy,
-          CcyNm: data.CcyNm,
-          CcyNbr: Number(data.CcyNbr),
-          CcyMnrUnts: Number(data.CcyMnrUnts),
-        };
-      })
+      .map((currency) => ({
+        ...currency,
+        rate: rates.rates[currency.name],
+      }))
       .filter(Boolean);
   }
 

@@ -71,9 +71,6 @@ export const Store = types
           rate: item.rate,
           symbol: item.symbol,
           description: item.description,
-          CtryNm: item.CtryNm,
-          CcyNbr: item.CcyNbr,
-          CcyMnrUnts: item.CcyMnrUnts,
         });
       }
     }

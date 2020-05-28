@@ -7,7 +7,6 @@ import {
   GetWalletResponse,
   LoginResponse,
 } from "common/responses";
-import { uniqBy } from "lodash";
 import { cast, flow, Instance, types } from "mobx-state-tree";
 import { LoginFormValues } from "../components/Login/LoginForm";
 import { Api } from "../services/Api";

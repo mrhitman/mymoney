@@ -2,9 +2,12 @@ import { Table } from "antd";
 import { inject, observer } from "mobx-react";
 import moment from "moment";
 import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { InjectedStore } from "src/store/Store";
 
-class TransactionList extends React.PureComponent<Partial<InjectedStore>> {
+class TransactionList extends React.PureComponent<
+  Partial<InjectedStore> & WithTranslation
+> {
   public get store() {
     return this.props.store!;
   }
@@ -28,7 +31,7 @@ class TransactionList extends React.PureComponent<Partial<InjectedStore>> {
           title="Category"
           dataIndex="category"
           key="category"
-          render={(category) => category.name}
+          render={(category) => this.props.t(category.name)}
         />
         <Table.Column title="Amount" dataIndex="amount" key="amount" />
         <Table.Column
@@ -47,4 +50,4 @@ class TransactionList extends React.PureComponent<Partial<InjectedStore>> {
   }
 }
 
-export default inject("store")(observer(TransactionList));
+export default withTranslation()(inject("store")(observer(TransactionList)));

@@ -6,6 +6,7 @@ import {
   GetRateResponse,
   GetWalletResponse,
   LoginResponse,
+  GetTransactionResponse,
 } from "common/responses";
 import { cast, flow, Instance, types } from "mobx-state-tree";
 import { LoginFormValues } from "../components/Login/LoginForm";
@@ -52,14 +53,15 @@ export const Store = types
     function* loadProfile() {
       const response = yield api.client.get("/profile");
       const data = response.data as GetProfileResponse;
-      self.account = cast(data);
+
+      self.account = Account.create(data);
     }
 
     function* loadTransactions() {
       const response = yield api.client.get("/transactions");
-      const data = response.data as any;
+      const data = response.data as GetTransactionResponse[];
 
-      self.transactions = cast([]);
+      self.transactions.clear();
       for (let item of data) {
         self.transactions.push({
           id: item.id,
@@ -80,7 +82,7 @@ export const Store = types
         return;
       }
 
-      self.currencies = cast([]);
+      self.currencies.clear();
       for (let item of data) {
         self.currencies.push({
           id: item.id,
@@ -96,7 +98,7 @@ export const Store = types
       const response = yield api.client.get("/wallets");
       const data = response.data as GetWalletResponse[];
 
-      self.wallets = cast([]);
+      self.wallets.clear();
       for (let item of data) {
         self.wallets.push(
           Wallet.create({
@@ -120,10 +122,10 @@ export const Store = types
       const response = yield api.client.get("/categories");
       const data = response.data as GetCategoryResponse[];
 
-      self.categories = cast([]);
+      self.categories.clear();
       for (let item of data) {
         self.categories.push(
-          cast({
+          Category.create({
             id: item.id,
             name: item.name,
             type: item.type ? item.type : undefined,
@@ -141,7 +143,7 @@ export const Store = types
         return;
       }
 
-      self.rates.rates = cast([]);
+      self.rates.rates.clear();
       for (let name in data.rates) {
         self.rates.rates.push(cast({ name, rate: data.rates[name] }));
       }

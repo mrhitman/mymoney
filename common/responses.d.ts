@@ -71,6 +71,23 @@ export interface GetProfileResponse {
   deletedAt: Date;
   syncAt: Date;
 }
+export interface GetTransactionResponse {
+  id: string;
+  userId: number;
+  type: number;
+  categoryId: string;
+  sourceWalletId: string;
+  destinationWalletId: string;
+  currencyId: string;
+  description: string;
+  fine: number;
+  amount: number;
+  date: Date;
+  syncAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+}
 export interface RefreshResponse extends LoginResponse {}
 export interface GetCategoryResponse extends Category {}
 export interface GetWalletResponse extends Wallet {}

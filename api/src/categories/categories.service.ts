@@ -33,7 +33,7 @@ export class CategoriesService {
     await Category.query().insert({
       ...data,
       userId: user.id,
-      createdAt: DateTime.fromMillis(data.createdAt).toJSDate(),
+      createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
       syncAt: DateTime.local().toJSDate(),
     });
   }
@@ -43,9 +43,9 @@ export class CategoriesService {
 
     await category.$query().update({
       ...data,
-      updatedAt: DateTime.fromMillis(data.updatedAt).toJSDate(),
+      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
       deletedAt: data.deletedAt
-        ? DateTime.fromMillis(data.deletedAt).toJSDate()
+        ? DateTime.fromSeconds(data.deletedAt).toJSDate()
         : null,
     });
   }

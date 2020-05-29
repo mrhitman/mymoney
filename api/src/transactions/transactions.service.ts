@@ -35,8 +35,8 @@ export class TransactionsService {
       ...data,
       id: uuid(),
       userId: user.id,
-      date: DateTime.fromMillis(data.date).toJSDate(),
-      createdAt: DateTime.fromMillis(data.createdAt).toJSDate(),
+      date: DateTime.fromSeconds(data.date).toJSDate(),
+      createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
       syncAt: DateTime.local().toJSDate(),
     });
   }
@@ -46,10 +46,10 @@ export class TransactionsService {
 
     await trx.$query().update({
       ...data,
-      date: DateTime.fromMillis(data.date).toJSDate(),
-      updatedAt: DateTime.fromMillis(data.updatedAt).toJSDate(),
+      date: DateTime.fromSeconds(data.date).toJSDate(),
+      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
       deletedAt: data.deletedAt
-        ? DateTime.fromMillis(data.deletedAt).toJSDate()
+        ? DateTime.fromSeconds(data.deletedAt).toJSDate()
         : null,
     });
   }

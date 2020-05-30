@@ -86,8 +86,8 @@ export const Store = types
           amount: Number(values.amount),
           createdAt: moment().unix(),
           date: values.date.unix(),
-          categoryId: values.category?.id,
-          currencyId: values.currency?.id,
+          categoryId: values.categoryId?.id,
+          currencyId: values.currencyId?.id,
         },
       );
 

@@ -52,11 +52,11 @@ class TransactionList extends React.PureComponent<
           render={(amount, record: Instance<typeof Transaction>) => {
             switch (record.type) {
               case 'income':
-                return <div className="tbl-income">+{amount}</div>;
+                return <div className={`tbl-${record.type}`}>+{amount}</div>;
               case 'outcome':
-                return <div className="tbl-outcome">-{amount}</div>;
+                return <div className={`tbl-${record.type}`}>-{amount}</div>;
               case 'transfer':
-                return <div className="tbl-transfer">{amount}</div>;
+                return <div className={`tbl-${record.type}`}>{amount}</div>;
             }
           }}
         />

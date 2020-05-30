@@ -1,12 +1,12 @@
 import { DatePicker, Form, Input, Select } from 'antd';
 import { Category, Currency } from 'common';
-import { Formik, FormikProps } from 'formik';
+import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
 import moment from 'moment';
 import React, { PureComponent } from 'react';
-import { InjectedStore } from '../../store/Store';
 import { WithTranslation, withTranslation } from 'react-i18next';
+import { InjectedStore } from '../../store/Store';
 
 const layout = {
   labelCol: { span: 8 },
@@ -14,12 +14,12 @@ const layout = {
 };
 
 export interface AddTransactionValues {
-  currency?: Instance<typeof Currency>;
-  category?: Instance<typeof Category>;
+  currencyId?: Instance<typeof Currency>;
+  categoryId?: Instance<typeof Category>;
   date: moment.Moment;
   sourceWalletId?: string;
   toWalletId?: string;
-  type: 'outcome' | 'income' | 'transfer';
+  type: string;
   fine?: number;
   amount?: number;
   description: string;
@@ -52,23 +52,26 @@ export class AddTransactionForm extends PureComponent<
     const store = this.store;
     return (
       <Formik
-        initialValues={{
-          currency: store.currencies.find(
-            (c) => c.name === store.account?.settings.primaryCurrencyName,
-          ),
-          category: undefined,
-          date: moment(),
-          sourceWalletId: undefined,
-          toWalletId: undefined,
-          type: 'outcome',
-          fine: undefined,
-          amount: undefined,
-          description: '',
-        }}
+        initialValues={
+          {
+            currencyId: store.currencies.find(
+              (c) => c.name === store.account?.settings.primaryCurrencyName,
+            ),
+            categoryId: undefined,
+            date: moment(),
+            sourceWalletId: undefined,
+            toWalletId: undefined,
+            type: 'outcome',
+            fine: undefined,
+            amount: undefined,
+            description: '',
+          } as AddTransactionValues
+        }
         onSubmit={this.handleSubmit}
         render={(bag) => (
           <Form {...layout} onSubmitCapture={bag.handleSubmit}>
             <Form.Item
+              validateStatus={bag.errors.amount ? 'error' : 'success'}
               label="Amount"
               name="amount"
               initialValue={bag.values.amount}
@@ -76,23 +79,27 @@ export class AddTransactionForm extends PureComponent<
             >
               <Input
                 placeholder="0"
-                prefix={bag.values.currency?.symbol || '$'}
-                suffix={bag.values.currency?.name}
+                prefix={bag.values.currencyId?.symbol || '$'}
+                suffix={bag.values.currencyId?.name}
                 onChange={bag.handleChange('amount')}
               />
             </Form.Item>
             <Form.Item
               label="Date"
+              validateStatus={bag.errors.date ? 'error' : 'success'}
               initialValue={bag.values.date}
               rules={[{ required: true, message: 'Input trx date' }]}
             >
               <DatePicker showTime defaultValue={bag.values.date} />
             </Form.Item>
-            <Form.Item label="Currency">
+            <Form.Item
+              label="Currency"
+              validateStatus={bag.errors.currencyId ? 'error' : 'success'}
+            >
               <Select
                 showSearch
                 filterOption={false}
-                value={bag.values.currency?.id}
+                value={bag.values.currencyId?.id}
                 onSearch={(filter) => this.setState({ filterCurrency: filter })}
                 onDropdownVisibleChange={() =>
                   this.setState({ filterCurrency: undefined })
@@ -111,7 +118,10 @@ export class AddTransactionForm extends PureComponent<
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item label="Wallet">
+            <Form.Item
+              label="Wallet"
+              validateStatus={bag.errors.sourceWalletId ? 'error' : 'success'}
+            >
               <Select
                 value={bag.values.sourceWalletId}
                 onChange={bag.handleChange('sourceWalletId')}
@@ -123,7 +133,10 @@ export class AddTransactionForm extends PureComponent<
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item label="Operation Type">
+            <Form.Item
+              label="Operation Type"
+              validateStatus={bag.errors.type ? 'error' : 'success'}
+            >
               <Select
                 value={bag.values.type}
                 onChange={bag.handleChange('type')}
@@ -133,13 +146,16 @@ export class AddTransactionForm extends PureComponent<
                 <Select.Option value="transfer">Transfer</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Category">
+            <Form.Item
+              label="Category"
+              validateStatus={bag.errors.categoryId ? 'error' : 'success'}
+            >
               <Select
                 showSearch
                 filterOption={false}
                 onChange={(id) =>
                   bag.setFieldValue(
-                    'category',
+                    'categoryId',
                     store.categories.find((c) => c.id === id),
                   )
                 }
@@ -157,7 +173,10 @@ export class AddTransactionForm extends PureComponent<
                   ))}
               </Select>
             </Form.Item>
-            <Form.Item label="Description">
+            <Form.Item
+              label="Description"
+              validateStatus={bag.errors.description ? 'error' : 'success'}
+            >
               <Input.TextArea />
             </Form.Item>
             {this.props.onInit(bag)}
@@ -203,9 +222,19 @@ export class AddTransactionForm extends PureComponent<
       });
   }
 
-  protected handleSubmit = async (values: AddTransactionValues) => {
-    await this.store.addTransaction(values);
-    this.props.onSubmit();
+  protected handleSubmit = async (
+    values: AddTransactionValues,
+    formikHelpers: FormikHelpers<AddTransactionValues>,
+  ) => {
+    try {
+      await this.store.addTransaction(values);
+      this.props.onSubmit();
+      formikHelpers.resetForm();
+    } catch (e) {
+      e.response.data.message.map((message: string) =>
+        formikHelpers.setFieldError(message.split(' ')[0], message),
+      );
+    }
   };
 }
 

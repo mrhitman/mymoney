@@ -64,6 +64,13 @@ class TransactionList extends React.PureComponent<
           title="Description"
           dataIndex="description"
           key="description"
+          render={(desc) =>
+            desc ? (
+              desc
+            ) : (
+              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            )
+          }
         />
         <Table.Column
           title="Date"

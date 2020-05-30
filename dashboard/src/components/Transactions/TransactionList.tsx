@@ -1,9 +1,11 @@
-import { Table } from "antd";
-import { inject, observer } from "mobx-react";
-import moment from "moment";
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { InjectedStore } from "src/store/Store";
+import { Popover, Table } from 'antd';
+import { Transaction } from 'common';
+import { inject, observer } from 'mobx-react';
+import { Instance } from 'mobx-state-tree';
+import moment from 'moment';
+import React from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { InjectedStore } from 'src/store/Store';
 
 class TransactionList extends React.PureComponent<
   Partial<InjectedStore> & WithTranslation
@@ -20,6 +22,16 @@ class TransactionList extends React.PureComponent<
   public render() {
     return (
       <Table dataSource={this.store.transactions.map((t) => t)}>
+        <Table.Column
+          title="id"
+          dataIndex="id"
+          key="id"
+          render={(id) => (
+            <Popover content={id}>
+              <div>{id.slice(0, 3)}</div>
+            </Popover>
+          )}
+        />
         <Table.Column title="Type" dataIndex="type" key="type" />
         <Table.Column
           title="Currency"
@@ -33,7 +45,21 @@ class TransactionList extends React.PureComponent<
           key="category"
           render={(category) => this.props.t(category.name)}
         />
-        <Table.Column title="Amount" dataIndex="amount" key="amount" />
+        <Table.Column
+          title="Amount"
+          dataIndex="amount"
+          key="amount"
+          render={(amount, record: Instance<typeof Transaction>) => {
+            switch (record.type) {
+              case 'income':
+                return <div className="tbl-income">+{amount}</div>;
+              case 'outcome':
+                return <div className="tbl-outcome">-{amount}</div>;
+              case 'transfer':
+                return <div className="tbl-transfer">{amount}</div>;
+            }
+          }}
+        />
         <Table.Column
           title="Description"
           dataIndex="description"
@@ -43,11 +69,11 @@ class TransactionList extends React.PureComponent<
           title="Date"
           dataIndex="date"
           key="date"
-          render={(date) => moment(date).format("LL")}
+          render={(date) => moment(date).format('LL')}
         />
       </Table>
     );
   }
 }
 
-export default withTranslation()(inject("store")(observer(TransactionList)));
+export default withTranslation()(inject('store')(observer(TransactionList)));

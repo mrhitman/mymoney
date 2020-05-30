@@ -53,3 +53,15 @@ body {
 .wallet-total {
   font-weight: bolder;
 }
+.tbl-income {
+  color: #9ccc65;
+  font-weight: bold;
+}
+.tbl-outcome {
+  color: #ef5350;
+  font-weight: bold;
+}
+.tbl-transfer {
+  color: #78909c;
+  font-weight: bold;
+}

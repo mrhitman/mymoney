@@ -24,7 +24,7 @@ export class TransactionsController {
     @Body() createTransaction: CreateTransactionDto,
     @Request() req,
   ) {
-    await this.service.create(createTransaction, req.user);
+    return this.service.create(createTransaction, req.user);
   }
 
   @Patch()
@@ -32,12 +32,12 @@ export class TransactionsController {
     @Body() updateTransaction: UpdateTransactionDto,
     @Request() req,
   ) {
-    await this.service.update(updateTransaction, req.user);
+    return this.service.update(updateTransaction, req.user);
   }
 
   @Delete('/:id')
   public async delete(@Param() id: string, @Request() req) {
-    await this.service.delete(id, req.user);
+    return this.service.delete(id, req.user);
   }
 
   @Get()

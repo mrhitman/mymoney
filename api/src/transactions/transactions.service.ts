@@ -31,7 +31,7 @@ export class TransactionsService {
   }
 
   public async create(data: CreateTransactionDto, user: User) {
-    await Transaction.query().insert({
+    const trx = await Transaction.query().insert({
       ...data,
       id: uuid(),
       userId: user.id,
@@ -39,6 +39,8 @@ export class TransactionsService {
       createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
       syncAt: DateTime.local().toJSDate(),
     });
+
+    return trx;
   }
 
   public async update(data: UpdateTransactionDto, user: User) {
@@ -52,6 +54,8 @@ export class TransactionsService {
         ? DateTime.fromSeconds(data.deletedAt).toJSDate()
         : null,
     });
+
+    return trx;
   }
 
   public async delete(id: string, user: User) {

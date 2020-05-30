@@ -1,14 +1,14 @@
-import { Button, Modal } from "antd";
-import { inject, observer } from "mobx-react";
-import React, { PureComponent } from "react";
-import { InjectedStore } from "../../store/Store";
-import AddTransactionForm from "./AddTransactionForm";
-import { FormikProps } from "formik";
-import { AddTransactionValues } from "./AddTransactionForm";
+import { Button, Modal } from 'antd';
+import { inject, observer } from 'mobx-react';
+import React, { PureComponent } from 'react';
+import { InjectedStore } from '../../store/Store';
+import AddTransactionForm from './AddTransactionForm';
+import { FormikProps } from 'formik';
+import { AddTransactionValues } from './AddTransactionForm';
 
 interface AddTransactionState {
   visible: boolean;
-  operation: "income" | "outcome" | "transfer";
+  operation: 'income' | 'outcome' | 'transfer';
   bag?: FormikProps<AddTransactionValues>;
 }
 
@@ -18,7 +18,7 @@ class AddTransaction extends PureComponent<
 > {
   public state: AddTransactionState = {
     visible: false,
-    operation: "outcome",
+    operation: 'outcome',
   };
 
   public get store() {
@@ -41,6 +41,7 @@ class AddTransaction extends PureComponent<
         >
           <AddTransactionForm
             onInit={(bag) => !this.state.bag && this.setState({ bag })}
+            onSubmit={() => this.setState({ visible: false })}
           />
         </Modal>
       </div>
@@ -56,4 +57,4 @@ class AddTransaction extends PureComponent<
   };
 }
 
-export default inject("store")(observer(AddTransaction));
+export default inject('store')(observer(AddTransaction));

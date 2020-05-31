@@ -18,7 +18,7 @@ export interface AddTransactionValues {
   categoryId?: Instance<typeof Category>;
   date: moment.Moment;
   sourceWalletId?: string;
-  toWalletId?: string;
+  destinationWalletId?: string;
   type: string;
   fine?: number;
   amount?: number;
@@ -55,12 +55,12 @@ export class AddTransactionForm extends PureComponent<
         initialValues={
           {
             currencyId: store.currencies.find(
-              (c) => c.name === store.account?.settings.primaryCurrencyName,
+              (c) => c.name === store.account?.settings.primaryCurrencyName
             ),
             categoryId: undefined,
             date: moment(),
             sourceWalletId: undefined,
-            toWalletId: undefined,
+            destinationWalletId: undefined,
             type: 'outcome',
             fine: undefined,
             amount: undefined,
@@ -72,20 +72,35 @@ export class AddTransactionForm extends PureComponent<
           <Form {...layout} onSubmitCapture={bag.handleSubmit}>
             <Form.Item
               validateStatus={bag.errors.amount ? 'error' : 'success'}
-              label="Amount"
-              name="amount"
+              label='Amount'
+              name='amount'
               initialValue={bag.values.amount}
               rules={[{ required: true, message: 'Input amount' }]}
             >
               <Input
-                placeholder="0"
+                placeholder='0'
                 prefix={bag.values.currencyId?.symbol || '$'}
                 suffix={bag.values.currencyId?.name}
                 onChange={bag.handleChange('amount')}
               />
             </Form.Item>
+            {bag.values.type === 'transfer' && (
+              <Form.Item
+                validateStatus={bag.errors.amount ? 'error' : 'success'}
+                label='Fine'
+                name='fine'
+                initialValue={bag.values.fine}
+              >
+                <Input
+                  placeholder='0'
+                  prefix={bag.values.currencyId?.symbol || '$'}
+                  suffix={bag.values.currencyId?.name}
+                  onChange={bag.handleChange('amount')}
+                />
+              </Form.Item>
+            )}
             <Form.Item
-              label="Date"
+              label='Date'
               validateStatus={bag.errors.date ? 'error' : 'success'}
               initialValue={bag.values.date}
               rules={[{ required: true, message: 'Input trx date' }]}
@@ -93,7 +108,7 @@ export class AddTransactionForm extends PureComponent<
               <DatePicker showTime defaultValue={bag.values.date} />
             </Form.Item>
             <Form.Item
-              label="Currency"
+              label='Currency'
               validateStatus={bag.errors.currencyId ? 'error' : 'success'}
             >
               <Select
@@ -107,7 +122,7 @@ export class AddTransactionForm extends PureComponent<
                 onChange={(id) =>
                   bag.setFieldValue(
                     'currency',
-                    store.currencies.find((c) => c.id === id),
+                    store.currencies.find((c) => c.id === id)
                   )
                 }
               >
@@ -118,63 +133,98 @@ export class AddTransactionForm extends PureComponent<
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item
-              label="Wallet"
-              validateStatus={bag.errors.sourceWalletId ? 'error' : 'success'}
-            >
-              <Select
-                value={bag.values.sourceWalletId}
-                onChange={bag.handleChange('sourceWalletId')}
+            {bag.values.type !== 'income' && (
+              <Form.Item
+                label='From Wallet'
+                validateStatus={bag.errors.sourceWalletId ? 'error' : 'success'}
               >
-                {store.wallets.map((wallet) => (
-                  <Select.Option key={wallet.id} value={wallet.id}>
-                    {wallet.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
+                <Select
+                  value={bag.values.sourceWalletId}
+                  onChange={bag.handleChange('sourceWalletId')}
+                >
+                  {store.wallets
+                    .filter((wallet) =>
+                      bag.values.type === 'transfer'
+                        ? wallet.id !== bag.values.destinationWalletId
+                        : true
+                    )
+                    .map((wallet) => (
+                      <Select.Option key={wallet.id} value={wallet.id}>
+                        {wallet.name}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            )}
+            {bag.values.type !== 'outcome' && (
+              <Form.Item
+                label='To Wallet'
+                validateStatus={bag.errors.sourceWalletId ? 'error' : 'success'}
+              >
+                <Select
+                  value={bag.values.destinationWalletId}
+                  onChange={bag.handleChange('destinationWalletId')}
+                >
+                  {store.wallets
+                    .filter((wallet) =>
+                      bag.values.type === 'transfer'
+                        ? wallet.id !== bag.values.sourceWalletId
+                        : true
+                    )
+                    .map((wallet) => (
+                      <Select.Option key={wallet.id} value={wallet.id}>
+                        {wallet.name}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            )}
             <Form.Item
-              label="Operation Type"
+              label='Operation Type'
               validateStatus={bag.errors.type ? 'error' : 'success'}
             >
               <Select
                 value={bag.values.type}
                 onChange={bag.handleChange('type')}
               >
-                <Select.Option value="income">Income</Select.Option>
-                <Select.Option value="outcome">Outcome</Select.Option>
-                <Select.Option value="transfer">Transfer</Select.Option>
+                <Select.Option value='income'>Income</Select.Option>
+                <Select.Option value='outcome'>Outcome</Select.Option>
+                <Select.Option value='transfer'>Transfer</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item
-              label="Category"
-              validateStatus={bag.errors.categoryId ? 'error' : 'success'}
-            >
-              <Select
-                showSearch
-                filterOption={false}
-                onChange={(id) =>
-                  bag.setFieldValue(
-                    'categoryId',
-                    store.categories.find((c) => c.id === id),
-                  )
-                }
-                onSearch={(filter) => this.setState({ filterCategory: filter })}
-                onDropdownVisibleChange={() =>
-                  this.setState({ filterCategory: undefined })
-                }
+            {bag.values.type !== 'transfer' && (
+              <Form.Item
+                label='Category'
+                validateStatus={bag.errors.categoryId ? 'error' : 'success'}
               >
-                {this.categories
-                  .filter((category) => category.type === bag.values.type)
-                  .map((category) => (
-                    <Select.Option key={category.id} value={category.id}>
-                      {this.props.t(category.name)}
-                    </Select.Option>
-                  ))}
-              </Select>
-            </Form.Item>
+                <Select
+                  showSearch
+                  filterOption={false}
+                  onChange={(id) =>
+                    bag.setFieldValue(
+                      'categoryId',
+                      store.categories.find((c) => c.id === id)
+                    )
+                  }
+                  onSearch={(filter) =>
+                    this.setState({ filterCategory: filter })
+                  }
+                  onDropdownVisibleChange={() =>
+                    this.setState({ filterCategory: undefined })
+                  }
+                >
+                  {this.categories
+                    .filter((category) => category.type === bag.values.type)
+                    .map((category) => (
+                      <Select.Option key={category.id} value={category.id}>
+                        {this.props.t(category.name)}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            )}
             <Form.Item
-              label="Description"
+              label='Description'
               validateStatus={bag.errors.description ? 'error' : 'success'}
             >
               <Input.TextArea />
@@ -209,7 +259,7 @@ export class AddTransactionForm extends PureComponent<
             'TRANSFER_OUT',
             'TRANSFER_SYS',
             'SYSTEM_EMPTY',
-          ].includes(category.name),
+          ].includes(category.name)
       )
       .filter((category) => {
         const filter = this.state.filterCategory?.toLowerCase();
@@ -224,7 +274,7 @@ export class AddTransactionForm extends PureComponent<
 
   protected handleSubmit = async (
     values: AddTransactionValues,
-    formikHelpers: FormikHelpers<AddTransactionValues>,
+    formikHelpers: FormikHelpers<AddTransactionValues>
   ) => {
     try {
       await this.store.addTransaction(values);
@@ -232,7 +282,7 @@ export class AddTransactionForm extends PureComponent<
       formikHelpers.resetForm();
     } catch (e) {
       e.response.data.message.map((message: string) =>
-        formikHelpers.setFieldError(message.split(' ')[0], message),
+        formikHelpers.setFieldError(message.split(' ')[0], message)
       );
     }
   };

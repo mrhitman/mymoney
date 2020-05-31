@@ -34,4 +34,5 @@ COPY --from=stage /opt/mymoney/common/node_modules common/node_modules
 EXPOSE 3000
 
 RUN cd api
-CMD yarn start
+WORKDIR /opt/mymoney/api
+CMD yarn start:prod

@@ -3,7 +3,7 @@ import { Model } from 'objection';
 export class Transaction extends Model {
   public id: string;
   public userId: number;
-  public type: number;
+  public type: string;
   public categoryId: string;
   public sourceWalletId: string;
   public destinationWalletId: string;

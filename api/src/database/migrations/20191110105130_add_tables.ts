@@ -27,7 +27,7 @@ export async function up(knex: Knex): Promise<any> {
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('name', 64);
     t.string('description', 64);
-    t.string('cardNumber', 64);
+    t.string('card_number', 64);
     t.string('type', 32);
     t.jsonb('pockets');
     t.timestamp('created_at').defaultTo(knex.fn.now());

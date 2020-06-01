@@ -72,13 +72,13 @@ export class AddTransactionForm extends PureComponent<
           <Form {...layout} onSubmitCapture={bag.handleSubmit}>
             <Form.Item
               validateStatus={bag.errors.amount ? 'error' : 'success'}
-              label='Amount'
-              name='amount'
+              label="Amount"
+              name="amount"
               initialValue={bag.values.amount}
               rules={[{ required: true, message: 'Input amount' }]}
             >
               <Input
-                placeholder='0'
+                placeholder="0"
                 prefix={bag.values.currencyId?.symbol || '$'}
                 suffix={bag.values.currencyId?.name}
                 onChange={bag.handleChange('amount')}
@@ -87,12 +87,12 @@ export class AddTransactionForm extends PureComponent<
             {bag.values.type === 'transfer' && (
               <Form.Item
                 validateStatus={bag.errors.amount ? 'error' : 'success'}
-                label='Fine'
-                name='fine'
+                label="Fine"
+                name="fine"
                 initialValue={bag.values.fine}
               >
                 <Input
-                  placeholder='0'
+                  placeholder="0"
                   prefix={bag.values.currencyId?.symbol || '$'}
                   suffix={bag.values.currencyId?.name}
                   onChange={bag.handleChange('amount')}
@@ -100,7 +100,7 @@ export class AddTransactionForm extends PureComponent<
               </Form.Item>
             )}
             <Form.Item
-              label='Date'
+              label="Date"
               validateStatus={bag.errors.date ? 'error' : 'success'}
               initialValue={bag.values.date}
               rules={[{ required: true, message: 'Input trx date' }]}
@@ -108,7 +108,7 @@ export class AddTransactionForm extends PureComponent<
               <DatePicker showTime defaultValue={bag.values.date} />
             </Form.Item>
             <Form.Item
-              label='Currency'
+              label="Currency"
               validateStatus={bag.errors.currencyId ? 'error' : 'success'}
             >
               <Select
@@ -135,7 +135,7 @@ export class AddTransactionForm extends PureComponent<
             </Form.Item>
             {bag.values.type !== 'income' && (
               <Form.Item
-                label='From Wallet'
+                label="From Wallet"
                 validateStatus={bag.errors.sourceWalletId ? 'error' : 'success'}
               >
                 <Select
@@ -158,7 +158,7 @@ export class AddTransactionForm extends PureComponent<
             )}
             {bag.values.type !== 'outcome' && (
               <Form.Item
-                label='To Wallet'
+                label="To Wallet"
                 validateStatus={bag.errors.sourceWalletId ? 'error' : 'success'}
               >
                 <Select
@@ -180,21 +180,21 @@ export class AddTransactionForm extends PureComponent<
               </Form.Item>
             )}
             <Form.Item
-              label='Operation Type'
+              label="Operation Type"
               validateStatus={bag.errors.type ? 'error' : 'success'}
             >
               <Select
                 value={bag.values.type}
                 onChange={bag.handleChange('type')}
               >
-                <Select.Option value='income'>Income</Select.Option>
-                <Select.Option value='outcome'>Outcome</Select.Option>
-                <Select.Option value='transfer'>Transfer</Select.Option>
+                <Select.Option value="income">Income</Select.Option>
+                <Select.Option value="outcome">Outcome</Select.Option>
+                <Select.Option value="transfer">Transfer</Select.Option>
               </Select>
             </Form.Item>
             {bag.values.type !== 'transfer' && (
               <Form.Item
-                label='Category'
+                label="Category"
                 validateStatus={bag.errors.categoryId ? 'error' : 'success'}
               >
                 <Select
@@ -224,10 +224,13 @@ export class AddTransactionForm extends PureComponent<
               </Form.Item>
             )}
             <Form.Item
-              label='Description'
+              label="Description"
               validateStatus={bag.errors.description ? 'error' : 'success'}
             >
-              <Input.TextArea />
+              <Input.TextArea
+                value={bag.values.description}
+                onChange={bag.handleChange('description')}
+              />
             </Form.Item>
             {this.props.onInit(bag)}
           </Form>

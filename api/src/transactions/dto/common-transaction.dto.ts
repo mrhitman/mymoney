@@ -30,4 +30,7 @@ export class CommonTransactionDto {
 
   @IsNumber()
   readonly date: number;
+
+  @IsString()
+  readonly description: string;
 }

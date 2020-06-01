@@ -1,24 +1,24 @@
-import { types, Instance, IAnyType } from "mobx-state-tree";
-import { Category } from "./category";
-import { Wallet } from "./wallet";
-import { Currency } from "./currency";
+import { types, Instance, IAnyType } from 'mobx-state-tree';
+import { Category } from './category';
+import { Wallet } from './wallet';
+import { Currency } from './currency';
 
 export enum TransactionType {
-  income = "income",
-  outcome = "outcome",
-  transfer = "transfer",
+  income = 'income',
+  outcome = 'outcome',
+  transfer = 'transfer',
 }
 
-export const Transaction = (types.model("Transaction", {
+export const Transaction = (types.model('Transaction', {
   id: types.identifier,
   category: types.reference(Category),
   type: types.enumeration(Object.keys(TransactionType)),
-  source: types.maybe(types.reference(Wallet)),
-  destination: types.maybe(types.reference(Wallet)),
+  source: types.maybeNull(types.reference(Wallet)),
+  destination: types.maybeNull(types.reference(Wallet)),
   date: types.optional(types.Date, new Date()),
   amount: types.number,
   currency: types.reference(Currency),
-  description: types.optional(types.string, ""),
+  description: types.optional(types.string, ''),
   fine: types.optional(types.number, 0),
   transferOptions: types.maybe(
     types.model({

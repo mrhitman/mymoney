@@ -71,7 +71,9 @@ export const Store = types
           currency: item.currencyId,
           category: item.categoryId,
           source: item.sourceWalletId,
+          destination: item.destinationWalletId,
           type: item.type,
+          description: item.description,
           amount: Number(item.amount),
           date: new Date(item.date),
         });
@@ -88,7 +90,7 @@ export const Store = types
           date: values.date.unix(),
           categoryId: values.categoryId?.id,
           currencyId: values.currencyId?.id,
-        },
+        }
       );
 
       const item = response.data;
@@ -101,7 +103,7 @@ export const Store = types
           type: item.type,
           amount: Number(item.amount),
           date: new Date(item.date),
-        }),
+        })
       );
     }
 
@@ -142,9 +144,9 @@ export const Store = types
                 id: p.id,
                 amount: p.amount,
                 currency: p.currencyId,
-              }),
+              })
             ),
-          }),
+          })
         );
       }
     }
@@ -161,7 +163,7 @@ export const Store = types
             name: item.name,
             type: item.type ? item.type : undefined,
             parent: item.parent ? item.parent : undefined,
-          }),
+          })
         );
       }
     }

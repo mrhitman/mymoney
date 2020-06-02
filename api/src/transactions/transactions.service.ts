@@ -3,15 +3,16 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
-import { upperFirst } from 'lodash';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import Objection, { transaction } from 'objection';
 
 @Injectable()
 export class TransactionsService {
@@ -36,33 +37,83 @@ export class TransactionsService {
   }
 
   public async create(data: CreateTransactionDto, user: User) {
-    const trx = await Transaction.query().insert({
-      ...data,
-      id: uuid(),
-      userId: user.id,
-      date: DateTime.fromSeconds(data.date).toJSDate(),
-      createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
-      syncAt: DateTime.local().toJSDate(),
-    });
+    const dbTrx = await transaction.start(Transaction);
+    try {
+      const trx = await Transaction.query(dbTrx).insert({
+        ...data,
+        id: uuid(),
+        userId: user.id,
+        date: DateTime.fromSeconds(data.date).toJSDate(),
+        createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
+        syncAt: DateTime.local().toJSDate(),
+      });
 
-    this[`add${upperFirst(trx.type)}Trx`](trx);
+      const wallet = await this[`add${upperFirst(trx.type)}Trx`](trx, dbTrx);
+      await dbTrx.commit();
 
-    return trx;
+      return {
+        transaction: trx,
+        wallet,
+      };
+    } catch (e) {
+      await dbTrx.rollback();
+      throw new BadRequestException(e.message);
+    }
   }
 
-  protected async addIncomeTrx(trx: Transaction) {
+  protected async addIncomeTrx(
+    trx: Transaction,
+    dbTrx?: Objection.TransactionOrKnex,
+  ) {
+    const wallet = await this.walletService.getWallet(trx.destinationWalletId);
+    const pocket = this.getPocket(wallet, trx);
+    pocket.amount += trx.amount;
+
+    await wallet
+      .$query(dbTrx)
+      .update({
+        pockets: [...wallet.pockets.filter((p) => p.id !== pocket.id), pocket],
+      })
+      .debug()
+      .execute();
+
+    return wallet;
+  }
+
+  protected async addOutcomeTrx(
+    trx: Transaction,
+    dbTrx?: Objection.TransactionOrKnex,
+  ) {
     const wallet = await this.walletService.getWallet(trx.sourceWalletId);
-    this.walletService.performOperation(wallet, trx);
-    await wallet.$query().update().execute();
+    const pocket = this.getPocket(wallet, trx);
+    pocket.amount -= trx.amount;
+
+    await wallet
+      .$query(dbTrx)
+      .update({
+        pockets: [...wallet.pockets.filter((p) => p.id !== pocket.id), pocket],
+      })
+      .execute();
+
+    return wallet;
   }
 
-  protected async addOutcomeTrx(trx: Transaction) {
-    const wallet = await this.walletService.getWallet(trx.sourceWalletId);
-    this.walletService.performOperation(wallet, trx);
-    await wallet.$query().update().execute();
+  protected async addTransferTrx(
+    trx: Transaction,
+    dbTrx?: Objection.TransactionOrKnex,
+  ) {
+    return;
   }
 
-  protected async addTransferTrx(trx: Transaction) {}
+  private getPocket(wallet: Wallet, trx: Transaction) {
+    return (
+      wallet.pockets.find((p) => p.currencyId === trx.currencyId) || {
+        id: uuid(),
+        currencyId: trx.currencyId,
+        amount: 0,
+      }
+    );
+  }
 
   public async update(data: UpdateTransactionDto, user: User) {
     const trx = await this.getTransaction(data.id, user.id);

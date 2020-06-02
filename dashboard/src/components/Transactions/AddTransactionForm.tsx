@@ -95,7 +95,7 @@ export class AddTransactionForm extends PureComponent<
                   placeholder="0"
                   prefix={bag.values.currencyId?.symbol || '$'}
                   suffix={bag.values.currencyId?.name}
-                  onChange={bag.handleChange('amount')}
+                  onChange={bag.handleChange('fine')}
                 />
               </Form.Item>
             )}
@@ -121,7 +121,7 @@ export class AddTransactionForm extends PureComponent<
                 }
                 onChange={(id) =>
                   bag.setFieldValue(
-                    'currency',
+                    'currencyId',
                     store.currencies.find((c) => c.id === id)
                   )
                 }

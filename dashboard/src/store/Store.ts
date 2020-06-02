@@ -81,30 +81,43 @@ export const Store = types
     }
 
     function* addTransaction(values: AddTransactionValues) {
-      const response = yield api.client.post<GetTransactionResponse>(
-        '/transactions',
-        {
-          ...omit(values, ['category', 'currency']),
-          amount: Number(values.amount),
-          createdAt: moment().unix(),
-          date: values.date.unix(),
-          categoryId: values.categoryId?.id,
-          currencyId: values.currencyId?.id,
-        }
-      );
+      const response = yield api.client.post<{
+        wallet: GetWalletResponse;
+        transaction: GetTransactionResponse;
+      }>('/transactions', {
+        ...omit(values, ['category', 'currency']),
+        amount: Number(values.amount),
+        createdAt: moment().unix(),
+        date: values.date.unix(),
+        categoryId: values.categoryId?.id,
+        currencyId: values.currencyId?.id,
+      });
 
-      const item = response.data;
+      const { transaction, wallet } = response.data;
       self.transactions.push(
         Transaction.create({
-          id: item.id,
-          currency: item.currencyId,
-          category: item.categoryId,
-          source: item.sourceWalletId,
-          type: item.type,
-          amount: Number(item.amount),
-          date: new Date(item.date),
+          id: transaction.id,
+          currency: transaction.currencyId,
+          category: transaction.categoryId,
+          source: transaction.sourceWalletId,
+          type: transaction.type,
+          amount: Number(transaction.amount),
+          date: new Date(transaction.date),
         })
       );
+      // self.wallets.replace({
+      //   id: wallet.id,
+      //   name: wallet.name,
+      //   description: wallet.description,
+      //   type: wallet.type,
+      //   pockets: wallet.pockets.map((p: any) =>
+      //     cast<any>({
+      //       id: p.id,
+      //       amount: p.amount,
+      //       currency: p.currencyId,
+      //     })
+      //   ),
+      // } as any);
     }
 
     function* loadCurrencies(force: boolean = false) {

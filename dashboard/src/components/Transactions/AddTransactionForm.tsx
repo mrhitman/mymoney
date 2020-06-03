@@ -284,7 +284,7 @@ export class AddTransactionForm extends PureComponent<
       this.props.onSubmit();
       formikHelpers.resetForm();
     } catch (e) {
-      e.response.data.message.map((message: string) =>
+      e?.response?.data.message.map((message: string) =>
         formikHelpers.setFieldError(message.split(' ')[0], message)
       );
     }

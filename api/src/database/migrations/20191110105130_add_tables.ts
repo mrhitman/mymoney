@@ -6,9 +6,9 @@ export async function up(knex: Knex): Promise<any> {
     t.string('parent').index();
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('name');
-    t.string('description');
-    t.string('type');
-    t.boolean('is_fixed');
+    t.string('description').defaultTo('');
+    t.string('type').defaultTo('outcome');
+    t.boolean('is_fixed').defaultTo(false);
     t.jsonb('icon');
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at');

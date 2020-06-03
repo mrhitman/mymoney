@@ -1,17 +1,17 @@
-import { types } from "mobx-state-tree";
-import { Icon } from "./icon";
-import { Pocket } from "./pocket";
-import { red400 } from "./utils/colors";
+import { types } from 'mobx-state-tree';
+import { Icon } from './icon';
+import { Pocket } from './pocket';
+import { red400 } from './utils/colors';
 
-export const Wallet = types.model("Wallet", {
+export const Wallet = types.model('Wallet', {
   id: types.identifier,
   name: types.string,
-  description: types.maybe(types.string),
-  cardNumber: types.maybe(types.string),
+  description: types.maybeNull(types.string),
+  cardNumber: types.maybeNull(types.string),
   icon: types.optional(Icon, {
-    type: "Feather",
-    name: "target",
-    color: "white",
+    type: 'Feather',
+    name: 'target',
+    color: 'white',
     backgroundColor: red400,
   }),
   allowNegativeBalance: types.optional(types.boolean, true),

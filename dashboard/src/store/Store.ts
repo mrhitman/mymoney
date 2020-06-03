@@ -66,17 +66,7 @@ export const Store = types
 
       self.transactions.clear();
       for (let item of data) {
-        self.transactions.push({
-          id: item.id,
-          currency: item.currencyId,
-          category: item.categoryId,
-          source: item.sourceWalletId,
-          destination: item.destinationWalletId,
-          type: item.type,
-          description: item.description,
-          amount: Number(item.amount),
-          date: new Date(item.date),
-        });
+        self.transactions.push(Transaction.create(item));
       }
     }
 
@@ -94,30 +84,9 @@ export const Store = types
       });
 
       const { transaction, wallet } = response.data;
-      self.transactions.push(
-        Transaction.create({
-          id: transaction.id,
-          currency: transaction.currencyId,
-          category: transaction.categoryId,
-          source: transaction.sourceWalletId,
-          type: transaction.type,
-          amount: Number(transaction.amount),
-          date: new Date(transaction.date),
-        })
-      );
-      // self.wallets.replace({
-      //   id: wallet.id,
-      //   name: wallet.name,
-      //   description: wallet.description,
-      //   type: wallet.type,
-      //   pockets: wallet.pockets.map((p: any) =>
-      //     cast<any>({
-      //       id: p.id,
-      //       amount: p.amount,
-      //       currency: p.currencyId,
-      //     })
-      //   ),
-      // } as any);
+      self.transactions.push(Transaction.create(transaction));
+      self.wallets.remove(self.wallets.find((w) => w.id === wallet.id)!);
+      self.wallets.push(Wallet.create(wallet));
     }
 
     function* loadCurrencies(force: boolean = false) {
@@ -130,13 +99,7 @@ export const Store = types
 
       self.currencies.clear();
       for (let item of data) {
-        self.currencies.push({
-          id: item.id,
-          name: item.name,
-          rate: item.rate,
-          symbol: item.symbol,
-          description: item.description,
-        });
+        self.currencies.push(Currency.create(item));
       }
     }
 
@@ -146,21 +109,7 @@ export const Store = types
 
       self.wallets.clear();
       for (let item of data) {
-        self.wallets.push(
-          Wallet.create({
-            id: item.id,
-            name: item.name,
-            description: item.description,
-            type: item.type,
-            pockets: item.pockets.map((p) =>
-              cast<any>({
-                id: p.id,
-                amount: p.amount,
-                currency: p.currencyId,
-              })
-            ),
-          })
-        );
+        self.wallets.push(Wallet.create(item));
       }
     }
 
@@ -170,14 +119,7 @@ export const Store = types
 
       self.categories.clear();
       for (let item of data) {
-        self.categories.push(
-          Category.create({
-            id: item.id,
-            name: item.name,
-            type: item.type ? item.type : undefined,
-            parent: item.parent ? item.parent : undefined,
-          })
-        );
+        self.categories.push(Category.create(item));
       }
     }
 

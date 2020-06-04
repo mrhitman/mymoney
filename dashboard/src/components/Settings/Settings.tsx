@@ -10,6 +10,7 @@ class Settings extends PureComponent<Partial<InjectedStore>> {
   public componentDidMount = async () => {
     await this.store.loadProfile();
   };
+
   public render() {
     return <pre>{JSON.stringify(this.store.account, null, 2)}</pre>;
   }

@@ -126,6 +126,7 @@ export const Store = types
       const response = yield api.client.get('/currencies/rates');
       const data = response.data as GetRateResponse;
 
+      debugger;
       if (self.currencies.length && !force) {
         return;
       }
@@ -136,10 +137,6 @@ export const Store = types
       }
 
       return data;
-    }
-
-    function* init() {
-      yield Promise.all([flow(loadRates)(), flow(loadCurrencies)()]);
     }
 
     return {
@@ -153,7 +150,6 @@ export const Store = types
       loadWallets: flow(loadWallets),
       addTransaction: flow(addTransaction),
       loadTransactions: flow(loadTransactions),
-      init: flow(init),
     };
   });
 

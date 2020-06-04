@@ -25,10 +25,6 @@ class AddTransaction extends PureComponent<
     return this.props.store!;
   }
 
-  public componentDidMount = async () => {
-    await this.store.loadProfile();
-  };
-
   public render() {
     return (
       <div>

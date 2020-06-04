@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
-import { inject, observer } from "mobx-react";
-import { InjectedStore } from "../../store/Store";
-import { Collapse } from "antd";
+import React, { PureComponent } from 'react';
+import { inject, observer } from 'mobx-react';
+import { InjectedStore } from '../../store/Store';
+import { Collapse } from 'antd';
 
 class Rates extends PureComponent<Partial<InjectedStore>> {
   protected timerId?: NodeJS.Timer;
@@ -11,7 +11,6 @@ class Rates extends PureComponent<Partial<InjectedStore>> {
   }
 
   public componentDidMount = async () => {
-    await this.store.loadRates(true);
     await this.store.loadCurrencies();
     this.timerId = setInterval(() => this.store.loadRates(true), 3600 * 1000);
   };
@@ -28,7 +27,7 @@ class Rates extends PureComponent<Partial<InjectedStore>> {
       <Collapse>
         <Collapse.Panel header="Rates" key="rates">
           {this.store.rates.rates
-            .filter((r) => !["BAM", "TTD", "CVE", "TOP"].includes(r.name))
+            .filter((r) => !['BAM', 'TTD', 'CVE', 'TOP'].includes(r.name))
             .map(this.renderRate)}
         </Collapse.Panel>
       </Collapse>
@@ -49,4 +48,4 @@ class Rates extends PureComponent<Partial<InjectedStore>> {
   };
 }
 
-export default inject("store")(observer(Rates));
+export default inject('store')(observer(Rates));

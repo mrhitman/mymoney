@@ -33,7 +33,7 @@ export class Api {
         newConfig.headers.Authorization = `Bearer ${this.accessToken}`;
         return newConfig;
       },
-      (e) => Promise.reject(e),
+      (e) => Promise.reject(e)
     );
 
     this.client.interceptors.response.use(
@@ -57,8 +57,10 @@ export class Api {
 
           if (this.onLogout) {
             this.onLogout();
+          } else {
+            localStorage.clear();
           }
-          localStorage.clear();
+
           throw e;
         }
 
@@ -67,7 +69,7 @@ export class Api {
           retry: true,
         };
         return this.client(newRequest);
-      },
+      }
     );
   }
 

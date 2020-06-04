@@ -49,7 +49,6 @@ export const Store = types
     }
 
     function exit() {
-      localStorage.clear();
       self.isAuthorized = false;
     }
 

@@ -1,14 +1,15 @@
-import { inject, observer } from "mobx-react";
-import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import Categories from "../components/Accounting/Categories";
-import Info from "../components/Info/Info";
-import Login from "../components/Login/Login";
-import Layout from "../components/misc/Layout";
-import { InjectedStore } from "../store/Store";
-import PrivateRoute from "./PrivateRoute";
-import Settings from "../components/Settings/Settings";
-import TransactionList from "../components/Transactions/TransactionList";
+import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Categories from 'src/components/Accounting/Categories';
+import Info from 'src/components/Info/Info';
+import Login from 'src/components/Login/Login';
+import Layout from 'src/components/misc/Layout';
+import Settings from 'src/components/Settings/Settings';
+import CalendarView from 'src/components/Transactions/CalendarView';
+import TransactionList from 'src/components/Transactions/TransactionList';
+import { InjectedStore } from 'src/store/Store';
+import PrivateRoute from './PrivateRoute';
 
 class Routes extends React.Component {
   public get store() {
@@ -50,7 +51,7 @@ class Routes extends React.Component {
 
         <PrivateRoute path="/scheduler" exact>
           <Layout activePage="scheduler">
-            <div>scheduler</div>
+            <CalendarView />
           </Layout>
         </PrivateRoute>
 
@@ -78,4 +79,4 @@ class Routes extends React.Component {
   }
 }
 
-export default inject("store")(observer(Routes));
+export default inject('store')(observer(Routes));

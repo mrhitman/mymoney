@@ -87,7 +87,6 @@ class LoginForm extends React.Component<
   protected handleSubmit = async (values: LoginFormValues) => {
     try {
       await this.store.login(values);
-      await this.store.init();
       this.props.afterLogin();
     } catch (e) {}
   };

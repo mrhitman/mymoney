@@ -21,7 +21,11 @@ class TransactionList extends React.PureComponent<
 
   public render() {
     return (
-      <Table dataSource={this.store.transactions.map((t) => t)}>
+      <Table
+        dataSource={this.store.transactions
+          .sort((t2, t1) => moment(t1.date).unix() - moment(t2.date).unix())
+          .map((t) => t)}
+      >
         <Table.Column
           title="id"
           dataIndex="id"

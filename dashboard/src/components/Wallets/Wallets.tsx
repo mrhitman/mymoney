@@ -3,6 +3,7 @@ import { Pocket, Wallet } from 'common';
 import { sumBy } from 'lodash';
 import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
+import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { InjectedStore } from '../../store/Store';
 
@@ -19,7 +20,16 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
   };
 
   public render() {
-    return <Collapse>{this.store.wallets.map(this.renderWallet)}</Collapse>;
+    return (
+      <Collapse>
+        {this.store.wallets
+          .sort(
+            (w1, w2) =>
+              moment(w1.createdAt).unix() - moment(w2.createdAt).unix()
+          )
+          .map(this.renderWallet)}
+      </Collapse>
+    );
   }
 
   protected getTotal = () => {

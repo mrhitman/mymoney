@@ -1,11 +1,12 @@
 import { Popover, Table } from 'antd';
 import { Transaction } from 'common';
 import { inject, observer } from 'mobx-react';
-import { Instance } from 'mobx-state-tree';
+import { Instance, flow } from 'mobx-state-tree';
 import moment from 'moment';
 import React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { InjectedStore } from 'src/store/Store';
+import Icon from 'src/components/misc/Icon';
 
 class TransactionList extends React.PureComponent<
   Partial<InjectedStore> & WithTranslation
@@ -47,7 +48,35 @@ class TransactionList extends React.PureComponent<
           title="Category"
           dataIndex="category"
           key="category"
-          render={(category) => this.props.t(category.name)}
+          render={(category) => {
+            return (
+              <div>
+                <div
+                  style={{
+                    padding: 3,
+                    margin: 3,
+                    marginRight: 10,
+                    borderRadius: 20,
+                    width: 24,
+                    height: 24,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    float: 'left',
+                    backgroundColor: category.icon.backgroundColor,
+                  }}
+                >
+                  <Icon
+                    name={category.icon.name}
+                    type={category.icon.type}
+                    color={'white'}
+                    size={12}
+                  />
+                </div>
+                {this.props.t(category.name)}
+              </div>
+            );
+          }}
         />
         <Table.Column
           title="Amount"

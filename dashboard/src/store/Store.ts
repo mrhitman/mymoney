@@ -126,7 +126,6 @@ export const Store = types
       const response = yield api.client.get('/currencies/rates');
       const data = response.data as GetRateResponse;
 
-      debugger;
       if (self.currencies.length && !force) {
         return;
       }

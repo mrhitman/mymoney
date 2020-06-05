@@ -28,6 +28,11 @@ export const Category = (types
       type: snapshot.type || 'outcome',
       isFixed: snapshot.isFixed || false,
       description: snapshot.description || '',
+      icon: {
+        name: snapshot.icon?.name || 'piggy-bank',
+        type: snapshot.icon?.type || 'FontAwesome5',
+        backgroundColor: snapshot.icon?.backgroundColor || 'black',
+      },
     };
   }) as any) as CategoryLike;
 

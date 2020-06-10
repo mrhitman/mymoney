@@ -85,3 +85,16 @@ body {
 .notes-month section {
   font-size: 28px;
 }
+
+.site-tag-plus {
+  background: #fff;
+  border-style: dashed;
+}
+.edit-tag {
+  user-select: none;
+}
+.tag-input {
+  width: 78px;
+  margin-right: 8px;
+  vertical-align: top;
+}

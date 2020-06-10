@@ -6,19 +6,20 @@ import {
   LogoutOutlined,
   SettingOutlined,
   WalletOutlined,
-} from "@ant-design/icons";
-import { Menu } from "antd";
-import SubMenu from "antd/lib/menu/SubMenu";
-import React, { PureComponent } from "react";
+} from '@ant-design/icons';
+import { Menu } from 'antd';
+import SubMenu from 'antd/lib/menu/SubMenu';
+import ReactCountryFlag from 'react-country-flag';
+import React, { PureComponent } from 'react';
 
 export type ActivePage =
-  | "info"
-  | "accounting"
-  | "planning"
-  | "scheduler"
-  | "analysis"
-  | "settings"
-  | "categories"
+  | 'info'
+  | 'accounting'
+  | 'planning'
+  | 'scheduler'
+  | 'analysis'
+  | 'settings'
+  | 'categories'
   | undefined;
 
 interface HeaderProps {
@@ -40,41 +41,54 @@ export class Header extends PureComponent<HeaderProps> {
         <Menu.Item
           key="info"
           icon={<InfoCircleOutlined />}
-          onClick={this.navigate("info")}
+          onClick={this.navigate('info')}
         >
           Info
         </Menu.Item>
         <Menu.Item
           key="accounting"
           icon={<WalletOutlined />}
-          onClick={this.navigate("accounting")}
+          onClick={this.navigate('accounting')}
         >
           Accounting
         </Menu.Item>
         <SubMenu icon={<BookOutlined />} title="Planning">
           <Menu.Item key="operations">Transactions</Menu.Item>
-          <Menu.Item key="categories" onClick={this.navigate("categories")}>
+          <Menu.Item key="categories" onClick={this.navigate('categories')}>
             Categories
           </Menu.Item>
         </SubMenu>
         <Menu.Item
           key="scheduler"
           icon={<CalendarOutlined />}
-          onClick={this.navigate("scheduler")}
+          onClick={this.navigate('scheduler')}
         >
           Scheduler
         </Menu.Item>
         <Menu.Item
           key="analysis"
           icon={<LineChartOutlined />}
-          onClick={this.navigate("analysis")}
+          onClick={this.navigate('analysis')}
         >
           Analytics
         </Menu.Item>
         <Menu.Item
           key="settings"
-          icon={<SettingOutlined />}
-          onClick={this.navigate("settings")}
+          icon={
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <div style={{ marginRight: 20 }}>
+                <ReactCountryFlag className="emojiFlag" countryCode="UA" />
+              </div>
+              <SettingOutlined />
+            </div>
+          }
+          onClick={this.navigate('settings')}
         />
         <Menu.Item
           key="logout"

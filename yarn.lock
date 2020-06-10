@@ -15140,6 +15140,11 @@ react-app-rewired@^2.1.6:
   dependencies:
     semver "^5.6.0"
 
+react-country-flag@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-country-flag/-/react-country-flag-2.2.0.tgz#d4894010da889c036cfd1adbe0fea7d5458db241"
+  integrity sha512-pQHpUjTHhXhapzquhKF0cVC21L8IpPoz6bxhDx1U+tiljoUijtZJgOPPslkhigXJsEUMWmZSUcLq2PmrtbdeYg==
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"

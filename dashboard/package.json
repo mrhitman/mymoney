@@ -23,6 +23,7 @@
     "mobx-state-tree": "^3.16.0",
     "moment": "^2.26.0",
     "react": "^16.13.1",
+    "react-country-flag": "^2.2.0",
     "react-dom": "^16.13.1",
     "react-i18next": "^11.5.0",
     "react-native-elements": "^2.0.2",

@@ -1,4 +1,4 @@
-import { Checkbox, Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import { Formik } from 'formik';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
@@ -28,6 +28,9 @@ class AddWalletForm extends PureComponent<
         initialValues={{
           name: '',
           description: '',
+          allow_negative_balance: true,
+          use_in_balance: true,
+          use_in_analytics: true,
         }}
         onSubmit={this.handleSubmit}
         render={(bag) => (
@@ -36,19 +39,34 @@ class AddWalletForm extends PureComponent<
               <Input onChange={bag.handleChange('name')} />
             </Form.Item>
             <Form.Item label="Description" name="description">
-              <Input onChange={bag.handleChange('description')} />
+              <Input.TextArea onChange={bag.handleChange('description')} />
             </Form.Item>
             <Form.Item
               label="Allow negative balance"
               name="allow_negative_balance"
             >
-              <Checkbox />
+              <Switch
+                defaultChecked={bag.values.allow_negative_balance}
+                onChange={(checked: boolean) =>
+                  bag.setFieldValue('allow_negative_balance', checked)
+                }
+              />
             </Form.Item>
             <Form.Item label="Allow negative balance" name="use_in_balance">
-              <Checkbox />
+              <Switch
+                defaultChecked={bag.values.use_in_balance}
+                onChange={(checked: boolean) =>
+                  bag.setFieldValue('use_in_balance', checked)
+                }
+              />
             </Form.Item>
             <Form.Item label="Allow negative balance" name="use_in_analytics">
-              <Checkbox />
+              <Switch
+                defaultChecked={bag.values.use_in_analytics}
+                onChange={(checked: boolean) =>
+                  bag.setFieldValue('use_in_analytics', checked)
+                }
+              />
             </Form.Item>
           </Form>
         )}

@@ -7,11 +7,7 @@ import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import { InjectedStore } from '../../store/Store';
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
+import { formLayout } from '../misc/Layout';
 
 export interface AddTransactionValues {
   currencyId?: Instance<typeof Currency>;
@@ -69,7 +65,7 @@ export class AddTransactionForm extends PureComponent<
         }
         onSubmit={this.handleSubmit}
         render={(bag) => (
-          <Form {...layout} onSubmitCapture={bag.handleSubmit}>
+          <Form {...formLayout} onSubmitCapture={bag.handleSubmit}>
             <Form.Item
               validateStatus={bag.errors.amount ? 'error' : 'success'}
               label="Amount"

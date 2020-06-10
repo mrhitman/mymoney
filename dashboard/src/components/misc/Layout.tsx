@@ -1,12 +1,18 @@
-import { Layout as AntdLayout, Row, Col } from 'antd';
+import { Col, Layout as AntdLayout, Row } from 'antd';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { InjectedStore } from '../../store/Store';
 import Rates from '../Rates/Rates';
 import AddTransaction from '../Transactions/AddTransaction';
+import AddWallet from '../Wallets/AddWallet';
 import Wallets from '../Wallets/Wallets';
 import MenuHeader, { ActivePage } from './Header';
+
+export const formLayout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
 
 interface LayoutProps extends Partial<InjectedStore> {
   activePage?: ActivePage;
@@ -52,6 +58,7 @@ class Layout extends PureComponent<LayoutProps, LayoutState> {
             <Row gutter={[16, 16]}>
               <Col span={6}>
                 <AddTransaction />
+                <AddWallet />
                 <Wallets />
                 <Rates />
               </Col>

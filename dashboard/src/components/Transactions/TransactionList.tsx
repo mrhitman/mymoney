@@ -1,7 +1,7 @@
 import { Popover, Table } from 'antd';
 import { Transaction } from 'common';
 import { inject, observer } from 'mobx-react';
-import { Instance, flow } from 'mobx-state-tree';
+import { Instance } from 'mobx-state-tree';
 import moment from 'moment';
 import React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';

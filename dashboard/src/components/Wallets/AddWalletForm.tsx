@@ -1,29 +1,29 @@
 import {
-  PlusOutlined,
-  DeleteOutlined,
   AppstoreAddOutlined,
+  DeleteOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import {
-  Row,
+  AutoComplete,
+  Button,
   Col,
   Collapse,
   Form,
   Input,
+  List,
+  Row,
   Switch,
   Tag,
-  List,
-  Avatar,
-  Button,
 } from 'antd';
+import * as Colors from 'common/src/utils/colors';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
+import { sample } from 'lodash';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import { withTranslation, WithTranslation } from 'react-i18next';
 import ReactCountryFlag from 'react-country-flag';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { InjectedStore } from 'src/store/Store';
 import { formLayout } from '../misc/Layout';
-import * as Colors from 'common/src/utils/colors';
-import { sample } from 'lodash';
 
 interface PocketValues {
   currencyId: string;
@@ -39,12 +39,22 @@ export interface AddWalletValues {
   pockets: Array<PocketValues>;
 }
 
+interface AddWalletFormState {
+  currencyFilter: string;
+  selectedCurrencyId?: string;
+}
+
 class AddWalletForm extends PureComponent<
-  Partial<InjectedStore> & WithTranslation
+  Partial<InjectedStore> & WithTranslation,
+  AddWalletFormState
 > {
   public get store() {
     return this.props.store!;
   }
+
+  public state: AddWalletFormState = {
+    currencyFilter: '',
+  };
 
   public render() {
     return (
@@ -127,18 +137,61 @@ class AddWalletForm extends PureComponent<
                 dataSource={bag.values.pockets}
                 renderItem={this.renderPocketItem(bag)}
               />
+
+              <AutoComplete
+                value={this.state.currencyFilter}
+                onSearch={(text) => this.setState({ currencyFilter: text })}
+                onSelect={(name) =>
+                  this.setState({
+                    selectedCurrencyId: this.store.currencies.find(
+                      (c) => c.name === name
+                    )?.id,
+                  })
+                }
+                options={this.store.currencies
+                  .filter(
+                    (c) =>
+                      c.name
+                        .toLowerCase()
+                        .includes(this.state.currencyFilter.toLowerCase()) ||
+                      c.description
+                        ?.toLowerCase()
+                        .includes(this.state.currencyFilter.toLowerCase())
+                  )
+                  .filter(
+                    (c) =>
+                      !bag.values.pockets
+                        .map((p) => p.currencyId)
+                        .includes(c.id)
+                  )
+                  .map((c) => ({
+                    label: (
+                      <div>
+                        {c.name} - {c.description} ({c.symbol})
+                      </div>
+                    ),
+                    value: c.name,
+                  }))}
+              >
+                <Input.Search placeholder="input here" enterButton />
+              </AutoComplete>
               <Button
                 type="dashed"
                 icon={<AppstoreAddOutlined />}
-                onClick={() =>
+                disabled={!this.state.selectedCurrencyId}
+                onClick={() => {
                   bag.setFieldValue('pockets', [
                     ...bag.values.pockets,
                     {
-                      currencyId: sample(this.store.currencies)?.id,
+                      currencyId: this.state.selectedCurrencyId,
                       amount: 0,
                     },
-                  ])
-                }
+                  ]);
+                  this.setState({
+                    selectedCurrencyId: undefined,
+                    currencyFilter: '',
+                  });
+                }}
               >
                 Add pocket
               </Button>

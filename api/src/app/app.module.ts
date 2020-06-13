@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
 import { AuthModule } from '../auth/auth.module';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { CategoriesModule } from '../categories/categories.module';
@@ -10,6 +11,7 @@ import { UsersModule } from '../users/users.module';
 import { WalletsModule } from '../wallets/wallets.module';
 import { AppController } from './app.controller';
 import { LoggerMiddleware } from './logger.middleware';
+import { RecipesModule } from '../recipes/recipes.module';
 
 @Module({
   imports: [
@@ -21,6 +23,11 @@ import { LoggerMiddleware } from './logger.middleware';
     TransactionsModule,
     CurrenciesModule,
     AuthModule,
+    RecipesModule,
+    GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
+      autoSchemaFile: 'schema.gql',
+    }),
   ],
   controllers: [AppController],
   providers: [Fixer],

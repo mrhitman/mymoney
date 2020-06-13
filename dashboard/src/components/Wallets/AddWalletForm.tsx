@@ -77,21 +77,21 @@ class AddWalletForm extends PureComponent<
         onSubmit={this.handleSubmit}
         render={(bag) => (
           <Form {...formLayout} onSubmitCapture={bag.handleSubmit}>
-            <Form.Item label="Name" name="name">
+            <Form.Item label='Name' name='name'>
               <Input onChange={bag.handleChange('name')} />
             </Form.Item>
-            <Form.Item label="Description" name="description">
+            <Form.Item label='Description' name='description'>
               <Input.TextArea onChange={bag.handleChange('description')} />
             </Form.Item>
             <Collapse>
               <Collapse.Panel
-                header="Options"
-                key="switchers"
-                className="site-collapse-custom-panel"
+                header='Options'
+                key='switchers'
+                className='site-collapse-custom-panel'
               >
                 <Form.Item
-                  label="Allow negative balance"
-                  name="allow_negative_balance"
+                  label='Allow negative balance'
+                  name='allow_negative_balance'
                 >
                   <Switch
                     defaultChecked={bag.values.allow_negative_balance}
@@ -100,7 +100,7 @@ class AddWalletForm extends PureComponent<
                     }
                   />
                 </Form.Item>
-                <Form.Item label="Allow negative balance" name="use_in_balance">
+                <Form.Item label='Allow negative balance' name='use_in_balance'>
                   <Switch
                     defaultChecked={bag.values.use_in_balance}
                     onChange={(checked: boolean) =>
@@ -109,8 +109,8 @@ class AddWalletForm extends PureComponent<
                   />
                 </Form.Item>
                 <Form.Item
-                  label="Allow negative balance"
-                  name="use_in_analytics"
+                  label='Allow negative balance'
+                  name='use_in_analytics'
                 >
                   <Switch
                     defaultChecked={bag.values.use_in_analytics}
@@ -121,19 +121,19 @@ class AddWalletForm extends PureComponent<
                 </Form.Item>
               </Collapse.Panel>
             </Collapse>
-            <Form.Item label="Tags" name="tags">
+            <Form.Item label='Tags' name='tags'>
               {bag.values.tags.map((tag, i) => (
                 <Tag color={sample(Colors)} key={`${tag}-${i}`} closable>
                   <span>{tag}</span>
                 </Tag>
               ))}
-              <Tag className="site-tag-plus">
+              <Tag className='site-tag-plus'>
                 <PlusOutlined /> New Tag
               </Tag>
             </Form.Item>
-            <Form.Item label="Pockets" name="pockets">
+            <Form.Item label='Pockets' name='pockets'>
               <List
-                itemLayout="horizontal"
+                itemLayout='horizontal'
                 dataSource={bag.values.pockets}
                 renderItem={this.renderPocketItem(bag)}
               />
@@ -173,10 +173,10 @@ class AddWalletForm extends PureComponent<
                     value: c.name,
                   }))}
               >
-                <Input.Search placeholder="input here" enterButton />
+                <Input.Search placeholder='input here' enterButton />
               </AutoComplete>
               <Button
-                type="dashed"
+                type='dashed'
                 icon={<AppstoreAddOutlined />}
                 disabled={!this.state.selectedCurrencyId}
                 onClick={() => {
@@ -213,7 +213,7 @@ class AddWalletForm extends PureComponent<
       <List.Item
         actions={[
           <Button
-            type="dashed"
+            type='dashed'
             danger
             icon={<DeleteOutlined />}
             onClick={() =>
@@ -232,7 +232,7 @@ class AddWalletForm extends PureComponent<
             <div>
               <span style={{ marginRight: 10 }}>
                 <ReactCountryFlag
-                  className="emojiFlag"
+                  className='emojiFlag'
                   countryCode={currency.name.slice(0, 2)}
                 />
               </span>
@@ -245,7 +245,7 @@ class AddWalletForm extends PureComponent<
             {currency.description}
           </Col>
           <Col xs={8} offset={2}>
-            <Input placeholder="0" size="small" />
+            <Input placeholder='0' size='small' />
           </Col>
         </Row>
       </List.Item>

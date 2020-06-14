@@ -6,8 +6,14 @@ import Transaction from 'src/database/models/transaction.model';
 
 @Injectable()
 export class WalletsService {
-  public async getAll(user: User) {
-    return Wallet.query().where({ userId: user.id });
+  public async getAll(user: User, params?: { eager?: string }) {
+    const query = Wallet.query().where({ userId: user.id });
+
+    if (params && params.eager) {
+      query.eager(params.eager);
+    }
+
+    return query;
   }
 
   public async getWallet(id: string) {

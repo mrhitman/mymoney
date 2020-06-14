@@ -14,7 +14,7 @@ describe('CurrenciesService', () => {
       imports: [
         JwtModule.register({
           secret: 'test_secret',
-          signOptions: { expiresIn: 3600 },
+          signOptions: { expiresIn: 3600 * 3 },
         }),
       ],
     }).compile();

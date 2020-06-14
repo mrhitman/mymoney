@@ -11,8 +11,14 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
-  public async getAll(user: User) {
-    return Category.query().where({ userId: user.id });
+  public async getAll(user: User, params?: { type?: string }) {
+    const query = Category.query().where({ userId: user.id });
+
+    if (params && params.type) {
+      query.andWhere({ type: params.type })
+    }
+
+    return query
   }
 
   public async getCategory(id: string, userId: number) {

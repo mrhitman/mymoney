@@ -11,7 +11,6 @@ import { UsersModule } from '../users/users.module';
 import { WalletsModule } from '../wallets/wallets.module';
 import { AppController } from './app.controller';
 import { LoggerMiddleware } from './logger.middleware';
-import { RecipesModule } from '../recipes/recipes.module';
 
 @Module({
   imports: [
@@ -23,7 +22,6 @@ import { RecipesModule } from '../recipes/recipes.module';
     TransactionsModule,
     CurrenciesModule,
     AuthModule,
-    RecipesModule,
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: 'schema.gql',

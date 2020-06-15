@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
+import { GetRateResponse } from 'common/responses';
 import Currency from 'src/database/models/currency.model';
 import { Fixer } from 'src/fixer';
 import xml2js from 'xml2js';
-import { GetRateResponse } from 'common/responses';
 
 interface InfoResponse {
   ISO_4217: {
@@ -24,7 +24,7 @@ interface InfoResponse {
 
 @Injectable()
 export class CurrenciesService {
-  constructor(protected fixer: Fixer) {}
+  constructor(protected fixer: Fixer, @Inject(CACHE_MANAGER) private readonly cache) { }
 
   public async findAll() {
     const currencies = await Currency.query();
@@ -43,7 +43,15 @@ export class CurrenciesService {
   }
 
   public async rates(base?: string) {
+    const rates = await this.cache.get('rates')
+
+    console.log(rates)
+    if (rates) {
+      return rates as GetRateResponse;
+    }
+
     const response = await this.fixer.latest(base);
+    await this.cache.set('rates', response, { ttl: 3600 });
 
     return response as GetRateResponse;
   }
@@ -53,6 +61,12 @@ export class CurrenciesService {
    * https://en.wikipedia.org/wiki/ISO_4217
    */
   public async getIsoInfo(): Promise<any> {
+    const iso4217 = await this.cache.get('ISO_4217');
+
+    if (iso4217) {
+      return iso4217;
+    }
+
     const url = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml';
     const body = await axios.get(url);
     const response = await new Promise((resolve, reject) => {
@@ -64,6 +78,7 @@ export class CurrenciesService {
       });
     });
 
+    await this.cache.set('ISO_4217', response, { ttl: 3600 * 24 * 7 });
     return response as InfoResponse;
   }
 }

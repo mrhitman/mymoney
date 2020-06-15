@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, Float } from '@nestjs/graphql';
 
 @ObjectType('Currency')
 export class CurrencyDto {
@@ -13,4 +13,7 @@ export class CurrencyDto {
 
   @Field()
   symbol: string;
+
+  @Field(type => Float, { nullable: true })
+  rate?: number;
 }

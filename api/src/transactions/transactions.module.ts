@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
+import redisStore from 'cache-manager-redis-store';
 import { DatabaseModule } from 'src/database/database.module';
 import { CurrenciesService } from '../currencies/currencies.service';
 import { Fixer } from '../fixer';
@@ -8,7 +9,10 @@ import { TransactionsResolver } from './transactions.resolver';
 import { TransactionsService } from './transactions.service';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, CacheModule.register({
+    store: redisStore,
+    url: process.env.REDIS_URL,
+  })],
   controllers: [TransactionsController],
   providers: [
     TransactionsResolver,
@@ -18,4 +22,4 @@ import { TransactionsService } from './transactions.service';
     WalletsService,
   ],
 })
-export class TransactionsModule {}
+export class TransactionsModule { }

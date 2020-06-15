@@ -30,6 +30,7 @@ type Currency {
   name: String!
   description: String
   symbol: String!
+  rate: Float
 }
 
 type Transaction {

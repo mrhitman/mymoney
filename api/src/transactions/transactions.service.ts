@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
+import Objection, { RelationExpression, transaction } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
@@ -12,14 +13,22 @@ import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import Objection, { transaction } from 'objection';
 
 @Injectable()
 export class TransactionsService {
   constructor(protected walletService: WalletsService) {}
 
-  public async getAll(user: User) {
-    return Transaction.query().where({ userId: user.id });
+  public async getAll(
+    user: User,
+    params: { relation?: RelationExpression<any> } = {},
+  ) {
+    const query = Transaction.query().where({ userId: user.id });
+
+    if (params.relation) {
+      query.withGraphFetched(params.relation);
+    }
+
+    return query;
   }
 
   public async getTransaction(id: string, userId: number) {

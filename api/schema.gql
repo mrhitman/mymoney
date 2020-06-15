@@ -37,10 +37,11 @@ type Transaction {
   type: String!
   categoryId: String!
   currencyId: String
+  currency: Currency
   sourceWalletId: String
   destinationWalletId: String
-  fine: Float
   amount: Float!
+  fine: Float
   date: DateTime!
   description: String
 }

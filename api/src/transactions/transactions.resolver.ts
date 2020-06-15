@@ -1,18 +1,35 @@
-import { Resolver, Query } from '@nestjs/graphql';
-import { TransactionDto } from './dto/transaction.dto';
-import { TransactionsService } from './transactions.service';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
+import { Parent, Query, ResolveField, Resolver, Info } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
 import User from 'src/database/models/user.model';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
+import { TransactionDto } from './dto/transaction.dto';
+import { TransactionsService } from './transactions.service';
+import { CurrenciesService } from '../currencies/currencies.service';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
-  constructor(private readonly service: TransactionsService) {}
+  constructor(
+    private readonly transactionService: TransactionsService,
+    private readonly currencyService: CurrenciesService,
+  ) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [TransactionDto])
-  async transactions(@CurrentUser() user: User): Promise<TransactionDto[]> {
-    return this.service.getAll(user);
+  async transactions(
+    @CurrentUser() user: User,
+    @Info({
+      transform: (value) => {
+        return value.fieldNodes
+          .find((f) => f.name.value === 'transactions')
+          .selectionSet.selections.map((f) => f.name.value);
+      },
+    })
+    info: string[],
+  ): Promise<TransactionDto[]> {
+    return this.transactionService.getAll(
+      user,
+      info.includes('currency') ? { relation: '[currency]' } : {},
+    );
   }
 }

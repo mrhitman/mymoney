@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import Currency from './currency.model';
 
 export class Transaction extends Model {
   public id: string;
@@ -16,9 +17,23 @@ export class Transaction extends Model {
   public createdAt: Date;
   public updatedAt: Date;
   public deletedAt: Date;
+  public currency: Currency;
 
   static get tableName() {
     return 'transactions';
+  }
+
+  static get relationMappings() {
+    return {
+      currency: {
+        relation: Model.HasOneRelation,
+        modelClass: Currency,
+        join: {
+          from: 'transactions.currencyId',
+          to: 'currencies.id',
+        },
+      },
+    };
   }
 }
 

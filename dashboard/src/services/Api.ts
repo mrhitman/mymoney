@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
 import { LoginResponse, RefreshResponse } from 'common/responses';
-import { request } from 'graphql-request';
 
 interface ApiParams {
   accessToken?: string | null;

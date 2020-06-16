@@ -138,6 +138,7 @@ export const Store = types
       return data;
     }
 
+    // eslint-disable-next-line require-yield
     function* query() {
       return api.query(`
         query {

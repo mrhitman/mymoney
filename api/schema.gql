@@ -27,7 +27,7 @@ type Category {
 
 type Currency {
   id: ID!
-  name: String!
+  name: String
   description: String
   symbol: String!
   rate: Float

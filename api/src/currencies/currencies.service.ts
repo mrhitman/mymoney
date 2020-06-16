@@ -1,4 +1,9 @@
-import { CACHE_MANAGER, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import axios from 'axios';
 import { GetRateResponse } from 'common/responses';
 import Currency from 'src/database/models/currency.model';
@@ -24,7 +29,10 @@ interface InfoResponse {
 
 @Injectable()
 export class CurrenciesService {
-  constructor(protected fixer: Fixer, @Inject(CACHE_MANAGER) private readonly cache) { }
+  constructor(
+    protected fixer: Fixer,
+    @Inject(CACHE_MANAGER) private readonly cache,
+  ) {}
 
   public async findAll() {
     const currencies = await Currency.query();
@@ -43,9 +51,8 @@ export class CurrenciesService {
   }
 
   public async rates(base?: string) {
-    const rates = await this.cache.get('rates')
+    const rates = await this.cache.get('rates');
 
-    console.log(rates)
     if (rates) {
       return rates as GetRateResponse;
     }

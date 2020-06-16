@@ -9,10 +9,13 @@ import { TransactionsResolver } from './transactions.resolver';
 import { TransactionsService } from './transactions.service';
 
 @Module({
-  imports: [DatabaseModule, CacheModule.register({
-    store: redisStore,
-    url: process.env.REDIS_URL,
-  })],
+  imports: [
+    DatabaseModule,
+    CacheModule.register({
+      store: redisStore,
+      url: process.env.REDIS_URL,
+    }),
+  ],
   controllers: [TransactionsController],
   providers: [
     TransactionsResolver,
@@ -22,4 +25,4 @@ import { TransactionsService } from './transactions.service';
     WalletsService,
   ],
 })
-export class TransactionsModule { }
+export class TransactionsModule {}

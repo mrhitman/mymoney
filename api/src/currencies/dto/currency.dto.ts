@@ -5,7 +5,7 @@ export class CurrencyDto {
   @Field((type) => ID)
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
   @Field({ nullable: true })
@@ -14,6 +14,6 @@ export class CurrencyDto {
   @Field()
   symbol: string;
 
-  @Field(type => Float, { nullable: true })
+  @Field((type) => Float, { nullable: true })
   rate?: number;
 }

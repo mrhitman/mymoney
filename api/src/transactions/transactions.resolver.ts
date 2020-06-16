@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Parent, Query, ResolveField, Resolver, Info } from '@nestjs/graphql';
+import { Info, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
 import User from 'src/database/models/user.model';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
@@ -16,7 +16,7 @@ export class TransactionsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [TransactionDto])
-  async transactions(
+  public async transactions(
     @CurrentUser() user: User,
     @Info({
       transform: (value) => {
@@ -32,4 +32,23 @@ export class TransactionsResolver {
       info.includes('currency') ? { relation: '[currency]' } : {},
     );
   }
+
+  // @ResolveProperty('currency')
+  // public async currency(@Parent() transaction: TransactionDto) {
+  //   const currency = transaction.currency;
+
+  //   if (currency) {
+  //     const rates = await this.currencyService.rates();
+
+  //     return {
+  //       ...transaction,
+  //       currency: {
+  //         ...currency,
+  //         rate: rates.rates[currency.name],
+  //       },
+  //     };
+  //   }
+
+  //   return transaction;
+  // }
 }

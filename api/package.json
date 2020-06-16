@@ -27,6 +27,7 @@
     "seed:make": "knex seed:make --cwd src --knexfile knexfile.ts -x ts"
   },
   "dependencies": {
+    "@apollo/gateway": "^0.16.6",
     "@nestjs/common": "^7.0.0",
     "@nestjs/core": "^7.0.0",
     "@nestjs/graphql": "^7.4.1",

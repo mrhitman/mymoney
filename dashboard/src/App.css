@@ -98,3 +98,15 @@ body {
   margin-right: 8px;
   vertical-align: top;
 }
+.category-icon {
+  padding: 3px;
+  margin: 3px;
+  margin-right: 10px;
+  border-radius: 20px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: 'left';
+}

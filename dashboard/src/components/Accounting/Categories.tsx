@@ -1,52 +1,14 @@
-import { CarryOutOutlined, FormOutlined } from '@ant-design/icons';
+import { CarryOutOutlined } from '@ant-design/icons';
 import { Tree } from 'antd';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { InjectedStore } from '../../store/Store';
+import Icon from 'src/components/misc/Icon';
 
-const treeData = [
-  {
-    title: 'parent 1',
-    key: '0-0',
-    icon: <CarryOutOutlined />,
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',
-        icon: <CarryOutOutlined />,
-        children: [
-          { title: 'leaf', key: '0-0-0-0', icon: <CarryOutOutlined /> },
-          { title: 'leaf', key: '0-0-0-1', icon: <CarryOutOutlined /> },
-          { title: 'leaf', key: '0-0-0-2', icon: <CarryOutOutlined /> },
-        ],
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        icon: <CarryOutOutlined />,
-        children: [
-          { title: 'leaf', key: '0-0-1-0', icon: <CarryOutOutlined /> },
-        ],
-      },
-      {
-        title: 'parent 1-2',
-        key: '0-0-2',
-        icon: <CarryOutOutlined />,
-        children: [
-          { title: 'leaf', key: '0-0-2-0', icon: <CarryOutOutlined /> },
-          {
-            title: 'leaf',
-            key: '0-0-2-1',
-            icon: <CarryOutOutlined />,
-            switcherIcon: <FormOutlined />,
-          },
-        ],
-      },
-    ],
-  },
-];
-
-class Categories extends PureComponent<Partial<InjectedStore>> {
+class Categories extends PureComponent<
+  Partial<InjectedStore> & WithTranslation
+> {
   public get store() {
     return this.props.store!;
   }
@@ -56,10 +18,46 @@ class Categories extends PureComponent<Partial<InjectedStore>> {
   };
 
   public render() {
-    return (
-      <Tree showIcon defaultExpandedKeys={['0-0-0']} treeData={treeData} />
-    );
+    return <Tree showIcon treeData={this.getCategories()} />;
   }
+
+  private getCategories = (parentId?: string) => {
+    const categories = this.store.categories;
+
+    if (parentId) {
+      return categories
+        .filter((c) => c.parent && c.parent.id === parentId)
+        .map(this.categoryToLeaf);
+    }
+
+    return categories
+      .filter(
+        (c) => !['TRANSFER_IN', 'TRANSFER_OUT', 'SYSTEM_EMPTY'].includes(c.name)
+      )
+      .filter((c) => !c.parent)
+      .map(this.categoryToLeaf);
+  };
+
+  private categoryToLeaf = (category: any): any => {
+    return {
+      key: category.id,
+      title: this.props.t(category.name),
+      icon: (
+        <div
+          className="category-icon"
+          style={{ backgroundColor: category.icon.backgroundColor }}
+        >
+          <Icon
+            name={category.icon.name}
+            type={category.icon.type}
+            color={'white'}
+            size={12}
+          />
+        </div>
+      ),
+      children: this.getCategories(category.id),
+    };
+  };
 }
 
-export default inject('store')(observer(Categories));
+export default withTranslation()(inject('store')(observer(Categories)));

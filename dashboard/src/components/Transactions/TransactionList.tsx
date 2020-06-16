@@ -52,19 +52,8 @@ class TransactionList extends React.PureComponent<
             return (
               <div>
                 <div
-                  style={{
-                    padding: 3,
-                    margin: 3,
-                    marginRight: 10,
-                    borderRadius: 20,
-                    width: 24,
-                    height: 24,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    float: 'left',
-                    backgroundColor: category.icon.backgroundColor,
-                  }}
+                  className="category-icon"
+                  style={{ backgroundColor: category.icon.backgroundColor }}
                 >
                   <Icon
                     name={category.icon.name}

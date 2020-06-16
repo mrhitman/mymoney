@@ -37,15 +37,15 @@ class Routes extends React.Component {
           </Layout>
         </PrivateRoute>
 
-        <PrivateRoute path="/categories" exact>
-          <Layout activePage="accounting">
-            <Categories />
+        <PrivateRoute path="/operations" exact>
+          <Layout activePage="operations">
+            <TransactionList />
           </Layout>
         </PrivateRoute>
 
-        <PrivateRoute path="/planning" exact>
-          <Layout activePage="planning">
-            <div>planning</div>
+        <PrivateRoute path="/categories" exact>
+          <Layout activePage="categories">
+            <Categories />
           </Layout>
         </PrivateRoute>
 

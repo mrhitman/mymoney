@@ -17,6 +17,7 @@ export type ActivePage =
   | 'accounting'
   | 'planning'
   | 'scheduler'
+  | 'operations'
   | 'analysis'
   | 'settings'
   | 'categories'
@@ -53,7 +54,9 @@ export class Header extends PureComponent<HeaderProps> {
           Accounting
         </Menu.Item>
         <SubMenu icon={<BookOutlined />} title="Planning">
-          <Menu.Item key="operations">Transactions</Menu.Item>
+          <Menu.Item key="operations" onClick={this.navigate('operations')}>
+            Transactions
+          </Menu.Item>
           <Menu.Item key="categories" onClick={this.navigate('categories')}>
             Categories
           </Menu.Item>

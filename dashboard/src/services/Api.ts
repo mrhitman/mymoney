@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { LoginResponse, RefreshResponse } from 'common/responses';
+import { request } from 'graphql-request';
 
 interface ApiParams {
   accessToken?: string | null;
@@ -99,6 +100,14 @@ export class Api {
   public async refresh() {
     const response = await this.client.post<RefreshResponse>('refresh', {
       token: this.refreshToken,
+    });
+
+    return response.data;
+  }
+
+  public async query(query: string) {
+    const response = await this.client.post('graphql', {
+      query,
     });
 
     return response.data;

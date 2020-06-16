@@ -138,6 +138,23 @@ export const Store = types
       return data;
     }
 
+    function* query() {
+      return api.query(`
+        query {
+          user {
+            firstName
+            middleName
+            lastName
+            email
+          }
+          wallets {
+            id
+            name
+          }
+        }
+      `);
+    }
+
     return {
       exit,
       login: flow(login),
@@ -149,6 +166,7 @@ export const Store = types
       loadWallets: flow(loadWallets),
       addTransaction: flow(addTransaction),
       loadTransactions: flow(loadTransactions),
+      query: flow(query),
     };
   });
 

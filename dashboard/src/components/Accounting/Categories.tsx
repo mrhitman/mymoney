@@ -1,10 +1,9 @@
-import { CarryOutOutlined } from '@ant-design/icons';
 import { Tree } from 'antd';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { InjectedStore } from '../../store/Store';
 import Icon from 'src/components/misc/Icon';
+import { InjectedStore } from '../../store/Store';
 
 class Categories extends PureComponent<
   Partial<InjectedStore> & WithTranslation

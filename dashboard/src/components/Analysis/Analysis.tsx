@@ -28,7 +28,7 @@ class Analysis extends PureComponent<
   }
 
   public state: AnalysisState = {
-    zoomDomain: { x: [new Date(2020, 5, 16), new Date(2020, 5, 18)] },
+    zoomDomain: { x: [new Date(), new Date()] },
   };
 
   public handleZoom = (domain: { x?: DomainTuple; y?: DomainTuple }) => {
@@ -39,29 +39,41 @@ class Analysis extends PureComponent<
     return this.fetchData();
   }
 
-  protected fetchData = () => {
-    return this.store.loadTransactions();
+  protected fetchData = async () => {
+    await this.store.loadTransactions();
+    const transactions = this.store.transactions.sort(
+      (a, b) => moment(a).unix() - moment(b).unix()
+    );
+    const first = transactions.shift();
+    const last = transactions.pop();
+
+    this.setState({
+      zoomDomain: {
+        x: [
+          (first && first.date) || this.state.zoomDomain.x![0],
+          (last && last.date) || this.state.zoomDomain!.x![1],
+        ],
+      },
+    });
   };
 
   protected getData = () => {
-    return this.store.transactions
-      .map((trx) => {
+    const data = this.store.transactions
+      .map((trx, i, transactions) => {
+        const amount = transactions
+          .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
+          .reduce((s, t) => {
+            return s + (t.type === 'outcome' ? -1 * t.amount : t.amount);
+          }, 0);
+
         return {
           date: trx.date,
-          amount: trx.type === 'outcome' ? -1 * trx.amount : trx.amount,
+          amount,
         };
       })
-      .sort((a, b) => moment(a).unix() - moment(b).unix())
-      .reduce(
-        (acc, value, i) => [
-          ...acc,
-          {
-            ...value,
-            amount: i ? acc[i - 1].amount + value.amount : value.amount,
-          },
-        ],
-        [] as { date: Date; amount: number }[]
-      );
+      .sort((a, b) => moment(a).unix() - moment(b).unix());
+
+    return data;
   };
 
   public render() {

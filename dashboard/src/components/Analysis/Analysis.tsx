@@ -60,7 +60,7 @@ class Analysis extends PureComponent<
             amount: i ? acc[i - 1].amount + value.amount : value.amount,
           },
         ],
-        [] as any
+        [] as { date: Date; amount: number }[]
       );
   };
 

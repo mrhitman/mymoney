@@ -139,9 +139,10 @@ export const Store = types
     }
 
     // eslint-disable-next-line require-yield
-    function* query() {
-      return api.query(`
-        query {
+    function* query(query?: string) {
+      return api.query(
+        query ||
+          `query {
           user {
             firstName
             middleName
@@ -153,7 +154,8 @@ export const Store = types
             name
           }
         }
-      `);
+      `
+      );
     }
 
     return {

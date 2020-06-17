@@ -9,6 +9,7 @@ import {
   VictoryLine,
   VictoryZoomContainer,
 } from 'victory';
+import moment from 'moment';
 import { InjectedStore } from '../../store/Store';
 
 interface AnalysisState {
@@ -27,11 +28,40 @@ class Analysis extends PureComponent<
   }
 
   public state: AnalysisState = {
-    zoomDomain: { x: [new Date(1990, 1, 1), new Date(2009, 1, 1)] },
+    zoomDomain: { x: [new Date(2020, 5, 16), new Date(2020, 5, 18)] },
   };
 
   public handleZoom = (domain: { x?: DomainTuple; y?: DomainTuple }) => {
     this.setState({ zoomDomain: domain });
+  };
+
+  public componentDidMount() {
+    return this.fetchData();
+  }
+
+  protected fetchData = () => {
+    return this.store.loadTransactions();
+  };
+
+  protected getData = () => {
+    return this.store.transactions
+      .map((trx) => {
+        return {
+          date: trx.date,
+          amount: trx.type === 'outcome' ? -1 * trx.amount : trx.amount,
+        };
+      })
+      .sort((a, b) => moment(a).unix() - moment(b).unix())
+      .reduce(
+        (acc, value, i) => [
+          ...acc,
+          {
+            ...value,
+            amount: i ? acc[i - 1].amount + value.amount : value.amount,
+          },
+        ],
+        [] as any
+      );
   };
 
   public render() {
@@ -53,18 +83,9 @@ class Analysis extends PureComponent<
             style={{
               data: { stroke: 'tomato' },
             }}
-            data={[
-              { a: new Date(1982, 1, 1), b: 125 },
-              { a: new Date(1987, 1, 1), b: 257 },
-              { a: new Date(1993, 1, 1), b: 345 },
-              { a: new Date(1997, 1, 1), b: 515 },
-              { a: new Date(2001, 1, 1), b: 132 },
-              { a: new Date(2005, 1, 1), b: 305 },
-              { a: new Date(2011, 1, 1), b: 270 },
-              { a: new Date(2015, 1, 1), b: 470 },
-            ]}
-            x="a"
-            y="b"
+            data={this.getData()}
+            x="date"
+            y="amount"
           />
         </VictoryChart>
         <VictoryChart
@@ -85,18 +106,9 @@ class Analysis extends PureComponent<
             style={{
               data: { stroke: 'tomato' },
             }}
-            data={[
-              { key: new Date(1982, 1, 1), b: 125 },
-              { key: new Date(1987, 1, 1), b: 257 },
-              { key: new Date(1993, 1, 1), b: 345 },
-              { key: new Date(1997, 1, 1), b: 515 },
-              { key: new Date(2001, 1, 1), b: 132 },
-              { key: new Date(2005, 1, 1), b: 305 },
-              { key: new Date(2011, 1, 1), b: 270 },
-              { key: new Date(2015, 1, 1), b: 470 },
-            ]}
+            data={this.getData()}
             x="key"
-            y="b"
+            y="amount"
           />
         </VictoryChart>
       </div>

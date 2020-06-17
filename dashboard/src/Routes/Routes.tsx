@@ -2,6 +2,7 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Categories from 'src/components/Accounting/Categories';
+import Analysis from 'src/components/Analysis/Analysis';
 import Info from 'src/components/Info/Info';
 import Login from 'src/components/Login/Login';
 import Layout from 'src/components/misc/Layout';
@@ -57,7 +58,7 @@ class Routes extends React.Component {
 
         <PrivateRoute path="/analysis" exact>
           <Layout activePage="analysis">
-            <div>analysis</div>
+            <Analysis />
           </Layout>
         </PrivateRoute>
 

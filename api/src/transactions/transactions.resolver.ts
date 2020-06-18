@@ -27,28 +27,8 @@ export class TransactionsResolver {
     })
     info: string[],
   ): Promise<TransactionDto[]> {
-    return this.transactionService.getAll(
-      user,
-      info.includes('currency') ? { relation: '[currency]' } : {},
-    );
+    return this.transactionService
+      .getAll(user, info.includes('currency') ? { relation: '[currency]' } : {})
+      .then((data) => data.items);
   }
-
-  // @ResolveProperty('currency')
-  // public async currency(@Parent() transaction: TransactionDto) {
-  //   const currency = transaction.currency;
-
-  //   if (currency) {
-  //     const rates = await this.currencyService.rates();
-
-  //     return {
-  //       ...transaction,
-  //       currency: {
-  //         ...currency,
-  //         rate: rates.rates[currency.name],
-  //       },
-  //     };
-  //   }
-
-  //   return transaction;
-  // }
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -41,7 +42,7 @@ export class TransactionsController {
   }
 
   @Get()
-  public async getAll(@Request() req) {
-    return this.service.getAll(req.user);
+  public async getAll(@Request() req, @Query() query) {
+    return this.service.getAll(req.user, query);
   }
 }

@@ -1,7 +1,6 @@
-import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from 'src/auth/auth.service';
-import { UsersService } from 'src/users/users.service';
+import redisStore from 'cache-manager-redis-store';
 import { Fixer } from '../fixer';
 import { CurrenciesService } from './currencies.service';
 
@@ -10,11 +9,11 @@ describe('CurrenciesService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, UsersService, CurrenciesService, Fixer],
+      providers: [CurrenciesService, Fixer],
       imports: [
-        JwtModule.register({
-          secret: 'test_secret',
-          signOptions: { expiresIn: 3600 * 3 },
+        CacheModule.register({
+          store: redisStore,
+          url: process.env.REDIS_URL,
         }),
       ],
     }).compile();

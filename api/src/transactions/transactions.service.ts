@@ -5,7 +5,11 @@ import {
 } from '@nestjs/common';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
-import Objection, { RelationExpression, transaction } from 'objection';
+import Objection, {
+  RelationExpression,
+  transaction,
+  OrderByDirection,
+} from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
@@ -14,21 +18,40 @@ import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
+interface QueryParams {
+  relation?: RelationExpression<any>;
+  limit?: number;
+  offset?: number;
+  sortDirection?: OrderByDirection;
+  sortBy?: string;
+}
+
 @Injectable()
 export class TransactionsService {
   constructor(protected walletService: WalletsService) {}
 
-  public async getAll(
-    user: User,
-    params: { relation?: RelationExpression<any> } = {},
-  ) {
+  public async getAll(user: User, params: QueryParams = {}) {
     const query = Transaction.query().where({ userId: user.id });
 
     if (params.relation) {
       query.withGraphFetched(params.relation);
     }
 
-    return query;
+    const count = await query.clone().clearSelect().count();
+
+    query.limit(params.limit || 10);
+    query.offset(params.offset || 0);
+    query.orderBy(
+      params.sortBy || 'created_at',
+      params.sortDirection || 'DESC',
+    );
+
+    const items = await query;
+
+    return {
+      items,
+      count: Number((count[0] as any).count),
+    };
   }
 
   public async getTransaction(id: string, userId: number) {

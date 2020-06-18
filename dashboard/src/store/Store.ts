@@ -1,4 +1,4 @@
-import { Account, Category, Currency, Transaction, Wallet } from 'common';
+import { Account, Category, Currency, Transaction, Wallet } from "common";
 import {
   GetCategoryResponse,
   GetCurrencyResponse,
@@ -7,27 +7,27 @@ import {
   GetTransactionResponse,
   GetWalletResponse,
   LoginResponse,
-} from 'common/responses';
-import { omit } from 'lodash';
-import { cast, flow, Instance, types } from 'mobx-state-tree';
-import moment from 'moment';
-import { LoginFormValues } from '../components/Login/LoginForm';
-import { AddTransactionValues } from '../components/Transactions/AddTransactionForm';
-import { Api } from '../services/Api';
-import { Rate } from './Rate';
+} from "common/responses";
+import { omit } from "lodash";
+import { cast, flow, Instance, types } from "mobx-state-tree";
+import moment from "moment";
+import { LoginFormValues } from "../components/Login/LoginForm";
+import { AddTransactionValues } from "../components/Transactions/AddTransactionForm";
+import { Api } from "../services/Api";
+import { Rate } from "./Rate";
 
-const accessToken = localStorage.getItem('accessToken');
-const refreshToken = localStorage.getItem('refreshToken');
+const accessToken = localStorage.getItem("accessToken");
+const refreshToken = localStorage.getItem("refreshToken");
 
 export const api = new Api({
   accessToken,
   refreshToken,
 });
 
-export type Entity = 'categories' | 'wallets';
+export type Entity = "categories" | "wallets";
 
 export const Store = types
-  .model('Store', {
+  .model("Store", {
     isAuthorized: types.optional(types.boolean, !!accessToken),
     account: types.maybe(Account),
     rates: types.optional(Rate, { rates: [] }),
@@ -53,18 +53,21 @@ export const Store = types
     }
 
     function* loadProfile() {
-      const response = yield api.client.get('/profile');
+      const response = yield api.client.get("/profile");
       const data = response.data as GetProfileResponse;
 
       self.account = Account.create(data);
     }
 
     function* loadTransactions() {
-      const response = yield api.client.get('/transactions');
-      const data = response.data as GetTransactionResponse[];
+      const response = yield api.client.get("/transactions");
+      const data = response.data as {
+        items: GetTransactionResponse[];
+        count: number;
+      };
 
       self.transactions.clear();
-      for (let item of data) {
+      for (let item of data.items) {
         self.transactions.push(Transaction.create(item));
       }
     }
@@ -73,8 +76,8 @@ export const Store = types
       const response = yield api.client.post<{
         wallet: GetWalletResponse;
         transaction: GetTransactionResponse;
-      }>('/transactions', {
-        ...omit(values, ['category', 'currency']),
+      }>("/transactions", {
+        ...omit(values, ["category", "currency"]),
         amount: Number(values.amount),
         createdAt: moment().unix(),
         date: values.date.unix(),
@@ -89,7 +92,7 @@ export const Store = types
     }
 
     function* loadCurrencies(force: boolean = false) {
-      const response = yield api.client.get('/currencies');
+      const response = yield api.client.get("/currencies");
       const data = response.data as GetCurrencyResponse[];
 
       if (self.currencies.length && !force) {
@@ -103,7 +106,7 @@ export const Store = types
     }
 
     function* loadWallets() {
-      const response = yield api.client.get('/wallets');
+      const response = yield api.client.get("/wallets");
       const data = response.data as GetWalletResponse[];
 
       self.wallets.clear();
@@ -113,7 +116,7 @@ export const Store = types
     }
 
     function* loadCategories() {
-      const response = yield api.client.get('/categories');
+      const response = yield api.client.get("/categories");
       const data = response.data as GetCategoryResponse[];
 
       self.categories.clear();
@@ -123,7 +126,7 @@ export const Store = types
     }
 
     function* loadRates(force: boolean = false) {
-      const response = yield api.client.get('/currencies/rates');
+      const response = yield api.client.get("/currencies/rates");
       const data = response.data as GetRateResponse;
 
       if (self.currencies.length && !force) {

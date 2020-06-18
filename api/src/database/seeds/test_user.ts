@@ -52,12 +52,14 @@ export async function seed(knex: Knex): Promise<any> {
       pockets: JSON.stringify([
         {
           id: chance().guid(),
-          amount: 2000,
+          amount:
+            Math.floor(chance().natural({ min: 2000, max: 6000 }) / 100) * 100,
           currencyId: '096225f7-d38e-5650-8b9f-a19034a5fe6e',
         },
         {
           id: chance().guid(),
-          amount: 300,
+          amount:
+            Math.floor(chance().natural({ min: 200, max: 600 }) / 100) * 100,
           currencyId: '040864eb-a01d-5660-8b23-d26ab5088233',
         },
       ]),
@@ -70,7 +72,14 @@ export async function seed(knex: Knex): Promise<any> {
       name: 'TEST_WALLET 2',
       description: 'TEST_DESCRIPTION',
       type: 'credit',
-      pockets: JSON.stringify([]),
+      pockets: JSON.stringify([
+        {
+          id: chance().guid(),
+          amount:
+            Math.floor(chance().natural({ min: 2000, max: 6000 }) / 100) * 100,
+          currencyId: '096225f7-d38e-5650-8b9f-a19034a5fe6e',
+        },
+      ]),
     })
     .into('wallets');
 

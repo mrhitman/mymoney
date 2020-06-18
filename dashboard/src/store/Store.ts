@@ -59,8 +59,8 @@ export const Store = types
       self.account = Account.create(data);
     }
 
-    function* loadTransactions() {
-      const response = yield api.client.get("/transactions");
+    function* loadTransactions(params: { current: number; pageSize: number }) {
+      const response = yield api.client.get(`/transactions?limit=${params.pageSize}&offset=${(params.current - 1) * params.pageSize}`);
       const data = response.data as {
         items: GetTransactionResponse[];
         count: number;
@@ -70,6 +70,8 @@ export const Store = types
       for (let item of data.items) {
         self.transactions.push(Transaction.create(item));
       }
+
+      return data.count;
     }
 
     function* addTransaction(values: AddTransactionValues) {
@@ -145,7 +147,7 @@ export const Store = types
     function* query(query?: string) {
       return api.query(
         query ||
-          `query {
+        `query {
           user {
             firstName
             middleName

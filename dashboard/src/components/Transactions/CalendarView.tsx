@@ -16,7 +16,10 @@ class CalendarView extends PureComponent<
 
   public componentDidMount = async () => {
     await this.store.loadCurrencies();
-    await this.store.loadTransactions();
+    await this.store.loadTransactions({
+      current: 1,
+      pageSize: 100,
+    });
     this.forceUpdate();
   };
 
@@ -30,7 +33,7 @@ class CalendarView extends PureComponent<
     });
 
     return (
-      <ul className="events">
+      <ul className='events'>
         {items.map((item: Instance<typeof Transaction>) => (
           <li key={item.id}>
             <Badge

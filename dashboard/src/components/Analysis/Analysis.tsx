@@ -51,7 +51,7 @@ class Analysis extends PureComponent<
       zoomDomain: {
         x: [
           (first && first.date) || this.state.zoomDomain.x![0],
-          (last && last.date) || this.state.zoomDomain!.x![1],
+          (last && last.date) || this.state.zoomDomain.x![1],
         ],
       },
     });
@@ -67,11 +67,11 @@ class Analysis extends PureComponent<
           }, 0);
 
         return {
-          date: trx.date,
-          amount,
+          a: trx.date,
+          b: amount,
         };
       })
-      .sort((a, b) => moment(a).unix() - moment(b).unix());
+      .sort((a, b) => moment(a.a).unix() - moment(b.a).unix());
 
     return data;
   };
@@ -87,7 +87,7 @@ class Analysis extends PureComponent<
             <VictoryZoomContainer
               zoomDimension="x"
               zoomDomain={this.state.zoomDomain}
-              onZoomDomainChange={this.handleZoom.bind(this)}
+              onZoomDomainChange={this.handleZoom}
             />
           }
         >
@@ -96,8 +96,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.getData()}
-            x="date"
-            y="amount"
+            x="a"
+            y="b"
           />
         </VictoryChart>
         <VictoryChart
@@ -119,8 +119,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.getData()}
-            x="key"
-            y="amount"
+            x="a"
+            y="b"
           />
         </VictoryChart>
       </div>

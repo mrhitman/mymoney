@@ -37,7 +37,7 @@ export const Transaction = (types
       source: snapshot.sourceWalletId,
       destination: snapshot.destinationWalletId,
       type: snapshot.type,
-      description: snapshot.description,
+      description: snapshot.description || '',
       amount: Number(snapshot.amount),
       date: new Date(snapshot.date),
     };

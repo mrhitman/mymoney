@@ -1,16 +1,11 @@
-import {
-  Controller,
-  Get,
-  Param,
-  UseGuards
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrenciesService } from './currencies.service';
 
 @Controller('currencies')
 @UseGuards(JwtAuthGuard)
 export class CurrenciesController {
-  constructor(protected service: CurrenciesService) { }
+  constructor(protected service: CurrenciesService) {}
 
   @Get('/rates')
   public async rates() {
@@ -37,6 +32,13 @@ export class CurrenciesController {
 
   @Get('/:id')
   public async findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+    const rates = await this.service.rates();
+    const currency = await this.service.findOne(id);
+
+    if (currency) {
+      return { ...currency, rate: rates.rates[currency.name] };
+    }
+
+    return currency;
   }
 }

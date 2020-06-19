@@ -88,7 +88,7 @@ class Analysis extends PureComponent<
           scale={{ x: 'time' }}
           containerComponent={
             <VictoryZoomContainer
-              zoomDimension="x"
+              zoomDimension='x'
               zoomDomain={this.state.zoomDomain}
               onZoomDomainChange={this.handleZoom}
             />
@@ -99,8 +99,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.getData()}
-            x="a"
-            y="b"
+            x='a'
+            y='b'
           />
         </VictoryChart>
         <VictoryChart
@@ -110,7 +110,7 @@ class Analysis extends PureComponent<
           scale={{ x: 'time' }}
           containerComponent={
             <VictoryBrushContainer
-              brushDimension="x"
+              brushDimension='x'
               brushDomain={this.state.zoomDomain}
               onBrushDomainChange={this.handleZoom.bind(this)}
             />
@@ -122,8 +122,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.getData()}
-            x="a"
-            y="b"
+            x='a'
+            y='b'
           />
         </VictoryChart>
       </div>

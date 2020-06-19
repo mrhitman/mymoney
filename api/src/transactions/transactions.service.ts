@@ -17,6 +17,7 @@ import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import moment from 'moment';
 
 interface QueryParams {
   relation?: RelationExpression<any>;
@@ -24,6 +25,8 @@ interface QueryParams {
   offset?: number;
   sortDirection?: OrderByDirection;
   sortBy?: string;
+  start?: number;
+  end?: number;
 }
 
 @Injectable()
@@ -37,10 +40,18 @@ export class TransactionsService {
       query.withGraphFetched(params.relation);
     }
 
+    if (params.start) {
+      query.where('date', '>=', moment.unix(params.start).toDate());
+    }
+
+    if (params.end) {
+      query.where('date', '<=', moment.unix(params.end).toDate());
+    }
+
     const count = await query.clone().clearSelect().count();
 
-    query.limit(params.limit || 10);
-    query.offset(params.offset || 0);
+    params.limit && query.limit(params.limit);
+    params.offset && query.offset(params.offset);
     query.orderBy(
       params.sortBy || 'created_at',
       params.sortDirection || 'DESC',

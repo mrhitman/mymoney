@@ -7,24 +7,47 @@ import { InjectedStore } from 'src/store/Store';
 import { Instance } from 'mobx-state-tree';
 import { Transaction } from 'common';
 
+interface CalendarViewState {
+  view: 'year' | 'month';
+  time: moment.Moment;
+}
+
 class CalendarView extends PureComponent<
-  Partial<InjectedStore> & WithTranslation
+  Partial<InjectedStore> & WithTranslation,
+  CalendarViewState
 > {
+  public state: CalendarViewState = {
+    time: moment(),
+    view: 'month',
+  };
+
   public get store() {
     return this.props.store!;
   }
 
   public componentDidMount = async () => {
     await this.store.loadCurrencies();
-    await this.store.loadTransactions({
-      current: 1,
-      pageSize: 100,
-    });
+    await this.fetchData();
     this.forceUpdate();
   };
 
+  protected fetchData = async () => {
+    return this.store.loadTransactions({
+      start: this.state.time.startOf('year').unix(),
+      end: this.state.time.endOf('year').unix(),
+    });
+  };
+
   public render() {
-    return <Calendar dateCellRender={this.dateCellRender} />;
+    return (
+      <Calendar
+        onChange={(time) => this.setState({ time }, this.fetchData)}
+        onPanelChange={(time, view) =>
+          this.setState({ time, view }, this.fetchData)
+        }
+        dateCellRender={this.dateCellRender}
+      />
+    );
   }
 
   protected dateCellRender = (date: Moment) => {
@@ -33,7 +56,7 @@ class CalendarView extends PureComponent<
     });
 
     return (
-      <ul className='events'>
+      <ul className="events">
         {items.map((item: Instance<typeof Transaction>) => (
           <li key={item.id}>
             <Badge

@@ -40,7 +40,10 @@ class Analysis extends PureComponent<
   }
 
   protected fetchData = async () => {
-    await this.store.loadTransactions({ current: 1, pageSize: 100 });
+    await this.store.loadTransactions({
+      start: moment().startOf('year').unix(),
+      end: moment().endOf('year').unix(),
+    });
     const transactions = this.store.transactions.sort(
       (a, b) => moment(a).unix() - moment(b).unix()
     );
@@ -85,7 +88,7 @@ class Analysis extends PureComponent<
           scale={{ x: 'time' }}
           containerComponent={
             <VictoryZoomContainer
-              zoomDimension='x'
+              zoomDimension="x"
               zoomDomain={this.state.zoomDomain}
               onZoomDomainChange={this.handleZoom}
             />
@@ -96,8 +99,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.getData()}
-            x='a'
-            y='b'
+            x="a"
+            y="b"
           />
         </VictoryChart>
         <VictoryChart
@@ -107,7 +110,7 @@ class Analysis extends PureComponent<
           scale={{ x: 'time' }}
           containerComponent={
             <VictoryBrushContainer
-              brushDimension='x'
+              brushDimension="x"
               brushDomain={this.state.zoomDomain}
               onBrushDomainChange={this.handleZoom.bind(this)}
             />
@@ -119,8 +122,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.getData()}
-            x='a'
-            y='b'
+            x="a"
+            y="b"
           />
         </VictoryChart>
       </div>

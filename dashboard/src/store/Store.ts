@@ -25,7 +25,6 @@ export const api = new Api({
 });
 
 export type Entity = 'categories' | 'wallets';
-
 export const Store = types
   .model('Store', {
     isAuthorized: types.optional(types.boolean, !!accessToken),
@@ -164,7 +163,7 @@ export const Store = types
     function* query(query?: string) {
       return api.query(
         query ||
-          `query {
+        `query {
           user {
             firstName
             middleName

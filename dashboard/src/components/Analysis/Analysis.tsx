@@ -10,9 +10,13 @@ import {
   VictoryZoomContainer,
 } from 'victory';
 import moment from 'moment';
-import { InjectedStore } from '../../store/Store';
+import { Dropdown, Menu } from 'antd';
+import { InjectedStore, api } from '../../store/Store';
+import { DownOutlined } from '@ant-design/icons';
 
 interface AnalysisState {
+  data: Array<{ a: Date; b: number }>;
+  interval: 'week' | 'day' | 'month' | 'year';
   zoomDomain: {
     x?: DomainTuple;
     y?: DomainTuple;
@@ -28,6 +32,8 @@ class Analysis extends PureComponent<
   }
 
   public state: AnalysisState = {
+    interval: 'day',
+    data: [],
     zoomDomain: { x: [new Date(), new Date()] },
   };
 
@@ -40,48 +46,69 @@ class Analysis extends PureComponent<
   }
 
   protected fetchData = async () => {
-    await this.store.loadTransactions({
-      start: moment().startOf('year').unix(),
-      end: moment().endOf('year').unix(),
-    });
-    const transactions = this.store.transactions.sort(
-      (a, b) => moment(a).unix() - moment(b).unix()
+    const response = await api.client(
+      '/transactions/statistic/' + this.state.interval
     );
-    const first = transactions.shift();
-    const last = transactions.pop();
+    const data = response.data;
 
     this.setState({
-      zoomDomain: {
-        x: [
-          (first && first.date) || this.state.zoomDomain.x![0],
-          (last && last.date) || this.state.zoomDomain.x![1],
-        ],
-      },
+      data: Object.keys(data).map((time) => {
+        return { a: moment.unix(+time).toDate(), b: data[time] };
+      }),
     });
-  };
-
-  protected getData = () => {
-    const data = this.store.transactions
-      .map((trx, i, transactions) => {
-        const amount = transactions
-          .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
-          .reduce((s, t) => {
-            return s + (t.type === 'outcome' ? -1 * t.amount : t.amount);
-          }, 0);
-
-        return {
-          a: trx.date,
-          b: amount,
-        };
-      })
-      .sort((a, b) => moment(a.a).unix() - moment(b.a).unix());
-
-    return data;
   };
 
   public render() {
     return (
       <div style={{ display: 'flex' }}>
+        <div>
+          <Dropdown
+            overlay={() => (
+              <Menu>
+                <Menu.Item
+                  key='day'
+                  onClick={() =>
+                    this.setState({ interval: 'day' }, this.fetchData)
+                  }
+                >
+                  Day
+                </Menu.Item>
+                <Menu.Item
+                  key='week'
+                  onClick={() =>
+                    this.setState({ interval: 'week' }, this.fetchData)
+                  }
+                >
+                  Week
+                </Menu.Item>
+                <Menu.Item
+                  key='month'
+                  onClick={() =>
+                    this.setState({ interval: 'month' }, this.fetchData)
+                  }
+                >
+                  Month
+                </Menu.Item>
+                <Menu.Item
+                  key='year'
+                  onClick={() =>
+                    this.setState({ interval: 'year' }, this.fetchData)
+                  }
+                >
+                  Year
+                </Menu.Item>
+              </Menu>
+            )}
+            trigger={['click']}
+          >
+            <a
+              className='ant-dropdown-link'
+              onClick={(e) => e.preventDefault()}
+            >
+              {this.state.interval} <DownOutlined />
+            </a>
+          </Dropdown>
+        </div>
         <VictoryChart
           width={600}
           height={470}
@@ -98,7 +125,7 @@ class Analysis extends PureComponent<
             style={{
               data: { stroke: 'tomato' },
             }}
-            data={this.getData()}
+            data={this.state.data}
             x='a'
             y='b'
           />
@@ -121,7 +148,7 @@ class Analysis extends PureComponent<
             style={{
               data: { stroke: 'tomato' },
             }}
-            data={this.getData()}
+            data={this.state.data}
             x='a'
             y='b'
           />

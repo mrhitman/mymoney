@@ -1,5 +1,11 @@
 import { Field, Float, Int } from '@nestjs/graphql';
-import { IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateIf,
+  IsBoolean,
+} from 'class-validator';
 
 export class CommonTransactionDto {
   @Field()
@@ -36,4 +42,12 @@ export class CommonTransactionDto {
   @Field()
   @IsString()
   readonly description: string;
+
+  @Field((type) => Boolean)
+  @IsBoolean()
+  readonly isNecessary: boolean;
+
+  @Field((type) => Boolean)
+  @IsBoolean()
+  readonly isTemplate: boolean;
 }

@@ -1,4 +1,4 @@
-import { DatePicker, Form, Input, Select } from 'antd';
+import { Checkbox, DatePicker, Form, Input, Select } from 'antd';
 import { Category, Currency } from 'common';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { inject, observer } from 'mobx-react';
@@ -18,6 +18,8 @@ export interface AddTransactionValues {
   type: string;
   fine?: number;
   amount?: number;
+  isNecessary?: boolean;
+  isTemplate?: boolean;
   description: string;
 }
 
@@ -61,6 +63,8 @@ export class AddTransactionForm extends PureComponent<
             fine: undefined,
             amount: undefined,
             description: '',
+            isNecessary: false,
+            isTemplate: false,
           } as AddTransactionValues
         }
         onSubmit={this.handleSubmit}
@@ -219,6 +223,12 @@ export class AddTransactionForm extends PureComponent<
                 </Select>
               </Form.Item>
             )}
+            <Form.Item label="Is Necessary">
+              <Checkbox value={bag.values.isNecessary} />
+            </Form.Item>
+            <Form.Item label="Repeatable operation">
+              <Checkbox value={bag.values.isTemplate} />
+            </Form.Item>
             <Form.Item
               label="Description"
               validateStatus={bag.errors.description ? 'error' : 'success'}

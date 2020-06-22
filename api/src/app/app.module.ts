@@ -11,6 +11,8 @@ import { UsersModule } from '../users/users.module';
 import { WalletsModule } from '../wallets/wallets.module';
 import { AppController } from './app.controller';
 import { LoggerMiddleware } from './logger.middleware';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskService } from './task.service';
 
 @Module({
   imports: [
@@ -22,13 +24,14 @@ import { LoggerMiddleware } from './logger.middleware';
     TransactionsModule,
     CurrenciesModule,
     AuthModule,
+    ScheduleModule.forRoot(),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: 'schema.gql',
     }),
   ],
   controllers: [AppController],
-  providers: [Fixer],
+  providers: [Fixer, TaskService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

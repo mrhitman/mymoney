@@ -224,10 +224,20 @@ export class AddTransactionForm extends PureComponent<
               </Form.Item>
             )}
             <Form.Item labelCol={{ span: 22 }} label="Is Necessary">
-              <Checkbox value={bag.values.isNecessary} />
+              <Checkbox
+                checked={bag.values.isNecessary}
+                onChange={(e) =>
+                  bag.setFieldValue('isNecessary', e.target.checked)
+                }
+              />
             </Form.Item>
             <Form.Item labelCol={{ span: 22 }} label="Repeatable operation">
-              <Checkbox value={bag.values.isTemplate} />
+              <Checkbox
+                checked={bag.values.isTemplate}
+                onChange={(e) =>
+                  bag.setFieldValue('isTemplate', e.target.checked)
+                }
+              />
             </Form.Item>
             <Form.Item
               label="Description"

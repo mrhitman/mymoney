@@ -1,4 +1,4 @@
-import { Checkbox, DatePicker, Form, Input, Select } from 'antd';
+import { Checkbox, DatePicker, Form, Input, Select, Tabs } from 'antd';
 import { Category, Currency } from 'common';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { inject, observer } from 'mobx-react';
@@ -239,6 +239,24 @@ export class AddTransactionForm extends PureComponent<
                 }
               />
             </Form.Item>
+            {bag.values.isTemplate && (
+              <Tabs defaultActiveKey="1">
+                <Tabs.TabPane tab="day" key="1">
+                  <ul>
+                    <li>mon</li>
+                    <li>tue</li>
+                    <li>wed</li>
+                    <li>thu</li>
+                    <li>fri</li>
+                    <li>sat</li>
+                    <li>sun</li>
+                  </ul>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="week" key="2" />
+                <Tabs.TabPane tab="month" key="3" />
+                <Tabs.TabPane tab="year" key="4" />
+              </Tabs>
+            )}
             <Form.Item
               label="Description"
               validateStatus={bag.errors.description ? 'error' : 'success'}

@@ -66,7 +66,7 @@ class Analysis extends PureComponent<
             overlay={() => (
               <Menu>
                 <Menu.Item
-                  key='day'
+                  key="day"
                   onClick={() =>
                     this.setState({ interval: 'day' }, this.fetchData)
                   }
@@ -74,7 +74,7 @@ class Analysis extends PureComponent<
                   Day
                 </Menu.Item>
                 <Menu.Item
-                  key='week'
+                  key="week"
                   onClick={() =>
                     this.setState({ interval: 'week' }, this.fetchData)
                   }
@@ -82,7 +82,7 @@ class Analysis extends PureComponent<
                   Week
                 </Menu.Item>
                 <Menu.Item
-                  key='month'
+                  key="month"
                   onClick={() =>
                     this.setState({ interval: 'month' }, this.fetchData)
                   }
@@ -90,7 +90,7 @@ class Analysis extends PureComponent<
                   Month
                 </Menu.Item>
                 <Menu.Item
-                  key='year'
+                  key="year"
                   onClick={() =>
                     this.setState({ interval: 'year' }, this.fetchData)
                   }
@@ -101,12 +101,9 @@ class Analysis extends PureComponent<
             )}
             trigger={['click']}
           >
-            <a
-              className='ant-dropdown-link'
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="ant-dropdown-link">
               {this.state.interval} <DownOutlined />
-            </a>
+            </span>
           </Dropdown>
         </div>
         <VictoryChart
@@ -115,7 +112,7 @@ class Analysis extends PureComponent<
           scale={{ x: 'time' }}
           containerComponent={
             <VictoryZoomContainer
-              zoomDimension='x'
+              zoomDimension="x"
               zoomDomain={this.state.zoomDomain}
               onZoomDomainChange={this.handleZoom}
             />
@@ -126,8 +123,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.state.data}
-            x='a'
-            y='b'
+            x="a"
+            y="b"
           />
         </VictoryChart>
         <VictoryChart
@@ -137,7 +134,7 @@ class Analysis extends PureComponent<
           scale={{ x: 'time' }}
           containerComponent={
             <VictoryBrushContainer
-              brushDimension='x'
+              brushDimension="x"
               brushDomain={this.state.zoomDomain}
               onBrushDomainChange={this.handleZoom.bind(this)}
             />
@@ -149,8 +146,8 @@ class Analysis extends PureComponent<
               data: { stroke: 'tomato' },
             }}
             data={this.state.data}
-            x='a'
-            y='b'
+            x="a"
+            y="b"
           />
         </VictoryChart>
       </div>

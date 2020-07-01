@@ -5,6 +5,7 @@ node_modules
 api/dist
 api/data
 api/coverage
+common/lib
 
 ## Mobile
 # OSX

@@ -2,8 +2,15 @@
   "extends": "../tsconfig.build.json",
 
   "compilerOptions": {
-    "outDir": "./dist"
+    "target": "es6",
+    "lib": ["es6", "dom"],
+    "outDir": "./lib",
+    "declaration": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
 
-  "include": ["src/**/*"]
+  "include": ["./src"]
 }

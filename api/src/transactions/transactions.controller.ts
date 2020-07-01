@@ -18,7 +18,7 @@ import { TransactionsService } from './transactions.service';
 @Controller('transactions')
 @UseGuards(JwtAuthGuard)
 export class TransactionsController {
-  constructor(private readonly service: TransactionsService) { }
+  constructor(private readonly service: TransactionsService) {}
 
   @Post()
   public async create(
@@ -47,7 +47,11 @@ export class TransactionsController {
   }
 
   @Get('/statistic/:interval')
-  public async getStatistic(@Request() req, @Param('interval') interval: string, @Query() query) {
+  public async getStatistic(
+    @Request() req,
+    @Param('interval') interval: string,
+    @Query() query,
+  ) {
     return this.service.getStatistic(req.user, { ...query, interval });
   }
 }

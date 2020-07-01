@@ -1,4 +1,4 @@
-import { chain, groupBy, reduce, sumBy } from 'lodash';
+import { chain, groupBy, reduce, sumBy, first } from 'lodash';
 import * as moment from 'moment';
 // import { TransactionLike } from '../transaction';
 
@@ -33,12 +33,13 @@ export function dataByPeriod(items: any[], interval: Interval) {
   );
 }
 
-export function dataByCategory(items: any[]) {
+export function dataByCategory(items: any[], withParents: boolean = false) {
   const groups = chain(items)
     .groupBy('categoryId')
-    .map((group, categoryId) => {
+    .map((group, categoryId, groups) => {
       return {
         categoryId,
+        parentCategoryId: first(group).category.parent,
         amount: group.reduce(
           (acc, trx) =>
             acc +
@@ -51,7 +52,20 @@ export function dataByCategory(items: any[]) {
     })
     .value();
 
-  console.log(items);
+  if (withParents) {
+    return groups.reduce((acc, group) => {
+      if (!group.parentCategoryId) {
+        return acc;
+      }
+
+      const parentCategoriesSum = groups
+        .filter((g) => g.categoryId === group.parentCategoryId)
+        .reduce((acc, c) => acc + c.amount, 0);
+
+      return [...acc, { ...group, amount: group.amount + parentCategoriesSum }];
+    }, [] as any[]);
+  }
+
   return groups;
 }
 

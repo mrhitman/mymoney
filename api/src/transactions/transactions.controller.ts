@@ -57,6 +57,9 @@ export class TransactionsController {
 
   @Get('/statistic-categories')
   public async getStatisticByCategory(@Request() req, @Query() query) {
-    return this.service.getStatisticByCategory(req.user, query);
+    return this.service.getStatisticByCategory(req.user, {
+      ...query,
+      relation: '[category]',
+    });
   }
 }

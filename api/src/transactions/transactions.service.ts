@@ -48,7 +48,7 @@ export class TransactionsService {
       query.where('date', '<=', DateTime.fromSeconds(params.end).toJSDate());
     }
 
-    const count = await query.clone().clearSelect().count();
+    const count = await query.clone().clearSelect().clearEager().count();
 
     params.limit && query.limit(params.limit);
     params.offset && query.offset(params.offset);
@@ -75,7 +75,7 @@ export class TransactionsService {
 
   public async getStatisticByCategory(user: User, params: QueryParams) {
     const items = await this.getAll(user, params);
-    return dataByCategory(items.items);
+    return dataByCategory(items.items, true);
   }
 
   public async getTransaction(id: string, userId: number) {

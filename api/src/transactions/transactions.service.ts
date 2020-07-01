@@ -1,14 +1,15 @@
 import {
   BadRequestException,
   ForbiddenException,
-  Injectable
+  Injectable,
 } from '@nestjs/common';
-import { groupBy, reduce, sumBy, upperFirst } from 'lodash';
+import { dataByPeriod, dataByCategory, Interval } from 'common';
+import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
-import moment from 'moment';
 import Objection, {
-  OrderByDirection, RelationExpression,
-  transaction
+  OrderByDirection,
+  RelationExpression,
+  transaction,
 } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
@@ -17,8 +18,6 @@ import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-
-export type Interval = 'day' | 'week' | 'month' | 'year';
 
 interface QueryParams {
   relation?: RelationExpression<any>;
@@ -32,7 +31,7 @@ interface QueryParams {
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) { }
+  constructor(protected walletService: WalletsService) {}
 
   public async getAll(user: User, params: QueryParams = {}) {
     const query = Transaction.query().where({ userId: user.id });
@@ -42,11 +41,11 @@ export class TransactionsService {
     }
 
     if (params.start) {
-      query.where('date', '>=', moment.unix(params.start).toDate());
+      query.where('date', '>=', DateTime.fromSeconds(params.start).toJSDate());
     }
 
     if (params.end) {
-      query.where('date', '<=', moment.unix(params.end).toDate());
+      query.where('date', '<=', DateTime.fromSeconds(params.end).toJSDate());
     }
 
     const count = await query.clone().clearSelect().count();
@@ -66,43 +65,17 @@ export class TransactionsService {
     };
   }
 
-  public async getStatistic(user: User, params: QueryParams & { interval: Interval } = { interval: 'month' }) {
+  public async getStatisticByPeriod(
+    user: User,
+    params: QueryParams & { interval: Interval } = { interval: 'month' },
+  ) {
     const items = await this.getAll(user, params);
-
-    const data = items.items
-      .map((trx, i, transactions) => {
-        const amount = transactions
-          .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
-          .reduce((s, t) => {
-            return s + (t.type === 'outcome' ? -1 * Number(t.amount) : Number(t.amount));
-          }, 0);
-
-        return {
-          date: trx.date,
-          amount,
-        };
-      })
-      .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());
-
-    const grouped = this.groupStatistic(data, params.interval);
-    return reduce(grouped, (acc, group, interval) => {
-      return { ...acc, [interval]: sumBy(group, 'amount') }
-    }, {});
+    return dataByPeriod(items.items, params.interval);
   }
 
-  protected groupStatistic(items: Array<{ date: moment.MomentInput }>, interval: Interval) {
-    switch (interval) {
-      case 'day':
-        return groupBy(items, item => moment(item.date).startOf('day').unix());
-      case 'week':
-        return groupBy(items, item => moment(item.date).startOf('week').unix());
-      case 'month':
-        return groupBy(items, item => moment(item.date).startOf('month').unix());
-      case 'year':
-        return groupBy(items, item => moment(item.date).startOf('year').unix());
-      default:
-        return groupBy(items, item => moment(item.date).startOf('month').unix());
-    }
+  public async getStatisticByCategory(user: User, params: QueryParams) {
+    const items = await this.getAll(user, params);
+    return dataByCategory(items.items);
   }
 
   public async getTransaction(id: string, userId: number) {

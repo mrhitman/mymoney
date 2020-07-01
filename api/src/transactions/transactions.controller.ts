@@ -52,6 +52,11 @@ export class TransactionsController {
     @Param('interval') interval: string,
     @Query() query,
   ) {
-    return this.service.getStatistic(req.user, { ...query, interval });
+    return this.service.getStatisticByPeriod(req.user, { ...query, interval });
+  }
+
+  @Get('/statistic-categories')
+  public async getStatisticByCategory(@Request() req, @Query() query) {
+    return this.service.getStatisticByCategory(req.user, query);
   }
 }

@@ -43,7 +43,7 @@ export const Transaction = (types
     };
   }) as any) as TransactionLike;
 
-interface TransactionLike extends IAnyType {
+export interface TransactionLike extends IAnyType {
   id: string;
   category: Instance<typeof Category>;
   type: TransactionType;

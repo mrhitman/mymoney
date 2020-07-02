@@ -18,6 +18,7 @@ import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import Category from '../database/models/category.model';
 
 interface QueryParams {
   relation?: RelationExpression<any>;
@@ -75,7 +76,13 @@ export class TransactionsService {
 
   public async getStatisticByCategory(user: User, params: QueryParams) {
     const items = await this.getAll(user, params);
-    return dataByCategory(items.items, true);
+    const data = dataByCategory(items.items, true);
+    const categoryIds = data.map((d) => d.categoryId);
+    const categories = await Category.query().whereIn('id', categoryIds);
+    return data.map((d) => ({
+      ...d,
+      category: categories.find((c) => c.id === d.categoryId),
+    }));
   }
 
   public async getTransaction(id: string, userId: number) {

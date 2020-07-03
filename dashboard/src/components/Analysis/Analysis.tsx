@@ -1,4 +1,6 @@
+import { Button, Dropdown, Menu } from 'antd';
 import { inject, observer } from 'mobx-react';
+import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import {
@@ -9,15 +11,12 @@ import {
   VictoryLine,
   VictoryZoomContainer,
 } from 'victory';
-import moment from 'moment';
-import { Dropdown, Menu } from 'antd';
-import { InjectedStore, api } from '../../store/Store';
-import { DownOutlined } from '@ant-design/icons';
+import { api, InjectedStore } from '../../store/Store';
 
 interface AnalysisState {
   data: Array<{ a: Date; b: number }>;
   interval: 'week' | 'day' | 'month' | 'year';
-  zoomDomain: {
+  zoomDomain?: {
     x?: DomainTuple;
     y?: DomainTuple;
   };
@@ -34,7 +33,6 @@ class Analysis extends PureComponent<
   public state: AnalysisState = {
     interval: 'day',
     data: [],
-    zoomDomain: { x: [new Date(), new Date()] },
   };
 
   public handleZoom = (domain: { x?: DomainTuple; y?: DomainTuple }) => {
@@ -100,10 +98,9 @@ class Analysis extends PureComponent<
               </Menu>
             )}
             trigger={['click']}
+            placement="bottomCenter"
           >
-            <span className="ant-dropdown-link">
-              {this.state.interval} <DownOutlined />
-            </span>
+            <Button>{this.state.interval}</Button>
           </Dropdown>
         </div>
         <VictoryChart

@@ -41,12 +41,12 @@ export class TransactionsService {
       query.withGraphFetched(params.relation);
     }
 
-    if (params.start) {
-      query.where('date', '>=', DateTime.fromSeconds(params.start).toJSDate());
+    if (params.start && !isNaN(params.start)) {
+      query.where('date', '>=', DateTime.fromSeconds(+params.start).toJSDate());
     }
 
-    if (params.end) {
-      query.where('date', '<=', DateTime.fromSeconds(params.end).toJSDate());
+    if (params.end && !isNaN(params.end)) {
+      query.where('date', '<=', DateTime.fromSeconds(+params.end).toJSDate());
     }
 
     const count = await query.clone().clearSelect().clearEager().count();

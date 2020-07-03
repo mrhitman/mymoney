@@ -1,4 +1,4 @@
-import { DownOutlined, SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Button } from 'antd';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
@@ -22,7 +22,7 @@ class AnalysisByCategory extends PureComponent<
 
   public state: AnalysisByCategoryState = {
     data: [],
-    loading: !false,
+    loading: false,
     type: 'outcome',
   };
 
@@ -58,10 +58,9 @@ class AnalysisByCategory extends PureComponent<
             </Menu>
           )}
           trigger={['click']}
+          placement="bottomCenter"
         >
-          <span className="ant-dropdown-link">
-            {this.state.type} <DownOutlined />
-          </span>
+          <Button className="ant-dropdown-link">{this.state.type}</Button>
         </Dropdown>
         <Button onClick={this.fetchData}>
           <SyncOutlined spin={this.state.loading} />
@@ -71,6 +70,8 @@ class AnalysisByCategory extends PureComponent<
           style={{ labels: { fill: 'black' } }}
           innerRadius={80}
           labelRadius={120}
+          cornerRadius={2}
+          labelPosition={'centroid'}
           labels={({ datum }) => `${this.props.t(datum.x)}`}
           data={this.state.data
             .filter(({ category }) => category.type === this.state.type)

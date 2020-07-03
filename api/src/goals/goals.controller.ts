@@ -6,4 +6,7 @@ export class GoalsController {
   public async getAll() {
     return [];
   }
+
+  @Get('/:id')
+  public async getOne() {}
 }

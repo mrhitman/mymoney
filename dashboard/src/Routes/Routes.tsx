@@ -2,8 +2,8 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Categories from 'src/components/Accounting/Categories';
-import Analysis from 'src/components/Analysis/Analysis';
 import AnalysisByCategory from 'src/components/Analysis/AnalysisByCategory';
+import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
 import Info from 'src/components/Info/Info';
 import Login from 'src/components/Login/Login';
 import Layout from 'src/components/misc/Layout';
@@ -11,6 +11,7 @@ import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
 import { InjectedStore } from 'src/store/Store';
+import { Accounting } from '../components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
 
 class Routes extends React.Component {
@@ -35,7 +36,7 @@ class Routes extends React.Component {
 
         <PrivateRoute path="/accounting" exact>
           <Layout activePage="accounting">
-            <TransactionList />
+            <Accounting />
           </Layout>
         </PrivateRoute>
 
@@ -59,7 +60,7 @@ class Routes extends React.Component {
 
         <PrivateRoute path="/analysis" exact>
           <Layout activePage="analysis">
-            <Analysis />
+            <AnalysisByPeriod />
           </Layout>
         </PrivateRoute>
 

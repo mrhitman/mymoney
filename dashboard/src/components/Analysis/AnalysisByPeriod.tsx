@@ -13,7 +13,7 @@ import {
 } from 'victory';
 import { api, InjectedStore } from '../../store/Store';
 
-interface AnalysisState {
+interface AnalysisByPeriodState {
   data: Array<{ a: Date; b: number }>;
   interval: 'week' | 'day' | 'month' | 'year';
   zoomDomain?: {
@@ -22,15 +22,15 @@ interface AnalysisState {
   };
 }
 
-class Analysis extends PureComponent<
+class AnalysisByPeriod extends PureComponent<
   Partial<InjectedStore> & WithTranslation,
-  AnalysisState
+  AnalysisByPeriodState
 > {
   public get store() {
     return this.props.store!;
   }
 
-  public state: AnalysisState = {
+  public state: AnalysisByPeriodState = {
     interval: 'day',
     data: [],
   };
@@ -152,4 +152,4 @@ class Analysis extends PureComponent<
   }
 }
 
-export default withTranslation()(inject('store')(observer(Analysis)));
+export default withTranslation()(inject('store')(observer(AnalysisByPeriod)));

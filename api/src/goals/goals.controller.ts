@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Patch, Post } from '@nestjs/common';
 
 @Controller('goals')
 export class GoalsController {
@@ -8,5 +8,14 @@ export class GoalsController {
   }
 
   @Get('/:id')
-  public async getOne() {}
+  public async findOne() {}
+
+  @Patch('/:id')
+  public async update() {}
+
+  @Post()
+  public async create() {}
+
+  @Post('/:id')
+  public async delete() {}
 }

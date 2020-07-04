@@ -3,32 +3,19 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { dataByPeriod, dataByCategory, Interval } from 'common';
+import { dataByCategory, dataByPeriod, Interval } from 'common';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
-import Objection, {
-  OrderByDirection,
-  RelationExpression,
-  transaction,
-} from 'objection';
+import Objection, { transaction } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
+import Category from '../database/models/category.model';
 import Wallet from '../database/models/wallet.model';
+import { bindFilters, QueryParams } from '../utils';
 import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import Category from '../database/models/category.model';
-
-interface QueryParams {
-  relation?: RelationExpression<any>;
-  limit?: number;
-  offset?: number;
-  sortDirection?: OrderByDirection;
-  sortBy?: string;
-  start?: number;
-  end?: number;
-}
 
 @Injectable()
 export class TransactionsService {
@@ -36,10 +23,7 @@ export class TransactionsService {
 
   public async getAll(user: User, params: QueryParams = {}) {
     const query = Transaction.query().where({ userId: user.id });
-
-    if (params.relation) {
-      query.withGraphFetched(params.relation);
-    }
+    bindFilters(query, params);
 
     if (params.start && !isNaN(params.start)) {
       query.where('date', '>=', DateTime.fromSeconds(+params.start).toJSDate());
@@ -50,7 +34,6 @@ export class TransactionsService {
     }
 
     const count = await query.clone().clearSelect().clearEager().count();
-
     params.limit && query.limit(params.limit);
     params.offset && query.offset(params.offset);
     query.orderBy(

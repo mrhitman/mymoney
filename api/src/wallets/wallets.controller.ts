@@ -1,19 +1,19 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
+  Patch,
+  Post,
   Request,
   Response,
   UseGuards,
-  Post,
-  Body,
-  Patch,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { WalletsService } from './wallets.service';
-import CreateWalletDto from '../../dist/wallets/dto/create-wallet.dto';
+import CreateWalletDto from 'src/wallets/dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
+import { WalletsService } from './wallets.service';
 
 @Controller('wallets')
 @UseGuards(JwtAuthGuard)

@@ -94,7 +94,11 @@ export class TransactionsService {
         syncAt: DateTime.local().toJSDate(),
       });
 
-      const wallet = await this[`add${upperFirst(trx.type)}Trx`](trx, dbTrx);
+      const wallet = await this[`add${upperFirst(trx.type)}Trx`](
+        trx,
+        user,
+        dbTrx,
+      );
       await dbTrx.commit();
 
       return {
@@ -109,9 +113,13 @@ export class TransactionsService {
 
   protected async addIncomeTrx(
     trx: Transaction,
+    user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.getWallet(trx.destinationWalletId);
+    const wallet = await this.walletService.findOne(
+      trx.destinationWalletId,
+      user,
+    );
     const pocket = this.getPocket(wallet, trx);
     pocket.amount += trx.amount;
 
@@ -128,9 +136,10 @@ export class TransactionsService {
 
   protected async addOutcomeTrx(
     trx: Transaction,
+    user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.getWallet(trx.sourceWalletId);
+    const wallet = await this.walletService.findOne(trx.sourceWalletId, user);
     const pocket = this.getPocket(wallet, trx);
     pocket.amount -= trx.amount;
 
@@ -146,6 +155,7 @@ export class TransactionsService {
 
   protected async addTransferTrx(
     trx: Transaction,
+    user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     return;
@@ -154,7 +164,6 @@ export class TransactionsService {
   private getPocket(wallet: Wallet, trx: Transaction) {
     return (
       wallet.pockets.find((p) => p.currencyId === trx.currencyId) || {
-        id: uuid(),
         currencyId: trx.currencyId,
         amount: 0,
       }

@@ -1,16 +1,21 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Request,
   UseGuards,
-  Param,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import CreateGoalDto from 'src/goals/dto/create-goal.dto';
+import UpdateGoalDto from 'src/goals/dto/update-goal.dto';
 import { GoalsService } from './goals.service';
 
 @Controller('goals')
+@ApiHeader({ name: 'jwt token' })
 @UseGuards(JwtAuthGuard)
 export class GoalsController {
   public constructor(protected readonly service: GoalsService) {}
@@ -25,11 +30,15 @@ export class GoalsController {
     return this.service.findOne(id, req.user);
   }
 
-  @Patch('/:id')
-  public async update() {}
-
   @Post()
-  public async create() {}
+  public async create(@Body() body: CreateGoalDto, @Request() req) {
+    return this.service.create(body, req.user);
+  }
+
+  @Patch('/:id')
+  public async update(@Body() body: UpdateGoalDto, @Request() req) {
+    return this.service.update(body, req.user);
+  }
 
   @Post('/:id')
   public async delete(@Param('id') id: string, @Request() req) {

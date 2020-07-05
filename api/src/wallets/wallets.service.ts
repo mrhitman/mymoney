@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
@@ -37,9 +38,23 @@ export class WalletsService {
     return wallet;
   }
 
-  public async create(data: CreateWalletDto, user: User) {}
+  public async create(data: CreateWalletDto, user: User) {
+    return Wallet.query().insert({
+      ...data,
+      userId: user.id,
+      createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
+      syncAt: DateTime.local().toJSDate(),
+    });
+  }
 
-  public async update(data: UpdateWalletDto, user: User) {}
+  public async update(data: UpdateWalletDto, user: User) {
+    const wallet = await this.findOne(data.id, user);
+
+    await wallet.$query().update({
+      ...data,
+      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
+    });
+  }
 
   public async delete(id: string, user: User) {
     const wallet = await this.findOne(id, user);

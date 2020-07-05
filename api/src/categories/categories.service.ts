@@ -15,20 +15,20 @@ export class CategoriesService {
     const query = Category.query().where({ userId: user.id });
 
     if (params && params.type) {
-      query.andWhere({ type: params.type })
+      query.andWhere({ type: params.type });
     }
 
-    return query
+    return query;
   }
 
-  public async getCategory(id: string, userId: number) {
+  public async findOne(id: string, user: User) {
     const category = await Category.query().findById(id);
 
     if (!category) {
       throw new BadRequestException('No such category');
     }
 
-    if (category.userId !== userId) {
+    if (category.userId !== user.id) {
       throw new ForbiddenException('You are not access to this item');
     }
 
@@ -45,7 +45,7 @@ export class CategoriesService {
   }
 
   public async update(data: UpdateCategoryDto, user: User) {
-    const category = await this.getCategory(data.id, user.id);
+    const category = await this.findOne(data.id, user);
 
     await category.$query().update({
       ...data,
@@ -57,7 +57,7 @@ export class CategoriesService {
   }
 
   public async delete(id: string, user: User) {
-    const category = await this.getCategory(id, user.id);
+    const category = await this.findOne(id, user);
 
     return category.$query().delete();
   }

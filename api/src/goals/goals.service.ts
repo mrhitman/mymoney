@@ -13,7 +13,7 @@ export class GoalsService {
   }
 
   public async findOne(id: string, user: User) {
-    const goal = await Goal.query().findOne({ id });
+    const goal = await Goal.query().findOne({ id, userId: user.id });
 
     if (!goal) {
       throw new NotFoundException();

@@ -8,14 +8,12 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import CreateGoalDto from 'src/goals/dto/create-goal.dto';
 import UpdateGoalDto from 'src/goals/dto/update-goal.dto';
 import { GoalsService } from './goals.service';
 
 @Controller('goals')
-@ApiHeader({ name: 'jwt token' })
 @UseGuards(JwtAuthGuard)
 export class GoalsController {
   public constructor(protected readonly service: GoalsService) {}

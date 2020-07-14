@@ -97,7 +97,6 @@ export const Store = types
       }>('/transactions', {
         ...omit(values, ['category', 'currency']),
         amount: Number(values.amount),
-        createdAt: moment().unix(),
         date: values.date.unix(),
         categoryId: values.categoryId?.id,
         currencyId: values.currencyId?.id,
@@ -107,6 +106,16 @@ export const Store = types
       self.transactions.push(Transaction.create(transaction));
       self.wallets.remove(self.wallets.find((w) => w.id === wallet.id)!);
       self.wallets.push(Wallet.create(wallet));
+    }
+
+    function* addWallet(values: any) {
+      const response = yield api.client.post('/wallets', {
+        ...values,
+        type: 'deposit',
+      })
+
+      console.log(response);
+
     }
 
     function* loadCurrencies(force: boolean = false) {
@@ -189,6 +198,7 @@ export const Store = types
       loadCategories: flow(loadCategories),
       loadWallets: flow(loadWallets),
       addTransaction: flow(addTransaction),
+      addWallet: flow(addWallet),
       loadTransactions: flow(loadTransactions),
       query: flow(query),
     };

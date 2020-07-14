@@ -36,7 +36,7 @@ export class Wallet extends Model {
               amount: { type: 'number' },
               currencyId: { type: 'string' },
             },
-            required: ['id', 'amount', 'currencyId'],
+            required: ['amount', 'currencyId'],
             additionalProperties: false,
           },
         },

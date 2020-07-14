@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<any> {
     t.uuid('token').primary();
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.unique(['user_id', 'token']);
+    t.timestamp('expire_at');
     t.timestamp('created_at').defaultTo(knex.fn.now());
   });
 }

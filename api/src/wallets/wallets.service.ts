@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
@@ -40,10 +41,10 @@ export class WalletsService {
 
   public async create(data: CreateWalletDto, user: User) {
     return Wallet.query().insert({
-      ...data,
+      ...omit(data, ['allow_negative_balance', 'use_in_analytics', 'use_in_balance', 'tags']),
       userId: user.id,
-      createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
       syncAt: DateTime.local().toJSDate(),
+      ...data.createdAt && { createdAt: DateTime.fromSeconds(data.createdAt).toJSDate() },
     });
   }
 

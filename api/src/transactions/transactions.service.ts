@@ -19,7 +19,7 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) {}
+  constructor(protected walletService: WalletsService) { }
 
   public async getAll(user: User, params: QueryParams = {}) {
     const query = Transaction.query().where({ userId: user.id });
@@ -33,7 +33,7 @@ export class TransactionsService {
       query.where('date', '<=', DateTime.fromSeconds(+params.end).toJSDate());
     }
 
-    const count = await query.clone().clearSelect().clearEager().count();
+    const count = await query.clone().clearSelect().clearWithGraph().count();
     params.limit && query.limit(params.limit);
     params.offset && query.offset(params.offset);
     query.orderBy(
@@ -90,8 +90,8 @@ export class TransactionsService {
         id: uuid(),
         userId: user.id,
         date: DateTime.fromSeconds(data.date).toJSDate(),
-        createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
         syncAt: DateTime.local().toJSDate(),
+        ...data.createdAt && { createdAt: DateTime.fromSeconds(data.createdAt).toJSDate() },
       });
 
       const wallet = await this[`add${upperFirst(trx.type)}Trx`](

@@ -32,7 +32,7 @@ export class CurrenciesService {
   constructor(
     protected fixer: Fixer,
     @Inject(CACHE_MANAGER) private readonly cache,
-  ) {}
+  ) { }
 
   public async findAll() {
     const currencies = await Currency.query();
@@ -58,7 +58,7 @@ export class CurrenciesService {
     }
 
     const response = await this.fixer.latest(base);
-    await this.cache.set('rates', response, { ttl: 3600 });
+    await this.cache.set('rates', response, { ttl: 36000 });
 
     return response as GetRateResponse;
   }

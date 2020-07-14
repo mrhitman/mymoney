@@ -1,7 +1,8 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 import { CommonTransactionDto } from './common-transaction.dto';
 
 export class CreateTransactionDto extends CommonTransactionDto {
-  @IsNumber()
-  readonly createdAt: number;
+    @IsOptional()
+    @IsNumber({ allowNaN: true })
+    readonly createdAt: number;
 }

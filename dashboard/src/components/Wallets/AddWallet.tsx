@@ -3,9 +3,11 @@ import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { InjectedStore } from 'src/store/Store';
 import AddWalletForm from './AddWalletForm';
+import { FormikProps } from 'formik';
 
 interface AddWalletState {
   visible: boolean;
+  bag?: FormikProps<any>;
 }
 
 class AddWallet extends PureComponent<Partial<InjectedStore>, AddWalletState> {
@@ -22,11 +24,15 @@ class AddWallet extends PureComponent<Partial<InjectedStore>, AddWalletState> {
       <div>
         <Button onClick={this.showModal}>Create new wallet</Button>
         <Modal
-          title="Add new wallet"
+          title='Add new wallet'
           visible={this.state.visible}
+          onOk={() => this.state.bag?.submitForm()}
           onCancel={this.handleCancel}
         >
-          <AddWalletForm />
+          <AddWalletForm
+            onInit={(bag) => !this.state.bag && this.setState({ bag })}
+            onSubmit={() => this.setState({ visible: false })}
+          />
         </Modal>
       </div>
     );

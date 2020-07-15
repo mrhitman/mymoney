@@ -1,11 +1,16 @@
 import { CacheModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import redisStore from 'cache-manager-redis-store';
+import { config } from 'dotenv';
 import { Fixer } from '../fixer';
 import { CurrenciesService } from './currencies.service';
 
 describe('CurrenciesService', () => {
   let service: CurrenciesService;
+
+  beforeAll(() => {
+    config();
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

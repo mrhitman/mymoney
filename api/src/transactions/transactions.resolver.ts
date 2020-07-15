@@ -5,14 +5,10 @@ import User from 'src/database/models/user.model';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionsService } from './transactions.service';
-import { CurrenciesService } from '../currencies/currencies.service';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
-  constructor(
-    private readonly transactionService: TransactionsService,
-    private readonly currencyService: CurrenciesService,
-  ) {}
+  constructor(private readonly transactionService: TransactionsService) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [TransactionDto])

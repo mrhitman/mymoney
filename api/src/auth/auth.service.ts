@@ -23,12 +23,17 @@ export class AuthService {
     }
   }
 
-  public async login(user: User) {
+  public async login(user: User, token?: RefreshToken) {
     const payload = { id: user.id };
-    const refreshToken = uuid();
+    const refreshToken = token?.token || uuid();
 
-    await RefreshToken.query().delete().where({ userId: user.id });
-    await RefreshToken.query().insert({ userId: user.id, token: refreshToken });
+    if (!token) {
+      await RefreshToken.query().delete().where({ userId: user.id });
+      await RefreshToken.query().insert({
+        userId: user.id,
+        token: refreshToken,
+      });
+    }
 
     return {
       accessToken: this.jwtService.sign(payload),
@@ -48,8 +53,7 @@ export class AuthService {
     }
 
     const user = await this.usersService.findById(refreshToken.userId);
-
-    return this.login(user);
+    return this.login(user, refreshToken);
   }
 
   public async getUser(id: number) {

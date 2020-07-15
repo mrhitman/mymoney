@@ -16,8 +16,8 @@ export class WalletsService {
     return query;
   }
 
-  public async getWallet(id: string) {
-    return Wallet.query().findById(id);
+  public async getOne(user: User, id: string) {
+    return Wallet.query().where({ userId: user.id }).findById(id);
   }
 
   public async performOperation(wallet: Wallet, trx: Transaction) {

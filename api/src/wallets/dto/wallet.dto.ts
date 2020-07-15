@@ -1,13 +1,5 @@
 import { ObjectType, Field, ID, Int, Float } from '@nestjs/graphql';
-
-@ObjectType('Pocket')
-export class PocketDto {
-  @Field()
-  currencyId: string;
-
-  @Field((type) => Float)
-  amount: number;
-}
+import { PocketDto } from './pocket';
 
 @ObjectType('Wallet')
 export class WalletDto {

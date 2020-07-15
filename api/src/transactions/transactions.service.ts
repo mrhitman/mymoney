@@ -1,14 +1,15 @@
 import {
   BadRequestException,
   ForbiddenException,
-  Injectable
+  Injectable,
 } from '@nestjs/common';
 import { groupBy, reduce, sumBy, upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 import moment from 'moment';
 import Objection, {
-  OrderByDirection, RelationExpression,
-  transaction
+  OrderByDirection,
+  RelationExpression,
+  transaction,
 } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
@@ -32,7 +33,7 @@ interface QueryParams {
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) { }
+  constructor(protected walletService: WalletsService) {}
 
   public async getAll(user: User, params: QueryParams = {}) {
     const query = Transaction.query().where({ userId: user.id });
@@ -66,7 +67,10 @@ export class TransactionsService {
     };
   }
 
-  public async getStatistic(user: User, params: QueryParams & { interval: Interval } = { interval: 'month' }) {
+  public async getStatistic(
+    user: User,
+    params: QueryParams & { interval: Interval } = { interval: 'month' },
+  ) {
     const items = await this.getAll(user, params);
 
     const data = items.items
@@ -74,7 +78,10 @@ export class TransactionsService {
         const amount = transactions
           .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
           .reduce((s, t) => {
-            return s + (t.type === 'outcome' ? -1 * Number(t.amount) : Number(t.amount));
+            return (
+              s +
+              (t.type === 'outcome' ? -1 * Number(t.amount) : Number(t.amount))
+            );
           }, 0);
 
         return {
@@ -85,23 +92,40 @@ export class TransactionsService {
       .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());
 
     const grouped = this.groupStatistic(data, params.interval);
-    return reduce(grouped, (acc, group, interval) => {
-      return { ...acc, [interval]: sumBy(group, 'amount') }
-    }, {});
+    return reduce(
+      grouped,
+      (acc, group, interval) => {
+        return { ...acc, [interval]: sumBy(group, 'amount') };
+      },
+      {},
+    );
   }
 
-  protected groupStatistic(items: Array<{ date: moment.MomentInput }>, interval: Interval) {
+  protected groupStatistic(
+    items: Array<{ date: moment.MomentInput }>,
+    interval: Interval,
+  ) {
     switch (interval) {
       case 'day':
-        return groupBy(items, item => moment(item.date).startOf('day').unix());
+        return groupBy(items, (item) =>
+          moment(item.date).startOf('day').unix(),
+        );
       case 'week':
-        return groupBy(items, item => moment(item.date).startOf('week').unix());
+        return groupBy(items, (item) =>
+          moment(item.date).startOf('week').unix(),
+        );
       case 'month':
-        return groupBy(items, item => moment(item.date).startOf('month').unix());
+        return groupBy(items, (item) =>
+          moment(item.date).startOf('month').unix(),
+        );
       case 'year':
-        return groupBy(items, item => moment(item.date).startOf('year').unix());
+        return groupBy(items, (item) =>
+          moment(item.date).startOf('year').unix(),
+        );
       default:
-        return groupBy(items, item => moment(item.date).startOf('month').unix());
+        return groupBy(items, (item) =>
+          moment(item.date).startOf('month').unix(),
+        );
     }
   }
 
@@ -131,7 +155,11 @@ export class TransactionsService {
         syncAt: DateTime.local().toJSDate(),
       });
 
-      const wallet = await this[`add${upperFirst(trx.type)}Trx`](trx, dbTrx);
+      const wallet = await this[`add${upperFirst(trx.type)}Trx`](
+        user,
+        trx,
+        dbTrx,
+      );
       await dbTrx.commit();
 
       return {
@@ -145,10 +173,14 @@ export class TransactionsService {
   }
 
   protected async addIncomeTrx(
+    user: User,
     trx: Transaction,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.getWallet(trx.destinationWalletId);
+    const wallet = await this.walletService.getOne(
+      user,
+      trx.destinationWalletId,
+    );
     const pocket = this.getPocket(wallet, trx);
     pocket.amount += trx.amount;
 
@@ -164,10 +196,11 @@ export class TransactionsService {
   }
 
   protected async addOutcomeTrx(
+    user: User,
     trx: Transaction,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.getWallet(trx.sourceWalletId);
+    const wallet = await this.walletService.getOne(user, trx.sourceWalletId);
     const pocket = this.getPocket(wallet, trx);
     pocket.amount -= trx.amount;
 
@@ -182,6 +215,7 @@ export class TransactionsService {
   }
 
   protected async addTransferTrx(
+    user: User,
     trx: Transaction,
     dbTrx?: Objection.TransactionOrKnex,
   ) {

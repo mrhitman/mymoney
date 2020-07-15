@@ -74,4 +74,22 @@ type Query {
   currency(id: String!): Currency!
   transactions: [Transaction!]!
   wallets: [Wallet!]!
+  wallet(id: String!): Wallet!
+}
+
+type Mutation {
+  create(walletCreateData: WalletCreateInput!): Wallet!
+}
+
+input WalletCreateInput {
+  name: String!
+  description: String!
+  type: String!
+  pockets: [PocketInput!]!
+  createdAt: Int!
+}
+
+input PocketInput {
+  currencyId: String!
+  amount: Float!
 }

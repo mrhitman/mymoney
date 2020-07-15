@@ -1,11 +1,12 @@
 import { UseGuards } from '@nestjs/common';
-import { Query, Resolver, Args, Mutation } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from '../auth/current-user';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
 import User from '../database/models/user.model';
+import { WalletCreateInput } from './dto/wallet-create-input';
 import { WalletDto } from './dto/wallet.dto';
 import { WalletsService } from './wallets.service';
-import { WalletCreateInput } from './dto/wallet-create-input';
+import { WalletUpdateInput } from './dto/wallet-update-input';
 
 @Resolver((of) => WalletDto)
 export class WalletsResolver {
@@ -23,7 +24,7 @@ export class WalletsResolver {
     @CurrentUser() user: User,
     @Args('id') id: string,
   ): Promise<WalletDto> {
-    return this.service.findOne(id, user);
+    return this.service.findOne(user, id);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -33,6 +34,25 @@ export class WalletsResolver {
     @Args('walletCreateData')
     data: WalletCreateInput,
   ): Promise<WalletDto> {
-    return this.service.findOne('00708bb2-cdf3-5a23-8a03-bbd051c73c00', user);
+    return this.service.create(user, data);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation((returns) => WalletDto)
+  async updateWallet(
+    @CurrentUser() user: User,
+    @Args('walletUpdateData')
+    data: WalletUpdateInput,
+  ): Promise<WalletDto> {
+    return this.service.update(user, data);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation((returns) => WalletDto)
+  async deleteWallet(
+    @CurrentUser() user: User,
+    @Args('id') id: string,
+  ): Promise<WalletDto> {
+    return this.service.delete(user, id);
   }
 }

@@ -79,6 +79,8 @@ type Query {
 
 type Mutation {
   createWallet(walletCreateData: WalletCreateInput!): Wallet!
+  updateWallet(walletUpdateData: WalletUpdateInput!): Wallet!
+  deleteWallet(id: String!): Wallet!
 }
 
 input WalletCreateInput {
@@ -92,4 +94,13 @@ input WalletCreateInput {
 input PocketInput {
   currencyId: String!
   amount: Float!
+}
+
+input WalletUpdateInput {
+  id: String!
+  name: String
+  description: String
+  type: String
+  pockets: [PocketInput!]
+  updatedAt: Int
 }

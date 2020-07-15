@@ -119,8 +119,8 @@ export class TransactionsService {
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     const wallet = await this.walletService.findOne(
-      trx.destinationWalletId,
       user,
+      trx.destinationWalletId,
     );
     const pocket = this.getPocket(wallet, trx);
     pocket.amount += trx.amount;
@@ -144,7 +144,7 @@ export class TransactionsService {
     user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.findOne(trx.sourceWalletId, user);
+    const wallet = await this.walletService.findOne(user, trx.sourceWalletId);
     const pocket = this.getPocket(wallet, trx);
     pocket.amount -= trx.amount;
 

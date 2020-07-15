@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
 import { bindFilters, QueryParams } from 'src/utils';
-import CreateWalletDto from 'src/wallets/dto/create-wallet.dto';
 import { v4 as uuid } from 'uuid';
+import { WalletCreateInput } from './dto/wallet-create-input';
+import { WalletUpdateInput } from './dto/wallet-update-input';
 
 @Injectable()
 export class WalletsService {
@@ -28,7 +28,7 @@ export class WalletsService {
     pocket.amount += trx.amount * (trx.type === 'income' ? 1 : -1);
   }
 
-  public async findOne(id: string, user: User) {
+  public async findOne(user: User, id: string) {
     const wallet = await Wallet.query().findOne({ id, userId: user.id });
 
     if (!wallet) {
@@ -38,34 +38,36 @@ export class WalletsService {
     return wallet;
   }
 
-  public async create(data: CreateWalletDto, user: User) {
-    return Wallet.query().insert({
-      ...omit(data, [
-        'allow_negative_balance',
-        'use_in_analytics',
-        'use_in_balance',
-        'tags',
-      ]),
+  public async create(user: User, data: WalletCreateInput) {
+    const wallet = await Wallet.query().insert({
+      ...data,
+      id: uuid(),
       userId: user.id,
       syncAt: DateTime.local().toJSDate(),
       ...(data.createdAt && {
         createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
       }),
     });
+
+    return wallet;
   }
 
-  public async update(data: any, user: User) {
-    const wallet = await this.findOne(data.id, user);
+  public async update(user: User, data: WalletUpdateInput) {
+    const wallet = await this.findOne(user, data.id);
 
     await wallet.$query().update({
       ...data,
-      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
+      ...(data.updatedAt && {
+        updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
+      }),
     });
+    return wallet;
   }
 
-  public async delete(id: string, user: User) {
-    const wallet = await this.findOne(id, user);
+  public async delete(user: User, id: string) {
+    const wallet = await this.findOne(user, id);
 
-    return wallet.$query().delete();
+    await wallet.$query().delete();
+    return wallet;
   }
 }

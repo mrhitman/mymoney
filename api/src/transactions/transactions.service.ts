@@ -187,7 +187,10 @@ export class TransactionsService {
     await wallet
       .$query(dbTrx)
       .update({
-        pockets: [...wallet.pockets.filter((p) => p.id !== pocket.id), pocket],
+        pockets: [
+          ...wallet.pockets.filter((p) => p.currencyId !== pocket.currencyId),
+          pocket,
+        ],
       })
       .debug()
       .execute();
@@ -207,7 +210,10 @@ export class TransactionsService {
     await wallet
       .$query(dbTrx)
       .update({
-        pockets: [...wallet.pockets.filter((p) => p.id !== pocket.id), pocket],
+        pockets: [
+          ...wallet.pockets.filter((p) => p.currencyId !== pocket.currencyId),
+          pocket,
+        ],
       })
       .execute();
 

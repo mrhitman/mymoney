@@ -78,15 +78,15 @@ type Query {
 }
 
 type Mutation {
-  create(walletCreateData: WalletCreateInput!): Wallet!
+  createWallet(walletCreateData: WalletCreateInput!): Wallet!
 }
 
 input WalletCreateInput {
   name: String!
-  description: String!
-  type: String!
+  description: String
+  type: String
   pockets: [PocketInput!]!
-  createdAt: Int!
+  createdAt: Int
 }
 
 input PocketInput {

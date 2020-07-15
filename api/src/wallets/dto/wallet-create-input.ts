@@ -8,12 +8,12 @@ export class WalletCreateInput {
   @IsString()
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   description: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   type: string;
@@ -21,7 +21,7 @@ export class WalletCreateInput {
   @Field((type) => [PocketInput])
   pockets: PocketInput[];
 
-  @Field((type) => Int)
+  @Field((type) => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
   createdAt: number;

@@ -28,12 +28,11 @@ export class WalletsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation((returns) => WalletDto)
-  async create(
+  async createWallet(
     @CurrentUser() user: User,
     @Args('walletCreateData')
     data: WalletCreateInput,
   ): Promise<WalletDto> {
-    console.log(data);
     return this.service.getOne(user, '00708bb2-cdf3-5a23-8a03-bbd051c73c00');
   }
 }

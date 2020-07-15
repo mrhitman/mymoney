@@ -23,7 +23,7 @@ export class WalletsResolver {
     @CurrentUser() user: User,
     @Args('id') id: string,
   ): Promise<WalletDto> {
-    return this.service.getOne(user, id);
+    return this.service.findOne(id, user);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -33,6 +33,6 @@ export class WalletsResolver {
     @Args('walletCreateData')
     data: WalletCreateInput,
   ): Promise<WalletDto> {
-    return this.service.getOne(user, '00708bb2-cdf3-5a23-8a03-bbd051c73c00');
+    return this.service.findOne('00708bb2-cdf3-5a23-8a03-bbd051c73c00', user);
   }
 }

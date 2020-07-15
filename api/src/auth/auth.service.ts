@@ -12,7 +12,7 @@ export class AuthService {
   constructor(
     protected readonly usersService: UsersService,
     protected readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   public async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
@@ -25,7 +25,6 @@ export class AuthService {
 
   public async login(user: User, token?: RefreshToken) {
     const payload = { id: user.id };
-<<<<<<< HEAD
     const refreshToken = token?.token || uuid();
 
     if (!token) {
@@ -34,14 +33,6 @@ export class AuthService {
         userId: user.id,
         token: refreshToken,
       });
-=======
-    const refreshToken = token ? token.token : uuid();
-
-    if (!token) {
-      const refreshToken = uuid();
-      await RefreshToken.query().delete().where({ userId: user.id });
-      await RefreshToken.query().insert({ userId: user.id, token: refreshToken });
->>>>>>> master
     }
 
     return {

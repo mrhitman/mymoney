@@ -1,10 +1,6 @@
 import { Model } from 'objection';
 
 export interface Pocket {
-<<<<<<< HEAD
-=======
-  id?: string;
->>>>>>> master
   amount: number;
   currencyId: string;
 }

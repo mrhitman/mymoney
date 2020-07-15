@@ -19,6 +19,7 @@ export type ActivePage =
   | 'scheduler'
   | 'operations'
   | 'analysis'
+  | 'analysis-category'
   | 'settings'
   | 'categories'
   | undefined;
@@ -68,13 +69,22 @@ export class Header extends PureComponent<HeaderProps> {
         >
           Scheduler
         </Menu.Item>
-        <Menu.Item
-          key="analysis"
-          icon={<LineChartOutlined />}
-          onClick={this.navigate('analysis')}
-        >
-          Analytics
-        </Menu.Item>
+        <SubMenu icon={<BookOutlined />} title="Analytics">
+          <Menu.Item
+            key="analysis"
+            icon={<LineChartOutlined />}
+            onClick={this.navigate('analysis')}
+          >
+            by Period
+          </Menu.Item>
+          <Menu.Item
+            key="analysis-category"
+            icon={<LineChartOutlined />}
+            onClick={this.navigate('analysis-category')}
+          >
+            by Categories
+          </Menu.Item>
+        </SubMenu>
         <Menu.Item
           key="settings"
           icon={

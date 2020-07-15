@@ -1,6 +1,10 @@
 import { Model } from 'objection';
 
 export interface Pocket {
+<<<<<<< HEAD
+=======
+  id?: string;
+>>>>>>> master
   amount: number;
   currencyId: string;
 }
@@ -35,7 +39,7 @@ export class Wallet extends Model {
               amount: { type: 'number' },
               currencyId: { type: 'string' },
             },
-            required: ['id', 'amount', 'currencyId'],
+            required: ['amount', 'currencyId'],
             additionalProperties: false,
           },
         },

@@ -25,6 +25,6 @@ export class CategoriesResolver {
     @CurrentUser() user: User,
     @Args('id') id: string,
   ): Promise<CommonCategoryDto> {
-    return this.service.getCategory(id, user.id);
+    return this.service.findOne(id, user);
   }
 }

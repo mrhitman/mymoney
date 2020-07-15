@@ -6,24 +6,22 @@ import {
 import {
   AutoComplete,
   Button,
+  Checkbox,
   Col,
-  Collapse,
   Form,
   Input,
   List,
   Row,
-  Switch,
   Tag,
 } from 'antd';
-import * as Colors from 'common/src/utils/colors';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
-import { sample } from 'lodash';
 import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { InjectedStore } from 'src/store/Store';
 import { formLayout } from '../misc/Layout';
+import { Collapse } from 'antd';
 
 interface PocketValues {
   currencyId: string;
@@ -39,13 +37,19 @@ export interface AddWalletValues {
   pockets: Array<PocketValues>;
 }
 
+interface AddWalletFormProps {
+  onSubmit: () => void;
+  onInit: (bag: FormikProps<any>) => void;
+}
+
 interface AddWalletFormState {
   currencyFilter: string;
+  addingTag: boolean;
   selectedCurrencyId?: string;
 }
 
 class AddWalletForm extends PureComponent<
-  Partial<InjectedStore> & WithTranslation,
+  AddWalletFormProps & Partial<InjectedStore> & WithTranslation,
   AddWalletFormState
 > {
   public get store() {
@@ -54,6 +58,7 @@ class AddWalletForm extends PureComponent<
 
   public state: AddWalletFormState = {
     currencyFilter: '',
+    addingTag: false,
   };
 
   public render() {
@@ -72,7 +77,7 @@ class AddWalletForm extends PureComponent<
               amount: 0,
             },
           ],
-          tags: ['my', 'money', 'wallet'],
+          tags: [] as string[],
         }}
         onSubmit={this.handleSubmit}
         render={(bag) => (
@@ -83,119 +88,147 @@ class AddWalletForm extends PureComponent<
             <Form.Item label='Description' name='description'>
               <Input.TextArea onChange={bag.handleChange('description')} />
             </Form.Item>
-            <Collapse>
-              <Collapse.Panel
-                header='Options'
-                key='switchers'
-                className='site-collapse-custom-panel'
-              >
+            <Form.Item label='Tags' name='tags'>
+              {bag.values.tags.map((tag, i) => (
+                <Tag key={`${tag}-${i}`} closable>
+                  <span>{tag}</span>
+                </Tag>
+              ))}
+              {this.state.addingTag ? (
+                <Input
+                  onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === 'Enter') {
+                      bag.setFieldValue('tags', [
+                        ...bag.values.tags,
+                        (e.target as HTMLInputElement).value,
+                      ]);
+
+                      this.setState({ addingTag: false });
+                    }
+                  }}
+                />
+              ) : (
+                <Tag
+                  className='site-tag-plus'
+                  onClick={() => this.setState({ addingTag: true })}
+                >
+                  <PlusOutlined /> New Tag
+                </Tag>
+              )}
+            </Form.Item>
+            <Collapse accordion>
+              <Collapse.Panel key='1' header='Options'>
                 <Form.Item
                   label='Allow negative balance'
                   name='allow_negative_balance'
+                  labelCol={{ span: 22 }}
                 >
-                  <Switch
+                  <Checkbox
                     defaultChecked={bag.values.allow_negative_balance}
-                    onChange={(checked: boolean) =>
-                      bag.setFieldValue('allow_negative_balance', checked)
+                    onChange={(e) =>
+                      bag.setFieldValue(
+                        'allow_negative_balance',
+                        e.target.checked
+                      )
                     }
                   />
                 </Form.Item>
-                <Form.Item label='Allow negative balance' name='use_in_balance'>
-                  <Switch
+                <Form.Item
+                  label='Allow negative balance'
+                  name='use_in_balance'
+                  labelCol={{ span: 22 }}
+                >
+                  <Checkbox
                     defaultChecked={bag.values.use_in_balance}
-                    onChange={(checked: boolean) =>
-                      bag.setFieldValue('use_in_balance', checked)
+                    onChange={(e) =>
+                      bag.setFieldValue('use_in_balance', e.target.checked)
                     }
                   />
                 </Form.Item>
                 <Form.Item
                   label='Allow negative balance'
                   name='use_in_analytics'
+                  labelCol={{ span: 22 }}
                 >
-                  <Switch
+                  <Checkbox
                     defaultChecked={bag.values.use_in_analytics}
-                    onChange={(checked: boolean) =>
-                      bag.setFieldValue('use_in_analytics', checked)
+                    onChange={(e) =>
+                      bag.setFieldValue('use_in_analytics', e.target.checked)
                     }
                   />
                 </Form.Item>
               </Collapse.Panel>
-            </Collapse>
-            <Form.Item label='Tags' name='tags'>
-              {bag.values.tags.map((tag, i) => (
-                <Tag color={sample(Colors)} key={`${tag}-${i}`} closable>
-                  <span>{tag}</span>
-                </Tag>
-              ))}
-              <Tag className='site-tag-plus'>
-                <PlusOutlined /> New Tag
-              </Tag>
-            </Form.Item>
-            <Form.Item label='Pockets' name='pockets'>
-              <List
-                itemLayout='horizontal'
-                dataSource={bag.values.pockets}
-                renderItem={this.renderPocketItem(bag)}
-              />
+              <Collapse.Panel key='2' header='Pockets'>
+                <Form.Item label='Pockets' name='pockets'>
+                  <List
+                    itemLayout='horizontal'
+                    dataSource={bag.values.pockets}
+                    renderItem={this.renderPocketItem(bag)}
+                  />
 
-              <AutoComplete
-                value={this.state.currencyFilter}
-                onSearch={(text) => this.setState({ currencyFilter: text })}
-                onSelect={(name) =>
-                  this.setState({
-                    selectedCurrencyId: this.store.currencies.find(
-                      (c) => c.name === name
-                    )?.id,
-                  })
-                }
-                options={this.store.currencies
-                  .filter(
-                    (c) =>
-                      c.name
-                        .toLowerCase()
-                        .includes(this.state.currencyFilter.toLowerCase()) ||
-                      c.description
-                        ?.toLowerCase()
-                        .includes(this.state.currencyFilter.toLowerCase())
-                  )
-                  .filter(
-                    (c) =>
-                      !bag.values.pockets
-                        .map((p) => p.currencyId)
-                        .includes(c.id)
-                  )
-                  .map((c) => ({
-                    label: (
-                      <div>
-                        {c.name} - {c.description} ({c.symbol})
-                      </div>
-                    ),
-                    value: c.name,
-                  }))}
-              >
-                <Input.Search placeholder='input here' enterButton />
-              </AutoComplete>
-              <Button
-                type='dashed'
-                icon={<AppstoreAddOutlined />}
-                disabled={!this.state.selectedCurrencyId}
-                onClick={() => {
-                  bag.setFieldValue('pockets', [
-                    ...bag.values.pockets,
-                    {
-                      currencyId: this.state.selectedCurrencyId,
-                      amount: 0,
-                    },
-                  ]);
-                  this.setState({
-                    selectedCurrencyId: undefined,
-                    currencyFilter: '',
-                  });
-                }}
-              >
-                Add pocket
-              </Button>
-            </Form.Item>
+                  <AutoComplete
+                    value={this.state.currencyFilter}
+                    onSearch={(text) => this.setState({ currencyFilter: text })}
+                    onSelect={(name) =>
+                      this.setState({
+                        selectedCurrencyId: this.store.currencies.find(
+                          (c) => c.name === name
+                        )?.id,
+                      })
+                    }
+                    options={this.store.currencies
+                      .filter(
+                        (c) =>
+                          c.name
+                            .toLowerCase()
+                            .includes(
+                              this.state.currencyFilter.toLowerCase()
+                            ) ||
+                          c.description
+                            ?.toLowerCase()
+                            .includes(this.state.currencyFilter.toLowerCase())
+                      )
+                      .filter(
+                        (c) =>
+                          !bag.values.pockets
+                            .map((p) => p.currencyId)
+                            .includes(c.id)
+                      )
+                      .map((c) => ({
+                        label: (
+                          <div>
+                            {c.name} - {c.description} ({c.symbol})
+                          </div>
+                        ),
+                        value: c.name,
+                      }))}
+                  >
+                    <Input.Search placeholder='input here' enterButton />
+                  </AutoComplete>
+                  <Button
+                    type='dashed'
+                    icon={<AppstoreAddOutlined />}
+                    disabled={!this.state.selectedCurrencyId}
+                    onClick={() => {
+                      bag.setFieldValue('pockets', [
+                        ...bag.values.pockets,
+                        {
+                          currencyId: this.state.selectedCurrencyId,
+                          amount: 0,
+                        },
+                      ]);
+                      this.setState({
+                        selectedCurrencyId: undefined,
+                        currencyFilter: '',
+                      });
+                    }}
+                  >
+                    Add pocket
+                  </Button>
+                </Form.Item>
+              </Collapse.Panel>
+            </Collapse>
+            {this.props.onInit(bag)}
           </Form>
         )}
       />
@@ -256,7 +289,8 @@ class AddWalletForm extends PureComponent<
     values: AddWalletValues,
     formikHelpers: FormikHelpers<AddWalletValues>
   ) => {
-    console.log(values);
+    this.store.addWallet(values);
+    // this.props.onSubmit();
     formikHelpers.resetForm();
   };
 }

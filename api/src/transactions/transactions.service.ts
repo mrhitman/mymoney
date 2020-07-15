@@ -3,33 +3,19 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { groupBy, reduce, sumBy, upperFirst } from 'lodash';
+import { dataByCategory, dataByPeriod, Interval } from 'common';
+import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
-import moment from 'moment';
-import Objection, {
-  OrderByDirection,
-  RelationExpression,
-  transaction,
-} from 'objection';
+import Objection, { transaction } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
+import Category from '../database/models/category.model';
 import Wallet from '../database/models/wallet.model';
+import { bindFilters, QueryParams } from '../utils';
 import { WalletsService } from '../wallets/wallets.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-
-export type Interval = 'day' | 'week' | 'month' | 'year';
-
-interface QueryParams {
-  relation?: RelationExpression<any>;
-  limit?: number;
-  offset?: number;
-  sortDirection?: OrderByDirection;
-  sortBy?: string;
-  start?: number;
-  end?: number;
-}
 
 @Injectable()
 export class TransactionsService {
@@ -37,21 +23,17 @@ export class TransactionsService {
 
   public async getAll(user: User, params: QueryParams = {}) {
     const query = Transaction.query().where({ userId: user.id });
+    bindFilters(query, params);
 
-    if (params.relation) {
-      query.withGraphFetched(params.relation);
+    if (params.start && !isNaN(params.start)) {
+      query.where('date', '>=', DateTime.fromSeconds(+params.start).toJSDate());
     }
 
-    if (params.start) {
-      query.where('date', '>=', moment.unix(params.start).toDate());
+    if (params.end && !isNaN(params.end)) {
+      query.where('date', '<=', DateTime.fromSeconds(+params.end).toJSDate());
     }
 
-    if (params.end) {
-      query.where('date', '<=', moment.unix(params.end).toDate());
-    }
-
-    const count = await query.clone().clearSelect().count();
-
+    const count = await query.clone().clearSelect().clearWithGraph().count();
     params.limit && query.limit(params.limit);
     params.offset && query.offset(params.offset);
     query.orderBy(
@@ -67,66 +49,23 @@ export class TransactionsService {
     };
   }
 
-  public async getStatistic(
+  public async getStatisticByPeriod(
     user: User,
     params: QueryParams & { interval: Interval } = { interval: 'month' },
   ) {
     const items = await this.getAll(user, params);
-
-    const data = items.items
-      .map((trx, i, transactions) => {
-        const amount = transactions
-          .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
-          .reduce((s, t) => {
-            return (
-              s +
-              (t.type === 'outcome' ? -1 * Number(t.amount) : Number(t.amount))
-            );
-          }, 0);
-
-        return {
-          date: trx.date,
-          amount,
-        };
-      })
-      .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());
-
-    const grouped = this.groupStatistic(data, params.interval);
-    return reduce(
-      grouped,
-      (acc, group, interval) => {
-        return { ...acc, [interval]: sumBy(group, 'amount') };
-      },
-      {},
-    );
+    return dataByPeriod(items.items, params.interval);
   }
 
-  protected groupStatistic(
-    items: Array<{ date: moment.MomentInput }>,
-    interval: Interval,
-  ) {
-    switch (interval) {
-      case 'day':
-        return groupBy(items, (item) =>
-          moment(item.date).startOf('day').unix(),
-        );
-      case 'week':
-        return groupBy(items, (item) =>
-          moment(item.date).startOf('week').unix(),
-        );
-      case 'month':
-        return groupBy(items, (item) =>
-          moment(item.date).startOf('month').unix(),
-        );
-      case 'year':
-        return groupBy(items, (item) =>
-          moment(item.date).startOf('year').unix(),
-        );
-      default:
-        return groupBy(items, (item) =>
-          moment(item.date).startOf('month').unix(),
-        );
-    }
+  public async getStatisticByCategory(user: User, params: QueryParams) {
+    const items = await this.getAll(user, params);
+    const data = dataByCategory(items.items, true);
+    const categoryIds = data.map((d) => d.categoryId);
+    const categories = await Category.query().whereIn('id', categoryIds);
+    return data.map((d) => ({
+      ...d,
+      category: categories.find((c) => c.id === d.categoryId),
+    }));
   }
 
   public async getTransaction(id: string, userId: number) {
@@ -151,13 +90,15 @@ export class TransactionsService {
         id: uuid(),
         userId: user.id,
         date: DateTime.fromSeconds(data.date).toJSDate(),
-        createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
         syncAt: DateTime.local().toJSDate(),
+        ...(data.createdAt && {
+          createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
+        }),
       });
 
       const wallet = await this[`add${upperFirst(trx.type)}Trx`](
-        user,
         trx,
+        user,
         dbTrx,
       );
       await dbTrx.commit();
@@ -173,13 +114,13 @@ export class TransactionsService {
   }
 
   protected async addIncomeTrx(
-    user: User,
     trx: Transaction,
+    user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.getOne(
-      user,
+    const wallet = await this.walletService.findOne(
       trx.destinationWalletId,
+      user,
     );
     const pocket = this.getPocket(wallet, trx);
     pocket.amount += trx.amount;
@@ -199,11 +140,11 @@ export class TransactionsService {
   }
 
   protected async addOutcomeTrx(
-    user: User,
     trx: Transaction,
+    user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
-    const wallet = await this.walletService.getOne(user, trx.sourceWalletId);
+    const wallet = await this.walletService.findOne(trx.sourceWalletId, user);
     const pocket = this.getPocket(wallet, trx);
     pocket.amount -= trx.amount;
 
@@ -221,8 +162,8 @@ export class TransactionsService {
   }
 
   protected async addTransferTrx(
-    user: User,
     trx: Transaction,
+    user: User,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     return;
@@ -231,7 +172,6 @@ export class TransactionsService {
   private getPocket(wallet: Wallet, trx: Transaction) {
     return (
       wallet.pockets.find((p) => p.currencyId === trx.currencyId) || {
-        id: uuid(),
         currencyId: trx.currencyId,
         amount: 0,
       }

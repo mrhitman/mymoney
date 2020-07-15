@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import Category from './category.model';
 import Currency from './currency.model';
 
 export interface TransactionScheduleTemplate {
@@ -29,6 +30,7 @@ export class Transaction extends Model {
   public updatedAt: Date;
   public deletedAt: Date;
   public currency: Currency;
+  public category: Category;
 
   static get tableName() {
     return 'transactions';
@@ -42,6 +44,14 @@ export class Transaction extends Model {
         join: {
           from: 'transactions.currencyId',
           to: 'currencies.id',
+        },
+      },
+      category: {
+        relation: Model.HasOneRelation,
+        modelClass: Category,
+        join: {
+          from: 'transactions.categoryId',
+          to: 'categories.id',
         },
       },
     };

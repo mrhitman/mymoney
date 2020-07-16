@@ -38,13 +38,14 @@ type Transaction {
   type: String!
   categoryId: String!
   currencyId: String
-  currency: Currency
+  currency: Currency!
   sourceWalletId: String
   destinationWalletId: String
   amount: Float!
   fine: Float
   date: DateTime!
   description: String
+  category: Category!
 }
 
 """
@@ -73,6 +74,7 @@ type Query {
   currencies: [Currency!]!
   currency(id: String!): Currency!
   transactions: [Transaction!]!
+  transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
 }

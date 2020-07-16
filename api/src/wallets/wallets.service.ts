@@ -24,7 +24,6 @@ export class WalletsService {
       currencyId: trx.currencyId,
       amount: 0,
     };
-
     pocket.amount += trx.amount * (trx.type === 'income' ? 1 : -1);
   }
 
@@ -48,13 +47,11 @@ export class WalletsService {
         createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
       }),
     });
-
     return wallet;
   }
 
   public async update(user: User, data: WalletUpdateInput) {
     const wallet = await this.findOne(user, data.id);
-
     await wallet.$query().update({
       ...data,
       ...(data.updatedAt && {
@@ -66,7 +63,6 @@ export class WalletsService {
 
   public async delete(user: User, id: string) {
     const wallet = await this.findOne(user, id);
-
     await wallet.$query().delete();
     return wallet;
   }

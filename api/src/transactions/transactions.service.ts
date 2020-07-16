@@ -49,6 +49,18 @@ export class TransactionsService {
     };
   }
 
+  public async getOne(user: User, id: string) {
+    const trx = await Transaction.query()
+      .findById(id)
+      .where({ userId: user.id });
+
+    if (!trx) {
+      throw new BadRequestException('No such category');
+    }
+
+    return trx;
+  }
+
   public async getStatisticByPeriod(
     user: User,
     params: QueryParams & { interval: Interval } = { interval: 'month' },
@@ -111,6 +123,27 @@ export class TransactionsService {
       await dbTrx.rollback();
       throw new BadRequestException(e.message);
     }
+  }
+
+  public async update(data: UpdateTransactionDto, user: User) {
+    const trx = await this.getTransaction(data.id, user.id);
+
+    await trx.$query().update({
+      ...data,
+      date: DateTime.fromSeconds(data.date).toJSDate(),
+      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
+      deletedAt: data.deletedAt
+        ? DateTime.fromSeconds(data.deletedAt).toJSDate()
+        : null,
+    });
+
+    return trx;
+  }
+
+  public async delete(id: string, user: User) {
+    const trx = await this.getTransaction(id, user.id);
+
+    return trx.$query().delete();
   }
 
   protected async addIncomeTrx(
@@ -176,26 +209,5 @@ export class TransactionsService {
         amount: 0,
       }
     );
-  }
-
-  public async update(data: UpdateTransactionDto, user: User) {
-    const trx = await this.getTransaction(data.id, user.id);
-
-    await trx.$query().update({
-      ...data,
-      date: DateTime.fromSeconds(data.date).toJSDate(),
-      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
-      deletedAt: data.deletedAt
-        ? DateTime.fromSeconds(data.deletedAt).toJSDate()
-        : null,
-    });
-
-    return trx;
-  }
-
-  public async delete(id: string, user: User) {
-    const trx = await this.getTransaction(id, user.id);
-
-    return trx.$query().delete();
   }
 }

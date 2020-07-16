@@ -14,8 +14,8 @@ import Category from '../database/models/category.model';
 import Wallet from '../database/models/wallet.model';
 import { bindFilters, QueryParams } from '../utils';
 import { WalletsService } from '../wallets/wallets.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { TransactionCreate } from './input/transaction-create';
+import { TransactionUpdate } from './input/transaction-update';
 
 @Injectable()
 export class TransactionsService {
@@ -94,7 +94,7 @@ export class TransactionsService {
     return trx;
   }
 
-  public async create(data: CreateTransactionDto, user: User) {
+  public async create(user: User, data: TransactionCreate) {
     const dbTrx = await transaction.start(Transaction);
     try {
       const trx = await Transaction.query(dbTrx).insert({
@@ -109,8 +109,8 @@ export class TransactionsService {
       });
 
       const wallet = await this[`add${upperFirst(trx.type)}Trx`](
-        trx,
         user,
+        trx,
         dbTrx,
       );
       await dbTrx.commit();
@@ -125,7 +125,7 @@ export class TransactionsService {
     }
   }
 
-  public async update(data: UpdateTransactionDto, user: User) {
+  public async update(user: User, data: TransactionUpdate) {
     const trx = await this.getTransaction(data.id, user.id);
 
     await trx.$query().update({
@@ -147,8 +147,8 @@ export class TransactionsService {
   }
 
   protected async addIncomeTrx(
-    trx: Transaction,
     user: User,
+    trx: Transaction,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     const wallet = await this.walletService.findOne(
@@ -173,8 +173,8 @@ export class TransactionsService {
   }
 
   protected async addOutcomeTrx(
-    trx: Transaction,
     user: User,
+    trx: Transaction,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     const wallet = await this.walletService.findOne(user, trx.sourceWalletId);
@@ -195,8 +195,8 @@ export class TransactionsService {
   }
 
   protected async addTransferTrx(
-    trx: Transaction,
     user: User,
+    trx: Transaction,
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     return;

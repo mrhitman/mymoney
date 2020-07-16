@@ -39,26 +39,6 @@ type Currency {
   rate: Float
 }
 
-type Transaction {
-  id: ID!
-  type: String!
-  categoryId: String!
-  currencyId: String
-  currency: Currency!
-  sourceWalletId: String
-  destinationWalletId: String
-  amount: Float!
-  fine: Float
-  date: DateTime!
-  description: String
-  category: Category!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Pocket {
   currencyId: String!
   amount: Float!
@@ -74,6 +54,29 @@ type Wallet {
   syncAt: Int
 }
 
+type Transaction {
+  id: ID!
+  type: String!
+  categoryId: String!
+  currencyId: String
+  currency: Currency!
+  sourceWalletId: String
+  sourceWallet: Wallet
+  destinationWalletId: String
+  destinationWallet: Wallet
+  amount: Float!
+  fine: Float
+  date: DateTime!
+  description: String
+  createdAt: Int!
+  category: Category!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   user: User!
   categories(type: String): [Category!]!
@@ -87,9 +90,41 @@ type Query {
 }
 
 type Mutation {
+  createTransaction(transactionCreateData: TransactionCreate!): Transaction!
+  updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
+}
+
+input TransactionCreate {
+  id: String
+  categoryId: String!
+  currencyId: String!
+  sourceWalletId: String
+  destinationWalletId: String
+  fine: Float
+  amount: Float!
+  date: Int!
+  description: String
+  isNecessary: Boolean
+  isTemplate: Boolean
+  createdAt: Int
+}
+
+input TransactionUpdate {
+  id: String!
+  categoryId: String
+  currencyId: String
+  sourceWalletId: String
+  destinationWalletId: String
+  fine: Float
+  date: Int!
+  description: String
+  isNecessary: Boolean
+  isTemplate: Boolean
+  updatedAt: Int
+  deletedAt: Int
 }
 
 input WalletCreate {

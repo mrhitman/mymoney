@@ -35,7 +35,6 @@
     "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/schedule": "^0.4.0",
-    "@nestjs/swagger": "^4.5.12",
     "apollo-server-express": "^2.14.4",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",

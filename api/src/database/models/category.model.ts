@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import { CategoryType } from 'src/categories/category-type';
 
 export interface Icon {
   type: string;
@@ -12,7 +13,7 @@ export class Category extends Model {
   public name: string;
   public userId: number;
   public parent: string;
-  public type: string;
+  public type: CategoryType;
   public icon: Icon;
   public isFixed: boolean;
   public createdAt: Date;

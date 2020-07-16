@@ -4,7 +4,7 @@ import { CurrentUser } from 'src/auth/current-user';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import User from 'src/database/models/user.model';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
-import { CommonCategoryDto } from '../categories/dto/common-category.dto';
+import { Category } from '../categories/dto/category';
 import { loaders } from '../dataloaders';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionsService } from './transactions.service';
@@ -25,7 +25,7 @@ export class TransactionsResolver {
     return this.transactionService.getOne(user, id);
   }
 
-  @ResolveField('category', (returns) => CommonCategoryDto)
+  @ResolveField('category', (returns) => Category)
   async getCategory(@Parent() transaction: TransactionDto) {
     return loaders.category.load(transaction.categoryId);
   }

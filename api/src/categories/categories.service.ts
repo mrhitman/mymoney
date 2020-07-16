@@ -6,8 +6,8 @@ import {
 import { DateTime } from 'luxon';
 import Category from 'src/database/models/category.model';
 import User from 'src/database/models/user.model';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryCreate } from './input/category-create';
+import { CategoryUpdate } from './input/category-update';
 
 @Injectable()
 export class CategoriesService {
@@ -35,7 +35,7 @@ export class CategoriesService {
     return category;
   }
 
-  public async create(data: CreateCategoryDto, user: User) {
+  public async create(data: CategoryCreate, user: User) {
     await Category.query().insert({
       ...data,
       userId: user.id,
@@ -44,7 +44,7 @@ export class CategoriesService {
     });
   }
 
-  public async update(data: UpdateCategoryDto, user: User) {
+  public async update(data: CategoryUpdate, user: User) {
     const category = await this.findOne(data.id, user);
 
     await category.$query().update({

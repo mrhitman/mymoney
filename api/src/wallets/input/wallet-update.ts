@@ -1,9 +1,9 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { PocketInput } from './pocket';
+import { PocketInput } from './pocket-input';
 
 @InputType()
-export class WalletUpdateInput {
+export class WalletUpdate {
   @Field()
   @IsString()
   id: string;

@@ -1,8 +1,8 @@
-import { ObjectType, Field, ID, Int, Float } from '@nestjs/graphql';
-import { PocketDto } from './pocket';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Pocket } from './pocket';
 
 @ObjectType('Wallet')
-export class WalletDto {
+export class Wallet {
   @Field((type) => ID)
   id: string;
 
@@ -15,8 +15,8 @@ export class WalletDto {
   @Field()
   type: string;
 
-  @Field((type) => [PocketDto])
-  pockets: PocketDto[];
+  @Field((type) => [Pocket])
+  pockets: Pocket[];
 
   @Field((type) => Int, { nullable: true })
   syncAt: Date;

@@ -5,8 +5,8 @@ import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
 import { bindFilters, QueryParams } from 'src/utils';
 import { v4 as uuid } from 'uuid';
-import { WalletCreateInput } from './dto/wallet-create-input';
-import { WalletUpdateInput } from './dto/wallet-update-input';
+import { WalletCreate } from './input/wallet-create';
+import { WalletUpdate } from './input/wallet-update';
 
 @Injectable()
 export class WalletsService {
@@ -37,7 +37,7 @@ export class WalletsService {
     return wallet;
   }
 
-  public async create(user: User, data: WalletCreateInput) {
+  public async create(user: User, data: WalletCreate) {
     const wallet = await Wallet.query().insert({
       ...data,
       id: uuid(),
@@ -50,7 +50,7 @@ export class WalletsService {
     return wallet;
   }
 
-  public async update(user: User, data: WalletUpdateInput) {
+  public async update(user: User, data: WalletUpdate) {
     const wallet = await this.findOne(user, data.id);
     await wallet.$query().update({
       ...data,

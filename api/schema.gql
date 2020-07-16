@@ -81,12 +81,12 @@ type Query {
 }
 
 type Mutation {
-  createWallet(walletCreateData: WalletCreateInput!): Wallet!
-  updateWallet(walletUpdateData: WalletUpdateInput!): Wallet!
+  createWallet(walletCreateData: WalletCreate!): Wallet!
+  updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
 }
 
-input WalletCreateInput {
+input WalletCreate {
   name: String!
   description: String
   type: String
@@ -99,7 +99,7 @@ input PocketInput {
   amount: Float!
 }
 
-input WalletUpdateInput {
+input WalletUpdate {
   id: String!
   name: String
   description: String

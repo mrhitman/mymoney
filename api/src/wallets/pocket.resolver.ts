@@ -1,12 +1,12 @@
 import { Parent, ResolveProperty, Resolver } from '@nestjs/graphql';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { loaders } from '../dataloaders';
-import { PocketDto } from './dto/pocket';
+import { Pocket } from './dto/pocket';
 
-@Resolver((of) => PocketDto)
+@Resolver((of) => Pocket)
 export class PocketResolver {
   @ResolveProperty('currency', () => CurrencyDto)
-  async getTest(@Parent() pocket: PocketDto) {
+  async getCurrency(@Parent() pocket: Pocket) {
     return loaders.currency.load(pocket.currencyId);
   }
 }

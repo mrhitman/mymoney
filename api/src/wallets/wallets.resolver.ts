@@ -7,11 +7,9 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { CurrentUser } from '../auth/current-user';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
 import User from '../database/models/user.model';
-import { loaders } from '../dataloaders';
 import { PocketDto } from './dto/pocket';
 import { WalletCreateInput } from './dto/wallet-create-input';
 import { WalletUpdateInput } from './dto/wallet-update-input';

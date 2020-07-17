@@ -3,16 +3,14 @@ import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
-import { bindFilters, QueryParams } from 'src/utils';
 import { v4 as uuid } from 'uuid';
 import { WalletCreate } from './input/wallet-create';
 import { WalletUpdate } from './input/wallet-update';
 
 @Injectable()
 export class WalletsService {
-  public async getAll(user: User, params: QueryParams = {}) {
+  public async getAll(user: User) {
     const query = Wallet.query().where({ userId: user.id });
-    bindFilters(query, params);
     return query;
   }
 

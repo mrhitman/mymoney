@@ -12,7 +12,6 @@ import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
 import Category from '../database/models/category.model';
 import Wallet from '../database/models/wallet.model';
-import { bindFilters, QueryParams } from '../utils';
 import { WalletsService } from '../wallets/wallets.service';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
@@ -21,32 +20,10 @@ import { TransactionUpdate } from './input/transaction-update';
 export class TransactionsService {
   constructor(protected walletService: WalletsService) {}
 
-  public async getAll(user: User, params: QueryParams = {}) {
+  public async getAll(user: User) {
     const query = Transaction.query().where({ userId: user.id });
-    bindFilters(query, params);
-
-    if (params.start && !isNaN(params.start)) {
-      query.where('date', '>=', DateTime.fromSeconds(+params.start).toJSDate());
-    }
-
-    if (params.end && !isNaN(params.end)) {
-      query.where('date', '<=', DateTime.fromSeconds(+params.end).toJSDate());
-    }
-
-    const count = await query.clone().clearSelect().clearWithGraph().count();
-    params.limit && query.limit(params.limit);
-    params.offset && query.offset(params.offset);
-    query.orderBy(
-      params.sortBy || 'created_at',
-      params.sortDirection || 'DESC',
-    );
-
     const items = await query;
-
-    return {
-      items,
-      count: Number((count[0] as any).count),
-    };
+    return { items };
   }
 
   public async getOne(user: User, id: string) {
@@ -63,14 +40,14 @@ export class TransactionsService {
 
   public async getStatisticByPeriod(
     user: User,
-    params: QueryParams & { interval: Interval } = { interval: 'month' },
+    params: { interval: Interval } = { interval: 'month' },
   ) {
-    const items = await this.getAll(user, params);
+    const items = await this.getAll(user);
     return dataByPeriod(items.items, params.interval);
   }
 
-  public async getStatisticByCategory(user: User, params: QueryParams) {
-    const items = await this.getAll(user, params);
+  public async getStatisticByCategory(user: User) {
+    const items = await this.getAll(user);
     const data = dataByCategory(items.items, true);
     const categoryIds = data.map((d) => d.categoryId);
     const categories = await Category.query().whereIn('id', categoryIds);

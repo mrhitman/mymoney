@@ -91,6 +91,11 @@ type Login {
   profile: User!
 }
 
+type Refresh {
+  accessToken: ID!
+  refreshToken: String!
+}
+
 type Query {
   user: User!
   categories(type: String): [Category!]!
@@ -110,6 +115,7 @@ type Mutation {
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
   login(loginData: LoginInput!): Login!
+  refresh(refreshData: RefreshInput!): Refresh!
 }
 
 input TransactionCreate {
@@ -167,4 +173,8 @@ input WalletUpdate {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input RefreshInput {
+  refreshToken: String!
 }

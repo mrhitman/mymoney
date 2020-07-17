@@ -15,6 +15,10 @@ export class AppResolver {
   async login(@Args('loginData') data: LoginInput) {
     const user = await this.localStrategy.validate(data.email, data.password);
 
-    return this.authService.login(user);
+    const tokens = await this.authService.login(user);
+    return {
+      ...tokens,
+      profile: user,
+    };
   }
 }

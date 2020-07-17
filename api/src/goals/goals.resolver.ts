@@ -1,21 +1,24 @@
 import { UseGuards } from '@nestjs/common';
 import {
   Args,
-  Query,
-  Resolver,
-  ResolveProperty,
+  Float,
   Parent,
+  Query,
+  ResolveProperty,
+  Resolver,
 } from '@nestjs/graphql';
+import { round } from 'lodash';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import User from 'src/database/models/user.model';
+import { WalletDto } from 'src/wallets/dto/wallet.dto';
+import { CurrencyDto } from '../currencies/dto/currency.dto';
+import { loaders } from '../dataloaders';
 import { GoalDto } from './dto/goal.dto';
 import { GoalsService } from './goals.service';
-import { WalletDto } from '../wallets/dto/wallet.dto';
-import { loaders } from '../dataloaders';
 
 @Resolver((of) => GoalDto)
-export class WalletsResolver {
+export class GoalsResolver {
   constructor(private readonly service: GoalsService) {}
 
   @UseGuards(GqlAuthGuard)
@@ -33,5 +36,15 @@ export class WalletsResolver {
   @ResolveProperty('wallet', () => WalletDto)
   async getWallet(@Parent() goal: GoalDto) {
     return loaders.wallet.load(goal.walletId);
+  }
+
+  @ResolveProperty('currency', () => CurrencyDto)
+  async getCurrency(@Parent() goal: GoalDto) {
+    return loaders.currency.load(goal.currencyId);
+  }
+
+  @ResolveProperty('progressPercent', () => Float)
+  async getProgress(@Parent() goal: GoalDto) {
+    return goal.goal > 0 ? round(goal.progress / goal.goal, 3) : 0;
   }
 }

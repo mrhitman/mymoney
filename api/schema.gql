@@ -57,6 +57,19 @@ type Wallet {
   createdAt: Int!
 }
 
+type Goal {
+  id: ID!
+  goal: Float!
+  progress: Float!
+  progressPercent: Float!
+  walletId: String!
+  wallet: Wallet!
+  currencyId: String!
+  currency: Currency!
+  syncAt: Int!
+  createdAt: Int!
+}
+
 type Transaction {
   id: ID!
   type: TransactionType!
@@ -103,6 +116,8 @@ type Query {
   category(id: String!): Category!
   currencies: [Currency!]!
   currency(id: String!): Currency!
+  goals: [Goal!]!
+  goal(id: String!): [Goal!]!
   transactions: [Transaction!]!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!

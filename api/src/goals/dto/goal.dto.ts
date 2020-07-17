@@ -14,16 +14,19 @@ export class GoalDto {
   @Field((type) => Float)
   readonly progress: number;
 
+  @Field((type) => Float, { complexity: 2 })
+  readonly progressPercent: number;
+
   @Field((type) => String)
   readonly walletId: string;
 
-  @Field((type) => WalletDto)
+  @Field((type) => WalletDto, { complexity: 2 })
   readonly wallet: WalletDto;
 
   @Field((type) => String)
   readonly currencyId: string;
 
-  @Field((type) => CurrencyDto)
+  @Field((type) => CurrencyDto, { complexity: 2 })
   readonly currency: CurrencyDto;
 
   @Field((type) => Int)

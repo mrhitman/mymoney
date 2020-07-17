@@ -6,23 +6,23 @@ import { PocketInput } from './pocket-input';
 export class WalletCreate {
   @Field()
   @IsString()
-  name: string;
+  readonly name: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  description: string;
+  readonly description: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  type: string;
+  readonly type: string;
 
   @Field((type) => [PocketInput])
-  pockets: PocketInput[];
+  readonly pockets: PocketInput[];
 
   @Field((type) => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
-  createdAt: number;
+  readonly createdAt: number;
 }

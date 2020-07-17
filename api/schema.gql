@@ -125,6 +125,8 @@ type Query {
 }
 
 type Mutation {
+  createGoal(createGoalData: GoalCreate!): Goal!
+  updateGoal(updateGoalData: GoalUpdate!): Goal!
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!
@@ -132,6 +134,23 @@ type Mutation {
   deleteWallet(id: String!): Wallet!
   login(loginData: LoginInput!): Login!
   refresh(refreshData: RefreshInput!): Refresh!
+}
+
+input GoalCreate {
+  goal: Float!
+  progress: Float
+  walletId: String
+  currencyId: String!
+  createdAt: Int
+}
+
+input GoalUpdate {
+  id: ID!
+  goal: Float
+  progress: Float
+  walletId: String
+  currencyId: String
+  updatedAt: Int
 }
 
 input TransactionCreate {

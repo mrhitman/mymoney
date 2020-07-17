@@ -6,6 +6,7 @@ import {
   Query,
   ResolveProperty,
   Resolver,
+  Mutation,
 } from '@nestjs/graphql';
 import { round } from 'lodash';
 import { CurrentUser } from 'src/auth/current-user';
@@ -16,6 +17,8 @@ import { CurrencyDto } from '../currencies/dto/currency.dto';
 import { loaders } from '../dataloaders';
 import { GoalDto } from './dto/goal.dto';
 import { GoalsService } from './goals.service';
+import { GoalCreate } from './input/goal-create';
+import { GoalUpdate } from './input/goal-update';
 
 @Resolver((of) => GoalDto)
 export class GoalsResolver {
@@ -32,6 +35,20 @@ export class GoalsResolver {
   async goal(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.findOne(user, id);
   }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => GoalDto)
+  async createGoal(
+    @CurrentUser() user: User,
+    @Args('createGoalData') data: GoalCreate,
+  ) {}
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => GoalDto)
+  async updateGoal(
+    @CurrentUser() user: User,
+    @Args('updateGoalData') data: GoalUpdate,
+  ) {}
 
   @ResolveProperty('wallet', () => WalletDto)
   async getWallet(@Parent() goal: GoalDto) {

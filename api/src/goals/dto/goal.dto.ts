@@ -1,7 +1,6 @@
-import { IsNumber, IsString } from 'class-validator';
-import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
-import { WalletDto } from '../../wallets/dto/wallet.dto';
-import { CurrencyDto } from '../../currencies/dto/currency.dto';
+import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
+import { CurrencyDto } from 'src/currencies/dto/currency.dto';
+import { WalletDto } from 'src/wallets/dto/wallet.dto';
 
 @ObjectType('Goal')
 export class GoalDto {

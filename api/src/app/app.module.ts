@@ -13,6 +13,7 @@ import { AppController } from './app.controller';
 import { LoggerMiddleware } from './logger.middleware';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskService } from './task.service';
+import { ApolloComplexityPlugin } from '../utils/apollo-complexity-plugin';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TaskService } from './task.service';
     ScheduleModule.forRoot(),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
+      plugins: [new ApolloComplexityPlugin(20)],
       autoSchemaFile: 'schema.gql',
     }),
   ],

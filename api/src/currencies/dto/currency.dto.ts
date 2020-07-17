@@ -3,17 +3,17 @@ import { Field, ID, ObjectType, Float } from '@nestjs/graphql';
 @ObjectType('Currency')
 export class CurrencyDto {
   @Field((type) => ID)
-  id: string;
+  readonly id: string;
 
   @Field({ nullable: true })
-  name: string;
+  readonly name: string;
 
   @Field({ nullable: true })
-  description?: string;
+  readonly description?: string;
 
   @Field()
-  symbol: string;
+  readonly symbol: string;
 
   @Field((type) => Float, { nullable: true })
-  rate?: number;
+  readonly rate?: number;
 }

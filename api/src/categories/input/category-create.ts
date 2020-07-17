@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 import { CategoryType } from '../category-type';
-import { Icon } from '../dto/icon';
+import { IconDto } from '../dto/icon.dto';
 
 @InputType()
 export class CategoryCreate {
@@ -34,9 +34,9 @@ export class CategoryCreate {
   @IsEnum(['income', 'outcome', 'transfer'])
   readonly type: CategoryType;
 
-  @Field((type) => Icon, { nullable: true })
+  @Field((type) => IconDto, { nullable: true })
   @IsObject()
-  readonly icon: Icon;
+  readonly icon: IconDto;
 
   @IsString()
   readonly parent: string;

@@ -1,10 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsObject, IsString } from 'class-validator';
-import { Icon } from './icon';
+import { IconDto } from './icon.dto';
 import { CategoryType } from '../category-type';
 
 @ObjectType('Category')
-export class Category {
+export class CategoryDto {
   @Field((type) => ID)
   @IsString()
   readonly id: string;
@@ -21,9 +21,9 @@ export class Category {
   @IsString()
   readonly type: CategoryType;
 
-  @Field((type) => Icon, { nullable: true })
+  @Field((type) => IconDto, { nullable: true })
   @IsObject()
-  readonly icon: Icon;
+  readonly icon: IconDto;
 
   @IsString()
   readonly parent: string;

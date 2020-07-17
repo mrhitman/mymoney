@@ -4,27 +4,27 @@ import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import User from 'src/database/models/user.model';
 import { CategoriesService } from './categories.service';
-import { Category } from './dto/category';
+import { CategoryDto } from './dto/category.dto';
 
-@Resolver((of) => Category)
+@Resolver((of) => CategoryDto)
 export class CategoriesResolver {
   constructor(private readonly service: CategoriesService) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [Category])
+  @Query((returns) => [CategoryDto])
   async categories(
     @CurrentUser() user: User,
     @Args('type', { nullable: true }) type?: string,
-  ): Promise<Category[]> {
+  ): Promise<CategoryDto[]> {
     return this.service.getAll(user, { type });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => Category)
+  @Query((returns) => CategoryDto)
   async category(
     @CurrentUser() user: User,
     @Args('id') id: string,
-  ): Promise<Category> {
+  ): Promise<CategoryDto> {
     return this.service.findOne(id, user);
   }
 }

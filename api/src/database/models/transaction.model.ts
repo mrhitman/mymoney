@@ -1,6 +1,7 @@
 import { Model } from 'objection';
 import Category from './category.model';
 import Currency from './currency.model';
+import { TransactionType } from 'src/transactions/transaction-type';
 
 export interface TransactionScheduleTemplate {
   interval: 'day' | 'week' | 'month' | 'year';
@@ -11,7 +12,7 @@ export interface TransactionScheduleTemplate {
 export class Transaction extends Model {
   public id: string;
   public userId: number;
-  public type: string;
+  public type: TransactionType;
   public categoryId: string;
   public sourceWalletId: string;
   public destinationWalletId: string;

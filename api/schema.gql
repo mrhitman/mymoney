@@ -10,7 +10,7 @@ type User {
   email: String!
 }
 
-type Icon {
+type IconDto {
   type: String!
   name: String!
   backgroundColor: String
@@ -22,7 +22,7 @@ type Category {
   name: String!
   isFixed: Boolean!
   type: CategoryType
-  icon: Icon
+  icon: IconDto
 }
 
 enum CategoryType {
@@ -56,9 +56,10 @@ type Wallet {
 
 type Transaction {
   id: ID!
-  type: String!
-  categoryId: String!
-  currencyId: String
+  type: TransactionType!
+  categoryId: String
+  category: Category!
+  currencyId: String!
   currency: Currency!
   sourceWalletId: String
   sourceWallet: Wallet
@@ -69,7 +70,12 @@ type Transaction {
   date: DateTime!
   description: String
   createdAt: Int!
-  category: Category!
+}
+
+enum TransactionType {
+  income
+  outcome
+  transfer
 }
 
 """

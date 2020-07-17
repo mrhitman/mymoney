@@ -1,16 +1,16 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class Icon {
+export class IconDto {
   @Field()
-  type: string;
+  readonly type: string;
 
   @Field()
-  name: string;
+  readonly name: string;
 
   @Field({ nullable: true })
-  backgroundColor: string;
+  readonly backgroundColor: string;
 
   @Field({ nullable: true })
-  color: string;
+  readonly color: string;
 }

@@ -2,13 +2,13 @@ import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 
 @ObjectType('Pocket')
-export class Pocket {
+export class PocketDto {
   @Field()
-  currencyId: string;
+  readonly currencyId: string;
 
   @Field((type) => Float)
-  amount: number;
+  readonly amount: number;
 
-  @Field((type) => CurrencyDto)
-  currency: CurrencyDto;
+  @Field((type) => CurrencyDto, { complexity: 2 })
+  readonly currency: CurrencyDto;
 }

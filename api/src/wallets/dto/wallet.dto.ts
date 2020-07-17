@@ -18,6 +18,9 @@ export class WalletDto {
   @Field((type) => [PocketDto])
   readonly pockets: PocketDto[];
 
-  @Field((type) => Int, { nullable: true })
+  @Field((type) => Int)
   readonly syncAt: Date;
+
+  @Field((type) => Int)
+  readonly createdAt: Date;
 }

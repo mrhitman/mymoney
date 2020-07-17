@@ -7,8 +7,10 @@ export class Goal extends Model {
   public currencyId: string;
   public goal: number;
   public progress: number;
-  public lastSync: Date;
+  public syncAt: Date;
   public createdAt: Date;
+  public updatedAt: Date;
+  public deletedAt: Date;
 
   static get tableName() {
     return 'goals';

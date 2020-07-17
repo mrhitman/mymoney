@@ -132,7 +132,7 @@ export class TransactionsService {
       user,
       trx.destinationWalletId,
     );
-    const pocket = this.getPocket(wallet, trx);
+    const pocket = this.getOrCreatePocket(wallet, trx);
     pocket.amount += trx.amount;
 
     await wallet
@@ -143,7 +143,6 @@ export class TransactionsService {
           pocket,
         ],
       })
-      .debug()
       .execute();
 
     return wallet;
@@ -155,7 +154,7 @@ export class TransactionsService {
     dbTrx?: Objection.TransactionOrKnex,
   ) {
     const wallet = await this.walletService.findOne(user, trx.sourceWalletId);
-    const pocket = this.getPocket(wallet, trx);
+    const pocket = this.getOrCreatePocket(wallet, trx);
     pocket.amount -= trx.amount;
 
     await wallet
@@ -179,7 +178,7 @@ export class TransactionsService {
     return;
   }
 
-  private getPocket(wallet: Wallet, trx: Transaction) {
+  private getOrCreatePocket(wallet: Wallet, trx: Transaction) {
     return (
       wallet.pockets.find((p) => p.currencyId === trx.currencyId) || {
         currencyId: trx.currencyId,

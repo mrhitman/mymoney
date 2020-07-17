@@ -45,8 +45,10 @@ export async function up(knex: Knex): Promise<any> {
     t.string('currency_id').references('id').inTable('currencies');
     t.decimal('goal');
     t.decimal('progress');
-    t.timestamp('last_sync');
     t.timestamp('created_at').defaultTo(knex.fn.now());
+    t.timestamp('updated_at');
+    t.timestamp('deleted_at');
+    t.timestamp('sync_at');
   });
   await knex.schema.createTable('transactions', (t) => {
     t.string('id').primary();

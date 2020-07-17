@@ -53,7 +53,8 @@ type Wallet {
   description: String
   type: String!
   pockets: [Pocket!]!
-  syncAt: Int
+  syncAt: Int!
+  createdAt: Int!
 }
 
 type Transaction {

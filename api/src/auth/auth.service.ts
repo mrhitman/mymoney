@@ -23,7 +23,7 @@ export class AuthService {
     }
   }
 
-  public async login(user: User, token?: RefreshToken) {
+  public async login(user: Omit<User, 'password'>, token?: RefreshToken) {
     const payload = { id: user.id };
     const refreshToken = token?.token || uuid();
 

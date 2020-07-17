@@ -5,7 +5,7 @@ export class CurrencyDto {
   @Field((type) => ID)
   readonly id: string;
 
-  @Field({ nullable: true })
+  @Field()
   readonly name: string;
 
   @Field({ nullable: true })
@@ -14,6 +14,10 @@ export class CurrencyDto {
   @Field()
   readonly symbol: string;
 
-  @Field((type) => Float, { nullable: true })
+  @Field((type) => Float, {
+    nullable: true,
+    description: 'Rate to EUR (from fixer.io)',
+    complexity: 6,
+  })
   readonly rate?: number;
 }

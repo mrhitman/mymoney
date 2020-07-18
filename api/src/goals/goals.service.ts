@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import Goal from 'src/database/models/goal.model';
 import User from 'src/database/models/user.model';
+import { GoalCreate } from './input/goal-create';
+import { GoalUpdate } from './input/goal-update';
 
 @Injectable()
 export class GoalsService {
@@ -19,6 +21,10 @@ export class GoalsService {
 
     return goal;
   }
+
+  public async create(user: User, data: GoalCreate) {}
+
+  public async update(user: User, data: GoalUpdate) {}
 
   public async delete(user: User, id: string) {
     const goal = await this.findOne(user, id);

@@ -36,9 +36,7 @@ type Currency {
   name: String!
   description: String
   symbol: String!
-
-  """Rate to EUR (from fixer.io)"""
-  rate: Float
+  rate: Float!
 }
 
 type Pocket {
@@ -127,6 +125,7 @@ type Query {
 type Mutation {
   createGoal(createGoalData: GoalCreate!): Goal!
   updateGoal(updateGoalData: GoalUpdate!): Goal!
+  deleteGoal(id: String!): Goal!
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!

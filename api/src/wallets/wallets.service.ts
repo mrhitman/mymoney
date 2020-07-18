@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
 import { v4 as uuid } from 'uuid';
@@ -10,23 +9,18 @@ import { WalletUpdate } from './input/wallet-update';
 @Injectable()
 export class WalletsService {
   public async getAll(user: User) {
-    const query = Wallet.query().where({ userId: user.id });
+    const query = Wallet.query().where({ userId: user.id }).whereNot({
+      type: 'goal',
+    });
     return query;
   }
 
-  public async performOperation(wallet: Wallet, trx: Transaction) {
-    const pocket = wallet.pockets.find(
-      (p) => p.currencyId === trx.currencyId,
-    ) || {
-      id: uuid(),
-      currencyId: trx.currencyId,
-      amount: 0,
-    };
-    pocket.amount += trx.amount * (trx.type === 'income' ? 1 : -1);
-  }
-
   public async findOne(user: User, id: string) {
-    const wallet = await Wallet.query().findOne({ id, userId: user.id });
+    const wallet = await Wallet.query()
+      .whereNot({
+        type: 'goal',
+      })
+      .findOne({ id, userId: user.id });
 
     if (!wallet) {
       throw new NotFoundException();

@@ -2,11 +2,11 @@ import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Float,
+  Mutation,
   Parent,
   Query,
   ResolveProperty,
   Resolver,
-  Mutation,
 } from '@nestjs/graphql';
 import { round } from 'lodash';
 import { CurrentUser } from 'src/auth/current-user';
@@ -41,14 +41,24 @@ export class GoalsResolver {
   async createGoal(
     @CurrentUser() user: User,
     @Args('createGoalData') data: GoalCreate,
-  ) {}
+  ) {
+    return this.service.create(user, data);
+  }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => GoalDto)
   async updateGoal(
     @CurrentUser() user: User,
     @Args('updateGoalData') data: GoalUpdate,
-  ) {}
+  ) {
+    return this.service.update(user, data);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => GoalDto)
+  async deleteGoal(@CurrentUser() user: User, @Args('id') id: string) {
+    return this.service.delete(user, id);
+  }
 
   @ResolveProperty('wallet', () => WalletDto)
   async getWallet(@Parent() goal: GoalDto) {

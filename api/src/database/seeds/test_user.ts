@@ -86,7 +86,7 @@ export async function seed(knex: Knex): Promise<any> {
     .into('wallets');
   await knex
     .insert({
-      id: wallet2Id,
+      id: wallet3Id,
       user_id: id,
       name: 'For flat',
       description: 'TEST_DESCRIPTION',
@@ -99,13 +99,12 @@ export async function seed(knex: Knex): Promise<any> {
       id: chance().guid(),
       user_id: id,
       goal: 45000,
+      progress: 100,
       wallet_id: wallet3Id,
       currency_id: chance().pick([
         '096225f7-d38e-5650-8b9f-a19034a5fe6e',
         '040864eb-a01d-5660-8b23-d26ab5088233',
       ]),
-      name: 'For flat',
-      pockets: JSON.stringify([]),
     })
     .into('goals');
 

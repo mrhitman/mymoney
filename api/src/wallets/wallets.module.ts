@@ -7,6 +7,7 @@ import { CurrencyRateResolver } from './currency-rate.resolver';
 import { PocketResolver } from './pocket.resolver';
 import { WalletsResolver } from './wallets.resolver';
 import { WalletsService } from './wallets.service';
+import { DataLoader } from 'src/dataloader';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { WalletsService } from './wallets.service';
     CurrenciesService,
     CurrencyRateResolver,
     WalletsService,
+    DataLoader,
   ],
 })
 export class WalletsModule {}

@@ -12,16 +12,19 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import { CategoryDto } from 'src/categories/dto/category.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import User from 'src/database/models/user.model';
-import { loaders } from 'src/dataloaders';
+import { DataLoader } from 'src/dataloader';
+import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionsService } from './transactions.service';
-import { WalletDto } from 'src/wallets/dto/wallet.dto';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
-  constructor(private readonly service: TransactionsService) {}
+  constructor(
+    private readonly service: TransactionsService,
+    private readonly loader: DataLoader,
+  ) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [TransactionDto])
@@ -57,14 +60,14 @@ export class TransactionsResolver {
 
   @ResolveField('category', (returns) => CategoryDto)
   async getCategory(@Parent() transaction: TransactionDto) {
-    return loaders.category.load(transaction.categoryId);
+    return this.loader.category.load(transaction.categoryId);
   }
 
   @ResolveField('currency', (returns) => CurrencyDto)
   async getCurrency(
     @Parent() transaction: TransactionDto,
   ): Promise<CurrencyDto> {
-    return loaders.currency.load(transaction.currencyId);
+    return this.loader.currency.load(transaction.currencyId);
   }
 
   @ResolveField('sourceWallet', (returns) => WalletDto, { nullable: true })
@@ -73,7 +76,7 @@ export class TransactionsResolver {
       return;
     }
 
-    return loaders.wallet.load(transaction.sourceWalletId);
+    return this.loader.wallet.load(transaction.sourceWalletId);
   }
 
   @ResolveField('destinationWallet', (returns) => WalletDto, { nullable: true })
@@ -82,6 +85,6 @@ export class TransactionsResolver {
       return;
     }
 
-    return loaders.wallet.load(transaction.destinationWalletId);
+    return this.loader.wallet.load(transaction.destinationWalletId);
   }
 }

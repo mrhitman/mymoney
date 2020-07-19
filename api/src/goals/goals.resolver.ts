@@ -14,7 +14,7 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import User from 'src/database/models/user.model';
 import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { CurrencyDto } from '../currencies/dto/currency.dto';
-import { loaders } from '../dataloaders';
+import { DataLoader } from '../dataloader';
 import { GoalDto } from './dto/goal.dto';
 import { GoalsService } from './goals.service';
 import { GoalCreate } from './input/goal-create';
@@ -22,7 +22,10 @@ import { GoalUpdate } from './input/goal-update';
 
 @Resolver((of) => GoalDto)
 export class GoalsResolver {
-  constructor(private readonly service: GoalsService) {}
+  constructor(
+    private readonly service: GoalsService,
+    private readonly loader: DataLoader,
+  ) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [GoalDto])
@@ -62,12 +65,12 @@ export class GoalsResolver {
 
   @ResolveProperty('wallet', () => WalletDto)
   async getWallet(@Parent() goal: GoalDto) {
-    return loaders.wallet.load(goal.walletId);
+    return this.loader.wallet.load(goal.walletId);
   }
 
   @ResolveProperty('currency', () => CurrencyDto)
   async getCurrency(@Parent() goal: GoalDto) {
-    return loaders.currency.load(goal.currencyId);
+    return this.loader.currency.load(goal.currencyId);
   }
 
   @ResolveProperty('progressPercent', () => Float)

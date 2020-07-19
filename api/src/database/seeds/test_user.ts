@@ -9,6 +9,7 @@ export async function seed(knex: Knex): Promise<any> {
   await knex('transactions').del();
   await knex('users').del();
   await knex('categories').del();
+  await knex('goals').del();
   await knex('wallets').del();
   const password = await bcrypt.hash('1', 10);
   const [first_name, middle_name, last_name] = chance()
@@ -42,6 +43,7 @@ export async function seed(knex: Knex): Promise<any> {
   );
   const wallet1Id = chance().guid();
   const wallet2Id = chance().guid();
+  const wallet3Id = chance().guid();
   await knex
     .insert({
       id: wallet1Id,
@@ -82,8 +84,32 @@ export async function seed(knex: Knex): Promise<any> {
       ]),
     })
     .into('wallets');
+  await knex
+    .insert({
+      id: wallet2Id,
+      user_id: id,
+      name: 'For flat',
+      description: 'TEST_DESCRIPTION',
+      type: 'goal',
+      pockets: JSON.stringify([]),
+    })
+    .into('wallets');
+  await knex
+    .insert({
+      id: chance().guid(),
+      user_id: id,
+      goal: 45000,
+      wallet_id: wallet3Id,
+      currency_id: chance().pick([
+        '096225f7-d38e-5650-8b9f-a19034a5fe6e',
+        '040864eb-a01d-5660-8b23-d26ab5088233',
+      ]),
+      name: 'For flat',
+      pockets: JSON.stringify([]),
+    })
+    .into('goals');
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < chance().natural({ min: 95, max: 115 }); i++) {
     await knex
       .insert({
         id: chance().guid(),

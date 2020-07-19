@@ -45,24 +45,25 @@ type Pocket {
   currency: Currency!
 }
 
-type Wallet {
-  id: ID!
-  name: String!
-  description: String
-  type: String!
-  pockets: [Pocket!]!
-  syncAt: Int!
-  createdAt: Int!
-}
-
 type Goal {
   id: ID!
   goal: Float!
   progress: Float!
   progressPercent: Float!
   name: String!
+  pockets: [Pocket!]!
   currencyId: String!
   currency: Currency!
+  syncAt: Int!
+  createdAt: Int!
+}
+
+type Wallet {
+  id: ID!
+  name: String!
+  description: String
+  type: String!
+  pockets: [Pocket!]!
   syncAt: Int!
   createdAt: Int!
 }
@@ -138,16 +139,23 @@ input GoalCreate {
   goal: Float!
   progress: Float
   name: String!
+  pockets: [PocketInput!]
   currencyId: String!
   createdAt: Int
+}
+
+input PocketInput {
+  currencyId: String!
+  amount: Float!
 }
 
 input GoalUpdate {
   id: ID!
   goal: Float
   progress: Float
-  walletId: String
   currencyId: String
+  name: String!
+  pockets: [PocketInput!]
   updatedAt: Int
 }
 
@@ -187,11 +195,6 @@ input WalletCreate {
   type: String
   pockets: [PocketInput!]!
   createdAt: Int
-}
-
-input PocketInput {
-  currencyId: String!
-  amount: Float!
 }
 
 input WalletUpdate {

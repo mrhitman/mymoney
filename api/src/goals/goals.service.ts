@@ -32,8 +32,8 @@ export class GoalsService {
       name: data.name,
       userId: user.id,
       type: 'goal',
+      pockets: data.pockets || [],
     });
-    console.log(wallet);
     const goal = await Goal.query().insert({
       id: uuid(),
       walletId: wallet.id,
@@ -42,6 +42,8 @@ export class GoalsService {
       goal: data.goal,
       progress: data.progress || 0,
     });
+
+    goal.wallet = wallet;
     return goal;
   }
 

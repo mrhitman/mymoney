@@ -1,5 +1,7 @@
 import { Field, Float, ID, InputType, Int } from '@nestjs/graphql';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import Wallet from 'src/database/models/wallet.model';
+import { PocketInput } from 'src/wallets/input/pocket-input';
 
 @InputType()
 export class GoalUpdate {
@@ -18,17 +20,25 @@ export class GoalUpdate {
   readonly progress: number;
 
   @Field({ nullable: true })
-  @IsString()
-  @IsOptional()
-  readonly walletId?: string;
-
-  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   readonly currencyId: string;
+
+  @Field()
+  @IsOptional()
+  @IsString()
+  readonly name: string;
+
+  @Field((type) => [PocketInput], { nullable: true })
+  @IsOptional({ each: true })
+  readonly pockets: PocketInput[];
 
   @Field((type) => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
   readonly updatedAt?: Date;
+
+  readonly walletId: string;
+
+  readonly wallet: Wallet;
 }

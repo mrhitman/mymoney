@@ -1,6 +1,7 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import Wallet from 'src/database/models/wallet.model';
+import { PocketDto } from 'src/wallets/dto/pocket.dto';
 
 @ObjectType('Goal')
 export class GoalDto {
@@ -16,12 +17,11 @@ export class GoalDto {
   @Field((type) => Float, { complexity: 2 })
   readonly progressPercent: number;
 
-  readonly walletId: string;
-
-  readonly wallet: Wallet;
-
   @Field()
   readonly name: string;
+
+  @Field((type) => [PocketDto])
+  readonly pockets: PocketDto[];
 
   @Field(() => String)
   readonly currencyId: string;
@@ -34,4 +34,8 @@ export class GoalDto {
 
   @Field((type) => Int)
   readonly createdAt: Date;
+
+  readonly walletId: string;
+
+  readonly wallet: Wallet;
 }

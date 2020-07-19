@@ -12,13 +12,13 @@ import { round } from 'lodash';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import User from 'src/database/models/user.model';
-import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { CurrencyDto } from '../currencies/dto/currency.dto';
 import { DataLoader } from '../dataloader';
 import { GoalDto } from './dto/goal.dto';
 import { GoalsService } from './goals.service';
 import { GoalCreate } from './input/goal-create';
 import { GoalUpdate } from './input/goal-update';
+import { PocketDto } from '../wallets/dto/pocket.dto';
 
 @Resolver((of) => GoalDto)
 export class GoalsResolver {
@@ -64,8 +64,13 @@ export class GoalsResolver {
   }
 
   @ResolveField('name', () => String)
-  async getWallet(@Parent() goal: GoalDto) {
+  async getName(@Parent() goal: GoalDto) {
     return goal.wallet.name;
+  }
+
+  @ResolveField('pockets', () => [PocketDto])
+  async getPockets(@Parent() goal: GoalDto) {
+    return goal.wallet.pockets;
   }
 
   @ResolveField('currency', () => CurrencyDto)

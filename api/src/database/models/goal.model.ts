@@ -12,6 +12,7 @@ export class Goal extends Model {
   public createdAt: Date;
   public updatedAt: Date;
   public deletedAt: Date;
+  public wallet: Wallet;
 
   static get tableName() {
     return 'goals';

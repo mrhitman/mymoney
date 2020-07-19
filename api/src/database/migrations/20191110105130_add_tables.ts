@@ -29,7 +29,7 @@ export async function up(knex: Knex): Promise<any> {
     t.string('description', 64);
     t.string('card_number', 64);
     t.string('type', 32);
-    t.jsonb('pockets');
+    t.jsonb('pockets').defaultTo([]);
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at');
     t.timestamp('deleted_at');

@@ -28,5 +28,5 @@ export class GoalCreate {
   @Field((type) => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
-  readonly createdAt?: Date;
+  readonly createdAt?: number;
 }

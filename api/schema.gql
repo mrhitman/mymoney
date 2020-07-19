@@ -152,7 +152,6 @@ input PocketInput {
 input GoalUpdate {
   id: ID!
   goal: Float
-  progress: Float
   currencyId: String
   name: String!
   pockets: [PocketInput!]

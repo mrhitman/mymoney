@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DateTime } from 'luxon';
 import Goal from 'src/database/models/goal.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
@@ -17,7 +18,9 @@ export class GoalsService {
   }
 
   public async findOne(user: User, id: string) {
-    const goal = await Goal.query().findOne({ id, userId: user.id });
+    const goal = await Goal.query()
+      .withGraphFetched('[wallet]')
+      .findOne({ id, userId: user.id });
 
     if (!goal) {
       throw new NotFoundException();
@@ -41,16 +44,36 @@ export class GoalsService {
       userId: user.id,
       goal: data.goal,
       progress: data.progress || 0,
+      ...(data.createdAt && {
+        createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
+      }),
     });
 
     goal.wallet = wallet;
     return goal;
   }
 
-  public async update(user: User, data: GoalUpdate) {}
+  public async update(user: User, data: GoalUpdate) {
+    const goal = await this.findOne(user, data.id);
+
+    await goal.$query().update({
+      goal: data.goal || goal.goal,
+      ...(data.updatedAt && {
+        updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
+      }),
+    });
+
+    await goal.wallet.$query().update({
+      name: data.name || goal.wallet.name,
+      pockets: data.pockets || goal.wallet.pockets,
+    });
+
+    return goal;
+  }
 
   public async delete(user: User, id: string) {
     const goal = await this.findOne(user, id);
-    return goal.$query().delete();
+    await goal.$query().delete();
+    return goal;
   }
 }

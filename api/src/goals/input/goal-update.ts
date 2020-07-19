@@ -14,11 +14,6 @@ export class GoalUpdate {
   @IsNumber({ allowNaN: true })
   readonly goal: number;
 
-  @Field((type) => Float, { nullable: true })
-  @IsOptional()
-  @IsNumber({ allowNaN: true })
-  readonly progress: number;
-
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
@@ -36,9 +31,5 @@ export class GoalUpdate {
   @Field((type) => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
-  readonly updatedAt?: Date;
-
-  readonly walletId: string;
-
-  readonly wallet: Wallet;
+  readonly updatedAt: number;
 }

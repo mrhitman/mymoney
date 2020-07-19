@@ -6,7 +6,7 @@ import {
 import { dataByCategory, dataByPeriod, Interval } from 'common';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
-import Objection, { transaction } from 'objection';
+import { transaction, TransactionOrKnex } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
@@ -126,7 +126,7 @@ export class TransactionsService {
   protected async addIncomeTrx(
     user: User,
     trx: Transaction,
-    dbTrx?: Objection.TransactionOrKnex,
+    dbTrx?: TransactionOrKnex,
   ) {
     const wallet = await this.walletService.findOne(
       user,
@@ -151,7 +151,7 @@ export class TransactionsService {
   protected async addOutcomeTrx(
     user: User,
     trx: Transaction,
-    dbTrx?: Objection.TransactionOrKnex,
+    dbTrx?: TransactionOrKnex,
   ) {
     const wallet = await this.walletService.findOne(user, trx.sourceWalletId);
     const pocket = this.getOrCreatePocket(wallet, trx);
@@ -173,7 +173,7 @@ export class TransactionsService {
   protected async addTransferTrx(
     user: User,
     trx: Transaction,
-    dbTrx?: Objection.TransactionOrKnex,
+    dbTrx?: TransactionOrKnex,
   ) {
     return;
   }

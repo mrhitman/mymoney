@@ -16,11 +16,7 @@ export class WalletsService {
   }
 
   public async findOne(user: User, id: string) {
-    const wallet = await Wallet.query()
-      .whereNot({
-        type: 'goal',
-      })
-      .findOne({ id, userId: user.id });
+    const wallet = await Wallet.query().findOne({ id, userId: user.id });
 
     if (!wallet) {
       throw new NotFoundException();

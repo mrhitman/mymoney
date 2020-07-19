@@ -19,6 +19,8 @@ import { GoalsService } from './goals.service';
 import { GoalCreate } from './input/goal-create';
 import { GoalUpdate } from './input/goal-update';
 import { PocketDto } from '../wallets/dto/pocket.dto';
+import { GoalSaveDto } from './dto/goal-save.dto';
+import { GoalSave } from './input/goal-save';
 
 @Resolver((of) => GoalDto)
 export class GoalsResolver {
@@ -61,6 +63,15 @@ export class GoalsResolver {
   @Mutation(() => GoalDto)
   async deleteGoal(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.delete(user, id);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => GoalSaveDto)
+  async saveToGoal(
+    @CurrentUser() user: User,
+    @Args('saveGoalData') data: GoalSave,
+  ) {
+    return this.service.save(user, data);
   }
 
   @ResolveField('name', () => String)

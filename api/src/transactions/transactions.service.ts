@@ -4,7 +4,6 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { dataByCategory, dataByPeriod, Interval } from 'common';
-import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 import { transaction, TransactionOrKnex } from 'objection';
 import Transaction from 'src/database/models/transaction.model';
@@ -85,11 +84,7 @@ export class TransactionsService {
         }),
       });
 
-      const wallet = await this[`add${upperFirst(trx.type)}Trx`](
-        user,
-        trx,
-        dbTrx,
-      );
+      const wallet = await this[`add_${trx.type}_Trx`](user, trx, dbTrx);
       await dbTrx.commit();
 
       return {
@@ -123,7 +118,7 @@ export class TransactionsService {
     return trx.$query().delete();
   }
 
-  protected async addIncomeTrx(
+  public async add_income_Trx(
     user: User,
     trx: Transaction,
     dbTrx?: TransactionOrKnex,
@@ -148,7 +143,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  protected async addOutcomeTrx(
+  public async add_outcome_Trx(
     user: User,
     trx: Transaction,
     dbTrx?: TransactionOrKnex,
@@ -170,7 +165,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  protected async addTransferTrx(
+  public async add_transfer_Trx(
     user: User,
     trx: Transaction,
     dbTrx?: TransactionOrKnex,

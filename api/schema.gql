@@ -69,6 +69,11 @@ type Wallet {
   createdAt: Int!
 }
 
+type GoalSaveResponse {
+  goal: Goal!
+  wallet: Wallet!
+}
+
 type Transaction {
   id: ID!
   type: TransactionType!
@@ -127,6 +132,7 @@ type Mutation {
   createGoal(createGoalData: GoalCreate!): Goal!
   updateGoal(updateGoalData: GoalUpdate!): Goal!
   deleteGoal(id: String!): Goal!
+  saveToGoal(saveGoalData: GoalSave!): GoalSaveResponse!
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!
@@ -159,6 +165,13 @@ input GoalUpdate {
   updatedAt: Int
 }
 
+input GoalSave {
+  toGoalId: String!
+  fromWalletId: String!
+  currencyId: String!
+  amount: Float!
+}
+
 input TransactionCreate {
   id: String
   categoryId: String!
@@ -168,6 +181,7 @@ input TransactionCreate {
   fine: Float
   amount: Float!
   date: Int!
+  type: String!
   description: String
   isNecessary: Boolean
   isTemplate: Boolean

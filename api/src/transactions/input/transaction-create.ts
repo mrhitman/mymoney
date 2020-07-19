@@ -1,4 +1,5 @@
 import { Field, Float, InputType, Int } from '@nestjs/graphql';
+import { TransactionType } from '../transaction-type';
 import {
   IsBoolean,
   IsNumber,
@@ -12,7 +13,7 @@ export class TransactionCreate {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  readonly id: string;
+  readonly id?: string;
 
   @Field()
   @IsString()
@@ -25,17 +26,17 @@ export class TransactionCreate {
   @Field({ nullable: true })
   @IsString()
   @ValidateIf((o, v) => o.type !== 'income')
-  readonly sourceWalletId: string;
+  readonly sourceWalletId?: string;
 
   @Field({ nullable: true })
   @IsString()
   @ValidateIf((o, v) => o.type !== 'outcome')
-  readonly destinationWalletId: string;
+  readonly destinationWalletId?: string;
 
   @Field((type) => Float, { nullable: true })
   @IsNumber()
   @IsOptional()
-  readonly fine: number;
+  readonly fine?: number;
 
   @Field((type) => Float)
   @IsNumber()
@@ -45,23 +46,27 @@ export class TransactionCreate {
   @IsNumber()
   readonly date: number;
 
+  @Field()
+  @IsString()
+  readonly type: TransactionType;
+
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  readonly description: string;
+  readonly description?: string;
 
   @Field((type) => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
-  readonly isNecessary: boolean;
+  readonly isNecessary?: boolean;
 
   @Field((type) => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
-  readonly isTemplate: boolean;
+  readonly isTemplate?: boolean;
 
   @Field((type) => Int, { nullable: true })
   @IsNumber({ allowNaN: true })
   @IsOptional()
-  readonly createdAt: number;
+  readonly createdAt?: number;
 }

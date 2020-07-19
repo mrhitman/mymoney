@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsBoolean } from 'class-validator';
 import { PocketInput } from './pocket-input';
 
 @InputType()
@@ -17,6 +17,11 @@ export class WalletCreate {
   @IsOptional()
   @IsString()
   readonly type: string;
+
+  @Field(() => Boolean)
+  @IsOptional()
+  @IsBoolean()
+  readonly allowNegativeBalance: boolean;
 
   @Field((type) => [PocketInput])
   readonly pockets: PocketInput[];

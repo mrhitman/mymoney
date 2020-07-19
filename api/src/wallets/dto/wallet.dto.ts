@@ -15,6 +15,9 @@ export class WalletDto {
   @Field()
   readonly type: string;
 
+  @Field(() => Boolean)
+  readonly allowNegativeBalance: boolean;
+
   @Field((type) => [PocketDto])
   readonly pockets: PocketDto[];
 

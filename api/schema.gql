@@ -60,8 +60,7 @@ type Goal {
   goal: Float!
   progress: Float!
   progressPercent: Float!
-  walletId: String!
-  wallet: Wallet!
+  name: String!
   currencyId: String!
   currency: Currency!
   syncAt: Int!
@@ -138,7 +137,7 @@ type Mutation {
 input GoalCreate {
   goal: Float!
   progress: Float
-  walletId: String
+  name: String!
   currencyId: String!
   createdAt: Int
 }

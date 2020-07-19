@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import Wallet from './wallet.model';
 
 export class Goal extends Model {
   public id: string;
@@ -14,6 +15,19 @@ export class Goal extends Model {
 
   static get tableName() {
     return 'goals';
+  }
+
+  static get relationMappings() {
+    return {
+      wallet: {
+        relation: Model.HasOneRelation,
+        modelClass: Wallet,
+        join: {
+          from: 'goals.walletId',
+          to: 'wallets.id',
+        },
+      },
+    };
   }
 }
 

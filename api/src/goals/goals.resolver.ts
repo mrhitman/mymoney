@@ -5,7 +5,7 @@ import {
   Mutation,
   Parent,
   Query,
-  ResolveProperty,
+  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import { round } from 'lodash';
@@ -63,17 +63,17 @@ export class GoalsResolver {
     return this.service.delete(user, id);
   }
 
-  @ResolveProperty('wallet', () => WalletDto)
+  @ResolveField('name', () => String)
   async getWallet(@Parent() goal: GoalDto) {
-    return this.loader.wallet.load(goal.walletId);
+    return goal.wallet.name;
   }
 
-  @ResolveProperty('currency', () => CurrencyDto)
+  @ResolveField('currency', () => CurrencyDto)
   async getCurrency(@Parent() goal: GoalDto) {
     return this.loader.currency.load(goal.currencyId);
   }
 
-  @ResolveProperty('progressPercent', () => Float)
+  @ResolveField('progressPercent', () => Float)
   async getProgress(@Parent() goal: GoalDto) {
     return goal.goal > 0 ? round(goal.progress / goal.goal, 3) : 0;
   }

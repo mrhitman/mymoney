@@ -12,10 +12,9 @@ export class GoalCreate {
   @IsNumber({ allowNaN: true })
   readonly progress: number;
 
-  @Field({ nullable: true })
+  @Field()
   @IsString()
-  @IsOptional()
-  readonly walletId?: string;
+  readonly name: string;
 
   @Field()
   @IsString()

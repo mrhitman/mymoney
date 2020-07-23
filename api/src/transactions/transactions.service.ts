@@ -128,7 +128,6 @@ export class TransactionsService {
       trx.destinationWalletId,
     );
     const pocket = this.getOrCreatePocket(wallet, trx);
-    Logger.log(pocket)
     pocket.amount += trx.amount;
 
     await wallet

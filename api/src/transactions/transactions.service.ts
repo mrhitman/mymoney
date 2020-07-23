@@ -6,7 +6,7 @@ import {
 import { dataByCategory, dataByPeriod, Interval } from 'common';
 import { DateTime } from 'luxon';
 import { transaction, TransactionOrKnex } from 'objection';
-import Transaction from 'src/database/models/transaction.model';
+import Transaction, { categoryInId, categoryOutId, categoryTransferId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
 import Category from '../database/models/category.model';
@@ -14,10 +14,11 @@ import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
+import { TransactionType } from './transaction-type';
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) {}
+  constructor(protected walletService: WalletsService) { }
 
   public async getAll(user: User) {
     const query = Transaction.query().where({ userId: user.id });
@@ -170,6 +171,29 @@ export class TransactionsService {
     trx: Transaction,
     dbTrx?: TransactionOrKnex,
   ) {
+    await trx.$query().update({ categoryId: categoryTransferId });
+    const trxIn = await Transaction.query(dbTrx).insert({
+      id: uuid(),
+      userId: user.id,
+      type: TransactionType.income,
+      categoryId: categoryInId,
+      amount: trx.amount,
+      date: trx.date,
+      syncAt: trx.syncAt,
+      createdAt: trx.createdAt
+    });
+    const trxOut = await Transaction.query(dbTrx).insert({
+      id: uuid(),
+      userId: user.id,
+      type: TransactionType.outcome,
+      categoryId: categoryOutId,
+      amount: trx.amount,
+      date: trx.date,
+      syncAt: trx.syncAt,
+      createdAt: trx.createdAt
+    });
+    await this.add_income_Trx(user, trxIn, dbTrx);
+    await this.add_outcome_Trx(user, trxOut, dbTrx);
     return;
   }
 

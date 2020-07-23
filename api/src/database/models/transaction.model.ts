@@ -9,6 +9,9 @@ export interface TransactionScheduleTemplate {
   frequency: number;
 }
 
+export const categoryInId = '4ade3988-43f4-4ab5-951a-223806c9f5c7';
+export const categoryOutId = '981fd55b-2840-4d9d-a758-f24e4bce1176';
+export const categoryTransferId = 'bec3812e-5eb6-495f-b021-58bc39184cc7';
 export class Transaction extends Model {
   public id: string;
   public userId: number;

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { dataByCategory, dataByPeriod, Interval } from 'common';
 import { DateTime } from 'luxon';
@@ -85,15 +86,13 @@ export class TransactionsService {
         }),
       });
 
-      const wallet = await this[`add_${trx.type}_Trx`](user, trx, dbTrx);
+      await this[`add${trx.type}Trx`](user, trx, dbTrx);
       await dbTrx.commit();
 
-      return {
-        transaction: trx,
-        wallet,
-      };
+      return trx;
     } catch (e) {
       await dbTrx.rollback();
+      Logger.error(e.message);
       throw new BadRequestException(e.message);
     }
   }
@@ -119,7 +118,7 @@ export class TransactionsService {
     return trx.$query().delete();
   }
 
-  public async add_income_Trx(
+  private async addincomeTrx(
     user: User,
     trx: Transaction,
     dbTrx?: TransactionOrKnex,
@@ -129,6 +128,7 @@ export class TransactionsService {
       trx.destinationWalletId,
     );
     const pocket = this.getOrCreatePocket(wallet, trx);
+    Logger.log(pocket)
     pocket.amount += trx.amount;
 
     await wallet
@@ -144,7 +144,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  public async add_outcome_Trx(
+  private async addoutcomeTrx(
     user: User,
     trx: Transaction,
     dbTrx?: TransactionOrKnex,
@@ -166,7 +166,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  public async add_transfer_Trx(
+  private async addtransferTrx(
     user: User,
     trx: Transaction,
     dbTrx?: TransactionOrKnex,
@@ -176,6 +176,8 @@ export class TransactionsService {
       id: uuid(),
       userId: user.id,
       type: TransactionType.income,
+      currencyId: trx.currencyId,
+      destinationWalletId: trx.destinationWalletId,
       categoryId: categoryInId,
       amount: trx.amount,
       date: trx.date,
@@ -186,14 +188,16 @@ export class TransactionsService {
       id: uuid(),
       userId: user.id,
       type: TransactionType.outcome,
+      currencyId: trx.currencyId,
+      sourceWalletId: trx.sourceWalletId,
       categoryId: categoryOutId,
       amount: trx.amount,
       date: trx.date,
       syncAt: trx.syncAt,
       createdAt: trx.createdAt
     });
-    await this.add_income_Trx(user, trxIn, dbTrx);
-    await this.add_outcome_Trx(user, trxOut, dbTrx);
+    await this.addincomeTrx(user, trxIn, dbTrx);
+    await this.addoutcomeTrx(user, trxOut, dbTrx);
     return;
   }
 

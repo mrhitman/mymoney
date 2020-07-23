@@ -1,27 +1,28 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { transaction } from 'objection';
 import Goal from 'src/database/models/goal.model';
+import { categoryTransferId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
+import { TransactionType } from 'src/transactions/transaction-type';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import { WalletsService } from 'src/wallets/wallets.service';
 import { v4 as uuid } from 'uuid';
 import { GoalCreate } from './input/goal-create';
 import { GoalSave } from './input/goal-save';
 import { GoalUpdate } from './input/goal-update';
-import { TransactionType } from 'src/transactions/transaction-type';
 
 @Injectable()
 export class GoalsService {
   constructor(
     private readonly walletService: WalletsService,
     private readonly transactionService: TransactionsService,
-  ) {}
+  ) { }
 
   public async getAll(user: User) {
     const goals = await Goal.query()
@@ -48,18 +49,10 @@ export class GoalsService {
     const wallet = await this.walletService.findOne(user, data.fromWalletId);
 
     await this.transactionService.create(user, {
-      categoryId: '4ade3988-43f4-4ab5-951a-223806c9f5c7',
+      type: TransactionType.transfer,
       destinationWalletId: goal.walletId,
-      type: TransactionType.income,
-      currencyId: data.currencyId,
-      amount: data.amount,
-      date: DateTime.local().toSeconds(),
-    });
-
-    await this.transactionService.create(user, {
-      categoryId: '981fd55b-2840-4d9d-a758-f24e4bce1176',
+      categoryId: categoryTransferId,
       sourceWalletId: wallet.id,
-      type: TransactionType.outcome,
       currencyId: data.currencyId,
       amount: data.amount,
       date: DateTime.local().toSeconds(),

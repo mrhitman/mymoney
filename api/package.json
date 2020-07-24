@@ -21,9 +21,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "reset:db": "yarn migrate:down && yarn migrate && yarn seed",
     "migrate": "knex migrate:latest --cwd src --knexfile knexfile.ts",
+    "migrate:prod": "knex migrate:latest --cwd dist --knexfile knexfile.js",
     "migrate:down": "knex migrate:rollback --cwd src --knexfile knexfile.ts",
     "migrate:make": "knex migrate:make --cwd src --knexfile knexfile.ts -x ts",
     "seed": "knex seed:run --cwd src --knexfile knexfile.ts",
+    "seed:prod": "knex seed:run --cwd dist --knexfile knexfile.js",
     "seed:make": "knex seed:make --cwd src --knexfile knexfile.ts -x ts"
   },
   "dependencies": {

@@ -12,7 +12,7 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => UserDto)
-  public async user(@CurrentUser() user: User): Promise<UserDto> {
+  public async profile(@CurrentUser() user: User): Promise<UserDto> {
     return user;
   }
 }

@@ -115,7 +115,7 @@ type Refresh {
 }
 
 type Query {
-  user: User!
+  profile: User!
   categories(type: String): [Category!]!
   category(id: String!): Category!
   currencies: [Currency!]!

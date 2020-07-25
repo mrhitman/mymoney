@@ -16,6 +16,7 @@ import { AppController } from './app.controller';
 import { AppResolver } from './app.resolver';
 import { LoggerMiddleware } from './logger.middleware';
 import { TaskService } from './task.service';
+import { StatisticsModule } from '../statistics/statistics.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TaskService } from './task.service';
     TransactionsModule,
     CurrenciesModule,
     AuthModule,
+    StatisticsModule,
     ScheduleModule.forRoot(),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,

@@ -114,6 +114,10 @@ type Refresh {
   refreshToken: String!
 }
 
+type StatisticByPeriod {
+  type: String!
+}
+
 type Query {
   profile: User!
   categories(type: String): [Category!]!
@@ -126,6 +130,7 @@ type Query {
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
+  statisticByPeriod: StatisticByPeriod!
 }
 
 type Mutation {

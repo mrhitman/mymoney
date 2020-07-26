@@ -4,13 +4,15 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { dataByCategory, dataByPeriod, Interval } from 'common';
 import { DateTime } from 'luxon';
 import { transaction, TransactionOrKnex } from 'objection';
-import Transaction, { categoryInId, categoryOutId, categoryTransferId } from 'src/database/models/transaction.model';
+import Transaction, {
+  categoryInId,
+  categoryOutId,
+  categoryTransferId,
+} from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { v4 as uuid } from 'uuid';
-import Category from '../database/models/category.model';
 import Wallet from '../database/models/wallet.model';
 import { WalletsService } from '../wallets/wallets.service';
 import { TransactionCreate } from './input/transaction-create';
@@ -19,7 +21,7 @@ import { TransactionType } from './transaction-type';
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) { }
+  constructor(protected walletService: WalletsService) {}
 
   public async getAll(user: User) {
     const query = Transaction.query().where({ userId: user.id });
@@ -37,25 +39,6 @@ export class TransactionsService {
     }
 
     return trx;
-  }
-
-  public async getStatisticByPeriod(
-    user: User,
-    params: { interval: Interval } = { interval: 'month' },
-  ) {
-    const items = await this.getAll(user);
-    return dataByPeriod(items.items, params.interval);
-  }
-
-  public async getStatisticByCategory(user: User) {
-    const items = await this.getAll(user);
-    const data = dataByCategory(items.items, true);
-    const categoryIds = data.map((d) => d.categoryId);
-    const categories = await Category.query().whereIn('id', categoryIds);
-    return data.map((d) => ({
-      ...d,
-      category: categories.find((c) => c.id === d.categoryId),
-    }));
   }
 
   public async getTransaction(id: string, userId: number) {
@@ -181,7 +164,7 @@ export class TransactionsService {
       amount: trx.amount,
       date: trx.date,
       syncAt: trx.syncAt,
-      createdAt: trx.createdAt
+      createdAt: trx.createdAt,
     });
     const trxOut = await Transaction.query(dbTrx).insert({
       id: uuid(),
@@ -193,7 +176,7 @@ export class TransactionsService {
       amount: trx.amount,
       date: trx.date,
       syncAt: trx.syncAt,
-      createdAt: trx.createdAt
+      createdAt: trx.createdAt,
     });
     await this.addincomeTrx(user, trxIn, dbTrx);
     await this.addoutcomeTrx(user, trxOut, dbTrx);

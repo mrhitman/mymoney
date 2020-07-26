@@ -115,7 +115,8 @@ type Refresh {
 }
 
 type StatisticByPeriod {
-  type: String!
+  date: String!
+  amount: Float!
 }
 
 type Query {
@@ -130,7 +131,7 @@ type Query {
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
-  statisticByPeriod: StatisticByPeriod!
+  statisticByPeriod(interval: String!): [StatisticByPeriod!]!
 }
 
 type Mutation {

@@ -6,7 +6,7 @@ import { TransactionsService } from 'src/transactions/transactions.service';
 
 @Injectable()
 export class StatisticsService {
-  constructor(readonly transactionsService: TransactionsService) {}
+  constructor(readonly transactionsService: TransactionsService) { }
 
   public async getStatisticByPeriod(
     user: User,

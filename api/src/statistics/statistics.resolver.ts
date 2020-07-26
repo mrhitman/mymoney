@@ -1,19 +1,29 @@
-import { Resolver, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { CurrentUser } from '../auth/current-user';
+import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Interval } from 'common';
+import { DateTime } from 'luxon';
 import User from 'src/database/models/user.model';
+import { CurrentUser } from '../auth/current-user';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
+import { StatisticsService } from './statistics.service';
 
 @Resolver()
 export class StatisticsResolver {
+  constructor(protected readonly service: StatisticsService) {
+  }
+
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => StatisticByPeriodDto)
+  @Query((returns) => [StatisticByPeriodDto])
   public async statisticByPeriod(
     @CurrentUser() user: User,
-  ): Promise<StatisticByPeriodDto> {
-    return {
-      type: 'simple',
-    };
+    @Args('interval') interval: Interval = 'month'
+  ): Promise<StatisticByPeriodDto[]> {
+    const data = await this.service.getStatisticByPeriod(user, { interval });
+    const keys = Object.keys(data);
+    return keys.map(date => ({
+      date: DateTime.fromSeconds(+date).toISO(),
+      amount: data[date]
+    }))
   }
 }

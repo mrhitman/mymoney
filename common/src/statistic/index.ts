@@ -3,70 +3,35 @@ import * as moment from 'moment';
 // import { TransactionLike } from '../transaction';
 
 export type Interval = 'day' | 'week' | 'month' | 'year';
-
 export function dataByPeriod(items: any[], interval: Interval) {
   const data = items
-    .map((trx, i, transactions) => {
-      const amount = transactions
+    .map((trx, i, trxs) => {
+      const transactions = trxs
         .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
-        .reduce((s, t) => {
-          return (
-            s +
-            (t.type === 'outcome' ? -1 * Number(t.amount) : Number(t.amount))
-          );
-        }, 0);
 
       return {
         date: trx.date,
-        amount,
+        transactions,
       };
     })
     .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());
 
-  const grouped = groupStatistic(data, interval);
   return reduce(
-    grouped,
-    (acc, group, interval) => {
-      return { ...acc, [interval]: sumBy(group, 'amount') };
-    },
-    {}
+    groupStatistic(data, interval), (acc, group, interval) => ({ ...acc, [interval]: group }), {}
   );
 }
 
 export function dataByCategory(items: any[], withParents: boolean = false) {
-  const groups = chain(items)
+  return chain(items)
     .groupBy('categoryId')
-    .map((group, categoryId, groups) => {
+    .map((transactions, categoryId) => {
       return {
         categoryId,
-        parentCategoryId: first(group).category.parent,
-        amount: group.reduce(
-          (acc, trx) =>
-            acc +
-            (trx.type === 'income'
-              ? parseInt(trx.amount, 10)
-              : -parseInt(trx.amount, 10)),
-          0
-        ),
+        parentCategoryId: first(transactions).category.parent,
+        transactions: transactions
       };
     })
     .value();
-
-  if (withParents) {
-    return groups.reduce((acc, group) => {
-      if (!group.parentCategoryId) {
-        return acc;
-      }
-
-      const parentCategoriesSum = groups
-        .filter((g) => g.categoryId === group.parentCategoryId)
-        .reduce((acc, c) => acc + c.amount, 0);
-
-      return [...acc, { ...group, amount: group.amount + parentCategoriesSum }];
-    }, [] as any[]);
-  }
-
-  return groups;
 }
 
 function groupStatistic(

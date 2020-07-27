@@ -1,7 +1,6 @@
 import { Logger, UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Interval } from 'common';
-import { DateTime } from 'luxon';
 import User from 'src/database/models/user.model';
 import { CurrentUser } from '../auth/current-user';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
@@ -19,13 +18,7 @@ export class StatisticsResolver {
     @CurrentUser() user: User,
     @Args('interval') interval: Interval = 'month'
   ): Promise<StatisticByPeriodDto[]> {
-    const data = await this.service.getStatisticByPeriod(user, { interval });
-    const keys = Object.keys(data);
-
-    return keys.map(date => ({
-      date: DateTime.fromSeconds(+date).toISO(),
-      amount: data[date]
-    }))
+    return this.service.getStatisticByPeriod(user, { interval });
   }
 
 

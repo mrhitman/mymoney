@@ -4,17 +4,28 @@ import Category from 'src/database/models/category.model';
 import User from 'src/database/models/user.model';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import Transaction from 'src/database/models/transaction.model';
+import { DateTime } from 'luxon';
+import { CurrenciesService } from 'src/currencies/currencies.service';
 
 @Injectable()
 export class StatisticsService {
-  constructor(readonly transactionsService: TransactionsService) { }
+  constructor(
+    protected readonly transactionsService: TransactionsService,
+    protected readonly currencyService: CurrenciesService
+  ) { }
 
   public async getStatisticByPeriod(
     user: User,
     params: { interval: Interval } = { interval: 'month' },
-  ): Promise<Record<string, number>> {
+  ): Promise<Array<{ date: string, amount: number }>> {
     const items = await this.transactionsService.getAll(user);
-    return dataByPeriod(items.items, params.interval);
+    const data = dataByPeriod(items.items, params.interval);
+    const keys = Object.keys(data);
+
+    return keys.map(date => ({
+      date: DateTime.fromSeconds(+date).toISO(),
+      amount: data[date].length
+    }))
   }
 
   public async getStatisticByCategory(user: User) {

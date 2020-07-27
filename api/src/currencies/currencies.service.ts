@@ -1,11 +1,12 @@
 import {
-  CACHE_MANAGER,
+  BadRequestException, CACHE_MANAGER,
   Inject,
   Injectable,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import axios from 'axios';
 import { GetRateResponse } from 'common/responses';
+import Category from 'src/database/models/category.model';
 import Currency from 'src/database/models/currency.model';
 import { Fixer } from 'src/fixer';
 import xml2js from 'xml2js';
@@ -33,6 +34,13 @@ export class CurrenciesService {
     protected fixer: Fixer,
     @Inject(CACHE_MANAGER) private readonly cache,
   ) { }
+
+  public async exchange(amount: number, fromCurrency: string, toCurrency: string) {
+    const rates = await this.rates();
+
+    const toEurRate = rates.rates[fromCurrency];
+    return (amount / toEurRate) * rates.rates[toCurrency];
+  }
 
   public async findAll() {
     const currencies = await Currency.query();

@@ -126,6 +126,14 @@ type Query {
   category(id: String!): Category!
   currencies: [Currency!]!
   currency(id: String!): Currency!
+  exchange(
+    """Currency name (eg. USD)"""
+    to: String!
+
+    """Currency name (eg. USD)"""
+    from: String!
+    amount: Float!
+  ): Float!
   goals: [Goal!]!
   goal(id: String!): [Goal!]!
   transactions: [Transaction!]!

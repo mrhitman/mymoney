@@ -31,4 +31,13 @@ export class CurrenciesResolver {
 
     return { ...currency, rate: rates[currency.name] };
   }
+
+  @Query(() => Number)
+  async exchange(
+    @Args('amount') amount: number,
+    @Args('from', { description: 'Currency name (eg. USD)' }) fromCurrency: string,
+    @Args('to', { description: 'Currency name (eg. USD)' }) toCurrency: string,
+  ) {
+    return this.service.exchange(amount, fromCurrency, toCurrency);
+  }
 }

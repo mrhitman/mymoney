@@ -4,21 +4,7 @@ import * as moment from 'moment';
 
 export type Interval = 'day' | 'week' | 'month' | 'year';
 export function dataByPeriod(items: any[], interval: Interval) {
-  const data = items
-    .map((trx, i, trxs) => {
-      const transactions = trxs
-        .filter((t) => moment(trx.date).unix() >= moment(t.date).unix())
-
-      return {
-        date: trx.date,
-        transactions,
-      };
-    })
-    .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());
-
-  return reduce(
-    groupStatistic(data, interval), (acc, group, interval) => ({ ...acc, [interval]: group }), {}
-  );
+  return groupStatistic(items, interval);
 }
 
 export function dataByCategory(items: any[], withParents: boolean = false) {

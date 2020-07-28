@@ -1,12 +1,11 @@
-import { Module, CacheModule } from '@nestjs/common';
-import { TransactionsService } from 'src/transactions/transactions.service';
+import { CacheModule, Module } from '@nestjs/common';
+import redisStore from 'cache-manager-redis-store';
+import { CurrenciesService } from 'src/currencies/currencies.service';
+import { DatabaseModule } from 'src/database/database.module';
+import { Fixer } from 'src/fixer';
 import { WalletsService } from 'src/wallets/wallets.service';
 import { StatisticsResolver } from './statistics.resolver';
 import { StatisticsService } from './statistics.service';
-import { Fixer } from 'src/fixer';
-import redisStore from 'cache-manager-redis-store';
-import { DatabaseModule } from 'src/database/database.module';
-import { CurrenciesService } from 'src/currencies/currencies.service';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { CurrenciesService } from 'src/currencies/currencies.service';
   providers: [
     StatisticsResolver,
     StatisticsService,
-    TransactionsService,
     WalletsService,
     CurrenciesService,
     Fixer

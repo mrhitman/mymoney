@@ -38,6 +38,7 @@ export class CurrenciesResolver {
     @Args('from', { description: 'Currency name (eg. USD)' }) fromCurrency: string,
     @Args('to', { description: 'Currency name (eg. USD)' }) toCurrency: string,
   ) {
-    return this.service.exchange(amount, fromCurrency, toCurrency);
+    const rates = await this.service.rates();
+    return this.service.exchange(rates, amount, fromCurrency, toCurrency);
   }
 }

@@ -1,16 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { dataByCategory, dataByPeriod, Interval } from 'common';
-import Category from 'src/database/models/category.model';
-import User from 'src/database/models/user.model';
-import { TransactionsService } from 'src/transactions/transactions.service';
-import Transaction from 'src/database/models/transaction.model';
 import { DateTime } from 'luxon';
 import { CurrenciesService } from 'src/currencies/currencies.service';
+import Category from 'src/database/models/category.model';
+import Transaction, { categoryInId, categoryOutId } from 'src/database/models/transaction.model';
+import User from 'src/database/models/user.model';
+import { TransactionType } from 'src/transactions/transaction-type';
 
 @Injectable()
 export class StatisticsService {
   constructor(
-    protected readonly transactionsService: TransactionsService,
     protected readonly currencyService: CurrenciesService
   ) { }
 
@@ -18,13 +17,24 @@ export class StatisticsService {
     user: User,
     params: { interval: Interval } = { interval: 'month' },
   ): Promise<Array<{ date: string, amount: number }>> {
-    const items = await this.transactionsService.getAll(user);
-    const data = dataByPeriod(items.items, params.interval);
+    const items = await Transaction.query()
+      .withGraphFetched('[currency]')
+      .where({ userId: user.id })
+      .whereNot({ type: TransactionType.transfer })
+      .whereNotIn('categoryId', [categoryInId, categoryOutId]);
+
+    const data = dataByPeriod(items, params.interval);
     const keys = Object.keys(data);
+    const rates = await this.currencyService.rates();
 
     return keys.map(date => ({
       date: DateTime.fromSeconds(+date).toISO(),
-      amount: data[date].length
+      amount: data[date]
+        .reduce((acc, trx: Transaction) =>
+          acc + this.currencyService.exchange(
+            rates, trx.type === TransactionType.income ? +trx.amount : -Number(trx.amount), trx.currency.name, "USD"),
+          0
+        )
     }))
   }
 

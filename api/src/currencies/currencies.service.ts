@@ -35,11 +35,21 @@ export class CurrenciesService {
     @Inject(CACHE_MANAGER) private readonly cache,
   ) { }
 
-  public async exchange(amount: number, fromCurrency: string, toCurrency: string) {
-    const rates = await this.rates();
-
+  public exchange(rates: GetRateResponse, amount: number, fromCurrency: string, toCurrency: string) {
     const toEurRate = rates.rates[fromCurrency];
     return (amount / toEurRate) * rates.rates[toCurrency];
+  }
+
+  public async exchangeByIds(amount: number, fromCurrencyId: string, toCurrencyId: string) {
+    const fromCurrency = await Currency.query().findById(fromCurrencyId);
+    const toCurrency = await Currency.query().findById(toCurrencyId);
+
+    if (!fromCurrency || !toCurrency) {
+      throw new BadRequestException();
+    }
+
+    const rates = await this.rates();
+    return this.exchange(rates, amount, fromCurrency.name, toCurrency.name);
   }
 
   public async findAll() {

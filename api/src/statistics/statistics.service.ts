@@ -6,6 +6,8 @@ import Category from 'src/database/models/category.model';
 import Transaction, { categoryInId, categoryOutId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { TransactionType } from 'src/transactions/transaction-type';
+import Wallet from 'src/database/models/wallet.model';
+import { chain, first } from 'lodash';
 
 @Injectable()
 export class StatisticsService {
@@ -50,5 +52,23 @@ export class StatisticsService {
       ...d,
       category: categories.find((c) => c.id === d.categoryId),
     }));
+  }
+
+  public async getStatisticByCurrency(user: User) {
+    const wallets = await Wallet.query()
+      .where({ userId: user.id })
+      .whereNot({ type: 'goal' });
+
+    return chain(wallets)
+      .map(wallets => wallets.pockets)
+      .flatten()
+      .groupBy(pocket => pocket.currencyId)
+      .map(group => {
+        return {
+          currencyId: first(group)?.currencyId,
+          amount: group.reduce((acc, p) => p.amount + acc, 0)
+        }
+      })
+      .value();
   }
 }

@@ -4,9 +4,9 @@ import { ObjectType, Field, Float } from '@nestjs/graphql';
   description: "Statistic info about transactions"
 })
 export class StatisticByCategoryDto {
-  @Field()
+  @Field({ complexity: 6 })
   readonly categoryId: string;
 
-  @Field(() => Float)
+  @Field(() => Float, { complexity: 6 })
   readonly amount: number;
 }

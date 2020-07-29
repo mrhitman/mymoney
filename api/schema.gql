@@ -120,6 +120,13 @@ type StatisticByPeriod {
   amount: Float!
 }
 
+"""Statistic info about transactions"""
+type StatisticByCurrency {
+  currencyId: String!
+  currency: Currency!
+  amount: Float!
+}
+
 type Query {
   profile: User!
   categories(type: String): [Category!]!
@@ -142,6 +149,7 @@ type Query {
   wallet(id: String!): Wallet!
   statisticByPeriod(interval: String!): [StatisticByPeriod!]!
   statisticByCategory: [StatisticByPeriod!]!
+  statisticByCurrency: [StatisticByCurrency!]!
 }
 
 type Mutation {

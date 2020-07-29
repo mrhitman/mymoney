@@ -2,10 +2,12 @@ import { CacheModule, Module } from '@nestjs/common';
 import redisStore from 'cache-manager-redis-store';
 import { CurrenciesService } from 'src/currencies/currencies.service';
 import { DatabaseModule } from 'src/database/database.module';
+import { DataLoader } from 'src/dataloader';
 import { Fixer } from 'src/fixer';
 import { WalletsService } from 'src/wallets/wallets.service';
 import { StatisticsResolver } from './statistics.resolver';
 import { StatisticsService } from './statistics.service';
+import { StatisticsByCurrencyResolver } from './statistics-by-currency.resolver';
 
 @Module({
   imports: [
@@ -17,10 +19,12 @@ import { StatisticsService } from './statistics.service';
   ],
   providers: [
     StatisticsResolver,
+    StatisticsByCurrencyResolver,
     StatisticsService,
     WalletsService,
     CurrenciesService,
-    Fixer
+    Fixer,
+    DataLoader,
   ],
 })
 export class StatisticsModule { }

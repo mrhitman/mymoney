@@ -14,4 +14,4 @@ import { TransactionsService } from 'src/transactions/transactions.service';
     DataLoader,
   ],
 })
-export class GoalsModule {}
+export class GoalsModule { }

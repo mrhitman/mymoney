@@ -1,12 +1,12 @@
 import { ObjectType, Field, Float } from '@nestjs/graphql';
 
 @ObjectType('StatisticByPeriod', {
-  description: "Statistic info about transactions"
+  description: "Statistic info about transactions",
 })
 export class StatisticByPeriodDto {
-  @Field()
+  @Field({ complexity: 6 })
   readonly date: string;
 
-  @Field(() => Float)
+  @Field(() => Float, { complexity: 6 })
   readonly amount: number;
 }

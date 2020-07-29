@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, Float } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { UserDto } from 'src/users/dto/user.dto';
 
 @ObjectType('Login')

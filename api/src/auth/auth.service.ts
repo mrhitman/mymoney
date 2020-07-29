@@ -6,13 +6,14 @@ import RefreshToken from 'src/database/models/refresh-token.model';
 import User from 'src/database/models/user.model';
 import { UsersService } from 'src/users/users.service';
 import { v4 as uuid } from 'uuid';
+import { RegisterInput } from 'src/app/input/register-input';
 
 @Injectable()
 export class AuthService {
   constructor(
     protected readonly usersService: UsersService,
     protected readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   public async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
@@ -39,6 +40,21 @@ export class AuthService {
       accessToken: 'Bearer ' + this.jwtService.sign(payload),
       refreshToken,
     };
+  }
+
+  public async register(data: RegisterInput) {
+    const existUser = await User.query().findOne({ email: data.email });
+
+    if (existUser) {
+      throw new BadRequestException('User with such email is busy');
+    }
+
+    const user = await User.query().insert({
+      ...data,
+      password: await bcrypt.hash(data.password, 10)
+    });
+
+    return user;
   }
 
   public async logout(user: User) {

@@ -170,6 +170,7 @@ type Mutation {
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
   login(loginData: LoginInput!): Login!
+  register(registerData: RegisterInput!): User!
   refresh(refreshData: RefreshInput!): Refresh!
 }
 
@@ -254,6 +255,14 @@ input WalletUpdate {
 }
 
 input LoginInput {
+  email: String!
+  password: String!
+}
+
+input RegisterInput {
+  firstName: String!
+  middleName: String
+  lastName: String
   email: String!
   password: String!
 }

@@ -49,10 +49,11 @@ export class AuthService {
       throw new BadRequestException('User with such email is busy');
     }
 
-    const user = await User.query().insert({
-      ...data,
-      password: await bcrypt.hash(data.password, 10)
-    });
+    const user = await User.query()
+      .insert({
+        ...data,
+        password: await bcrypt.hash(data.password, 10)
+      });
 
     return user;
   }

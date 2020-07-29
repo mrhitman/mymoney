@@ -9,6 +9,7 @@ import { StatisticsService } from './statistics.service';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { DataLoader } from 'src/dataloader';
+import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 
 @Resolver()
 export class StatisticsResolver {
@@ -27,11 +28,9 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [StatisticByPeriodDto])
+  @Query((returns) => [StatisticByCategoryDto])
   public async statisticByCategory(@CurrentUser() user: User) {
-    const data = await this.service.getStatisticByCategory(user);
-    Logger.debug(data);
-    return [];
+    return this.service.getStatisticByCategory(user);
   }
 
   @UseGuards(GqlAuthGuard)

@@ -5,9 +5,9 @@ import { DatabaseModule } from 'src/database/database.module';
 import { DataLoader } from 'src/dataloader';
 import { Fixer } from 'src/fixer';
 import { WalletsService } from 'src/wallets/wallets.service';
+import { StatisticsByCurrencyResolver } from './statistics-by-currency.resolver';
 import { StatisticsResolver } from './statistics.resolver';
 import { StatisticsService } from './statistics.service';
-import { StatisticsByCurrencyResolver } from './statistics-by-currency.resolver';
 
 @Module({
   imports: [

@@ -2,12 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { dataByCategory, dataByPeriod, Interval } from 'common';
 import { DateTime } from 'luxon';
 import { CurrenciesService } from 'src/currencies/currencies.service';
-import Category from 'src/database/models/category.model';
 import Transaction, { categoryInId, categoryOutId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { TransactionType } from 'src/transactions/transaction-type';
 import Wallet from 'src/database/models/wallet.model';
 import { chain, first } from 'lodash';
+import { GetRateResponse } from 'common/responses';
 
 @Injectable()
 export class StatisticsService {
@@ -31,27 +31,32 @@ export class StatisticsService {
 
     return keys.map(date => ({
       date: DateTime.fromSeconds(+date).toISO(),
-      amount: data[date]
-        .reduce((acc, trx: Transaction) =>
-          acc + this.currencyService.exchange(
-            rates, trx.type === TransactionType.income ? +trx.amount : -Number(trx.amount), trx.currency.name, "USD"),
-          0
-        )
+      amount: this.sumTransactionsAmount(data[date], rates),
     }))
   }
 
+
   public async getStatisticByCategory(user: User) {
     const items = await Transaction.query()
-      .withGraphFetched('[category]')
+      .withGraphFetched('[category,currency]')
       .where({ userId: user.id });
-    const data = dataByCategory(items, true);
-    const categoryIds = data.map((d) => d.categoryId);
-    const categories = await Category.query().whereIn('id', categoryIds);
 
-    return data.map((d) => ({
-      ...d,
-      category: categories.find((c) => c.id === d.categoryId),
-    }));
+    const data = dataByCategory(items, true);
+    const rates = await this.currencyService.rates();
+
+    return data.map((group) => ({
+      amount: this.sumTransactionsAmount(group.transactions, rates),
+      categoryId: group.categoryId,
+      category: first(group.transactions).category
+    }))
+  }
+
+  protected sumTransactionsAmount(transactions: Transaction[], rates: GetRateResponse) {
+    return transactions.reduce((acc, trx: Transaction) =>
+      acc + this.currencyService.exchange(
+        rates, trx.type === TransactionType.income ? +trx.amount : -Number(trx.amount), trx.currency.name, "USD"),
+      0
+    )
   }
 
   public async getStatisticByCurrency(user: User) {

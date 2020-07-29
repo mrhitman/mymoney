@@ -1,4 +1,4 @@
-import { chain, groupBy, reduce, sumBy, first } from 'lodash';
+import { chain, first, groupBy } from 'lodash';
 import * as moment from 'moment';
 // import { TransactionLike } from '../transaction';
 
@@ -23,7 +23,7 @@ export function dataByCategory(items: any[], withParents: boolean = false) {
 function groupStatistic(
   items: Array<{ date: moment.MomentInput }>,
   interval: Interval
-) {
+): Record<string, any> {
   switch (interval) {
     case 'day':
       return groupBy(items, (item) => moment(item.date).startOf('day').unix());

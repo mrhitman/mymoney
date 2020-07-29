@@ -1,17 +1,15 @@
 import { CacheModule, Module } from '@nestjs/common';
 import redisStore from 'cache-manager-redis-store';
-import { CurrenciesService } from 'src/currencies/currencies.service';
-import { DatabaseModule } from 'src/database/database.module';
-import { Fixer } from 'src/fixer';
+import { CurrenciesModule } from 'src/currencies/currencies.module';
+import { DataLoader } from 'src/dataloader';
 import { CurrencyRateResolver } from './currency-rate.resolver';
 import { PocketResolver } from './pocket.resolver';
 import { WalletsResolver } from './wallets.resolver';
 import { WalletsService } from './wallets.service';
-import { DataLoader } from 'src/dataloader';
 
 @Module({
   imports: [
-    DatabaseModule,
+    CurrenciesModule,
     CacheModule.register({
       store: redisStore,
       url: process.env.REDIS_URL,
@@ -20,11 +18,9 @@ import { DataLoader } from 'src/dataloader';
   providers: [
     WalletsResolver,
     PocketResolver,
-    Fixer,
-    CurrenciesService,
     CurrencyRateResolver,
     WalletsService,
     DataLoader,
   ],
 })
-export class WalletsModule {}
+export class WalletsModule { }

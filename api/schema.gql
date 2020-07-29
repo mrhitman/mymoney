@@ -122,15 +122,15 @@ type StatisticByCurrency {
 }
 
 """Statistic info about transactions"""
-type StatisticByPeriod {
-  date: String!
+type StatisticByCategory {
+  categoryId: String!
+  category: Category!
   amount: Float!
 }
 
 """Statistic info about transactions"""
-type StatisticByCategory {
-  categoryId: String!
-  category: Category!
+type StatisticByPeriod {
+  date: String!
   amount: Float!
 }
 

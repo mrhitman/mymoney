@@ -6,10 +6,10 @@ export class RegisterInput {
   firstName: string;
 
   @Field({ nullable: true })
-  middleName: string;
+  middleName?: string;
 
   @Field({ nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @Field()
   email: string;

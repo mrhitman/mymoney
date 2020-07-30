@@ -1,7 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalStrategy } from 'src/auth/strategies/local.strategy';
-import User from 'src/database/models/user.model';
 import { UserDto } from 'src/users/dto/user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';

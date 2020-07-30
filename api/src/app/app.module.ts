@@ -17,9 +17,11 @@ import { AppResolver } from './app.resolver';
 import { LoggerMiddleware } from './logger.middleware';
 import { TaskService } from './task.service';
 import { StatisticsModule } from '../statistics/statistics.module';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
+    DatabaseModule,
     UsersModule,
     WalletsModule,
     CategoriesModule,

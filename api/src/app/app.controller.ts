@@ -12,7 +12,7 @@ import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Get()
   public healthCheck(): string {
@@ -23,6 +23,11 @@ export class AppController {
   @Post('login')
   async login(@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @Post('register')
+  async register(@Request() req) {
+    return this.authService.register(req.body);
   }
 
   @UseGuards(JwtAuthGuard)

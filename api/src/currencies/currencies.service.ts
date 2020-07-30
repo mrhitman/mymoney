@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { GetRateResponse } from 'common/responses';
-import Category from 'src/database/models/category.model';
 import Currency from 'src/database/models/currency.model';
 import { Fixer } from 'src/fixer';
 import xml2js from 'xml2js';

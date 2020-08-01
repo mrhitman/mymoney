@@ -97,8 +97,13 @@ export class MonobankProvider {
     const clientInfo = await this.getClientInfo();
     const to = ~~(+new Date() / 1000);
     const from = to - 31 * 24 * 60 * 60;
+
     for (let account of clientInfo.accounts) {
-      const currency = await Currency.query().select(['id']).findOne({ code: account.currencyCode });
+      const currency = await Currency
+        .query()
+        .select(['id'])
+        .findOne({ code: account.currencyCode });
+
       await Wallet.query().insert({
         id: account.id,
         userId: user.id,

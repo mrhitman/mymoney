@@ -18,6 +18,7 @@ export async function up(knex: Knex): Promise<any> {
   await knex.schema.createTable('currencies', (t) => {
     t.string('id').primary();
     t.string('name');
+    t.integer('code');
     t.string('description');
     t.string('symbol');
     t.string('flagCode');

@@ -36,6 +36,7 @@ type Currency {
   name: String!
   description: String
   symbol: String!
+  code: Float!
   rate: Float!
 }
 

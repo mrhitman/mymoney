@@ -14,6 +14,9 @@ export class CurrencyDto {
   @Field()
   readonly symbol: string;
 
+  @Field()
+  readonly code: number;
+
   @Field((type) => Float, {
     nullable: true,
     description: 'Rate to EUR (from fixer.io)',

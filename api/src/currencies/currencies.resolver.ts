@@ -5,7 +5,7 @@ import { CurrencyDto } from './dto/currency.dto';
 
 @Resolver((of) => CurrencyDto)
 export class CurrenciesResolver {
-  constructor(private readonly service: CurrenciesService) { }
+  constructor(private readonly service: CurrenciesService) {}
 
   @Query((returns) => [CurrencyDto])
   async currencies(): Promise<CurrencyDto[]> {
@@ -35,7 +35,8 @@ export class CurrenciesResolver {
   @Query(() => Number)
   async exchange(
     @Args('amount') amount: number,
-    @Args('from', { description: 'Currency name (eg. USD)' }) fromCurrency: string,
+    @Args('from', { description: 'Currency name (eg. USD)' })
+    fromCurrency: string,
     @Args('to', { description: 'Currency name (eg. USD)' }) toCurrency: string,
   ) {
     const rates = await this.service.rates();

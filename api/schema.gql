@@ -74,6 +74,26 @@ type GoalSaveResponse {
   wallet: Wallet!
 }
 
+"""Statistic info about transactions"""
+type StatisticByCurrency {
+  currencyId: String!
+  currency: Currency!
+  amount: Float!
+}
+
+"""Statistic info about transactions"""
+type StatisticByCategory {
+  categoryId: String!
+  category: Category!
+  amount: Float!
+}
+
+"""Statistic info about transactions"""
+type StatisticByPeriod {
+  date: String!
+  amount: Float!
+}
+
 type Transaction {
   id: ID!
   type: TransactionType!
@@ -114,26 +134,6 @@ type Refresh {
   refreshToken: String!
 }
 
-"""Statistic info about transactions"""
-type StatisticByCurrency {
-  currencyId: String!
-  currency: Currency!
-  amount: Float!
-}
-
-"""Statistic info about transactions"""
-type StatisticByCategory {
-  categoryId: String!
-  category: Category!
-  amount: Float!
-}
-
-"""Statistic info about transactions"""
-type StatisticByPeriod {
-  date: String!
-  amount: Float!
-}
-
 type Query {
   profile: User!
   categories(type: String): [Category!]!
@@ -150,13 +150,13 @@ type Query {
   ): Float!
   goals: [Goal!]!
   goal(id: String!): [Goal!]!
+  statisticByPeriod(interval: String!): [StatisticByPeriod!]!
+  statisticByCategory: [StatisticByCategory!]!
+  statisticByCurrency: [StatisticByCurrency!]!
   transactions: [Transaction!]!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
-  statisticByPeriod(interval: String!): [StatisticByPeriod!]!
-  statisticByCategory: [StatisticByCategory!]!
-  statisticByCurrency: [StatisticByCurrency!]!
 }
 
 type Mutation {

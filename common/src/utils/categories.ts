@@ -107,7 +107,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'skin',
       backgroundColor: Colors.purple700,
     },
-    codes: [5137],
+    codes: [5137, 5651, 5661],
     parentId: '973e1ef1-5801-4d00-8045-7129a12b06a6',
   },
   {
@@ -372,6 +372,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'graduation-cap',
       backgroundColor: Colors.purple700,
     },
+    codes: [8299]
   },
   {
     id: '0b9e9f63-7e12-430f-9b07-05f5ff6fe8ce',
@@ -382,6 +383,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'child',
       backgroundColor: Colors.blue700,
     },
+    codes: [8351, 5641]
   },
   {
     id: '2321279b-56be-4ef1-872f-b7f8a3304247',

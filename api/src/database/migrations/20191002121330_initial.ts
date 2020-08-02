@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<any> {
     t.string('email').unique();
     t.string('password');
     t.jsonb('settings').defaultTo('{}');
+    t.jsonb('connections').defaultTo([]);
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at');
     t.timestamp('deleted_at');

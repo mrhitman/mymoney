@@ -1,6 +1,6 @@
-import { Controller, Get, Post } from '@nestjs/common';
-import { MonobankProvider } from './monobank.provider';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import User from 'src/database/models/user.model';
+import { MonobankProvider } from './monobank.provider';
 
 @Controller('monobank')
 export class MonobankController {
@@ -23,9 +23,24 @@ export class MonobankController {
     return this.service.getStatements(from, to);
   }
 
+  @Post('connect')
+  public async connect(@Body('token') token: string) {
+    const user = await User.query().findById(1);
+
+    return user.$query().update({
+      connections: [...user.connections.filter(c => !(c.type === 'mono' && c.token === token)), {
+        type: 'monobank',
+        token
+      }]
+    })
+  }
+
   @Post('import')
   public async import() {
     const user = await User.query().findById(1);
-    return this.service.import(user);
+
+    return Promise.all(
+      user.connections.filter(c => c.type === 'monobank').map(c => this.service.import(user, c.token))
+    );
   }
 }

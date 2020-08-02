@@ -8,6 +8,7 @@ export class User extends Model {
   public email: string;
   public password: string;
   public settings: any;
+  public connections: any[];
   public syncAt: Date;
   public createdAt: Date;
   public updatedAt: Date;
@@ -21,6 +22,7 @@ export class User extends Model {
     return {
       type: 'object',
       properties: {
+        connections: { type: 'array' },
         settings: { type: 'object' },
       },
     };

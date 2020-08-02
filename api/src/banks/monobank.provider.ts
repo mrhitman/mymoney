@@ -64,12 +64,10 @@ export class MonobankProvider {
     }
   }
 
-  public async getClientInfo(): Promise<ClientInfoResponse> {
+  public async getClientInfo(token: string = ''): Promise<ClientInfoResponse> {
     try {
       const response = await this.client.get<ClientInfoResponse>('personal/client-info', {
-        headers: {
-          'X-Token': process.env.MONO_TOKEN,
-        },
+        headers: { 'X-Token': token },
       });
       return response.data;
     } catch (e) {
@@ -77,14 +75,12 @@ export class MonobankProvider {
     }
   }
 
-  public async getStatements(from: number, to: number, account: string = '0'): Promise<StatementResponse[]> {
+  public async getStatements(from: number, to: number, account: string = '0', token: string = ''): Promise<StatementResponse[]> {
     try {
       const response = await this.client.get<StatementResponse[]>(
         `personal/statement/${account}/${from}/${to}`,
         {
-          headers: {
-            'X-Token': process.env.MONO_TOKEN,
-          },
+          headers: { 'X-Token': token },
         },
       );
       return response.data;
@@ -93,8 +89,8 @@ export class MonobankProvider {
     }
   }
 
-  public async import(user: User) {
-    const clientInfo = await this.getClientInfo();
+  public async import(user: User, token: string = '') {
+    const clientInfo = await this.getClientInfo(token);
     const to = ~~(+new Date() / 1000);
     const from = to - 31 * 24 * 60 * 60;
 
@@ -104,7 +100,8 @@ export class MonobankProvider {
         .select(['id'])
         .findOne({ code: account.currencyCode });
 
-      await Wallet.query().insert({
+      const wallet = await Wallet.query().findById(account.id);
+      const walletData = {
         id: account.id,
         userId: user.id,
         name: account.maskedPan.join(''),
@@ -116,9 +113,15 @@ export class MonobankProvider {
             amount: (account.balance - account.creditLimit) / 100
           }
         ]
-      });
+      }
 
-      const statements = await this.getStatements(from, to, account.id);
+      if (wallet) {
+        await wallet.$query().update(walletData);
+      } else {
+        await Wallet.query().insert(walletData);
+      }
+
+      const statements = await this.getStatements(from, to, account.id, token);
       const categories = await Category.query();
       for (let statement of statements) {
         const type = statement.amount > 0 ? TransactionType.income : TransactionType.outcome;
@@ -126,6 +129,12 @@ export class MonobankProvider {
 
         if (!category) {
           category = categories.find(c => c.type === type.toString() && c.name === 'SYSTEM_EMPTY')
+        }
+
+        const trx = await Transaction.query().findById(statement.id);
+
+        if (trx) {
+          continue;
         }
 
         const trxData = {
@@ -136,7 +145,8 @@ export class MonobankProvider {
           categoryId: category.id,
           currencyId: currency.id,
           type,
-          date: new Date(statement.time * 1000)
+          date: new Date(statement.time * 1000),
+          additional: JSON.stringify(statement)
         } as Partial<Transaction>;
 
         if (type === TransactionType.income) {

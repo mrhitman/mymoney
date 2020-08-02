@@ -69,6 +69,7 @@ export async function up(knex: Knex): Promise<any> {
     t.decimal('amount');
     t.string('type');
     t.string('description');
+    t.jsonb('additional').defaultTo('{}');
     t.timestamp('date');
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at');

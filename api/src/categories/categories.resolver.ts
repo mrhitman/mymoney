@@ -8,7 +8,7 @@ import { CategoryDto } from './dto/category.dto';
 
 @Resolver((of) => CategoryDto)
 export class CategoriesResolver {
-  constructor(private readonly service: CategoriesService) {}
+  constructor(private readonly service: CategoriesService) { }
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [CategoryDto])

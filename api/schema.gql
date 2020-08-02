@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BankConnection {
+  type: String!
+  date: String!
+}
+
 type User {
   id: ID!
   firstName: String!
@@ -136,6 +141,7 @@ type Refresh {
 }
 
 type Query {
+  connections: [BankConnection!]!
   profile: User!
   categories(type: String): [Category!]!
   category(id: String!): Category!
@@ -161,6 +167,8 @@ type Query {
 }
 
 type Mutation {
+  connectMonobank(token: String!): String!
+  disconnectMonobank(token: String!): String!
   createGoal(createGoalData: GoalCreate!): Goal!
   updateGoal(updateGoalData: GoalUpdate!): Goal!
   deleteGoal(id: String!): Goal!

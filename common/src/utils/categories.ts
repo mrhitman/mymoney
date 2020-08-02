@@ -361,7 +361,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'heart-pulse',
       backgroundColor: Colors.indigo900,
     },
-    codes: [5122, 8071, 8099, 8062, 8031, 8041, 8042]
+    codes: [5122, 5122, 8071, 8099, 8062, 8031, 8041, 8042]
   },
   {
     id: '080a42e9-32b1-4b4a-bda5-b5b1203f3c0c',

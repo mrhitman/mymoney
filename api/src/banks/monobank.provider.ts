@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import Wallet from 'src/database/models/wallet.model';
-import Currency from 'src/database/models/currency.model';
-import User from 'src/database/models/user.model';
-import Transaction from 'src/database/models/transaction.model';
-import { TransactionType } from 'src/transactions/transaction-type';
-import { CategoriesModule } from 'src/categories/categories.module';
 import Category from 'src/database/models/category.model';
+import Currency from 'src/database/models/currency.model';
+import Transaction from 'src/database/models/transaction.model';
+import User from 'src/database/models/user.model';
+import Wallet from 'src/database/models/wallet.model';
+import { TransactionType } from 'src/transactions/transaction-type';
 
 export interface CurrencyResponse {
   currencyCodeA: number;
@@ -90,7 +89,6 @@ export class MonobankProvider {
       );
       return response.data;
     } catch (e) {
-      console.log(e);
       return e.message;
     }
   }

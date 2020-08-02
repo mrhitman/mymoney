@@ -2,14 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  firstName: String!
-  middleName: String
-  lastName: String
-  email: String!
-}
-
 type IconDto {
   type: String!
   name: String!
@@ -29,6 +21,14 @@ enum CategoryType {
   income
   outcome
   transfer
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  middleName: String
+  lastName: String
+  email: String!
 }
 
 type Currency {
@@ -136,9 +136,9 @@ type Refresh {
 }
 
 type Query {
-  profile: User!
   categories(type: String): [Category!]!
   category(id: String!): Category!
+  profile: User!
   currencies: [Currency!]!
   currency(id: String!): Currency!
   exchange(

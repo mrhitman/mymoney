@@ -36,6 +36,7 @@ export async function seed(knex: Knex): Promise<any> {
           parent: category.parentId,
           icon: category.icon,
           type: category.type,
+          codes: JSON.stringify(category.codes || []),
           user_id: id,
         })
         .into('categories'),

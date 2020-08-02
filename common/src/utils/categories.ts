@@ -40,6 +40,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'cart-outline',
       backgroundColor: Colors.pink900,
     },
+    codes: [5499]
   },
   {
     id: '064e5ddc-6e9d-4573-817e-da5aa5d8cdbf',
@@ -62,6 +63,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink600,
     },
     parentId: '822d7512-1643-4a05-8386-b0f6d0038cf9',
+    codes: [5812, 5814]
   },
   {
     id: '9999e114-2359-4eb8-832d-03e037ee7754',
@@ -73,6 +75,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink400,
     },
     parentId: '822d7512-1643-4a05-8386-b0f6d0038cf9',
+    codes: [5813]
   },
   {
     id: '973e1ef1-5801-4d00-8045-7129a12b06a6',
@@ -104,6 +107,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'skin',
       backgroundColor: Colors.purple700,
     },
+    codes: [5137],
     parentId: '973e1ef1-5801-4d00-8045-7129a12b06a6',
   },
   {
@@ -211,6 +215,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'mobile',
       backgroundColor: Colors.deepOrange800,
     },
+    codes: [4814, 4815],
     parentId: '76822c56-2b8b-4a91-82b7-3b4b88e42a8f',
   },
   {
@@ -222,6 +227,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'network',
       backgroundColor: Colors.deepOrange700,
     },
+    codes: [4816],
     parentId: '76822c56-2b8b-4a91-82b7-3b4b88e42a8f',
   },
   {
@@ -275,6 +281,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'holiday-village',
       backgroundColor: Colors.indigo900,
     },
+    codes: [4722]
   },
   {
     id: '30a85193-a3a4-4d9c-8a0e-e86232f7f4b3',
@@ -285,6 +292,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'hotel',
       backgroundColor: Colors.indigo700,
     },
+    codes: [7011],
     parentId: 'a09d7b2e-6f9e-452c-ab1e-a621b8d61f0f',
   },
   {
@@ -307,6 +315,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'theater-masks',
       backgroundColor: Colors.pink800,
     },
+    codes: [7996]
   },
   {
     id: '40e4d8c1-26ec-4544-9ccb-9a0fa3b0dc0b',
@@ -318,8 +327,20 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink700,
     },
     parentId: 'f5b5bb95-1863-40e3-a69b-3a279ccef280',
+    codes: [5815]
   },
-
+  {
+    id: 'c85ec419-47c0-413c-8138-99a10eab2c99',
+    name: 'category_games',
+    type: CategoryType.outcome,
+    icon: {
+      type: 'FontAwesome',
+      name: 'steam-square',
+      backgroundColor: Colors.pink700,
+    },
+    parentId: 'f5b5bb95-1863-40e3-a69b-3a279ccef280',
+    codes: [5816, 7994]
+  },
   {
     id: '4fa40799-2e28-4c6b-bf18-0c1e93efd9af',
     name: 'category_sport',
@@ -329,6 +350,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'dumbbell',
       backgroundColor: Colors.pink400,
     },
+    codes: [5941]
   },
   {
     id: 'd9e10b9b-cee9-47e5-a8d0-729991107d8b',
@@ -339,6 +361,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'heart-pulse',
       backgroundColor: Colors.indigo900,
     },
+    codes: [5122, 8071, 8099, 8062, 8031, 8041, 8042]
   },
   {
     id: '080a42e9-32b1-4b4a-bda5-b5b1203f3c0c',
@@ -369,6 +392,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'baidu',
       backgroundColor: Colors.deepOrange700,
     },
+    codes: [5995]
   },
   {
     id: '0edf8617-9ceb-4416-9f02-0e2ad36881dc',

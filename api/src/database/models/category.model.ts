@@ -20,9 +20,19 @@ export class Category extends Model {
   public updatedAt: Date;
   public deletedAt: Date;
   public syncAt: Date;
+  public codes: number[];
 
   static get tableName() {
     return 'categories';
+  }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      properties: {
+        codes: { type: 'array' },
+      }
+    }
   }
 }
 

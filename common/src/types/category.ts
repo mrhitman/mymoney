@@ -15,4 +15,5 @@ export interface CreateCategoryDto {
   };
   type?: CategoryType;
   parentId?: string;
+  codes?: number[];
 }

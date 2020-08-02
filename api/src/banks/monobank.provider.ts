@@ -5,6 +5,8 @@ import Currency from 'src/database/models/currency.model';
 import User from 'src/database/models/user.model';
 import Transaction from 'src/database/models/transaction.model';
 import { TransactionType } from 'src/transactions/transaction-type';
+import { CategoriesModule } from 'src/categories/categories.module';
+import Category from 'src/database/models/category.model';
 
 export interface CurrencyResponse {
   currencyCodeA: number;
@@ -119,13 +121,21 @@ export class MonobankProvider {
       });
 
       const statements = await this.getStatements(from, to, account.id);
+      const categories = await Category.query();
       for (let statement of statements) {
         const type = statement.amount > 0 ? TransactionType.income : TransactionType.outcome;
+        let category = categories.find(c => c.codes.includes(statement.mcc));
+
+        if (!category) {
+          category = categories.find(c => c.type === type.toString() && c.name === 'SYSTEM_EMPTY')
+        }
+
         const trxData = {
           id: statement.id,
           description: statement.description,
-          amount: Math.abs(statement.amount),
+          amount: Math.abs(statement.amount) / 100,
           userId: user.id,
+          categoryId: category.id,
           currencyId: currency.id,
           type,
           date: new Date(statement.time * 1000)

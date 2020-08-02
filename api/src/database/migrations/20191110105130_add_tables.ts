@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<any> {
     t.string('type').defaultTo('outcome');
     t.boolean('is_fixed').defaultTo(false);
     t.jsonb('icon');
+    t.jsonb('codes').defaultTo([]);
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at');
     t.timestamp('deleted_at');

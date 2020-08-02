@@ -22,13 +22,13 @@ export class BanksResolver {
         @CurrentUser() user: User,
         @Args('token') token: string,
     ) {
-        await user.$query().update({
+        await User.query().update({
             connections: [...user.connections.filter(c => !(c.type === 'mono' && c.token === token)), {
                 type: 'monobank',
                 token,
                 date: new Date()
             }]
-        });
+        }).findById(user.id);
         return 'OK';
     }
 
@@ -38,9 +38,9 @@ export class BanksResolver {
         @CurrentUser() user: User,
         @Args('token') token: string,
     ) {
-        await user.$query().update({
+        await User.query().update({
             connections: [...user.connections.filter(c => !(c.type === 'mono' && c.token === token))]
-        });
+        }).findById(user.id);
         return 'OK';
     }
 }

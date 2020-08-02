@@ -7,7 +7,10 @@ import { MonobankProvider } from './monobank.provider';
 export class BankTaskService {
   constructor(protected readonly service: MonobankProvider) { }
 
-  @Cron('0 */5 * * * *')
+  /**
+   * Every hour
+   */
+  @Cron('0 * * * *')
   public async pushRepeatableTransactions() {
     const users = await User.query();
 

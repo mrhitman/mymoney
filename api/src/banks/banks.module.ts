@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { MonobankProvider } from './monobank.provider';
+import { BankTaskService } from './bank-task.service';
 import { MonobankController } from './monobank.controller';
+import { MonobankProvider } from './monobank.provider';
 
 @Module({
   controllers: [MonobankController],
-  providers: [MonobankProvider],
+  providers: [MonobankProvider, BankTaskService],
 })
-export class BanksModule {}
+export class BanksModule { }

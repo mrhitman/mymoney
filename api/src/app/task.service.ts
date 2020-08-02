@@ -18,8 +18,8 @@ export class TaskService {
 
     Logger.log(
       'Called when the current second every 5 minute ' +
-        ' ' +
-        JSON.stringify(transactions),
+      ' ' +
+      JSON.stringify(transactions),
       'TaskService',
     );
   }

@@ -31,11 +31,11 @@ export class TransactionsResolver {
   public async transactions(
     @CurrentUser() user: User,
     @Args('walletId', { nullable: true }) walletId?: string,
+    @Args('currencyId', { nullable: true }) currencyId?: string,
+    @Args('categoryId', { nullable: true }) categoryId?: string,
     @Args('type', { nullable: true }) type?: string
   ) {
-    return this.service
-      .getAll(user, { walletId, type })
-      .then((data) => data.items);
+    return this.service.getAll(user, { walletId, type, currencyId, categoryId });
   }
 
   @UseGuards(GqlAuthGuard)

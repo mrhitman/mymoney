@@ -23,11 +23,11 @@ import { TransactionType } from './transaction-type';
 export class TransactionsService {
   constructor(protected walletService: WalletsService) { }
 
-  public async getAll(user: User, filter?: { walletId?: string, type?: string }) {
+  public async getAll(user: User, filter: { walletId?: string, type?: string, currencyId?: string, categoryId?: string } = {}) {
     const query = Transaction.query()
       .where({ userId: user.id });
 
-    if (filter?.walletId) {
+    if (filter.walletId) {
       query.where(subquery =>
         subquery
           .where({ sourceWalletId: filter.walletId })
@@ -35,12 +35,19 @@ export class TransactionsService {
       )
     }
 
-    if (filter?.type) {
+    if (filter.currencyId) {
+      query.where({ currencyId: filter.currencyId });
+    }
+
+    if (filter.categoryId) {
+      query.where({ categoryId: filter.categoryId });
+    }
+
+    if (filter.type) {
       query.where({ type: filter.type });
     }
 
-    const items = await query;
-    return { items };
+    return query;
   }
 
   public async getOne(user: User, id: string) {

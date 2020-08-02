@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import Transaction from 'src/database/models/transaction.model';
+import axios from 'axios';
 
 @Injectable()
 export class TaskService {
@@ -22,5 +23,12 @@ export class TaskService {
       JSON.stringify(transactions),
       'TaskService',
     );
+  }
+
+  @Cron('0 */15 * * * *')
+  public async refreshHeroku() {
+    Logger.log('Refresh heroku', 'App');
+
+    await axios.get('https://mymoney-server-api.herokuapp.com/');
   }
 }

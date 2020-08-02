@@ -26,4 +26,7 @@ export class WalletDto {
 
   @Field((type) => Int)
   readonly createdAt: Date;
+
+  // @Field((type) => [TransactionDto])
+  // readonly transactions: Transaction[];
 }

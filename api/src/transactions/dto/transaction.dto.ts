@@ -1,9 +1,9 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
+import { CategoryDto } from 'src/categories/dto/category.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { TransactionType } from '../transaction-type';
-import { CategoryDto } from '../../categories/dto/category.dto';
 
 @ObjectType('Transaction')
 export class TransactionDto {

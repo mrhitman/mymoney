@@ -160,7 +160,7 @@ type Query {
   statisticByPeriod(interval: String!): [StatisticByPeriod!]!
   statisticByCategory: [StatisticByCategory!]!
   statisticByCurrency: [StatisticByCurrency!]!
-  transactions: [Transaction!]!
+  transactions(type: String, walletId: String): [Transaction!]!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!

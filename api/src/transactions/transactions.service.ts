@@ -21,10 +21,24 @@ import { TransactionType } from './transaction-type';
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) {}
+  constructor(protected walletService: WalletsService) { }
 
-  public async getAll(user: User) {
-    const query = Transaction.query().where({ userId: user.id });
+  public async getAll(user: User, filter?: { walletId?: string, type?: string }) {
+    const query = Transaction.query()
+      .where({ userId: user.id });
+
+    if (filter?.walletId) {
+      query.where(subquery =>
+        subquery
+          .where({ sourceWalletId: filter.walletId })
+          .orWhere({ destinationWalletId: filter.walletId })
+      )
+    }
+
+    if (filter?.type) {
+      query.where({ type: filter.type });
+    }
+
     const items = await query;
     return { items };
   }

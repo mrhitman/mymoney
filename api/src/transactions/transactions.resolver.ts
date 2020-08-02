@@ -5,7 +5,7 @@ import {
   Parent,
   Query,
   ResolveField,
-  Resolver,
+  Resolver
 } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
@@ -24,12 +24,18 @@ export class TransactionsResolver {
   constructor(
     private readonly service: TransactionsService,
     private readonly loader: DataLoader,
-  ) {}
+  ) { }
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [TransactionDto])
-  public async transactions(@CurrentUser() user: User) {
-    return this.service.getAll(user).then((data) => data.items);
+  public async transactions(
+    @CurrentUser() user: User,
+    @Args('walletId', { nullable: true }) walletId?: string,
+    @Args('type', { nullable: true }) type?: string
+  ) {
+    return this.service
+      .getAll(user, { walletId, type })
+      .then((data) => data.items);
   }
 
   @UseGuards(GqlAuthGuard)

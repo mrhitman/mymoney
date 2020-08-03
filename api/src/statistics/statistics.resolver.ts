@@ -8,6 +8,7 @@ import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
 import { StatisticsService } from './statistics.service';
+import { TransactionType } from 'src/transactions/transaction-type';
 
 @Resolver()
 export class StatisticsResolver {
@@ -25,8 +26,13 @@ export class StatisticsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [StatisticByCategoryDto])
-  public async statisticByCategory(@CurrentUser() user: User) {
-    return this.service.getStatisticByCategory(user);
+  public async statisticByCategory(
+    @CurrentUser() user: User,
+    @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
+    @Args('currencyName', { nullable: true }) currencyName: string,
+    @Args('type', { nullable: true, type: () => TransactionType }) type: TransactionType
+  ) {
+    return this.service.getStatisticByCategory(user, { walletIds, currencyName, type });
   }
 
   @UseGuards(GqlAuthGuard)

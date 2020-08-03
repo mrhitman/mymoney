@@ -158,7 +158,7 @@ type Query {
   goals: [Goal!]!
   goal(id: String!): [Goal!]!
   statisticByPeriod(interval: String!): [StatisticByPeriod!]!
-  statisticByCategory: [StatisticByCategory!]!
+  statisticByCategory(type: TransactionType, currencyName: String, walletIds: [String!]): [StatisticByCategory!]!
   statisticByCurrency: [StatisticByCurrency!]!
   transactions(type: String, categoryId: String, currencyId: String, walletId: String): [Transaction!]!
   transaction(id: String!): Transaction!

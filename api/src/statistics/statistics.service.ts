@@ -31,30 +31,42 @@ export class StatisticsService {
 
     return keys.map(date => ({
       date: DateTime.fromSeconds(+date).toISO(),
-      amount: this.sumTransactionsAmount(data[date], rates),
+      amount: this.sumTransactionsAmount(data[date], rates, "UAH"),
     }))
   }
 
 
-  public async getStatisticByCategory(user: User) {
-    const items = await Transaction.query()
+  public async getStatisticByCategory(user: User, filter: { walletIds?: string[], currencyName?: string, type?: TransactionType } = {}) {
+    const query = Transaction.query()
       .withGraphFetched('[category,currency]')
       .where({ userId: user.id });
 
+    if (filter.walletIds) {
+      query.where(subquery =>
+        subquery
+          .whereIn('sourceWalletId', filter.walletIds)
+          .orWhereIn('destinationWalletId', filter.walletIds))
+    }
+
+    if (filter.type) {
+      query.where({ type: filter.type });
+    }
+
+    const items = await query;
     const data = dataByCategory(items, true);
     const rates = await this.currencyService.rates();
 
     return data.map((group) => ({
-      amount: this.sumTransactionsAmount(group.transactions, rates),
+      amount: this.sumTransactionsAmount(group.transactions, rates, filter.currencyName || "UAH"),
       categoryId: group.categoryId,
       category: first(group.transactions).category
     }))
   }
 
-  protected sumTransactionsAmount(transactions: Transaction[], rates: GetRateResponse) {
+  protected sumTransactionsAmount(transactions: Transaction[], rates: GetRateResponse, currencyName: string) {
     return transactions.reduce((acc, trx: Transaction) =>
       acc + this.currencyService.exchange(
-        rates, trx.type === TransactionType.income ? +trx.amount : -Number(trx.amount), trx.currency.name, "USD"),
+        rates, trx.type === TransactionType.income ? +trx.amount : -Number(trx.amount), trx.currency.name, currencyName),
       0
     )
   }

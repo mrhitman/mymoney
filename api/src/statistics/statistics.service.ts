@@ -36,7 +36,7 @@ export class StatisticsService {
   }
 
 
-  public async getStatisticByCategory(user: User, filter: { walletIds?: string[], currencyName?: string, type?: TransactionType } = {}) {
+  public async getStatisticByCategory(user: User, filter: { walletIds?: string[], currencyName?: string, type?: TransactionType, from?: number, to?: number } = {}) {
     const query = Transaction.query()
       .withGraphFetched('[category,currency]')
       .where({ userId: user.id });
@@ -52,7 +52,15 @@ export class StatisticsService {
       query.where({ type: filter.type });
     }
 
-    const items = await query;
+    if (filter.from) {
+      query.where('date', '>=', DateTime.fromSeconds(filter.from).toISODate());
+    }
+
+    if (filter.to) {
+      query.where('date', '<=', DateTime.fromSeconds(filter.to).toISODate());
+    }
+
+    const items = await query.debug();
     const data = dataByCategory(items, true);
     const rates = await this.currencyService.rates();
 

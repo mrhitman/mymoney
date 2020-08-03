@@ -18,6 +18,7 @@ import { TransactionDto } from './dto/transaction.dto';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionsService } from './transactions.service';
+import { TransactionType } from './transaction-type';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
@@ -33,7 +34,7 @@ export class TransactionsResolver {
     @Args('walletId', { nullable: true }) walletId?: string,
     @Args('currencyId', { nullable: true }) currencyId?: string,
     @Args('categoryId', { nullable: true }) categoryId?: string,
-    @Args('type', { nullable: true }) type?: string
+    @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType
   ) {
     return this.service.getAll(user, { walletId, type, currencyId, categoryId });
   }

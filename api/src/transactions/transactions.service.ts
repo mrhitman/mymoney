@@ -2,19 +2,19 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  Logger,
+  Logger
 } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { transaction, TransactionOrKnex } from 'objection';
 import Transaction, {
   categoryInId,
   categoryOutId,
-  categoryTransferId,
+  categoryTransferId
 } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
+import Wallet from 'src/database/models/wallet.model';
+import { WalletsService } from 'src/wallets/wallets.service';
 import { v4 as uuid } from 'uuid';
-import Wallet from '../database/models/wallet.model';
-import { WalletsService } from '../wallets/wallets.service';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionType } from './transaction-type';
@@ -23,7 +23,7 @@ import { TransactionType } from './transaction-type';
 export class TransactionsService {
   constructor(protected walletService: WalletsService) { }
 
-  public async getAll(user: User, filter: { walletId?: string, type?: string, currencyId?: string, categoryId?: string } = {}) {
+  public async getAll(user: User, filter: { walletId?: string, type?: TransactionType, currencyId?: string, categoryId?: string } = {}) {
     const query = Transaction.query()
       .where({ userId: user.id });
 

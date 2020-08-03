@@ -304,6 +304,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'ticket',
       backgroundColor: Colors.indigo600,
     },
+    codes: [4511],
     parentId: 'a09d7b2e-6f9e-452c-ab1e-a621b8d61f0f',
   },
   {

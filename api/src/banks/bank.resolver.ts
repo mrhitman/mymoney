@@ -1,7 +1,8 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
+import BankConnector, { BankConnectorType } from 'src/database/models/bank-connector.model';
 import User from 'src/database/models/user.model';
 import { BankConnectionDto } from './dto/banks.dto';
 
@@ -13,7 +14,7 @@ export class BanksResolver {
     public async connections(
         @CurrentUser() user: User,
     ) {
-        return user.connections;
+        return []; // @TODO
     }
 
     @UseGuards(GqlAuthGuard)
@@ -22,13 +23,18 @@ export class BanksResolver {
         @CurrentUser() user: User,
         @Args('token') token: string,
     ) {
-        await User.query().update({
-            connections: [...user.connections.filter(c => !(c.type === 'mono' && c.token === token)), {
-                type: 'monobank',
-                token,
-                date: new Date()
-            }]
-        }).findById(user.id);
+        const existConnection = await BankConnector
+            .query()
+            .where({ userId: user.id, meta: { token } });
+
+        if (!existConnection) {
+            await BankConnector.query().insert({
+                userId: user.id,
+                type: BankConnectorType.MONOBANK,
+                meta: { token },
+            });
+        }
+
         return 'OK';
     }
 
@@ -38,9 +44,11 @@ export class BanksResolver {
         @CurrentUser() user: User,
         @Args('token') token: string,
     ) {
-        await User.query().update({
-            connections: [...user.connections.filter(c => !(c.type === 'mono' && c.token === token))]
-        }).findById(user.id);
+        await BankConnector.query().delete().where({
+            userId: user.id,
+            type: BankConnectorType.MONOBANK,
+            meta: { token },
+        });
         return 'OK';
     }
 }

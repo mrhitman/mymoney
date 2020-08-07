@@ -6,7 +6,7 @@ export class Budget extends Model {
   public outcomes: any;
   public incomes: any;
   public savings: any;
-  public currency_id: string;
+  public currencyId: string;
   public date: Date;
   public deadline: Date;
   public lastSync: Date;

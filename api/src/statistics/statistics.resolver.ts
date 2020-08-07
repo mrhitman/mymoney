@@ -19,13 +19,18 @@ export class StatisticsResolver {
   @Query((returns) => [StatisticByPeriodDto])
   public async statisticByPeriod(
     @CurrentUser() user: User,
-    @Args('interval') interval: Interval = 'month'
+    @Args('interval', { nullable: true, defaultValue: 'month' }) interval: Interval = 'month',
+    @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
+    @Args('currencyName', { nullable: true, description: "Currency short name, eg. USD" }) currencyName: string,
+    @Args('type', { nullable: true, type: () => TransactionType }) type: TransactionType,
+    @Args('from', { nullable: true, description: "Unix timestamp" }) from: number,
+    @Args('to', { nullable: true, description: "Unix timestamp" }) to: number,
   ): Promise<StatisticByPeriodDto[]> {
     return this.service.getStatisticByPeriod(user, { interval });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [StatisticByCategoryDto])
+  @Query((returns) => [StatisticByCategoryDto], { description: "Statistic grouped by categories" })
   public async statisticByCategory(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
@@ -39,7 +44,10 @@ export class StatisticsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [StatisticByCurrencyDto])
-  public async statisticByCurrency(@CurrentUser() user: User) {
-    return this.service.getStatisticByCurrency(user);
+  public async statisticByCurrency(
+    @CurrentUser() user: User,
+    @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
+  ) {
+    return this.service.getStatisticByCurrency(user, { walletIds });
   }
 }

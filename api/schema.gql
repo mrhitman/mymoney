@@ -157,7 +157,21 @@ type Query {
   ): Float!
   goals: [Goal!]!
   goal(id: String!): [Goal!]!
-  statisticByPeriod(interval: String!): [StatisticByPeriod!]!
+  statisticByPeriod(
+    """Unix timestamp"""
+    to: Float
+
+    """Unix timestamp"""
+    from: Float
+    type: TransactionType
+
+    """Currency short name, eg. USD"""
+    currencyName: String
+    walletIds: [String!]
+    interval: String = "month"
+  ): [StatisticByPeriod!]!
+
+  """Statistic grouped by categories"""
   statisticByCategory(
     """Unix timestamp"""
     to: Float
@@ -170,7 +184,7 @@ type Query {
     currencyName: String
     walletIds: [String!]
   ): [StatisticByCategory!]!
-  statisticByCurrency: [StatisticByCurrency!]!
+  statisticByCurrency(walletIds: [String!]): [StatisticByCurrency!]!
   transactions(type: TransactionType, categoryId: String, currencyId: String, walletId: String): [Transaction!]!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!

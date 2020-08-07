@@ -79,11 +79,16 @@ export class StatisticsService {
     )
   }
 
-  public async getStatisticByCurrency(user: User) {
-    const wallets = await Wallet.query()
+  public async getStatisticByCurrency(user: User, filter: { walletIds?: string[] } = {}) {
+    const query = Wallet.query()
       .where({ userId: user.id })
       .whereNot({ type: 'goal' });
 
+    if (filter.walletIds) {
+      query.whereIn('id', filter.walletIds);
+    }
+
+    const wallets = await query;
     return chain(wallets)
       .map(wallets => wallets.pockets)
       .flatten()

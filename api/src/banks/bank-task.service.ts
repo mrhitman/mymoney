@@ -5,17 +5,21 @@ import BankConnector, {
   BankConnectorType,
 } from 'src/database/models/bank-connector.model';
 import { raw } from 'objection';
+import { Privat24Provider } from './privat24.provider';
 
 @Injectable()
 export class BankTaskService {
-  constructor(protected readonly service: MonobankProvider) {}
+  constructor(
+    protected readonly mono: MonobankProvider,
+    protected readonly privat24: Privat24Provider,
+  ) {}
 
   /**
-   * Every 5 minutes
+   * Every 10 minutes
    */
-  @Cron('*/5 * * * *')
+  @Cron('*/10 * * * *')
   public async pushRepeatableTransactions() {
-    const connectors = await BankConnector.query()
+    const connectorsMono = await BankConnector.query()
       .withGraphFetched('[user]')
       .where({
         enabled: true,
@@ -28,8 +32,35 @@ export class BankTaskService {
       );
 
     Logger.log('Bank scheduling task updating api', 'Monobank Api');
-    for (let connector of connectors) {
-      this.service.import(connector.user, connector.meta.token);
+    for (let connector of connectorsMono) {
+      await this.mono.import(connector.user, connector.meta.token);
+      connector.$query().update({
+        syncAt: new Date(),
+      });
+    }
+
+    const connectorsPrivat24 = await BankConnector.query()
+      .withGraphFetched('[user]')
+      .where({
+        enabled: true,
+        type: BankConnectorType.PRIVAT24,
+      })
+      .where(
+        'syncAt',
+        '<',
+        raw("now() - bank_connectors.interval * interval '1 second'"),
+      );
+
+    Logger.log('Bank scheduling task updating api', 'Privat24 Api');
+    for (let connector of connectorsPrivat24) {
+      await this.privat24.import(
+        connector.user,
+        connector.meta.merchant_id,
+        connector.meta.password,
+      );
+      connector.$query().update({
+        syncAt: new Date(),
+      });
     }
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { createHash } from 'crypto';
 import parcer from 'xml2json';
+import User from 'src/database/models/user.model';
 
 @Injectable()
 export class Privat24Provider {
@@ -13,13 +14,22 @@ export class Privat24Provider {
     });
   }
 
+  public async import(user: User, id: string, token: string) { }
+
   protected getWallet(id: string, token: string) {
     const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""></payment>${token}`
     return this.query('balance', this.getBody(data, id));
   }
 
-  protected getTransactions(id: string, token: string) {
-    const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""><prop name="sd" value="01.07.2020" /><prop name="ed" value="07.08.2020" /></payment>${token}`
+  /**
+   * @param id 
+   * @param token 
+   * @param from 07.08.2020
+   * @param to 07.08.2020
+   */
+  protected getTransactions(id: string, token: string, from: string, to: string) {
+
+    const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""><prop name="sd" value="${from}" /><prop name="ed" value="${to}" /></payment>${token}`
     return this.query('https://api.privatbank.ua/p24api/rest_fiz', this.getBody(data, id));
   }
 

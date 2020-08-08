@@ -11,10 +11,14 @@ import { BankConnectionDto } from './dto/banks.dto';
 export class BanksResolver {
     @UseGuards(GqlAuthGuard)
     @Query(() => [BankConnectionDto])
-    public async connections(
+    public async connectors(
         @CurrentUser() user: User,
     ) {
-        return []; // @TODO
+        const connectors = await BankConnector
+            .query()
+            .where({ userId: user.id })
+
+        return connectors;
     }
 
     @UseGuards(GqlAuthGuard)
@@ -25,7 +29,8 @@ export class BanksResolver {
     ) {
         const existConnection = await BankConnector
             .query()
-            .where({ userId: user.id, meta: { token } });
+            .where({ userId: user.id, meta: { token } })
+            .first();
 
         if (!existConnection) {
             await BankConnector.query().insert({
@@ -51,4 +56,47 @@ export class BanksResolver {
         });
         return 'OK';
     }
+
+    @UseGuards(GqlAuthGuard)
+    @Mutation((returns) => String)
+    public async connectPrivat24(
+        @CurrentUser() user: User,
+        @Args('merchant_id') merchantId: string,
+        @Args('password') password: string,
+    ) {
+        const existConnection = await BankConnector
+            .query()
+            .where({ userId: user.id, meta: { merchant_id: merchantId, password } })
+            .first();
+
+        if (!existConnection) {
+            await BankConnector.query().insert({
+                userId: user.id,
+                type: BankConnectorType.PRIVAT24,
+                meta: { merchant_id: merchantId, password },
+            });
+        }
+
+        return 'OK';
+    }
+
+    @UseGuards(GqlAuthGuard)
+    @Mutation((returns) => String)
+    public async disconnectPrivat24(
+        @CurrentUser() user: User,
+        @Args('merchant_id') merchantId: string,
+    ) {
+        const connectors = await BankConnector.query().where({
+            userId: user.id,
+            type: BankConnectorType.PRIVAT24,
+        });
+
+        await connectors
+            .find(c => c.meta.merchant_id === merchantId)
+            .$query()
+            .delete()
+
+        return 'OK';
+    }
+
 }

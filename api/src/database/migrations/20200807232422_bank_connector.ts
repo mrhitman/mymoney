@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<any> {
         t.increments('id').primary();
         t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
         t.string('type').notNullable();
-        t.boolean('enabled');
+        t.boolean('enabled').defaultTo(true);
         t.jsonb('meta').defaultTo('{}');
         t.timestamp('connected_at').defaultTo(knex.fn.now());
         t.timestamp('created_at').defaultTo(knex.fn.now());

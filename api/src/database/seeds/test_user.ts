@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import chance from 'chance';
 import { defaultCategories } from 'common/src/utils/categories';
 import * as Knex from 'knex';

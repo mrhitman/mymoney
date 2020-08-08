@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { omit } from 'lodash';
 import RefreshToken from 'src/database/models/refresh-token.model';
 import User from 'src/database/models/user.model';

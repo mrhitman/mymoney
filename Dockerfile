@@ -20,6 +20,8 @@ COPY tsconfig.build.json tsconfig.build.json
 COPY lerna.json lerna.json
 COPY yarn.lock yarn.lock
 
+RUN apk add --update python make g++\
+    && rm -rf /var/cache/apk/*
 RUN yarn install
 RUN npm i -g lerna
 
@@ -34,6 +36,7 @@ WORKDIR /opt/mymoney
 COPY --from=stage /opt/mymoney/api/dist api/dist
 COPY --from=stage /opt/mymoney/api/src api/src
 COPY --from=stage /opt/mymoney/api/package.json api/package.json
+COPY --from=stage /opt/mymoney/api/tsconfig.json api/tsconfig.json
 COPY --from=stage /opt/mymoney/api/nest-cli.json api/nest-cli.json
 COPY --from=stage /opt/mymoney/api/node_modules api/node_modules
 COPY --from=stage /opt/mymoney/common api/node_modules/common

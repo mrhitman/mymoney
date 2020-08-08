@@ -8,6 +8,10 @@ export async function up(knex: Knex): Promise<any> {
         t.string('type').notNullable();
         t.boolean('enabled').defaultTo(true);
         t.jsonb('meta').defaultTo('{}');
+        t.integer('interval')
+            .defaultTo(30 * 60)
+            .comment('interval between sync');
+        t.timestamp('sync_at');
         t.timestamp('connected_at').defaultTo(knex.fn.now());
         t.timestamp('created_at').defaultTo(knex.fn.now());
     });

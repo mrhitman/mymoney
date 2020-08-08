@@ -3,7 +3,9 @@
 # ------------------------------------------------------
 
 type BankConnection {
+  id: String!
   type: String!
+  enabled: Boolean
   createdAt: String!
   meta: JSON!
 }
@@ -147,7 +149,7 @@ type Refresh {
 }
 
 type Query {
-  connections: [BankConnection!]!
+  connectors: [BankConnection!]!
   profile: User!
   categories(type: String): [Category!]!
   category(id: String!): Category!
@@ -198,8 +200,11 @@ type Query {
 }
 
 type Mutation {
+  import: String!
   connectMonobank(token: String!): String!
   disconnectMonobank(token: String!): String!
+  connectPrivat24(password: String!, merchant_id: String!): String!
+  disconnectPrivat24(merchant_id: String!): String!
   createGoal(createGoalData: GoalCreate!): Goal!
   updateGoal(updateGoalData: GoalUpdate!): Goal!
   deleteGoal(id: String!): Goal!

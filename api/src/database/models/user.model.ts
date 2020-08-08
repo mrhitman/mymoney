@@ -25,19 +25,6 @@ export class User extends Model {
       },
     };
   }
-
-  static get relationMappings() {
-    return {
-      user: {
-        relation: Model.HasOneRelation,
-        modelClass: User,
-        join: {
-          from: 'bank_connectros.userId',
-          to: 'users.id',
-        },
-      },
-    }
-  }
 }
 
 export default User;

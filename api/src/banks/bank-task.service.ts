@@ -8,14 +8,17 @@ export class BankTaskService {
   constructor(protected readonly service: MonobankProvider) { }
 
   /**
-   * Every hour
+   * Every 30 minutes
    */
-  @Cron('0 * * * *')
+  @Cron('*/30 * * * *')
   public async pushRepeatableTransactions() {
-    const connectors = await BankConnector.query().withGraphFetched('[user]').where({
-      enabled: true,
-      type: BankConnectorType.MONOBANK
-    })
+    const connectors = await BankConnector
+      .query()
+      .withGraphFetched('[user]')
+      .where({
+        enabled: true,
+        type: BankConnectorType.MONOBANK
+      })
 
     Logger.log('Bank scheduling task updating api', 'Monobank Api');
     for (let connector of connectors) {

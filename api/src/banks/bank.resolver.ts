@@ -5,10 +5,13 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import BankConnector, { BankConnectorType } from 'src/database/models/bank-connector.model';
 import User from 'src/database/models/user.model';
 import { BankConnectionDto } from './dto/banks.dto';
+import { Privat24Provider } from './privat24.provider';
 
 
 @Resolver()
 export class BanksResolver {
+    constructor(private service: Privat24Provider) { }
+
     @UseGuards(GqlAuthGuard)
     @Query(() => [BankConnectionDto])
     public async connectors(
@@ -19,6 +22,21 @@ export class BanksResolver {
             .where({ userId: user.id })
 
         return connectors;
+    }
+
+    @UseGuards(GqlAuthGuard)
+    @Mutation((returns) => String)
+    public async import(
+        @CurrentUser() user: User,
+    ) {
+        const connector = await BankConnector
+            .query()
+            .where({ userId: user.id, type: BankConnectorType.PRIVAT24 })
+            .first()
+
+
+        await this.service.import(user, connector.meta.merchant_id, connector.meta.password);
+        return 'ok';
     }
 
     @UseGuards(GqlAuthGuard)

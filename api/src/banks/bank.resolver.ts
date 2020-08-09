@@ -6,11 +6,15 @@ import BankConnector, { BankConnectorType } from 'src/database/models/bank-conne
 import User from 'src/database/models/user.model';
 import { BankConnectionDto } from './dto/banks.dto';
 import { Privat24Provider } from './privat24.provider';
+import { MonobankProvider } from './monobank.provider';
 
 
 @Resolver()
 export class BanksResolver {
-    constructor(private service: Privat24Provider) { }
+    constructor(
+        private mono: MonobankProvider,
+        private privat24: Privat24Provider,
+    ) { }
 
     @UseGuards(GqlAuthGuard)
     @Query(() => [BankConnectionDto])
@@ -28,14 +32,21 @@ export class BanksResolver {
     @Mutation((returns) => String)
     public async import(
         @CurrentUser() user: User,
+        @Args('id') id: string,
     ) {
         const connector = await BankConnector
             .query()
-            .where({ userId: user.id, type: BankConnectorType.PRIVAT24 })
-            .first()
+            .where({ userId: user.id })
+            .findById(id)
 
-
-        await this.service.import(user, connector.meta.merchant_id, connector.meta.password);
+        switch (connector.type) {
+            case BankConnectorType.MONOBANK:
+                await this.mono.import(user, connector.meta.token);
+                break;
+            case BankConnectorType.PRIVAT24:
+                await this.privat24.import(user, connector.meta.merchant_id, connector.meta.password);
+                break;
+        }
         return 'ok';
     }
 

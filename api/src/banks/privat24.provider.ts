@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { createHash } from 'crypto';
 import { toJson } from 'xml2json';
@@ -190,6 +190,7 @@ export class Privat24Provider {
       });
 
     try {
+      Logger.debug(response.data, 'Privat24 privider');
       const json = JSON.parse(toJson(response.data));
       return json?.response?.data;
     } catch (e) {

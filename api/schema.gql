@@ -220,6 +220,7 @@ type Mutation {
   disconnectMonobank(token: String!): String!
   connectPrivat24(password: String!, merchant_id: String!): String!
   disconnectPrivat24(merchant_id: String!): String!
+  budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   createGoal(createGoalData: GoalCreate!): Goal!
   updateGoal(updateGoalData: GoalUpdate!): Goal!
   deleteGoal(id: String!): Goal!
@@ -232,6 +233,12 @@ type Mutation {
   login(loginData: LoginInput!): Login!
   register(registerData: RegisterInput!): User!
   refresh(refreshData: RefreshInput!): Refresh!
+}
+
+input BudgetCategoryCreate {
+  categoryId: String!
+  amount: Float!
+  progress: Float!
 }
 
 input GoalCreate {

@@ -8,7 +8,7 @@ import { raw } from 'objection';
 import { Privat24Provider } from './privat24.provider';
 
 @Injectable()
-export class BankTaskService {
+export class BanksTaskService {
   constructor(
     protected readonly mono: MonobankProvider,
     protected readonly privat24: Privat24Provider,

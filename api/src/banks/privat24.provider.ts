@@ -132,11 +132,11 @@ export class Privat24Provider {
         } as Partial<Transaction>;
 
         if (type === TransactionType.income) {
-          trxData.destinationWalletId = wallet.id;
+          trxData.destinationWalletId = walletData.id;
         }
 
         if (type === TransactionType.outcome) {
-          trxData.sourceWalletId = wallet.id;
+          trxData.sourceWalletId = walletData.id;
         }
 
         await Transaction.query().insert(trxData);

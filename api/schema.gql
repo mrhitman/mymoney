@@ -44,6 +44,25 @@ enum CategoryType {
   transfer
 }
 
+type BudgetCategory {
+  categoryId: String!
+  category: Category!
+  amount: Float!
+  progress: Float!
+}
+
+type Budget {
+  id: String!
+  outcomes: [BudgetCategory!]!
+  date: DateTime!
+  deadline: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Currency {
   id: ID!
   name: String!
@@ -132,11 +151,6 @@ enum TransactionType {
   transfer
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Login {
   accessToken: ID!
   refreshToken: String!
@@ -151,6 +165,7 @@ type Refresh {
 type Query {
   connectors: [BankConnection!]!
   profile: User!
+  budgets: [Budget!]!
   categories(type: String): [Category!]!
   category(id: String!): Category!
   currencies: [Currency!]!
@@ -200,7 +215,7 @@ type Query {
 }
 
 type Mutation {
-  import: String!
+  import(id: String!): String!
   connectMonobank(token: String!): String!
   disconnectMonobank(token: String!): String!
   connectPrivat24(password: String!, merchant_id: String!): String!

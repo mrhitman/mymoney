@@ -1,20 +1,6 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { CategoryDto } from 'src/categories/dto/category.dto';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { BudgetCategoryDto } from './budget-category.dto';
 
-@ObjectType('BudgetCategory')
-export class BudgetCategoryDto {
-    @Field()
-    readonly categoryId: string;
-
-    @Field(() => CategoryDto)
-    readonly category: CategoryDto;
-
-    @Field()
-    readonly amount: number;
-
-    @Field()
-    readonly progress: number;
-}
 
 @ObjectType('Budget')
 export class BudgetDto {

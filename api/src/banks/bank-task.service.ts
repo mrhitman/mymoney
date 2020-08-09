@@ -12,7 +12,7 @@ export class BankTaskService {
   constructor(
     protected readonly mono: MonobankProvider,
     protected readonly privat24: Privat24Provider,
-  ) {}
+  ) { }
 
   /**
    * Every 10 minutes
@@ -23,41 +23,26 @@ export class BankTaskService {
       .withGraphFetched('[user]')
       .where({
         enabled: true,
-        type: BankConnectorType.MONOBANK,
       })
-      .where(
-        'syncAt',
-        '<',
-        raw("now() - bank_connectors.interval * interval '1 second'"),
+      .where(subquery =>
+        subquery
+          .where('syncAt', '<', raw("now() - bank_connectors.interval * interval '1 second'"))
+          .orWhereNull('syncAt')
       );
 
-    Logger.log('Bank scheduling task updating api', 'Monobank Api');
     for (let connector of connectorsMono) {
-      await this.mono.import(connector.user, connector.meta.token);
-      connector.$query().update({
-        syncAt: new Date(),
-      });
-    }
-
-    const connectorsPrivat24 = await BankConnector.query()
-      .withGraphFetched('[user]')
-      .where({
-        enabled: true,
-        type: BankConnectorType.PRIVAT24,
-      })
-      .where(
-        'syncAt',
-        '<',
-        raw("now() - bank_connectors.interval * interval '1 second'"),
-      );
-
-    Logger.log('Bank scheduling task updating api', 'Privat24 Api');
-    for (let connector of connectorsPrivat24) {
-      await this.privat24.import(
-        connector.user,
-        connector.meta.merchant_id,
-        connector.meta.password,
-      );
+      switch (connector.type) {
+        case BankConnectorType.MONOBANK:
+          await this.mono.import(connector.user, connector.meta.token);
+          break;
+        case BankConnectorType.PRIVAT24:
+          await this.privat24.import(
+            connector.user,
+            connector.meta.merchant_id,
+            connector.meta.password,
+          );
+          break;
+      }
       connector.$query().update({
         syncAt: new Date(),
       });

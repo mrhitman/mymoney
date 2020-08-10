@@ -18,10 +18,15 @@ import { v4 as uuid } from 'uuid';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionType } from './transaction-type';
+import Budget from 'src/database/models/budget.model';
+import { BudgetsService } from 'src/budgets/budgets.service';
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService) { }
+  constructor(
+    protected walletService: WalletsService,
+    protected budgetService: BudgetsService
+  ) { }
 
   public async getAll(user: User, filter: { walletId?: string, type?: TransactionType, currencyId?: string, categoryId?: string } = {}) {
     const query = Transaction.query()
@@ -166,6 +171,7 @@ export class TransactionsService {
       })
       .execute();
 
+    await this.budgetService.outcome(user, trx);
     return wallet;
   }
 

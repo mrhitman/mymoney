@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
 import { DataLoader } from 'src/dataloader';
-import { WalletsService } from 'src/wallets/wallets.service';
+import { TransactionsModule } from 'src/transactions/transactions.module';
+import { WalletsModule } from 'src/wallets/wallets.module';
 import { GoalsResolver } from './goals.resolver';
 import { GoalsService } from './goals.service';
-import { TransactionsService } from 'src/transactions/transactions.service';
 
 @Module({
+  imports: [
+    TransactionsModule,
+    WalletsModule,
+  ],
   providers: [
     GoalsService,
-    WalletsService,
-    TransactionsService,
     GoalsResolver,
     DataLoader,
   ],

@@ -18,7 +18,6 @@ import { v4 as uuid } from 'uuid';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionType } from './transaction-type';
-import Budget from 'src/database/models/budget.model';
 import { BudgetsService } from 'src/budgets/budgets.service';
 
 @Injectable()
@@ -172,7 +171,7 @@ export class TransactionsService {
       })
       .execute();
 
-    await this.budgetService.outcome(user, trx);
+    // await this.budgetService.outcome(user, trx);
     return wallet;
   }
 

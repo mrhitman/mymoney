@@ -22,5 +22,8 @@ import { WalletsService } from './wallets.service';
     WalletsService,
     DataLoader,
   ],
+  exports: [
+    WalletsService,
+  ]
 })
 export class WalletsModule { }

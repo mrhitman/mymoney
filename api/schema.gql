@@ -78,6 +78,41 @@ type Pocket {
   currency: Currency!
 }
 
+type Wallet {
+  id: ID!
+  name: String!
+  description: String
+  type: String!
+  allowNegativeBalance: Boolean!
+  pockets: [Pocket!]!
+  syncAt: Int!
+  createdAt: Int!
+}
+
+type Transaction {
+  id: ID!
+  type: TransactionType!
+  categoryId: String
+  category: Category!
+  currencyId: String!
+  currency: Currency!
+  sourceWalletId: String
+  sourceWallet: Wallet
+  destinationWalletId: String
+  destinationWallet: Wallet
+  amount: Float!
+  fine: Float
+  date: DateTime!
+  description: String
+  createdAt: Int!
+}
+
+enum TransactionType {
+  income
+  outcome
+  transfer
+}
+
 type Goal {
   id: ID!
   goal: Float!
@@ -87,17 +122,6 @@ type Goal {
   pockets: [Pocket!]!
   currencyId: String!
   currency: Currency!
-  syncAt: Int!
-  createdAt: Int!
-}
-
-type Wallet {
-  id: ID!
-  name: String!
-  description: String
-  type: String!
-  allowNegativeBalance: Boolean!
-  pockets: [Pocket!]!
   syncAt: Int!
   createdAt: Int!
 }
@@ -127,30 +151,6 @@ type StatisticByPeriod {
   amount: Float!
 }
 
-type Transaction {
-  id: ID!
-  type: TransactionType!
-  categoryId: String
-  category: Category!
-  currencyId: String!
-  currency: Currency!
-  sourceWalletId: String
-  sourceWallet: Wallet
-  destinationWalletId: String
-  destinationWallet: Wallet
-  amount: Float!
-  fine: Float
-  date: DateTime!
-  description: String
-  createdAt: Int!
-}
-
-enum TransactionType {
-  income
-  outcome
-  transfer
-}
-
 type Login {
   accessToken: ID!
   refreshToken: String!
@@ -178,6 +178,10 @@ type Query {
     from: String!
     amount: Float!
   ): Float!
+  transactions(type: TransactionType, categoryId: String, currencyId: String, walletId: String): [Transaction!]!
+  transaction(id: String!): Transaction!
+  wallets: [Wallet!]!
+  wallet(id: String!): Wallet!
   goals: [Goal!]!
   goal(id: String!): [Goal!]!
   statisticByPeriod(
@@ -208,10 +212,6 @@ type Query {
     walletIds: [String!]
   ): [StatisticByCategory!]!
   statisticByCurrency(walletIds: [String!]): [StatisticByCurrency!]!
-  transactions(type: TransactionType, categoryId: String, currencyId: String, walletId: String): [Transaction!]!
-  transaction(id: String!): Transaction!
-  wallets: [Wallet!]!
-  wallet(id: String!): Wallet!
 }
 
 type Mutation {
@@ -221,15 +221,15 @@ type Mutation {
   connectPrivat24(password: String!, merchant_id: String!): String!
   disconnectPrivat24(merchant_id: String!): String!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
-  createGoal(createGoalData: GoalCreate!): Goal!
-  updateGoal(updateGoalData: GoalUpdate!): Goal!
-  deleteGoal(id: String!): Goal!
-  saveToGoal(saveGoalData: GoalSave!): GoalSaveResponse!
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
+  createGoal(createGoalData: GoalCreate!): Goal!
+  updateGoal(updateGoalData: GoalUpdate!): Goal!
+  deleteGoal(id: String!): Goal!
+  saveToGoal(saveGoalData: GoalSave!): GoalSaveResponse!
   login(loginData: LoginInput!): Login!
   register(registerData: RegisterInput!): User!
   refresh(refreshData: RefreshInput!): Refresh!
@@ -239,36 +239,6 @@ input BudgetCategoryCreate {
   categoryId: String!
   amount: Float!
   progress: Float!
-}
-
-input GoalCreate {
-  goal: Float!
-  progress: Float
-  name: String!
-  pockets: [PocketInput!]
-  currencyId: String!
-  createdAt: Int
-}
-
-input PocketInput {
-  currencyId: String!
-  amount: Float!
-}
-
-input GoalUpdate {
-  id: ID!
-  goal: Float
-  currencyId: String
-  name: String!
-  pockets: [PocketInput!]
-  updatedAt: Int
-}
-
-input GoalSave {
-  toGoalId: String!
-  fromWalletId: String!
-  currencyId: String!
-  amount: Float!
 }
 
 input TransactionCreate {
@@ -311,6 +281,11 @@ input WalletCreate {
   createdAt: Int
 }
 
+input PocketInput {
+  currencyId: String!
+  amount: Float!
+}
+
 input WalletUpdate {
   id: String!
   name: String
@@ -319,6 +294,31 @@ input WalletUpdate {
   allowNegativeBalance: Boolean!
   pockets: [PocketInput!]
   updatedAt: Int
+}
+
+input GoalCreate {
+  goal: Float!
+  progress: Float
+  name: String!
+  pockets: [PocketInput!]
+  currencyId: String!
+  createdAt: Int
+}
+
+input GoalUpdate {
+  id: ID!
+  goal: Float
+  currencyId: String
+  name: String!
+  pockets: [PocketInput!]
+  updatedAt: Int
+}
+
+input GoalSave {
+  toGoalId: String!
+  fromWalletId: String!
+  currencyId: String!
+  amount: Float!
 }
 
 input LoginInput {

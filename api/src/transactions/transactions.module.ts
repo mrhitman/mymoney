@@ -5,10 +5,12 @@ import { WalletsService } from 'src/wallets/wallets.service';
 import { TransactionsResolver } from './transactions.resolver';
 import { TransactionsService } from './transactions.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
+import { BudgetsModule } from 'src/budgets/budgets.module';
 
 @Module({
   imports: [
     CurrenciesModule,
+    BudgetsModule,
   ],
   providers: [
     TransactionsResolver,
@@ -17,5 +19,10 @@ import { BudgetsService } from 'src/budgets/budgets.service';
     BudgetsService,
     DataLoader,
   ],
+  exports: [
+    WalletsService,
+    BudgetsService,
+    TransactionsService
+  ]
 })
 export class TransactionsModule { }

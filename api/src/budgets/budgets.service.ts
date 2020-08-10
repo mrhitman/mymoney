@@ -1,10 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import User from 'src/database/models/user.model';
 import Transaction from 'src/database/models/transaction.model';
 import Budget from 'src/database/models/budget.model';
 
 @Injectable()
 export class BudgetsService {
+    public async getAll(user: User) {
+        const query = Budget
+            .query()
+            .where({ userId: user.id })
+        return query;
+    }
+
+    public async findOne(user: User, id: string) {
+        const budget = await Budget.query().findOne({ id, userId: user.id });
+
+        if (!budget) {
+            throw new NotFoundException();
+        }
+
+        return budget;
+    }
+
     public async outcome(user: User, trx: Transaction) {
         const budget = await Budget
             .query()

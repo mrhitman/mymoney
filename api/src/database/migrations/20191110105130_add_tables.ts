@@ -83,6 +83,7 @@ export async function up(knex: Knex): Promise<any> {
     t.jsonb('incomes').defaultTo([]);
     t.jsonb('savings').defaultTo([]);
     t.string('currency_id').references('id').inTable('currencies');
+    t.boolean('active').defaultTo(true);
     t.date('date');
     t.date('deadline');
     t.timestamp('last_sync');

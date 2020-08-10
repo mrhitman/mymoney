@@ -149,6 +149,7 @@ export class TransactionsService {
       })
       .execute();
 
+    await this.budgetService.income(user, trx);
     return wallet;
   }
 

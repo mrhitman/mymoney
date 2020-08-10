@@ -12,6 +12,7 @@ export class Budget extends Model {
   public outcomes: BudgetCategory[];
   public incomes: any;
   public savings: any;
+  public active: boolean;
   public currencyId: string;
   public date: Date;
   public deadline: Date;

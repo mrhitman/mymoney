@@ -24,7 +24,6 @@ export class BudgetsResolver {
     public async budgetAddOutcomeCategory(
         @CurrentUser() user: User,
         @Args('categoryData') data: BudgetCategoryCreate) {
-
-        return this.service.findOne(user, '1');
+        return this.service.addOutcomeCategory(user, data);
     }
 }

@@ -1,7 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import User from 'src/database/models/user.model';
-import Transaction from 'src/database/models/transaction.model';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { raw } from 'objection';
 import Budget from 'src/database/models/budget.model';
+import Transaction from 'src/database/models/transaction.model';
+import User from 'src/database/models/user.model';
+import { BudgetCategoryCreate } from './input/budget-category-create';
 
 @Injectable()
 export class BudgetsService {
@@ -18,6 +20,30 @@ export class BudgetsService {
         if (!budget) {
             throw new NotFoundException();
         }
+
+        return budget;
+    }
+
+    public async addOutcomeCategory(user: User, data: BudgetCategoryCreate) {
+        const budget = await Budget
+            .query()
+            .where({ userId: user.id })
+            .andWhere('date', '>=', raw('now()'))
+            .andWhere('deadline', '<=', raw('now()'))
+            .first();
+
+        if (!budget) {
+            throw new BadRequestException('No active budgets');
+        }
+
+        if (budget.outcomes.find(c => c.categoryId === data.categoryId)) {
+            return budget;
+        }
+
+        await budget.$query()
+            .update({
+                outcomes: [...budget.outcomes, data]
+            })
 
         return budget;
     }

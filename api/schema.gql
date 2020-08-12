@@ -166,6 +166,7 @@ type Query {
   connectors: [BankConnection!]!
   profile: User!
   budgets: [Budget!]!
+  activeBudget: Budget!
   categories(type: String): [Category!]!
   category(id: String!): Category!
   currencies: [Currency!]!
@@ -273,11 +274,12 @@ input TransactionUpdate {
 }
 
 input WalletCreate {
+  id: String
   name: String!
   description: String
-  type: String
-  allowNegativeBalance: Boolean!
-  pockets: [PocketInput!]!
+  type: String = "credit"
+  allowNegativeBalance: Boolean = true
+  pockets: [PocketInput!] = []
   createdAt: Int
 }
 

@@ -4,6 +4,11 @@ import { PocketInput } from './pocket-input';
 
 @InputType()
 export class WalletCreate {
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  readonly id: string;
+
   @Field()
   @IsString()
   readonly name: string;
@@ -13,17 +18,18 @@ export class WalletCreate {
   @IsString()
   readonly description: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: true, defaultValue: 'credit' })
   @IsOptional()
   @IsString()
   readonly type: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @IsOptional()
   @IsBoolean()
   readonly allowNegativeBalance: boolean;
 
-  @Field((type) => [PocketInput])
+  @Field((type) => [PocketInput], { nullable: true, defaultValue: [] })
+  @IsOptional()
   readonly pockets: PocketInput[];
 
   @Field((type) => Int, { nullable: true })

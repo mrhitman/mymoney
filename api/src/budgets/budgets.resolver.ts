@@ -20,6 +20,12 @@ export class BudgetsResolver {
     }
 
     @UseGuards(GqlAuthGuard)
+    @Query(() => BudgetDto)
+    public async activeBudget(@CurrentUser() user: User) {
+        return this.service.getActiveBudget(user);
+    }
+
+    @UseGuards(GqlAuthGuard)
     @Mutation(() => BudgetDto)
     public async budgetAddOutcomeCategory(
         @CurrentUser() user: User,

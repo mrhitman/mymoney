@@ -2,14 +2,14 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  Logger
+  Logger,
 } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { transaction, TransactionOrKnex } from 'objection';
 import Transaction, {
   categoryInId,
   categoryOutId,
-  categoryTransferId
+  categoryTransferId,
 } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
@@ -24,19 +24,26 @@ import { BudgetsService } from 'src/budgets/budgets.service';
 export class TransactionsService {
   constructor(
     protected walletService: WalletsService,
-    protected budgetService: BudgetsService
-  ) { }
+    protected budgetService: BudgetsService,
+  ) {}
 
-  public async getAll(user: User, filter: { walletId?: string, type?: TransactionType, currencyId?: string, categoryId?: string } = {}) {
-    const query = Transaction.query()
-      .where({ userId: user.id });
+  public async getAll(
+    user: User,
+    filter: {
+      walletId?: string;
+      type?: TransactionType;
+      currencyId?: string;
+      categoryId?: string;
+    } = {},
+  ) {
+    const query = Transaction.query().where({ userId: user.id });
 
     if (filter.walletId) {
-      query.where(subquery =>
+      query.where((subquery) =>
         subquery
           .where({ sourceWalletId: filter.walletId })
-          .orWhere({ destinationWalletId: filter.walletId })
-      )
+          .orWhere({ destinationWalletId: filter.walletId }),
+      );
     }
 
     if (filter.currencyId) {
@@ -171,7 +178,7 @@ export class TransactionsService {
       })
       .execute();
 
-    // await this.budgetService.outcome(user, trx);
+    await this.budgetService.outcome(user, trx);
     return wallet;
   }
 

@@ -27,8 +27,11 @@ export class WalletsService {
 
   public async create(user: User, data: WalletCreate) {
     const wallet = await Wallet.query().insert({
-      ...data,
+      type: 'credit',
+      pockets: [],
       id: uuid(),
+      allowNegativeBalance: true,
+      ...data,
       userId: user.id,
       syncAt: DateTime.local().toJSDate(),
       ...(data.createdAt && {

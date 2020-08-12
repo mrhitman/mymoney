@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { raw } from 'objection';
 import Budget from 'src/database/models/budget.model';
-import Transaction from 'src/database/models/transaction.model';
+import Transaction, { categoryInId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { BudgetCategoryCreate } from './input/budget-category-create';
 
@@ -24,17 +24,23 @@ export class BudgetsService {
         return budget;
     }
 
-    public async addOutcomeCategory(user: User, data: BudgetCategoryCreate) {
+    public async getActiveBudget(user: User) {
         const budget = await Budget
             .query()
             .where({ userId: user.id })
-            .andWhere('date', '>=', raw('now()'))
-            .andWhere('deadline', '<=', raw('now()'))
+            .andWhere('date', '<=', raw('now()'))
+            .andWhere('deadline', '>=', raw('now()'))
+            .debug()
             .first();
 
         if (!budget) {
             throw new BadRequestException('No active budgets');
         }
+        return budget;
+    }
+
+    public async addOutcomeCategory(user: User, data: BudgetCategoryCreate) {
+        const budget = await this.getActiveBudget(user);
 
         if (budget.outcomes.find(c => c.categoryId === data.categoryId)) {
             return budget;
@@ -43,6 +49,17 @@ export class BudgetsService {
         await budget.$query()
             .update({
                 outcomes: [...budget.outcomes, data]
+            })
+
+        return budget;
+    }
+
+    public async removeOutcomeCategory(user: User, categoryId: string) {
+        const budget = await this.getActiveBudget(user);
+
+        await budget.$query()
+            .update({
+                outcomes: budget.outcomes.filter(c => c.categoryId !== categoryId)
             })
 
         return budget;

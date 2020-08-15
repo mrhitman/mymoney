@@ -66,6 +66,30 @@ export class BudgetsService {
     return budget;
   }
 
+  public async addIncomeCategory(user: User, data: BudgetCategoryCreate) {
+    const budget = await this.getActiveBudget(user);
+
+    if (budget.incomes.find((c) => c.categoryId === data.categoryId)) {
+      return budget;
+    }
+
+    await budget.$query().update({
+      outcomes: [...budget.incomes, data],
+    });
+
+    return budget;
+  }
+
+  public async removeIncomeCategory(user: User, categoryId: string) {
+    const budget = await this.getActiveBudget(user);
+
+    await budget.$query().update({
+      outcomes: budget.incomes.filter((c) => c.categoryId !== categoryId),
+    });
+
+    return budget;
+  }
+
   public async outcome(user: User, trx: Transaction) {
     const budget = await this.getActiveBudget(user);
     await budget.$query().update({

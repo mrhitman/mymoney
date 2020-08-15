@@ -1,116 +1,70 @@
-import axios, { AxiosInstance } from 'axios';
-import { LoginResponse, RefreshResponse } from 'common/responses';
+import ApolloClient, { InMemoryCache } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 interface ApiParams {
-  accessToken?: string | null;
-  refreshToken?: string | null;
-  client?: AxiosInstance;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export class Api {
-  protected accessToken?: string | null;
-  protected refreshToken?: string | null;
-  protected onLogout?: Function;
-  public readonly client: AxiosInstance;
+  private static instance: Api;
+  protected accessToken?: string;
+  protected refreshToken?: string;
+  protected client: ApolloClient<InMemoryCache>;
 
   constructor(options: ApiParams = {}) {
-    this.client =
-      options.client || axios.create({ baseURL: process.env.REACT_APP_SERVER });
     this.accessToken = options.accessToken;
     this.refreshToken = options.refreshToken;
-
-    this.client.interceptors.request.use(
-      (config) => {
-        if (!this.accessToken) {
-          return config;
-        }
-
-        const newConfig = {
-          headers: {},
-          ...config,
-        };
-
-        newConfig.headers.Authorization = `Bearer ${this.accessToken}`;
-        return newConfig;
-      },
-      (e) => Promise.reject(e)
-    );
-
-    this.client.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (
-          !this.refreshToken ||
-          error.response.status !== 401 ||
-          error.config.retry
-        ) {
-          throw error;
-        }
-
-        try {
-          const response = await this.refresh();
-          this.accessToken = response.accessToken;
-          this.refreshToken = response.refreshToken;
-        } catch (e) {
-          this.accessToken = undefined;
-          this.refreshToken = undefined;
-
-          if (this.onLogout) {
-            this.onLogout();
-          } else {
-            localStorage.clear();
-          }
-
-          throw e;
-        }
-
-        const newRequest = {
-          ...error.config,
-          retry: true,
-        };
-        return this.client(newRequest);
-      }
-    );
+    this.client = new ApolloClient({
+      uri: process.env.REACT_APP_SERVER,
+    });
   }
 
-  public setOnLogout(callback: Function) {
-    this.onLogout = callback;
+  public static getInstance(options: ApiParams = {}) {
+    return Api.instance || new Api(options);
   }
 
   public async login(username: string, password: string) {
-    const response = await this.client.post<LoginResponse>('login', {
-      username,
-      password,
+    const response = await this.client.mutate({
+      mutation: gql`
+        mutation {
+          login(loginData: { email: "${username}", password: "${password}" }) {
+            accessToken
+          }
+        }
+      `,
     });
 
-    this.accessToken = response.data.accessToken;
-    this.refreshToken = response.data.refreshToken;
-    localStorage.setItem('accessToken', this.accessToken);
-    localStorage.setItem('refreshToken', this.refreshToken);
-    return response.data;
+    this.accessToken = response.data.login.accessToken;
+    this.refreshToken = response.data.login.refreshToken;
+    localStorage.setItem('accessToken', this.accessToken!);
+    localStorage.setItem('refreshToken', this.refreshToken!);
+    return response.data.login;
   }
 
   public async logout() {
-    await this.client.post('logout');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
 
   public async refresh() {
-    const response = await this.client.post<RefreshResponse>('refresh', {
-      token: this.refreshToken,
+    const response = await this.client.mutate({
+      mutation: gql`
+        mutation {
+          refresh(refreshData: { refreshToken: "${this.refreshToken}" }) {
+            accessToken
+            refreshToken
+          }
+        }
+      `,
     });
 
-    return response.data;
-  }
-
-  public async query(query: string) {
-    const response = await this.client.post('graphql', {
-      query,
-    });
-
-    return response.data;
+    this.accessToken = response.data.refresh.accessToken;
+    this.refreshToken = response.data.refresh.refreshToken;
+    localStorage.setItem('accessToken', this.accessToken!);
+    localStorage.setItem('refreshToken', this.refreshToken!);
+    return response.data.refresh;
   }
 }
 
-export default new Api();
+export default Api;

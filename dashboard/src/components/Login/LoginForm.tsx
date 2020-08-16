@@ -1,8 +1,9 @@
-import { Button, Checkbox, Input, Form } from 'antd';
-import { Formik } from 'formik';
-import React, { FC } from 'react';
 import { useMutation } from '@apollo/client';
+import { Button, Checkbox, Form, Input } from 'antd';
+import { Formik } from 'formik';
 import { loader } from 'graphql.macro';
+import React, { FC } from 'react';
+import { loginLayout, loginTailLayout } from '../misc/layouts';
 
 export interface LoginFormValues {
   email: string;
@@ -12,15 +13,6 @@ export interface LoginFormValues {
 interface LoginFormProps {
   afterLogin: () => void;
 }
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
 
 const LoginForm: FC<LoginFormProps> = (props) => {
   const LoginQuery = loader('src/queries/login.graphql');
@@ -42,7 +34,7 @@ const LoginForm: FC<LoginFormProps> = (props) => {
       onSubmit={handleSubmit}
       render={(bag) => (
         <Form
-          {...layout}
+          {...loginLayout}
           initialValues={bag.values}
           onFinish={bag.submitForm}
           onChange={bag.handleChange}
@@ -66,11 +58,11 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+          <Form.Item {...loginTailLayout} name="remember" valuePropName="checked">
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
-          <Form.Item {...tailLayout}>
+          <Form.Item {...loginTailLayout}>
             <Button
               type="primary"
               htmlType="submit"

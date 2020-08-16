@@ -1,5 +1,4 @@
 import { Button, Dropdown, Menu } from 'antd';
-import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import {

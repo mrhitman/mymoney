@@ -10,7 +10,7 @@ interface AddTransactionState {
   bag?: FormikProps<AddTransactionValues>;
 }
 
-class AddTransaction extends PureComponent<AddTransactionState> {
+class AddTransaction extends PureComponent<{}, AddTransactionState> {
   public state: AddTransactionState = {
     visible: false,
     operation: 'outcome',

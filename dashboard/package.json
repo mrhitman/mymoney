@@ -20,6 +20,7 @@
     "formik": "^2.1.4",
     "graphql": "^15.3.0",
     "graphql-request": "^2.0.0",
+    "graphql.macro": "^1.4.2",
     "i18next": "^19.4.5",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",

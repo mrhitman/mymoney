@@ -1,27 +1,23 @@
 import {
   AppstoreAddOutlined,
   DeleteOutlined,
-  PlusOutlined,
+  PlusOutlined
 } from '@ant-design/icons';
 import {
   AutoComplete,
   Button,
   Checkbox,
-  Col,
-  Form,
+  Col, Collapse, Form,
   Input,
   List,
   Row,
-  Tag,
+  Tag
 } from 'antd';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
-import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { InjectedStore } from 'src/store/Store';
 import { formLayout } from '../misc/Layout';
-import { Collapse } from 'antd';
 
 interface PocketValues {
   currencyId: string;
@@ -48,14 +44,7 @@ interface AddWalletFormState {
   selectedCurrencyId?: string;
 }
 
-class AddWalletForm extends PureComponent<
-  AddWalletFormProps & Partial<InjectedStore> & WithTranslation,
-  AddWalletFormState
-> {
-  public get store() {
-    return this.props.store!;
-  }
-
+class AddWalletForm extends PureComponent<AddWalletFormProps & WithTranslation, AddWalletFormState> {
   public state: AddWalletFormState = {
     currencyFilter: '',
     addingTag: false,
@@ -72,8 +61,7 @@ class AddWalletForm extends PureComponent<
           use_in_analytics: true,
           pockets: [
             {
-              currencyId: this.store.currencies.find((c) => c.name === 'UAH')!
-                .id,
+              currencyId: '',
               amount: 0,
             },
           ],
@@ -108,13 +96,13 @@ class AddWalletForm extends PureComponent<
                   }}
                 />
               ) : (
-                <Tag
-                  className='site-tag-plus'
-                  onClick={() => this.setState({ addingTag: true })}
-                >
-                  <PlusOutlined /> New Tag
-                </Tag>
-              )}
+                  <Tag
+                    className='site-tag-plus'
+                    onClick={() => this.setState({ addingTag: true })}
+                  >
+                    <PlusOutlined /> New Tag
+                  </Tag>
+                )}
             </Form.Item>
             <Collapse accordion>
               <Collapse.Panel key='1' header='Options'>
@@ -169,39 +157,8 @@ class AddWalletForm extends PureComponent<
                   <AutoComplete
                     value={this.state.currencyFilter}
                     onSearch={(text) => this.setState({ currencyFilter: text })}
-                    onSelect={(name) =>
-                      this.setState({
-                        selectedCurrencyId: this.store.currencies.find(
-                          (c) => c.name === name
-                        )?.id,
-                      })
-                    }
-                    options={this.store.currencies
-                      .filter(
-                        (c) =>
-                          c.name
-                            .toLowerCase()
-                            .includes(
-                              this.state.currencyFilter.toLowerCase()
-                            ) ||
-                          c.description
-                            ?.toLowerCase()
-                            .includes(this.state.currencyFilter.toLowerCase())
-                      )
-                      .filter(
-                        (c) =>
-                          !bag.values.pockets
-                            .map((p) => p.currencyId)
-                            .includes(c.id)
-                      )
-                      .map((c) => ({
-                        label: (
-                          <div>
-                            {c.name} - {c.description} ({c.symbol})
-                          </div>
-                        ),
-                        value: c.name,
-                      }))}
+                    onSelect={(name) => { }}
+                    options={[]}
                   >
                     <Input.Search placeholder='input here' enterButton />
                   </AutoComplete>
@@ -238,10 +195,6 @@ class AddWalletForm extends PureComponent<
   protected renderPocketItem = (bag: FormikProps<AddWalletValues>) => (
     pocket: PocketValues
   ) => {
-    const currency = this.store.currencies.find(
-      (c) => c.id === pocket.currencyId
-    )!;
-
     return (
       <List.Item
         actions={[
@@ -266,16 +219,16 @@ class AddWalletForm extends PureComponent<
               <span style={{ marginRight: 10 }}>
                 <ReactCountryFlag
                   className='emojiFlag'
-                  countryCode={currency.name.slice(0, 2)}
+                  countryCode={"UA"}
                 />
               </span>
-              <span>{currency.name}</span>
+              <span>UAH</span>
             </div>
           }
         />
         <Row>
           <Col xs={12} offset={2}>
-            {currency.description}
+            DESCR
           </Col>
           <Col xs={8} offset={2}>
             <Input placeholder='0' size='small' />
@@ -289,10 +242,10 @@ class AddWalletForm extends PureComponent<
     values: AddWalletValues,
     formikHelpers: FormikHelpers<AddWalletValues>
   ) => {
-    this.store.addWallet(values);
+    // this.store.addWallet(values);
     // this.props.onSubmit();
     formikHelpers.resetForm();
   };
 }
 
-export default withTranslation()(inject('store')(observer(AddWalletForm)));
+export default withTranslation()(AddWalletForm);

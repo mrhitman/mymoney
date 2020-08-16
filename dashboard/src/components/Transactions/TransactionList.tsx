@@ -1,11 +1,9 @@
 import { Popover, Table } from 'antd';
 import { Transaction } from 'common';
-import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
 import moment from 'moment';
 import React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { InjectedStore } from 'src/store/Store';
 import Icon from 'src/components/misc/Icon';
 
 interface TransactionListState {
@@ -15,10 +13,7 @@ interface TransactionListState {
   pageSize: number;
 }
 
-class TransactionList extends React.PureComponent<
-  Partial<InjectedStore> & WithTranslation,
-  TransactionListState
-> {
+class TransactionList extends React.PureComponent<WithTranslation, TransactionListState> {
   public state = {
     current: 1,
     pageSize: 10,
@@ -26,22 +21,18 @@ class TransactionList extends React.PureComponent<
     loading: false,
   };
 
-  public get store() {
-    return this.props.store!;
-  }
-
   public componentDidMount = () => {
     return this.fetchData();
   };
 
   protected fetchData = async () => {
-    await this.store.loadCurrencies();
+    // await this.store.loadCurrencies();
     this.setState({ loading: true });
-    const total = await this.store.loadTransactions({
-      pageSize: this.state.pageSize,
-      current: this.state.current,
-    });
-    this.setState({ total, loading: false });
+    // const total = await this.store.loadTransactions({
+    //   pageSize: this.state.pageSize,
+    //   current: this.state.current,
+    // });
+    // this.setState({ total, loading: false });
   };
 
   public render() {
@@ -63,9 +54,7 @@ class TransactionList extends React.PureComponent<
           });
           return this.fetchData();
         }}
-        dataSource={this.store.transactions
-          .sort((t2, t1) => moment(t1.date).unix() - moment(t2.date).unix())
-          .map((t) => t)}
+        dataSource={[]}
       >
         <Table.Column
           title='id'
@@ -130,8 +119,8 @@ class TransactionList extends React.PureComponent<
             desc ? (
               desc
             ) : (
-              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-            )
+                <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+              )
           }
         />
         <Table.Column
@@ -145,4 +134,4 @@ class TransactionList extends React.PureComponent<
   }
 }
 
-export default withTranslation()(inject('store')(observer(TransactionList)));
+export default withTranslation()(TransactionList);

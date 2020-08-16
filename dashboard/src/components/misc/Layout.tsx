@@ -1,12 +1,10 @@
 import { Col, Layout as AntdLayout, Row } from 'antd';
-import { inject, observer } from 'mobx-react';
-import React, { PureComponent } from 'react';
+import React, { FC, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { InjectedStore } from '../../store/Store';
-import Rates from '../Rates/Rates';
-import AddTransaction from '../Transactions/AddTransaction';
-import AddWallet from '../Wallets/AddWallet';
-import Wallets from '../Wallets/Wallets';
+// import Rates from '../Rates/Rates';
+// import AddTransaction from '../Transactions/AddTransaction';
+// import AddWallet from '../Wallets/AddWallet';
+// import Wallets from '../Wallets/Wallets';
 import MenuHeader, { ActivePage } from './Header';
 
 export const formLayout = {
@@ -14,7 +12,7 @@ export const formLayout = {
   wrapperCol: { span: 16 },
 };
 
-interface LayoutProps extends Partial<InjectedStore> {
+interface LayoutProps {
   activePage?: ActivePage;
 }
 
@@ -22,67 +20,57 @@ interface LayoutState {
   redirect?: string;
 }
 
-class Layout extends PureComponent<LayoutProps, LayoutState> {
-  public state: LayoutState = {
-    redirect: undefined,
-  };
+const Layout: FC<LayoutProps> = ({ activePage, children }) => {
 
-  public get store() {
-    return this.props.store!;
+  const [redirect, setRedirect] = useState<string | undefined>(undefined);
+  if (redirect) {
+    return <Redirect to={redirect} exact />;
   }
 
-  public render() {
-    const { activePage } = this.props;
+  // if (!this.store.isAuthorized) {
+  // return <Redirect to="/login" exact />;
+  // }
 
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} exact />;
+  const logout = async () => {
+    try {
+      // await this.store.logout();
+    } finally {
+      setRedirect('/login');
     }
+  };
 
-    if (!this.store.isAuthorized) {
-      return <Redirect to="/login" exact />;
-    }
+  const navigate = async (page: ActivePage) => {
+    setRedirect(page ? `/${page}` : '/');
+  };
 
-    return (
+  return (
+    <AntdLayout>
+      <AntdLayout.Sider collapsible width={180} />
       <AntdLayout>
-        <AntdLayout.Sider collapsible width={180} />
-        <AntdLayout>
-          <AntdLayout.Header>
-            <div className="logo" />
-            <MenuHeader
-              activePage={activePage}
-              handleLogout={this.logout}
-              handleNavigate={this.navigate}
-            />
-          </AntdLayout.Header>
-          <AntdLayout.Content>
-            <Row gutter={[16, 16]}>
-              <Col span={6}>
-                <AddTransaction />
+        <AntdLayout.Header>
+          <div className="logo" />
+          <MenuHeader
+            activePage={activePage}
+            handleLogout={logout}
+            handleNavigate={navigate}
+          />
+        </AntdLayout.Header>
+        <AntdLayout.Content>
+          <Row gutter={[16, 16]}>
+            <Col span={6}>
+              {/* <AddTransaction />
                 <AddWallet />
                 <Wallets />
-                <Rates />
-              </Col>
-              <Col span={17}>{this.props.children}</Col>
-              <Col />
-            </Row>
-          </AntdLayout.Content>
-          <AntdLayout.Footer />
-        </AntdLayout>
+                <Rates /> */}
+            </Col>
+            <Col span={17}>{children}</Col>
+            <Col />
+          </Row>
+        </AntdLayout.Content>
+        <AntdLayout.Footer />
       </AntdLayout>
-    );
-  }
-
-  protected logout = async () => {
-    try {
-      await this.store.logout();
-    } finally {
-      this.setState({ redirect: '/login' });
-    }
-  };
-
-  protected navigate = async (page: ActivePage) => {
-    this.setState({ redirect: page ? `/${page}` : '/' });
-  };
+    </AntdLayout>
+  );
 }
 
-export default inject('store')(observer(Layout));
+export default Layout;

@@ -1,7 +1,5 @@
 import { Button, Modal } from 'antd';
-import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import { InjectedStore } from '../../store/Store';
 import AddTransactionForm from './AddTransactionForm';
 import { FormikProps } from 'formik';
 import { AddTransactionValues } from './AddTransactionForm';
@@ -12,18 +10,11 @@ interface AddTransactionState {
   bag?: FormikProps<AddTransactionValues>;
 }
 
-class AddTransaction extends PureComponent<
-  Partial<InjectedStore>,
-  AddTransactionState
-> {
+class AddTransaction extends PureComponent<AddTransactionState> {
   public state: AddTransactionState = {
     visible: false,
     operation: 'outcome',
   };
-
-  public get store() {
-    return this.props.store!;
-  }
 
   public render() {
     return (
@@ -36,7 +27,7 @@ class AddTransaction extends PureComponent<
           onOk={() => this.state.bag?.submitForm()}
         >
           <AddTransactionForm
-            onInit={(bag) => !this.state.bag && this.setState({ bag })}
+            onInit={(bag: any) => !this.state.bag && this.setState({ bag })}
             onSubmit={() => this.setState({ visible: false })}
           />
         </Modal>
@@ -53,4 +44,4 @@ class AddTransaction extends PureComponent<
   };
 }
 
-export default inject('store')(observer(AddTransaction));
+export default AddTransaction;

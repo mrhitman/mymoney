@@ -1,12 +1,10 @@
 import { Checkbox, DatePicker, Form, Input, Select, Tabs } from 'antd';
 import { Category, Currency } from 'common';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
-import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
 import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { WithTranslation, withTranslation } from 'react-i18next';
-import { InjectedStore } from '../../store/Store';
 import { formLayout } from '../misc/Layout';
 
 export interface AddTransactionValues {
@@ -34,16 +32,16 @@ interface AddTransactionFormState {
 }
 
 export class AddTransactionForm extends PureComponent<
-  AddTransactionFormProps & Partial<InjectedStore> & WithTranslation,
+  AddTransactionFormProps & WithTranslation,
   AddTransactionFormState
-> {
+  > {
   public state: AddTransactionFormState = {
     filterCurrency: undefined,
     filterCategory: undefined,
   };
 
   public get store() {
-    return this.props.store!;
+    return {} as any;
   }
 
   public render() {
@@ -53,7 +51,7 @@ export class AddTransactionForm extends PureComponent<
         initialValues={
           {
             currencyId: store.currencies.find(
-              (c) => c.name === store.account?.settings.primaryCurrencyName
+              (c: any) => c.name === store.account?.settings.primaryCurrencyName
             ),
             categoryId: undefined,
             date: moment(),
@@ -122,7 +120,7 @@ export class AddTransactionForm extends PureComponent<
                 onChange={(id) =>
                   bag.setFieldValue(
                     'currencyId',
-                    store.currencies.find((c) => c.id === id)
+                    store.currencies.find((c: any) => c.id === id)
                   )
                 }
               >
@@ -143,12 +141,12 @@ export class AddTransactionForm extends PureComponent<
                   onChange={bag.handleChange('sourceWalletId')}
                 >
                   {store.wallets
-                    .filter((wallet) =>
+                    .filter((wallet: any) =>
                       bag.values.type === 'transfer'
                         ? wallet.id !== bag.values.destinationWalletId
                         : true
                     )
-                    .map((wallet) => (
+                    .map((wallet: any) => (
                       <Select.Option key={wallet.id} value={wallet.id}>
                         {wallet.name}
                       </Select.Option>
@@ -166,12 +164,12 @@ export class AddTransactionForm extends PureComponent<
                   onChange={bag.handleChange('destinationWalletId')}
                 >
                   {store.wallets
-                    .filter((wallet) =>
+                    .filter((wallet: any) =>
                       bag.values.type === 'transfer'
                         ? wallet.id !== bag.values.sourceWalletId
                         : true
                     )
-                    .map((wallet) => (
+                    .map((wallet: any) => (
                       <Select.Option key={wallet.id} value={wallet.id}>
                         {wallet.name}
                       </Select.Option>
@@ -203,7 +201,7 @@ export class AddTransactionForm extends PureComponent<
                   onChange={(id) =>
                     bag.setFieldValue(
                       'categoryId',
-                      store.categories.find((c) => c.id === id)
+                      store.categories.find((c: any) => c.id === id)
                     )
                   }
                   onSearch={(filter) =>
@@ -214,8 +212,8 @@ export class AddTransactionForm extends PureComponent<
                   }
                 >
                   {this.categories
-                    .filter((category) => category.type === bag.values.type)
-                    .map((category) => (
+                    .filter((category: any) => category.type === bag.values.type)
+                    .map((category: any) => (
                       <Select.Option key={category.id} value={category.id}>
                         {this.props.t(category.name)}
                       </Select.Option>
@@ -273,8 +271,8 @@ export class AddTransactionForm extends PureComponent<
     );
   }
 
-  protected get currencies() {
-    return this.store.currencies.filter((currency) => {
+  protected get currencies(): any[] {
+    return this.store.currencies.filter((currency: any) => {
       const filter = this.state.filterCurrency?.toLowerCase();
 
       if (!filter) {
@@ -290,7 +288,7 @@ export class AddTransactionForm extends PureComponent<
   protected get categories() {
     return this.store.categories
       .filter(
-        (category) =>
+        (category: any) =>
           ![
             'TRANSFER_IN',
             'TRANSFER_OUT',
@@ -298,7 +296,7 @@ export class AddTransactionForm extends PureComponent<
             'SYSTEM_EMPTY',
           ].includes(category.name)
       )
-      .filter((category) => {
+      .filter((category: any) => {
         const filter = this.state.filterCategory?.toLowerCase();
 
         if (!filter) {
@@ -325,4 +323,4 @@ export class AddTransactionForm extends PureComponent<
   };
 }
 
-export default withTranslation()(inject('store')(observer(AddTransactionForm)));
+export default withTranslation()(AddTransactionForm);

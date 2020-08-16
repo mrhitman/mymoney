@@ -1,10 +1,8 @@
 import { SyncOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Button } from 'antd';
-import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { VictoryPie } from 'victory';
-import { api, InjectedStore } from '../../store/Store';
 
 interface AnalysisByCategoryState {
   data: Array<any>;
@@ -12,14 +10,7 @@ interface AnalysisByCategoryState {
   type: 'income' | 'outcome';
 }
 
-class AnalysisByCategory extends PureComponent<
-  Partial<InjectedStore> & WithTranslation,
-  AnalysisByCategoryState
-> {
-  public get store() {
-    return this.props.store!;
-  }
-
+class AnalysisByCategory extends PureComponent<WithTranslation, AnalysisByCategoryState> {
   public state: AnalysisByCategoryState = {
     data: [],
     loading: false,
@@ -31,10 +22,10 @@ class AnalysisByCategory extends PureComponent<
   }
 
   protected fetchData = async () => {
-    const response = await api.client('/transactions/statistic-categories/');
-    this.setState({ loading: true });
-    const data = response.data as any[];
-    this.setState({ data, loading: false });
+    // const response = await api.client('/transactions/statistic-categories/');
+    // this.setState({ loading: true });
+    // const data = response.data as any[];
+    // this.setState({ data, loading: false });
   };
 
   public render() {
@@ -84,4 +75,4 @@ class AnalysisByCategory extends PureComponent<
   }
 }
 
-export default withTranslation()(inject('store')(observer(AnalysisByCategory)));
+export default withTranslation()(AnalysisByCategory);

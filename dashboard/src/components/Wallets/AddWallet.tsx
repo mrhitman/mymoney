@@ -1,7 +1,5 @@
 import { Button, Modal } from 'antd';
-import { inject, observer } from 'mobx-react';
 import React, { PureComponent } from 'react';
-import { InjectedStore } from 'src/store/Store';
 import AddWalletForm from './AddWalletForm';
 import { FormikProps } from 'formik';
 
@@ -10,14 +8,10 @@ interface AddWalletState {
   bag?: FormikProps<any>;
 }
 
-class AddWallet extends PureComponent<Partial<InjectedStore>, AddWalletState> {
+class AddWallet extends PureComponent<{}, AddWalletState> {
   public state: AddWalletState = {
     visible: false,
   };
-
-  public get store() {
-    return this.props.store!;
-  }
 
   public render() {
     return (
@@ -30,7 +24,7 @@ class AddWallet extends PureComponent<Partial<InjectedStore>, AddWalletState> {
           onCancel={this.handleCancel}
         >
           <AddWalletForm
-            onInit={(bag) => !this.state.bag && this.setState({ bag })}
+            onInit={(bag: any) => !this.state.bag && this.setState({ bag })}
             onSubmit={() => this.setState({ visible: false })}
           />
         </Modal>
@@ -47,4 +41,4 @@ class AddWallet extends PureComponent<Partial<InjectedStore>, AddWalletState> {
   };
 }
 
-export default inject('store')(observer(AddWallet));
+export default AddWallet;

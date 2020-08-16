@@ -1,9 +1,7 @@
 import { Badge, Calendar } from 'antd';
-import { inject, observer } from 'mobx-react';
 import moment, { Moment } from 'moment';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { InjectedStore } from 'src/store/Store';
 import { Instance } from 'mobx-state-tree';
 import { Transaction } from 'common';
 
@@ -12,30 +10,23 @@ interface CalendarViewState {
   time: moment.Moment;
 }
 
-class CalendarView extends PureComponent<
-  Partial<InjectedStore> & WithTranslation,
-  CalendarViewState
-> {
+class CalendarView extends PureComponent<WithTranslation, CalendarViewState> {
   public state: CalendarViewState = {
     time: moment(),
     view: 'month',
   };
 
-  public get store() {
-    return this.props.store!;
-  }
-
   public componentDidMount = async () => {
-    await this.store.loadCurrencies();
+    // await this.store.loadCurrencies();
     await this.fetchData();
     this.forceUpdate();
   };
 
   protected fetchData = async () => {
-    return this.store.loadTransactions({
-      start: this.state.time.startOf('year').unix(),
-      end: this.state.time.endOf('year').unix(),
-    });
+    // return this.store.loadTransactions({
+    //   start: this.state.time.startOf('year').unix(),
+    //   end: this.state.time.endOf('year').unix(),
+    // });
   };
 
   public render() {
@@ -51,9 +42,10 @@ class CalendarView extends PureComponent<
   }
 
   protected dateCellRender = (date: Moment) => {
-    const items = this.store.transactions.filter((trx) => {
-      return moment(trx.date).format('L') === date.format('L');
-    });
+    const items = [] as any[]
+    // this.store.transactions.filter((trx) => {
+    // return moment(trx.date).format('L') === date.format('L');
+    // });
 
     return (
       <ul className="events">
@@ -70,4 +62,4 @@ class CalendarView extends PureComponent<
   };
 }
 
-export default withTranslation()(inject('store')(observer(CalendarView)));
+export default withTranslation()(CalendarView);

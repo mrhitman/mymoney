@@ -1,15 +1,7 @@
-import { inject, observer } from "mobx-react";
-import React, { PureComponent } from "react";
-import { InjectedStore } from "../../store/Store";
+import React, { FC } from "react";
 
-export class Info extends PureComponent<Partial<InjectedStore>> {
-  public get store() {
-    return this.props.store!;
-  }
-
-  public render() {
-    return <div>Info</div>;
-  }
+export const Info: FC = () => {
+  return <div>Info</div>;
 }
 
-export default inject("store")(observer(Info));
+export default Info;

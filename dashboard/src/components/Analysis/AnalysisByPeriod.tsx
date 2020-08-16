@@ -1,5 +1,4 @@
 import { Button, Dropdown, Menu } from 'antd';
-import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
@@ -11,7 +10,6 @@ import {
   VictoryLine,
   VictoryZoomContainer,
 } from 'victory';
-import { api, InjectedStore } from '../../store/Store';
 
 interface AnalysisByPeriodState {
   data: Array<{ a: Date; b: number }>;
@@ -22,14 +20,7 @@ interface AnalysisByPeriodState {
   };
 }
 
-class AnalysisByPeriod extends PureComponent<
-  Partial<InjectedStore> & WithTranslation,
-  AnalysisByPeriodState
-> {
-  public get store() {
-    return this.props.store!;
-  }
-
+class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodState> {
   public state: AnalysisByPeriodState = {
     interval: 'day',
     data: [],
@@ -44,16 +35,16 @@ class AnalysisByPeriod extends PureComponent<
   }
 
   protected fetchData = async () => {
-    const response = await api.client(
-      '/transactions/statistic/' + this.state.interval
-    );
-    const data = response.data;
+    // const response = await api.client(
+    //   '/transactions/statistic/' + this.state.interval
+    // );
+    // const data = response.data;
 
-    this.setState({
-      data: Object.keys(data).map((time) => {
-        return { a: moment.unix(+time).toDate(), b: data[time] };
-      }),
-    });
+    // this.setState({
+    //   data: Object.keys(data).map((time) => {
+    //     return { a: moment.unix(+time).toDate(), b: data[time] };
+    //   }),
+    // });
   };
 
   public render() {
@@ -152,4 +143,4 @@ class AnalysisByPeriod extends PureComponent<
   }
 }
 
-export default withTranslation()(inject('store')(observer(AnalysisByPeriod)));
+export default withTranslation()(AnalysisByPeriod);

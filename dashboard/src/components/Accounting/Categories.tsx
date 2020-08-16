@@ -1,29 +1,18 @@
 import { Tree } from 'antd';
 import { Category } from 'common';
-import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { InjectedStore } from '../../store/Store';
 
-class Categories extends PureComponent<
-  Partial<InjectedStore> & WithTranslation
-> {
-  public get store() {
-    return this.props.store!;
-  }
-
-  public componentDidMount = async () => {
-    await this.store.loadCategories();
-  };
+class Categories extends PureComponent<WithTranslation> {
 
   public render() {
     return <Tree showIcon treeData={this.getCategories()} />;
   }
 
   private getRootCategories = () => {
-    const categories = this.store.categories;
+    const categories = [] as any[];
     return categories
       .filter(
         (c) => !['TRANSFER_IN', 'TRANSFER_OUT', 'SYSTEM_EMPTY'].includes(c.name)
@@ -32,7 +21,7 @@ class Categories extends PureComponent<
   };
 
   private getCategories = (parentId?: string) => {
-    const categories = this.store.categories;
+    const categories = [] as any[];
 
     if (parentId) {
       return categories
@@ -69,4 +58,4 @@ class Categories extends PureComponent<
   };
 }
 
-export default withTranslation()(inject('store')(observer(Categories)));
+export default withTranslation()(Categories);

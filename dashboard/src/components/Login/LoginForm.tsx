@@ -1,8 +1,6 @@
 import { Button, Checkbox, Input, Form } from 'antd';
 import { Formik } from 'formik';
-import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { InjectedStore } from '../../store/Store';
 
 export interface LoginFormValues {
   username: string;
@@ -23,13 +21,7 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-class LoginForm extends React.Component<
-  LoginFormProps & Partial<InjectedStore>
-> {
-  public get store() {
-    return (this.props as InjectedStore).store;
-  }
-
+class LoginForm extends React.Component<LoginFormProps> {
   public render() {
     return (
       <Formik
@@ -86,10 +78,10 @@ class LoginForm extends React.Component<
 
   protected handleSubmit = async (values: LoginFormValues) => {
     try {
-      await this.store.login(values);
+      // await this.store.login(values);
       this.props.afterLogin();
-    } catch (e) {}
+    } catch (e) { }
   };
 }
 
-export default inject('store')(observer(LoginForm));
+export default LoginForm;

@@ -1,47 +1,24 @@
 import { Collapse } from 'antd';
 import { Pocket, Wallet } from 'common';
-import { sumBy } from 'lodash';
-import { inject, observer } from 'mobx-react';
 import { Instance } from 'mobx-state-tree';
-import moment from 'moment';
 import React, { PureComponent } from 'react';
-import { InjectedStore } from '../../store/Store';
 
-class Wallets extends PureComponent<Partial<InjectedStore>> {
-  public get store() {
-    return this.props.store!;
-  }
+class Wallets extends PureComponent {
 
-  public componentDidMount = async () => {
-    const store = this.store;
-    await store.loadCurrencies();
-    await store.loadCategories();
-    await store.loadWallets();
-  };
 
   public render() {
     return (
       <Collapse>
-        {this.store.wallets
-          .sort(
-            (w1, w2) =>
-              moment(w1.createdAt).unix() - moment(w2.createdAt).unix()
-          )
-          .map(this.renderWallet)}
       </Collapse>
     );
   }
 
   protected getTotal = () => {
-    return this.store.wallets
-      .reduce((acc, wallet) => this.getWalletSum(wallet) + acc, 0)
-      .toFixed(1);
+    return '0'
   };
 
   protected getWalletSum = (wallet: Instance<typeof Wallet>): number => {
-    return sumBy(wallet.pockets, (pocket) =>
-      this.store.rates.exchange(pocket.currency.name, 'UAH', pocket.amount)
-    );
+    return 0
   };
 
   protected renderWallet = (wallet: Instance<typeof Wallet>) => (
@@ -72,4 +49,4 @@ class Wallets extends PureComponent<Partial<InjectedStore>> {
   };
 }
 
-export default inject('store')(observer(Wallets));
+export default Wallets;

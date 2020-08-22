@@ -1,0 +1,36 @@
+fragment wallet on Wallet {
+  id
+  name
+  type
+  description
+}
+
+query getTransactions($type: TransactionType) {
+  transactions(type: $type) {
+    id
+    type
+    sourceWallet {
+      ...wallet
+    }
+    destinationWallet {
+      ...wallet
+    }
+    currency {
+      id
+      name
+      symbol
+    }
+    category {
+      name
+      type
+      icon {
+        type
+        name
+        backgroundColor
+        color
+      }
+    }
+    description
+    amount
+  }
+}

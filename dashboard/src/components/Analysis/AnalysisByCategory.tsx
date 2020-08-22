@@ -1,8 +1,8 @@
-import { SyncOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Button } from 'antd';
-import React, { PureComponent } from 'react';
-import { withTranslation, WithTranslation } from 'react-i18next';
-import { VictoryPie } from 'victory';
+import {SyncOutlined} from '@ant-design/icons';
+import {Dropdown, Menu, Button} from 'antd';
+import React, {PureComponent} from 'react';
+import {withTranslation, WithTranslation} from 'react-i18next';
+import {VictoryPie} from 'victory';
 
 interface AnalysisByCategoryState {
   data: Array<any>;
@@ -36,13 +36,13 @@ class AnalysisByCategory extends PureComponent<WithTranslation, AnalysisByCatego
             <Menu>
               <Menu.Item
                 key="income"
-                onClick={() => this.setState({ type: 'income' })}
+                onClick={() => this.setState({type: 'income'})}
               >
                 Income
               </Menu.Item>
               <Menu.Item
                 key="outcome"
-                onClick={() => this.setState({ type: 'outcome' })}
+                onClick={() => this.setState({type: 'outcome'})}
               >
                 Outcome
               </Menu.Item>
@@ -58,17 +58,17 @@ class AnalysisByCategory extends PureComponent<WithTranslation, AnalysisByCatego
         </Button>
         <VictoryPie
           colorScale={'qualitative'}
-          style={{ labels: { fill: 'black' } }}
+          style={{labels: {fill: 'black'}}}
           innerRadius={80}
           labelRadius={120}
           cornerRadius={2}
           labelPosition={'centroid'}
-          labels={({ datum }) => `${this.props.t(datum.x)}`}
+          labels={({datum}) => `${this.props.t(datum.x)}`}
           data={this.state.data
-            .filter(({ category }) => category.type === this.state.type)
-            .map(({ category, amount }) => {
-              return { x: category.name, y: Math.abs(amount) };
-            })}
+              .filter(({category}) => category.type === this.state.type)
+              .map(({category, amount}) => {
+                return {x: category.name, y: Math.abs(amount)};
+              })}
         />
       </div>
     );

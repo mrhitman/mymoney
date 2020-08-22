@@ -43,7 +43,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
+    "eject": "react-app-rewired eject",
+    "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -70,6 +71,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/uuid": "^8.0.0",
     "@types/victory": "^33.1.4",
+    "eslint-config-google": "^0.14.0",
     "react-app-rewired": "^2.1.6"
   }
 }

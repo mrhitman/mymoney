@@ -1,11 +1,8 @@
-import { Col, Layout as AntdLayout, Row } from 'antd';
+import { AreaChartOutlined, ArrowsAltOutlined, BarChartOutlined, BookOutlined, CarryOutOutlined, DollarOutlined, FallOutlined, LaptopOutlined, LinkOutlined, LogoutOutlined, MenuOutlined, MoneyCollectOutlined, PieChartOutlined, RiseOutlined, ScheduleOutlined, SolutionOutlined, TableOutlined, TrophyOutlined, WalletOutlined } from '@ant-design/icons';
+import { Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import Rates from '../Rates/Rates';
-import AddTransaction from '../Transactions/AddTransaction';
-import AddWallet from '../Wallets/AddWallet';
-import Wallets from '../Wallets/Wallets';
-import MenuHeader, { ActivePage } from './Header';
+import { ActivePage } from './Header';
 
 export const formLayout = {
   labelCol: { span: 8 },
@@ -14,10 +11,6 @@ export const formLayout = {
 
 interface LayoutProps {
   activePage?: ActivePage;
-}
-
-interface LayoutState {
-  redirect?: string;
 }
 
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
@@ -42,32 +35,69 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
 
   return (
     <AntdLayout>
-      <AntdLayout.Sider collapsible width={180} />
+      <AntdLayout.Header className="header">
+        <div className="logo" />
+        <Menu theme="dark" mode="horizontal" style={{ float: 'right' }} >
+          <Menu.SubMenu key="1" icon={<MenuOutlined />} >
+            <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout} >
+              Logout
+            </Menu.Item>
+          </Menu.SubMenu>
+        </Menu>
+      </AntdLayout.Header>
       <AntdLayout>
-        <AntdLayout.Header>
-          <div className="logo" />
-          <MenuHeader
-            activePage={activePage}
-            handleLogout={logout}
-            handleNavigate={navigate}
-          />
-        </AntdLayout.Header>
-        <AntdLayout.Content>
-          <Row gutter={[16, 16]}>
-            <Col span={6}>
-              <AddTransaction />
-              <AddWallet />
-              <Wallets />
-              <Rates />
-            </Col>
-            <Col span={17}>{children}</Col>
-            <Col />
-          </Row>
-        </AntdLayout.Content>
-        <AntdLayout.Footer />
+        <AntdLayout.Sider width={280} className="site-layout-background">
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            style={{ height: '100vh', borderRight: 0 }}
+          >
+            <Menu.SubMenu key="sub1" icon={<DollarOutlined />} title="Ledgers">
+              <Menu.Item key="1" icon={<WalletOutlined />}>Wallets</Menu.Item>
+              <Menu.Item key="2" icon={<TrophyOutlined />}>Goals</Menu.Item>
+            </Menu.SubMenu>
+            <Menu.SubMenu key="sub2" icon={<LaptopOutlined />} title="Transactions">
+              <Menu.Item key="5" icon={<RiseOutlined />}>Incomes</Menu.Item>
+              <Menu.Item key="6" icon={<FallOutlined />}>Outcomes</Menu.Item>
+              <Menu.Item key="7" icon={<ArrowsAltOutlined />}>Transfers</Menu.Item>
+            </Menu.SubMenu>
+            <Menu.SubMenu key="sub3" icon={<TableOutlined />} title="Budget">
+              <Menu.Item key="9" icon={<CarryOutOutlined />}>Current</Menu.Item>
+              <Menu.Item key="10" icon={<ScheduleOutlined />}>Planning</Menu.Item>
+              <Menu.Item key="11" icon={<SolutionOutlined />}>Archive</Menu.Item>
+            </Menu.SubMenu>
+            <Menu.SubMenu key="sub4" icon={<AreaChartOutlined />} title="Statistics">
+
+              <Menu.Item key="15" icon={<PieChartOutlined />}>By Categories</Menu.Item>
+              <Menu.Item key="16" icon={<PieChartOutlined />}>By Currencies</Menu.Item>
+              <Menu.Item key="17" icon={<BarChartOutlined />}>By Period</Menu.Item>
+            </Menu.SubMenu>
+            <Menu.Item key="12" icon={<BookOutlined />}>Categories</Menu.Item>
+            <Menu.Item key="13" icon={<MoneyCollectOutlined />}>Currencies</Menu.Item>
+            <Menu.Item key="14" icon={<LinkOutlined />}>Connectors</Menu.Item>
+          </Menu>
+        </AntdLayout.Sider>
+        <AntdLayout style={{ padding: '0 24px 24px' }}>
+          <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb.Item>Home</Breadcrumb.Item>
+            <Breadcrumb.Item>List</Breadcrumb.Item>
+            <Breadcrumb.Item>App</Breadcrumb.Item>
+          </Breadcrumb>
+          <AntdLayout.Content
+            className="site-layout-background"
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: 280,
+            }}
+          >
+            {children}
+          </AntdLayout.Content>
+        </AntdLayout>
       </AntdLayout>
     </AntdLayout>
   );
-}
+};
 
 export default Layout;

@@ -1,8 +1,8 @@
-import { Button, Modal } from 'antd';
-import React, { PureComponent } from 'react';
+import {Button, Modal} from 'antd';
+import React, {PureComponent} from 'react';
 import AddTransactionForm from './AddTransactionForm';
-import { FormikProps } from 'formik';
-import { AddTransactionValues } from './AddTransactionForm';
+import {FormikProps} from 'formik';
+import {AddTransactionValues} from './AddTransactionForm';
 
 interface AddTransactionState {
   visible: boolean;
@@ -27,8 +27,8 @@ class AddTransaction extends PureComponent<{}, AddTransactionState> {
           onOk={() => this.state.bag?.submitForm()}
         >
           <AddTransactionForm
-            onInit={(bag: any) => !this.state.bag && this.setState({ bag })}
-            onSubmit={() => this.setState({ visible: false })}
+            onInit={(bag: any) => !this.state.bag && this.setState({bag})}
+            onSubmit={() => this.setState({visible: false})}
           />
         </Modal>
       </div>
@@ -36,11 +36,11 @@ class AddTransaction extends PureComponent<{}, AddTransactionState> {
   }
 
   protected showModal = () => {
-    this.setState({ visible: true });
+    this.setState({visible: true});
   };
 
   protected handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({visible: false});
   };
 }
 

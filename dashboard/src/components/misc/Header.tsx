@@ -7,10 +7,10 @@ import {
   SettingOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
-import { Menu } from 'antd';
+import {Menu} from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import ReactCountryFlag from 'react-country-flag';
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 
 export type ActivePage =
   | 'info'
@@ -32,7 +32,7 @@ interface HeaderProps {
 
 export class Header extends PureComponent<HeaderProps> {
   public render() {
-    const { activePage, handleLogout } = this.props;
+    const {activePage, handleLogout} = this.props;
 
     return (
       <Menu
@@ -95,7 +95,7 @@ export class Header extends PureComponent<HeaderProps> {
                 alignItems: 'center',
               }}
             >
-              <div style={{ marginRight: 20 }}>
+              <div style={{marginRight: 20}}>
                 <ReactCountryFlag className="emojiFlag" countryCode="UA" />
               </div>
               <SettingOutlined />
@@ -113,7 +113,7 @@ export class Header extends PureComponent<HeaderProps> {
   }
 
   protected navigate = (page: ActivePage) => {
-    const { activePage, handleNavigate } = this.props;
+    const {activePage, handleNavigate} = this.props;
     return () => activePage !== page && handleNavigate(page);
   };
 }

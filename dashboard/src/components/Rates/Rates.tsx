@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react';
-import { Collapse } from 'antd';
+import React, {PureComponent} from 'react';
+import {Collapse} from 'antd';
 
 class Rates extends PureComponent {
   protected timerId?: NodeJS.Timer;

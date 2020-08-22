@@ -1,9 +1,9 @@
-import { Popover, Table } from 'antd';
-import { Transaction } from 'common';
-import { Instance } from 'mobx-state-tree';
+import {Popover, Table} from 'antd';
+import {Transaction} from 'common';
+import {Instance} from 'mobx-state-tree';
 import moment from 'moment';
 import React from 'react';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import {withTranslation, WithTranslation} from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
 
 interface TransactionListState {
@@ -27,7 +27,7 @@ class TransactionList extends React.PureComponent<WithTranslation, TransactionLi
 
   protected fetchData = async () => {
     // await this.store.loadCurrencies();
-    this.setState({ loading: true });
+    this.setState({loading: true});
     // const total = await this.store.loadTransactions({
     //   pageSize: this.state.pageSize,
     //   current: this.state.current,
@@ -82,7 +82,7 @@ class TransactionList extends React.PureComponent<WithTranslation, TransactionLi
               <div>
                 <div
                   className='category-icon'
-                  style={{ backgroundColor: category.icon.backgroundColor }}
+                  style={{backgroundColor: category.icon.backgroundColor}}
                 >
                   <Icon
                     name={category.icon.name}
@@ -119,7 +119,7 @@ class TransactionList extends React.PureComponent<WithTranslation, TransactionLi
             desc ? (
               desc
             ) : (
-                <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+                <p style={{color: 'grey', fontSize: '0.8em'}}>{'<NO INFO>'}</p>
               )
           }
         />

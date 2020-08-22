@@ -1,0 +1,16 @@
+query GetWallets {
+  wallets {
+    id
+    name
+    type
+    description
+    pockets {
+      amount
+      currency {
+        id
+        name
+        symbol
+      }
+    }
+  }
+}

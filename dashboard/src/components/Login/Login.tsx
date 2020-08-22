@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import {useHistory, Redirect} from 'react-router-dom';
 import LoginForm from './LoginForm';
 
 export const Login: React.FC = () => {
@@ -9,7 +9,7 @@ export const Login: React.FC = () => {
     return <Redirect to="/" exact />;
   }
 
-  const afterLogin = () => history.replace({ pathname: '/' });
+  const afterLogin = () => history.replace({pathname: '/'});
   return (
     <div className="App">
       <div className="login">

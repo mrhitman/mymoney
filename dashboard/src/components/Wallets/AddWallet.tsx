@@ -1,7 +1,7 @@
-import { Button, Modal } from 'antd';
-import React, { PureComponent } from 'react';
+import {Button, Modal} from 'antd';
+import React, {PureComponent} from 'react';
 import AddWalletForm from './AddWalletForm';
-import { FormikProps } from 'formik';
+import {FormikProps} from 'formik';
 
 interface AddWalletState {
   visible: boolean;
@@ -24,8 +24,8 @@ class AddWallet extends PureComponent<{}, AddWalletState> {
           onCancel={this.handleCancel}
         >
           <AddWalletForm
-            onInit={(bag: any) => !this.state.bag && this.setState({ bag })}
-            onSubmit={() => this.setState({ visible: false })}
+            onInit={(bag: any) => !this.state.bag && this.setState({bag})}
+            onSubmit={() => this.setState({visible: false})}
           />
         </Modal>
       </div>
@@ -33,11 +33,11 @@ class AddWallet extends PureComponent<{}, AddWalletState> {
   }
 
   protected showModal = () => {
-    this.setState({ visible: true });
+    this.setState({visible: true});
   };
 
   protected handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({visible: false});
   };
 }
 

@@ -1,9 +1,9 @@
-import { useMutation } from '@apollo/client';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { Formik } from 'formik';
-import { loader } from 'graphql.macro';
-import React, { FC } from 'react';
-import { loginLayout, loginTailLayout } from '../misc/layouts';
+import {useMutation} from '@apollo/client';
+import {Button, Checkbox, Form, Input} from 'antd';
+import {Formik} from 'formik';
+import {loader} from 'graphql.macro';
+import React, {FC} from 'react';
+import {loginLayout, loginTailLayout} from '../misc/layouts';
 
 export interface LoginFormValues {
   email: string;
@@ -19,7 +19,7 @@ const LoginForm: FC<LoginFormProps> = (props) => {
   const [login] = useMutation(LoginQuery);
 
   const handleSubmit = async (values: LoginFormValues) => {
-    const { data } = await login({ variables: values });
+    const {data} = await login({variables: values});
     localStorage.setItem('accessToken', data.login.accessToken);
     localStorage.setItem('refreshToken', data.login.refreshToken);
     props.afterLogin();
@@ -43,7 +43,7 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             label="Email"
             name="email"
             initialValue={bag.values.email}
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            rules={[{required: true, message: 'Please input your email!'}]}
           >
             <Input />
           </Form.Item>
@@ -52,7 +52,7 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             label="Password"
             name="password"
             rules={[
-              { required: true, message: 'Please input your password!' },
+              {required: true, message: 'Please input your password!'},
             ]}
           >
             <Input.Password />
@@ -69,12 +69,12 @@ const LoginForm: FC<LoginFormProps> = (props) => {
               onSubmit={bag.handleSubmit}
             >
               Submit
-              </Button>
+            </Button>
           </Form.Item>
         </Form>
       )}
     />
   );
-}
+};
 
 export default LoginForm;

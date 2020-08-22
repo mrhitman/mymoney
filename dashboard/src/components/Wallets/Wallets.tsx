@@ -1,11 +1,9 @@
-import { Collapse } from 'antd';
-import { Pocket, Wallet } from 'common';
-import { Instance } from 'mobx-state-tree';
-import React, { PureComponent } from 'react';
+import {Collapse} from 'antd';
+import {Pocket, Wallet} from 'common';
+import {Instance} from 'mobx-state-tree';
+import React, {PureComponent} from 'react';
 
 class Wallets extends PureComponent {
-
-
   public render() {
     return (
       <Collapse>
@@ -14,11 +12,11 @@ class Wallets extends PureComponent {
   }
 
   protected getTotal = () => {
-    return '0'
+    return '0';
   };
 
   protected getWalletSum = (wallet: Instance<typeof Wallet>): number => {
-    return 0
+    return 0;
   };
 
   protected renderWallet = (wallet: Instance<typeof Wallet>) => (

@@ -1,9 +1,9 @@
-import { Badge, Calendar } from 'antd';
-import moment, { Moment } from 'moment';
-import React, { PureComponent } from 'react';
-import { withTranslation, WithTranslation } from 'react-i18next';
-import { Instance } from 'mobx-state-tree';
-import { Transaction } from 'common';
+import {Badge, Calendar} from 'antd';
+import moment, {Moment} from 'moment';
+import React, {PureComponent} from 'react';
+import {withTranslation, WithTranslation} from 'react-i18next';
+import {Instance} from 'mobx-state-tree';
+import {Transaction} from 'common';
 
 interface CalendarViewState {
   view: 'year' | 'month';
@@ -32,9 +32,9 @@ class CalendarView extends PureComponent<WithTranslation, CalendarViewState> {
   public render() {
     return (
       <Calendar
-        onChange={(time) => this.setState({ time }, this.fetchData)}
+        onChange={(time) => this.setState({time}, this.fetchData)}
         onPanelChange={(time, view) =>
-          this.setState({ time, view }, this.fetchData)
+          this.setState({time, view}, this.fetchData)
         }
         dateCellRender={this.dateCellRender}
       />
@@ -42,7 +42,7 @@ class CalendarView extends PureComponent<WithTranslation, CalendarViewState> {
   }
 
   protected dateCellRender = (date: Moment) => {
-    const items = [] as any[]
+    const items = [] as any[];
     // this.store.transactions.filter((trx) => {
     // return moment(trx.date).format('L') === date.format('L');
     // });

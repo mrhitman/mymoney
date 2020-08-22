@@ -1,7 +1,7 @@
-import { ApolloProvider } from '@apollo/client';
+import {ApolloProvider} from '@apollo/client';
 import 'antd/dist/antd.css';
 import ApolloClient from 'apollo-boost';
-import React, { FC } from 'react';
+import React, {FC} from 'react';
 import './App.css';
 import './i18n';
 import IconStyles from './IconStyles';
@@ -22,6 +22,6 @@ const App: FC = () => {
       <Routes />
     </ApolloProvider>
   );
-}
+};
 
 export default App;

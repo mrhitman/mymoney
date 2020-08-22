@@ -1,11 +1,11 @@
-import { Checkbox, DatePicker, Form, Input, Select, Tabs } from 'antd';
-import { Category, Currency } from 'common';
-import { Formik, FormikHelpers, FormikProps } from 'formik';
-import { Instance } from 'mobx-state-tree';
+import {Checkbox, DatePicker, Form, Input, Select, Tabs} from 'antd';
+import {Category, Currency} from 'common';
+import {Formik, FormikHelpers, FormikProps} from 'formik';
+import {Instance} from 'mobx-state-tree';
 import moment from 'moment';
-import React, { PureComponent } from 'react';
-import { WithTranslation, withTranslation } from 'react-i18next';
-import { formLayout } from '../misc/Layout';
+import React, {PureComponent} from 'react';
+import {WithTranslation, withTranslation} from 'react-i18next';
+import {formLayout} from '../misc/Layout';
 
 export interface AddTransactionValues {
   currencyId?: Instance<typeof Currency>;
@@ -51,7 +51,7 @@ export class AddTransactionForm extends PureComponent<
         initialValues={
           {
             currencyId: store.currencies.find(
-              (c: any) => c.name === store.account?.settings.primaryCurrencyName
+                (c: any) => c.name === store.account?.settings.primaryCurrencyName,
             ),
             categoryId: undefined,
             date: moment(),
@@ -73,7 +73,7 @@ export class AddTransactionForm extends PureComponent<
               label='Amount'
               name='amount'
               initialValue={bag.values.amount}
-              rules={[{ required: true, message: 'Input amount' }]}
+              rules={[{required: true, message: 'Input amount'}]}
             >
               <Input
                 placeholder='0'
@@ -101,7 +101,7 @@ export class AddTransactionForm extends PureComponent<
               label='Date'
               validateStatus={bag.errors.date ? 'error' : 'success'}
               initialValue={bag.values.date}
-              rules={[{ required: true, message: 'Input trx date' }]}
+              rules={[{required: true, message: 'Input trx date'}]}
             >
               <DatePicker showTime defaultValue={bag.values.date} />
             </Form.Item>
@@ -113,14 +113,14 @@ export class AddTransactionForm extends PureComponent<
                 showSearch
                 filterOption={false}
                 value={bag.values.currencyId?.id}
-                onSearch={(filter) => this.setState({ filterCurrency: filter })}
+                onSearch={(filter) => this.setState({filterCurrency: filter})}
                 onDropdownVisibleChange={() =>
-                  this.setState({ filterCurrency: undefined })
+                  this.setState({filterCurrency: undefined})
                 }
                 onChange={(id) =>
                   bag.setFieldValue(
-                    'currencyId',
-                    store.currencies.find((c: any) => c.id === id)
+                      'currencyId',
+                      store.currencies.find((c: any) => c.id === id),
                   )
                 }
               >
@@ -141,16 +141,16 @@ export class AddTransactionForm extends PureComponent<
                   onChange={bag.handleChange('sourceWalletId')}
                 >
                   {store.wallets
-                    .filter((wallet: any) =>
-                      bag.values.type === 'transfer'
-                        ? wallet.id !== bag.values.destinationWalletId
-                        : true
-                    )
-                    .map((wallet: any) => (
-                      <Select.Option key={wallet.id} value={wallet.id}>
-                        {wallet.name}
-                      </Select.Option>
-                    ))}
+                      .filter((wallet: any) =>
+                      bag.values.type === 'transfer' ?
+                        wallet.id !== bag.values.destinationWalletId :
+                        true,
+                      )
+                      .map((wallet: any) => (
+                        <Select.Option key={wallet.id} value={wallet.id}>
+                          {wallet.name}
+                        </Select.Option>
+                      ))}
                 </Select>
               </Form.Item>
             )}
@@ -164,16 +164,16 @@ export class AddTransactionForm extends PureComponent<
                   onChange={bag.handleChange('destinationWalletId')}
                 >
                   {store.wallets
-                    .filter((wallet: any) =>
-                      bag.values.type === 'transfer'
-                        ? wallet.id !== bag.values.sourceWalletId
-                        : true
-                    )
-                    .map((wallet: any) => (
-                      <Select.Option key={wallet.id} value={wallet.id}>
-                        {wallet.name}
-                      </Select.Option>
-                    ))}
+                      .filter((wallet: any) =>
+                      bag.values.type === 'transfer' ?
+                        wallet.id !== bag.values.sourceWalletId :
+                        true,
+                      )
+                      .map((wallet: any) => (
+                        <Select.Option key={wallet.id} value={wallet.id}>
+                          {wallet.name}
+                        </Select.Option>
+                      ))}
                 </Select>
               </Form.Item>
             )}
@@ -200,28 +200,28 @@ export class AddTransactionForm extends PureComponent<
                   filterOption={false}
                   onChange={(id) =>
                     bag.setFieldValue(
-                      'categoryId',
-                      store.categories.find((c: any) => c.id === id)
+                        'categoryId',
+                        store.categories.find((c: any) => c.id === id),
                     )
                   }
                   onSearch={(filter) =>
-                    this.setState({ filterCategory: filter })
+                    this.setState({filterCategory: filter})
                   }
                   onDropdownVisibleChange={() =>
-                    this.setState({ filterCategory: undefined })
+                    this.setState({filterCategory: undefined})
                   }
                 >
                   {this.categories
-                    .filter((category: any) => category.type === bag.values.type)
-                    .map((category: any) => (
-                      <Select.Option key={category.id} value={category.id}>
-                        {this.props.t(category.name)}
-                      </Select.Option>
-                    ))}
+                      .filter((category: any) => category.type === bag.values.type)
+                      .map((category: any) => (
+                        <Select.Option key={category.id} value={category.id}>
+                          {this.props.t(category.name)}
+                        </Select.Option>
+                      ))}
                 </Select>
               </Form.Item>
             )}
-            <Form.Item labelCol={{ span: 22 }} label='Is Necessary'>
+            <Form.Item labelCol={{span: 22}} label='Is Necessary'>
               <Checkbox
                 checked={bag.values.isNecessary}
                 onChange={(e) =>
@@ -229,7 +229,7 @@ export class AddTransactionForm extends PureComponent<
                 }
               />
             </Form.Item>
-            <Form.Item labelCol={{ span: 22 }} label='Repeatable operation'>
+            <Form.Item labelCol={{span: 22}} label='Repeatable operation'>
               <Checkbox
                 checked={bag.values.isTemplate}
                 onChange={(e) =>
@@ -280,36 +280,36 @@ export class AddTransactionForm extends PureComponent<
       }
 
       return `${currency.description} (${currency.name})`
-        .toLowerCase()
-        .includes(filter);
+          .toLowerCase()
+          .includes(filter);
     });
   }
 
   protected get categories() {
     return this.store.categories
-      .filter(
-        (category: any) =>
-          ![
-            'TRANSFER_IN',
-            'TRANSFER_OUT',
-            'TRANSFER_SYS',
-            'SYSTEM_EMPTY',
-          ].includes(category.name)
-      )
-      .filter((category: any) => {
-        const filter = this.state.filterCategory?.toLowerCase();
+        .filter(
+            (category: any) =>
+              ![
+                'TRANSFER_IN',
+                'TRANSFER_OUT',
+                'TRANSFER_SYS',
+                'SYSTEM_EMPTY',
+              ].includes(category.name),
+        )
+        .filter((category: any) => {
+          const filter = this.state.filterCategory?.toLowerCase();
 
-        if (!filter) {
-          return true;
-        }
+          if (!filter) {
+            return true;
+          }
 
-        return category.name.toLowerCase().includes(filter);
-      });
+          return category.name.toLowerCase().includes(filter);
+        });
   }
 
   protected handleSubmit = async (
     values: AddTransactionValues,
-    formikHelpers: FormikHelpers<AddTransactionValues>
+    formikHelpers: FormikHelpers<AddTransactionValues>,
   ) => {
     try {
       await this.store.addTransaction(values);

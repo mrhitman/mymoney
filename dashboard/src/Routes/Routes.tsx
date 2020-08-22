@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, {FC} from 'react';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Categories from 'src/components/Accounting/Categories';
 import AnalysisByCategory from 'src/components/Analysis/AnalysisByCategory';
 import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
@@ -9,7 +9,7 @@ import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
-import { Accounting } from '../components/Accounting/Accounting';
+import {Accounting} from '../components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
 
 const Routes: FC = () => (

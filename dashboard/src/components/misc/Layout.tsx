@@ -1,4 +1,24 @@
-import { AreaChartOutlined, ArrowsAltOutlined, BarChartOutlined, BookOutlined, CarryOutOutlined, DollarOutlined, FallOutlined, LaptopOutlined, LinkOutlined, LogoutOutlined, MenuOutlined, MoneyCollectOutlined, PieChartOutlined, RiseOutlined, ScheduleOutlined, SolutionOutlined, TableOutlined, TrophyOutlined, WalletOutlined } from '@ant-design/icons';
+import {
+  AreaChartOutlined,
+  ArrowsAltOutlined,
+  BarChartOutlined,
+  BookOutlined,
+  CarryOutOutlined,
+  DollarOutlined,
+  FallOutlined,
+  LaptopOutlined,
+  LinkOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+  MoneyCollectOutlined,
+  PieChartOutlined,
+  RiseOutlined,
+  ScheduleOutlined,
+  SolutionOutlined,
+  TableOutlined,
+  TrophyOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
 import { Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Redirect } from 'react-router-dom';
@@ -37,9 +57,9 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
     <AntdLayout>
       <AntdLayout.Header className="header">
         <div className="logo" />
-        <Menu theme="dark" mode="horizontal" style={{ float: 'right' }} >
-          <Menu.SubMenu key="1" icon={<MenuOutlined />} >
-            <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout} >
+        <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
+          <Menu.SubMenu key="1" icon={<MenuOutlined />}>
+            <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout}>
               Logout
             </Menu.Item>
           </Menu.SubMenu>
@@ -54,28 +74,67 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             style={{ height: '100vh', borderRight: 0 }}
           >
             <Menu.SubMenu key="sub1" icon={<DollarOutlined />} title="Ledgers">
-              <Menu.Item key="1" icon={<WalletOutlined />}>Wallets</Menu.Item>
-              <Menu.Item key="2" icon={<TrophyOutlined />}>Goals</Menu.Item>
+              <Menu.Item
+                key="1"
+                icon={<WalletOutlined />}
+                onClick={() => navigate('accounting')}
+              >
+                Wallets
+              </Menu.Item>
+              <Menu.Item key="2" icon={<TrophyOutlined />}>
+                Goals
+              </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="sub2" icon={<LaptopOutlined />} title="Transactions">
-              <Menu.Item key="5" icon={<RiseOutlined />}>Incomes</Menu.Item>
-              <Menu.Item key="6" icon={<FallOutlined />}>Outcomes</Menu.Item>
-              <Menu.Item key="7" icon={<ArrowsAltOutlined />}>Transfers</Menu.Item>
+            <Menu.SubMenu
+              key="sub2"
+              icon={<LaptopOutlined />}
+              title="Transactions"
+            >
+              <Menu.Item key="5" icon={<RiseOutlined />}>
+                Incomes
+              </Menu.Item>
+              <Menu.Item key="6" icon={<FallOutlined />}>
+                Outcomes
+              </Menu.Item>
+              <Menu.Item key="7" icon={<ArrowsAltOutlined />}>
+                Transfers
+              </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu key="sub3" icon={<TableOutlined />} title="Budget">
-              <Menu.Item key="9" icon={<CarryOutOutlined />}>Current</Menu.Item>
-              <Menu.Item key="10" icon={<ScheduleOutlined />}>Planning</Menu.Item>
-              <Menu.Item key="11" icon={<SolutionOutlined />}>Archive</Menu.Item>
+              <Menu.Item key="9" icon={<CarryOutOutlined />}>
+                Current
+              </Menu.Item>
+              <Menu.Item key="10" icon={<ScheduleOutlined />}>
+                Planning
+              </Menu.Item>
+              <Menu.Item key="11" icon={<SolutionOutlined />}>
+                Archive
+              </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="sub4" icon={<AreaChartOutlined />} title="Statistics">
-
-              <Menu.Item key="15" icon={<PieChartOutlined />}>By Categories</Menu.Item>
-              <Menu.Item key="16" icon={<PieChartOutlined />}>By Currencies</Menu.Item>
-              <Menu.Item key="17" icon={<BarChartOutlined />}>By Period</Menu.Item>
+            <Menu.SubMenu
+              key="sub4"
+              icon={<AreaChartOutlined />}
+              title="Statistics"
+            >
+              <Menu.Item key="15" icon={<PieChartOutlined />}>
+                By Categories
+              </Menu.Item>
+              <Menu.Item key="16" icon={<PieChartOutlined />}>
+                By Currencies
+              </Menu.Item>
+              <Menu.Item key="17" icon={<BarChartOutlined />}>
+                By Period
+              </Menu.Item>
             </Menu.SubMenu>
-            <Menu.Item key="12" icon={<BookOutlined />}>Categories</Menu.Item>
-            <Menu.Item key="13" icon={<MoneyCollectOutlined />}>Currencies</Menu.Item>
-            <Menu.Item key="14" icon={<LinkOutlined />}>Connectors</Menu.Item>
+            <Menu.Item key="12" icon={<BookOutlined />}>
+              Categories
+            </Menu.Item>
+            <Menu.Item key="13" icon={<MoneyCollectOutlined />}>
+              Currencies
+            </Menu.Item>
+            <Menu.Item key="14" icon={<LinkOutlined />}>
+              Connectors
+            </Menu.Item>
           </Menu>
         </AntdLayout.Sider>
         <AntdLayout style={{ padding: '0 24px 24px' }}>

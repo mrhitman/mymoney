@@ -24,12 +24,12 @@ query getTransactions($type: TransactionType) {
     category {
       name
       type
-      # icon {
-      #   type
-      #   name
-      #   backgroundColor
-      #   color
-      # }
+      icon {
+        type
+        name
+        backgroundColor
+        color
+      }
     }
     description
     amount

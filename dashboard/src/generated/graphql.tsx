@@ -472,7 +472,7 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'Login' }
-    & Pick<Login, 'accessToken'>
+    & Pick<Login, 'accessToken' | 'refreshToken'>
   ) }
 );
 
@@ -555,6 +555,7 @@ export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(loginData: {email: $email, password: $password}) {
     accessToken
+    refreshToken
   }
 }
     `;

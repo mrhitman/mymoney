@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import React, { FC } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Categories from 'src/components/Accounting/Categories';
 import AnalysisByCategory from 'src/components/Analysis/AnalysisByCategory';
 import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
@@ -9,8 +9,9 @@ import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
-import {Accounting} from '../components/Accounting/Accounting';
+import { Accounting } from '../components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
+import Operation from 'antd/lib/transfer/operation';
 
 const Routes: FC = () => (
   <Router>
@@ -29,6 +30,18 @@ const Routes: FC = () => (
     <PrivateRoute path="/accounting" exact>
       <Layout activePage="accounting">
         <Accounting />
+      </Layout>
+    </PrivateRoute>
+
+    <PrivateRoute path="/incomes" exact>
+      <Layout activePage="incomes">
+        <TransactionList type="income" />
+      </Layout>
+    </PrivateRoute>
+
+    <PrivateRoute path="/outcomes" exact>
+      <Layout activePage="outcomes">
+        <TransactionList type="outcome" />
       </Layout>
     </PrivateRoute>
 

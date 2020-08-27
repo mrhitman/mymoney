@@ -49,7 +49,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
     setRedirect('/login');
   };
 
-  const navigate = async (page: ActivePage) => {
+  const navigate = (page: ActivePage) => () => {
     setRedirect(page ? `/${page}` : '/');
   };
 
@@ -77,7 +77,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               <Menu.Item
                 key="1"
                 icon={<WalletOutlined />}
-                onClick={() => navigate('accounting')}
+                onClick={navigate('accounting')}
               >
                 Wallets
               </Menu.Item>
@@ -90,10 +90,18 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               icon={<LaptopOutlined />}
               title="Transactions"
             >
-              <Menu.Item key="5" icon={<RiseOutlined />}>
+              <Menu.Item
+                key="5"
+                onClick={navigate('incomes')}
+                icon={<RiseOutlined />}
+              >
                 Incomes
               </Menu.Item>
-              <Menu.Item key="6" icon={<FallOutlined />}>
+              <Menu.Item
+                key="6"
+                onClick={navigate('outcomes')}
+                icon={<FallOutlined />}
+              >
                 Outcomes
               </Menu.Item>
               <Menu.Item key="7" icon={<ArrowsAltOutlined />}>

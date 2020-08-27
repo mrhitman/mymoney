@@ -142,5 +142,7 @@
   "set_pin": "Set PIN",
   "use_fingerprint": "Use Fingerprint",
   "lockscreen_after": "Lock screen after",
-  "<Not selected>": "<Not selected>"
+  "<Not selected>": "<Not selected>",
+  "SYSTEM_EMPTY": "Unknown",
+  "category_games": "Games"
 }

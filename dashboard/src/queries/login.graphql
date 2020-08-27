@@ -1,5 +1,6 @@
 mutation Login($email: String!, $password: String!) {
   login(loginData: { email: $email, password: $password }) {
     accessToken
+    refreshToken
   }
 }

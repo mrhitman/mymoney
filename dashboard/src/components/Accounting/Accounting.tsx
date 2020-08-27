@@ -10,11 +10,12 @@ import {
   Col,
 } from 'antd';
 import { loader } from 'graphql.macro';
+import { GetWalletsQuery } from 'src/generated/graphql';
 import React, { FC } from 'react';
 
 const WalletsQuery = loader('src/queries/wallets.graphql');
 
-const icons = {
+const icons: Record<string, string> = {
   'monobank-black':
     'https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png',
   'Privat24 Card':
@@ -26,29 +27,25 @@ const icons = {
 const layout = { xs: 24, sm: 24, md: 12, lg: 6 };
 
 export const Accounting: FC = () => {
-  const { loading, error, data } = useQuery(WalletsQuery);
-  const wallets = data?.wallets || [];
+  const { loading, error, data } = useQuery<GetWalletsQuery>(WalletsQuery);
+  const wallets = data ? data.wallets : [];
 
   return (
     <Skeleton loading={loading}>
       <Row gutter={16}>
-        {wallets.map((wallet: any) => {
+        {wallets.map((wallet) => {
           return (
             <Col id={wallet.id} {...layout}>
               <Card style={{ width: 300, marginTop: 16 }} loading={loading}>
                 <Card.Meta
                   title={wallet.name}
                   description={wallet.description}
-                  avatar={
-                    <Avatar
-                      src={(icons as any)[wallet.type || 'default-card']}
-                    />
-                  }
+                  avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
                 />
                 <Divider />
                 <List
                   dataSource={wallet.pockets}
-                  renderItem={(pocket: any) => (
+                  renderItem={(pocket) => (
                     <Typography>
                       {pocket.currency.symbol} {pocket.amount}{' '}
                       {pocket.currency.name}

@@ -44,7 +44,8 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix"
+    "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -62,6 +63,11 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.17.8",
+    "@graphql-codegen/introspection": "1.17.8",
+    "@graphql-codegen/typescript": "1.17.8",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "1.17.8",
     "@types/antd": "^1.0.0",
     "@types/i18next": "^13.0.0",
     "@types/lodash": "^4.14.152",

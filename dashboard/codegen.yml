@@ -1,0 +1,12 @@
+overwrite: true
+schema: 'https://mymoney-server-api.herokuapp.com/graphql'
+documents: 'src/queries/*.graphql'
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+  ./graphql.schema.json:
+    plugins:
+      - 'introspection'

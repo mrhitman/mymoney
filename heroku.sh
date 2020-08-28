@@ -6,6 +6,7 @@ then
     docker build -t mymoney-api .
     docker tag mymoney-api registry.heroku.com/mymoney-server-api/web
     docker push registry.heroku.com/mymoney-server-api/web
+    heroku container:login
     heroku container:push web --app mymoney-server-api
     heroku container:release web --app mymoney-server-api
 elif [[ "$1" == "migrate" ]]

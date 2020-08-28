@@ -535,6 +535,17 @@ export type GetCategoriesQuery = (
   )> }
 );
 
+export type GetCurrenciesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrenciesQuery = (
+  { __typename?: 'Query' }
+  & { currencies: Array<(
+    { __typename?: 'Currency' }
+    & Pick<Currency, 'id' | 'name' | 'description' | 'symbol' | 'code' | 'rate'>
+  )> }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -652,6 +663,43 @@ export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const GetCurrenciesDocument = gql`
+    query GetCurrencies {
+  currencies {
+    id
+    name
+    description
+    symbol
+    code
+    rate
+  }
+}
+    `;
+
+/**
+ * __useGetCurrenciesQuery__
+ *
+ * To run a query within a React component, call `useGetCurrenciesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrenciesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrenciesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrenciesQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrenciesQuery, GetCurrenciesQueryVariables>) {
+        return Apollo.useQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(GetCurrenciesDocument, baseOptions);
+      }
+export function useGetCurrenciesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrenciesQuery, GetCurrenciesQueryVariables>) {
+          return Apollo.useLazyQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(GetCurrenciesDocument, baseOptions);
+        }
+export type GetCurrenciesQueryHookResult = ReturnType<typeof useGetCurrenciesQuery>;
+export type GetCurrenciesLazyQueryHookResult = ReturnType<typeof useGetCurrenciesLazyQuery>;
+export type GetCurrenciesQueryResult = Apollo.QueryResult<GetCurrenciesQuery, GetCurrenciesQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(loginData: {email: $email, password: $password}) {

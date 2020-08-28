@@ -1,0 +1,10 @@
+query GetCurrencies {
+  currencies {
+    id
+    name
+    description
+    symbol
+    code
+    rate
+  }
+}

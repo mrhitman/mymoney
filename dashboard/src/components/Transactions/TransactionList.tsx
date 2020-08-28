@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Popover, Table, Skeleton } from 'antd';
+import { Col, Popover, Row, Table } from 'antd';
 import { loader } from 'graphql.macro';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
   const [pageSize, setPageSize] = useState(10);
   const { loading, data, error } = useQuery<GetTransactionsQuery>(
     TransactionsQuery,
-    { variables: { type, limit: pageSize, offset: pageSize * current } },
+    { variables: { type, limit: pageSize, offset: (pageSize - 1) * current } },
   );
 
   const { t } = useTranslation();
@@ -26,6 +26,7 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
       loading={loading}
       pagination={{
         position: ['topRight'],
+        responsive: true,
         total: data?.transactions?.totalCount || 0,
         pageSize,
         current,
@@ -59,22 +60,26 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
         key="category"
         render={(category) => {
           return (
-            <div>
-              <div
-                className="category-icon"
-                style={{
-                  backgroundColor: category.icon?.backgroundColor || 'grey',
-                }}
-              >
-                <Icon
-                  name={category.icon?.name || 'warning'}
-                  type={category.icon?.type || 'AntDesign'}
-                  color={'white'}
-                  size={12}
-                />
-              </div>
-              {t(category.name)}
-            </div>
+            <Row gutter={8}>
+              <Col span={8}>
+                <div
+                  className="category-icon"
+                  style={{
+                    backgroundColor: category.icon?.backgroundColor || 'grey',
+                  }}
+                >
+                  <Icon
+                    name={category.icon?.name || 'warning'}
+                    type={category.icon?.type || 'AntDesign'}
+                    color={'white'}
+                    size={16}
+                  />
+                </div>
+              </Col>
+              <Col span={16}>
+                {t(category.name)}
+              </Col>
+            </Row>
           );
         }}
       />
@@ -109,12 +114,13 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
         title="Description"
         dataIndex="description"
         key="description"
+        width="24%"
         render={(desc) =>
           desc ? (
             desc
           ) : (
-            <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-          )
+              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            )
         }
       />
       <Table.Column

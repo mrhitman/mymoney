@@ -1,0 +1,13 @@
+query GetCategories {
+  categories {
+    id
+    name
+    type
+    icon {
+      type
+      name
+      backgroundColor
+      color
+    }
+  }
+}

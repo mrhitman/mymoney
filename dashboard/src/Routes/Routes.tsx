@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Categories from 'src/components/Accounting/Categories';
+import Categories from 'src/components/Categories/Categories';
 import AnalysisByCategory from 'src/components/Analysis/AnalysisByCategory';
 import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
 import Info from 'src/components/Info/Info';
@@ -11,7 +11,6 @@ import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
 import { Accounting } from '../components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
-import Operation from 'antd/lib/transfer/operation';
 
 const Routes: FC = () => (
   <Router>

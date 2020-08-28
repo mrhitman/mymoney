@@ -17,11 +17,12 @@ import {
   SolutionOutlined,
   TableOutlined,
   TrophyOutlined,
-  WalletOutlined,
+  WalletOutlined
 } from '@ant-design/icons';
 import { Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
+import { upperFirst } from 'lodash';
 import React, { FC, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { ActivePage } from './Header';
 
 export const formLayout = {
@@ -102,14 +103,17 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 onClick={navigate('incomes')}
                 icon={<RiseOutlined />}
               >
-                Incomes
+                <Link to="/incomes">
+                  Incomes
+                </Link>
               </Menu.Item>
               <Menu.Item
                 key="outcomes"
-                onClick={navigate('outcomes')}
                 icon={<FallOutlined />}
               >
-                Outcomes
+                <Link to="/outcomes">
+                  Outcomes
+                </Link>
               </Menu.Item>
               <Menu.Item key="7" icon={<ArrowsAltOutlined />}>
                 Transfers
@@ -141,8 +145,10 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 By Period
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.Item key="12" icon={<BookOutlined />}>
-              Categories
+            <Menu.Item key="categories" icon={<BookOutlined />}>
+              <Link to="/categories">
+                Categories
+              </Link>
             </Menu.Item>
             <Menu.Item key="13" icon={<MoneyCollectOutlined />}>
               Currencies
@@ -154,9 +160,12 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
         </AntdLayout.Sider>
         <AntdLayout style={{ padding: '0 24px 24px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to="/">
+                Home
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{upperFirst(activePage)}</Breadcrumb.Item>
           </Breadcrumb>
           <AntdLayout.Content
             className="site-layout-background"

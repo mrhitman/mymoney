@@ -33,6 +33,12 @@ interface LayoutProps {
   activePage?: ActivePage;
 }
 
+const MenuMap: Record<string, string> = {
+  'accounting': 'ledgers',
+  'incomes': 'transactions',
+  'outcomes': 'transactions'
+};
+
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
   const [redirect, setRedirect] = useState<string | undefined>(undefined);
 
@@ -44,7 +50,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
     return <Redirect to="/login" exact />;
   }
 
-  const logout = async () => {
+  const logout = () => {
     localStorage.clear();
     setRedirect('/login');
   };
@@ -68,14 +74,15 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
       <AntdLayout>
         <AntdLayout.Sider width={280} className="site-layout-background">
           <Menu
+            theme="dark"
             mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultOpenKeys={activePage ? [MenuMap[activePage]] : []}
+            selectedKeys={activePage ? [activePage] : activePage}
             style={{ height: '100vh', borderRight: 0 }}
           >
-            <Menu.SubMenu key="sub1" icon={<DollarOutlined />} title="Ledgers">
+            <Menu.SubMenu key="ledgers" icon={<DollarOutlined />} title="Ledgers">
               <Menu.Item
-                key="1"
+                key="accounting"
                 icon={<WalletOutlined />}
                 onClick={navigate('accounting')}
               >
@@ -86,19 +93,19 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu
-              key="sub2"
+              key="transactions"
               icon={<LaptopOutlined />}
               title="Transactions"
             >
               <Menu.Item
-                key="5"
+                key="incomes"
                 onClick={navigate('incomes')}
                 icon={<RiseOutlined />}
               >
                 Incomes
               </Menu.Item>
               <Menu.Item
-                key="6"
+                key="outcomes"
                 onClick={navigate('outcomes')}
                 icon={<FallOutlined />}
               >

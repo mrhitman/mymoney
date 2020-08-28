@@ -1,28 +1,40 @@
 import { useQuery } from '@apollo/client';
-import { Popover, Table } from 'antd';
+import { Popover, Table, Skeleton } from 'antd';
 import { loader } from 'graphql.macro';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-// import Icon from 'src/components/misc/Icon';
+import Icon from 'src/components/misc/Icon';
 import { GetTransactionsQuery } from 'src/generated/graphql';
 
 const TransactionsQuery = loader('src/queries/transactions.graphql');
 const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
   type,
 }) => {
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const { loading, data, error } = useQuery<GetTransactionsQuery>(
     TransactionsQuery,
-    { variables: { type } },
+    { variables: { type, limit: pageSize, offset: pageSize * current } },
   );
-  console.log(data);
+
   const { t } = useTranslation();
   return (
     <Table
       bordered
       showSorterTooltip
       loading={loading}
-      dataSource={data?.transactions || []}
+      pagination={{
+        position: ['topRight'],
+        total: data?.transactions?.totalCount || 0,
+        pageSize,
+        current,
+      }}
+      onChange={(pagination) => {
+        setCurrent(pagination.current || 1);
+        setPageSize(pagination.pageSize || 1);
+      }}
+      dataSource={data?.transactions?.items || []}
     >
       <Table.Column
         title="id"
@@ -50,14 +62,16 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
             <div>
               <div
                 className="category-icon"
-                style={{ backgroundColor: category.icon?.backgroundColor }}
+                style={{
+                  backgroundColor: category.icon?.backgroundColor || 'grey',
+                }}
               >
-                {/* <Icon
-                  name={category.icon?.name}
-                  type={category.icon?.type}
+                <Icon
+                  name={category.icon?.name || 'warning'}
+                  type={category.icon?.type || 'AntDesign'}
                   color={'white'}
                   size={12}
-                /> */}
+                />
               </div>
               {t(category.name)}
             </div>

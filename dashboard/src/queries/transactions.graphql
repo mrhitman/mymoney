@@ -5,33 +5,36 @@
 #   description
 # }
 
-query getTransactions($type: TransactionType) {
-  transactions(type: $type) {
-    id
-    type
-    # sourceWallet {
-    #   ...wallet
-    # }
-    # destinationWallet {
-    #   ...wallet
-    # }
-    currency {
+query getTransactions($type: TransactionType, $limit: Float, $offset: Float) {
+  transactions(type: $type, limit: $limit, offset: $offset) {
+    totalCount
+    items {
       id
-      name
-      description
-      symbol
-    }
-    category {
-      name
       type
-      icon {
-        type
+      # sourceWallet {
+      #   ...wallet
+      # }
+      # destinationWallet {
+      #   ...wallet
+      # }
+      currency {
+        id
         name
-        backgroundColor
-        color
+        description
+        symbol
       }
+      category {
+        name
+        type
+        icon {
+          type
+          name
+          backgroundColor
+          color
+        }
+      }
+      description
+      amount
     }
-    description
-    amount
   }
 }

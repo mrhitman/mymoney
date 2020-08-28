@@ -4,9 +4,11 @@ import { loader } from 'graphql.macro';
 import Icon from 'src/components/misc/Icon'
 import React from 'react';
 import { GetCategoriesQuery } from 'src/generated/graphql';
+import { useTranslation } from 'react-i18next';
 
 const CategoriesQuery = loader('src/queries/categories.graphql')
 export const Categories: React.FC = () => {
+  const { t } = useTranslation();
   const { loading, data, error } = useQuery<GetCategoriesQuery>(
     CategoriesQuery,
   );
@@ -14,7 +16,9 @@ export const Categories: React.FC = () => {
     bordered
     showSorterTooltip
     loading={loading}
-    dataSource={data?.categories || []}
+    dataSource={data?.
+      categories?.
+      filter(c => !['TRANSFER_IN', 'TRANSFER_OUT', 'TRANSFER_SYS', 'SYSTEM_EMPTY'].includes(c.name)) || []}
   >
     <Table.Column
       title="id"
@@ -49,7 +53,7 @@ export const Categories: React.FC = () => {
       }}
     />
     <Table.Column title="Type" dataIndex="type" key="type" />
-    <Table.Column title="Name" dataIndex="name" key="name" />
+    <Table.Column title="Name" dataIndex="name" key="name" render={name => t(name)} />
   </Table>)
 }
 

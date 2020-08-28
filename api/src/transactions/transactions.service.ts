@@ -27,7 +27,7 @@ export class TransactionsService {
     protected budgetService: BudgetsService,
   ) {}
 
-  public async getAll(
+  public getAll(
     user: User,
     filter: {
       walletId?: string;

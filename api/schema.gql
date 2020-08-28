@@ -113,6 +113,11 @@ enum TransactionType {
   transfer
 }
 
+type GetTransaction {
+  totalCount: Float!
+  items: [Transaction!]!
+}
+
 type Goal {
   id: ID!
   goal: Float!
@@ -179,7 +184,7 @@ type Query {
     from: String!
     amount: Float!
   ): Float!
-  transactions(type: TransactionType, categoryId: String, currencyId: String, walletId: String): [Transaction!]!
+  transactions(order: String, offset: Float, limit: Float, type: TransactionType, categoryId: String, currencyId: String, walletId: String): GetTransaction!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
@@ -222,6 +227,9 @@ type Mutation {
   connectPrivat24(password: String!, merchant_id: String!): String!
   disconnectPrivat24(merchant_id: String!): String!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
+  budgetRemoveOutcomeCategory(categoryId: String!): Budget!
+  budgetAddIncomeCategory(categoryData: BudgetCategoryCreate!): Budget!
+  budgetRemoveIncomeCategory(categoryId: String!): Budget!
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!

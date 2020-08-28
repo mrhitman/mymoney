@@ -4,6 +4,8 @@ node_modules
 .env
 api/dist
 api/data
+api/static/*.*
+api/static/**/*.*
 api/coverage
 common/lib
 

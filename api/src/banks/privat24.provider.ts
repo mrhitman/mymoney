@@ -22,15 +22,15 @@ interface GetClientInfoResponse {
         main_card_number: string;
         card_stat: {};
         src: {};
-      }
+      };
       av_balance: string;
       bal_date: string;
       bal_dyn: string;
       balance: string;
       fin_limit: string;
       trade_limit: string;
-    }
-  }
+    };
+  };
 }
 
 interface GetStatementsResponse {
@@ -49,9 +49,9 @@ interface GetStatementsResponse {
         rest: string; // eg 780.00 UAH
         terminal: string;
         description: string;
-      }>
-    }
-  }
+      }>;
+    };
+  };
 }
 
 @Injectable()
@@ -71,12 +71,13 @@ export class Privat24Provider {
       return;
     }
 
-    const currency = await Currency
-      .query()
+    const currency = await Currency.query()
       .select(['id'])
       .findOne({ name: account.info.cardbalance.card.currency });
 
-    const wallet = await Wallet.query().findById(account.info.cardbalance.card.account);
+    const wallet = await Wallet.query().findById(
+      account.info.cardbalance.card.account,
+    );
     const walletData = {
       id: account.info.cardbalance.card.account,
       userId: user.id,
@@ -86,10 +87,10 @@ export class Privat24Provider {
       pockets: [
         {
           currencyId: currency.id,
-          amount: parseFloat(account.info.cardbalance.balance)
-        }
-      ]
-    }
+          amount: parseFloat(account.info.cardbalance.balance),
+        },
+      ],
+    };
 
     if (wallet) {
       await wallet.$query().update(walletData);
@@ -97,13 +98,8 @@ export class Privat24Provider {
       await Wallet.query().insert(walletData);
     }
 
-    const to = DateTime
-      .local()
-      .toFormat('dd.MM.yyyy');
-    const from = DateTime
-      .local()
-      .minus({ month: 1 })
-      .toFormat('dd.MM.yyyy');
+    const to = DateTime.local().toFormat('dd.MM.yyyy');
+    const from = DateTime.local().minus({ month: 1 }).toFormat('dd.MM.yyyy');
 
     const statements = await this.getStatements(id, token, from, to);
 
@@ -116,19 +112,20 @@ export class Privat24Provider {
         }
 
         const amount = parseFloat(statement.cardamount);
-        const type = amount > 0 ? TransactionType.income : TransactionType.outcome;
+        const type =
+          amount > 0 ? TransactionType.income : TransactionType.outcome;
         const categoryInId = '39da1fbc-1937-41b2-a46f-d2dce9a1f788';
         const categoryOutId = '07c0ba04-d1a2-4a17-b526-ac7bb80e78b1';
         const trxData = {
           id: statement.appcode,
           description: statement.description,
-          amount,
+          amount: Math.abs(amount),
           userId: user.id,
           categoryId: amount > 0 ? categoryInId : categoryOutId,
           currencyId: currency.id,
           type,
           date: new Date(),
-          additional: JSON.stringify(statement)
+          additional: JSON.stringify(statement),
         } as Partial<Transaction>;
 
         if (type === TransactionType.income) {
@@ -144,29 +141,39 @@ export class Privat24Provider {
     }
   }
 
-  protected getClientInfo(id: string, token: string): Promise<GetClientInfoResponse | undefined> {
-    const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""></payment>`
+  protected getClientInfo(
+    id: string,
+    token: string,
+  ): Promise<GetClientInfoResponse | undefined> {
+    const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""></payment>`;
     return this.query('balance', this.getBody(data, id, token));
   }
 
   /**
-   * @param id 
-   * @param token 
+   * @param id
+   * @param token
    * @param from 07.08.2020
    * @param to 07.08.2020
    */
-  protected getStatements(id: string, token: string, from: string, to: string): Promise<GetStatementsResponse> {
-
-    const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""><prop name="sd" value="${from}" /><prop name="ed" value="${to}" /></payment>`
-    return this.query('https://api.privatbank.ua/p24api/rest_fiz', this.getBody(data, id, token));
+  protected getStatements(
+    id: string,
+    token: string,
+    from: string,
+    to: string,
+  ): Promise<GetStatementsResponse> {
+    const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""><prop name="sd" value="${from}" /><prop name="ed" value="${to}" /></payment>`;
+    return this.query(
+      'https://api.privatbank.ua/p24api/rest_fiz',
+      this.getBody(data, id, token),
+    );
   }
 
   private sha1(data) {
-    return createHash('sha1').update(data).digest("hex");
+    return createHash('sha1').update(data).digest('hex');
   }
 
   private md5(data) {
-    return createHash('md5').update(data).digest("hex");
+    return createHash('md5').update(data).digest('hex');
   }
 
   private getBody(data: string, id: string, token: string) {
@@ -182,19 +189,18 @@ export class Privat24Provider {
   }
 
   private async query(url: string, body: string) {
-    const response = await this.client.post(url, body,
-      {
-        headers: {
-          'Content-Type': 'application/xml'
-        }
-      });
+    const response = await this.client.post(url, body, {
+      headers: {
+        'Content-Type': 'application/xml',
+      },
+    });
 
     try {
       Logger.debug(response.data, 'Privat24 privider');
       const json = JSON.parse(toJson(response.data));
       return json?.response?.data;
     } catch (e) {
-      return
+      return;
     }
   }
 }

@@ -5,7 +5,7 @@ import {
   Parent,
   Query,
   ResolveField,
-  Resolver
+  Resolver,
 } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
@@ -19,24 +19,56 @@ import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionsService } from './transactions.service';
 import { TransactionType } from './transaction-type';
+import { Transactions } from './dto/transactions';
+import { OrderByDirection } from 'objection';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
   constructor(
     private readonly service: TransactionsService,
     private readonly loader: DataLoader,
-  ) { }
+  ) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [TransactionDto])
+  @Query((returns) => Transactions)
   public async transactions(
     @CurrentUser() user: User,
     @Args('walletId', { nullable: true }) walletId?: string,
     @Args('currencyId', { nullable: true }) currencyId?: string,
     @Args('categoryId', { nullable: true }) categoryId?: string,
-    @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType
+    @Args('type', { nullable: true, type: () => TransactionType })
+    type?: TransactionType,
+    @Args('limit', { nullable: true }) limit?: number,
+    @Args('offset', { nullable: true }) offset?: number,
+    @Args('order', { nullable: true }) order?: OrderByDirection,
   ) {
-    return this.service.getAll(user, { walletId, type, currencyId, categoryId });
+    const query = this.service.getAll(user, {
+      walletId,
+      type,
+      currencyId,
+      categoryId,
+    });
+
+    const countQuery = query.clone();
+    countQuery.clearSelect();
+    const { count } = (await countQuery.count('id').first()) as any;
+
+    if (limit) {
+      query.limit(limit);
+    }
+
+    if (offset) {
+      query.offset(offset);
+    }
+
+    if (order) {
+      query.orderBy('id', order);
+    }
+
+    return {
+      totalCount: count,
+      items: query,
+    };
   }
 
   @UseGuards(GqlAuthGuard)

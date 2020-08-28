@@ -19,6 +19,8 @@ import { AppController } from './app.controller';
 import { AppResolver } from './app.resolver';
 import { LoggerMiddleware } from './logger.middleware';
 import { TaskService } from './task.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -34,9 +36,12 @@ import { TaskService } from './task.service';
     StatisticsModule,
     BanksModule,
     ScheduleModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'static'),
+    }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
-      plugins: [new ApolloComplexityPlugin(20)],
+      plugins: [new ApolloComplexityPlugin(25)],
       autoSchemaFile: 'schema.gql',
     }),
   ],

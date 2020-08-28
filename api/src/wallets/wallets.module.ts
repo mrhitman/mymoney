@@ -15,15 +15,7 @@ import { WalletsService } from './wallets.service';
       url: process.env.REDIS_URL,
     }),
   ],
-  providers: [
-    WalletsResolver,
-    PocketResolver,
-    CurrencyRateResolver,
-    WalletsService,
-    DataLoader,
-  ],
-  exports: [
-    WalletsService,
-  ]
+  providers: [WalletsResolver, PocketResolver, CurrencyRateResolver, WalletsService, DataLoader],
+  exports: [WalletsService],
 })
-export class WalletsModule { }
+export class WalletsModule {}

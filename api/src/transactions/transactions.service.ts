@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { transaction, TransactionOrKnex } from 'objection';
 import Transaction, {
@@ -22,10 +17,7 @@ import { BudgetsService } from 'src/budgets/budgets.service';
 
 @Injectable()
 export class TransactionsService {
-  constructor(
-    protected walletService: WalletsService,
-    protected budgetService: BudgetsService,
-  ) {}
+  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) {}
 
   public getAll(
     user: User,
@@ -62,9 +54,7 @@ export class TransactionsService {
   }
 
   public async getOne(user: User, id: string) {
-    const trx = await Transaction.query()
-      .findById(id)
-      .where({ userId: user.id });
+    const trx = await Transaction.query().findById(id).where({ userId: user.id });
 
     if (!trx) {
       throw new BadRequestException('No such category');
@@ -119,9 +109,7 @@ export class TransactionsService {
       ...data,
       date: DateTime.fromSeconds(data.date).toJSDate(),
       updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
-      deletedAt: data.deletedAt
-        ? DateTime.fromSeconds(data.deletedAt).toJSDate()
-        : null,
+      deletedAt: data.deletedAt ? DateTime.fromSeconds(data.deletedAt).toJSDate() : null,
     });
 
     return trx;
@@ -133,25 +121,15 @@ export class TransactionsService {
     return trx.$query().delete();
   }
 
-  private async addincomeTrx(
-    user: User,
-    trx: Transaction,
-    dbTrx?: TransactionOrKnex,
-  ) {
-    const wallet = await this.walletService.findOne(
-      user,
-      trx.destinationWalletId,
-    );
+  private async addincomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
+    const wallet = await this.walletService.findOne(user, trx.destinationWalletId);
     const pocket = this.getOrCreatePocket(wallet, trx);
     pocket.amount += trx.amount;
 
     await wallet
       .$query(dbTrx)
       .update({
-        pockets: [
-          ...wallet.pockets.filter((p) => p.currencyId !== pocket.currencyId),
-          pocket,
-        ],
+        pockets: [...wallet.pockets.filter((p) => p.currencyId !== pocket.currencyId), pocket],
       })
       .execute();
 
@@ -159,11 +137,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  private async addoutcomeTrx(
-    user: User,
-    trx: Transaction,
-    dbTrx?: TransactionOrKnex,
-  ) {
+  private async addoutcomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
     const wallet = await this.walletService.findOne(user, trx.sourceWalletId);
     const pocket = this.getOrCreatePocket(wallet, trx);
     pocket.amount -= trx.amount;
@@ -171,10 +145,7 @@ export class TransactionsService {
     await wallet
       .$query(dbTrx)
       .update({
-        pockets: [
-          ...wallet.pockets.filter((p) => p.currencyId !== pocket.currencyId),
-          pocket,
-        ],
+        pockets: [...wallet.pockets.filter((p) => p.currencyId !== pocket.currencyId), pocket],
       })
       .execute();
 
@@ -182,11 +153,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  private async addtransferTrx(
-    user: User,
-    trx: Transaction,
-    dbTrx?: TransactionOrKnex,
-  ) {
+  private async addtransferTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
     await trx.$query().update({ categoryId: categoryTransferId });
     const trxIn = await Transaction.query(dbTrx).insert({
       id: uuid(),

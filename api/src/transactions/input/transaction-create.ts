@@ -1,12 +1,6 @@
 import { Field, Float, InputType, Int } from '@nestjs/graphql';
 import { TransactionType } from '../transaction-type';
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateIf,
-} from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
 
 @InputType()
 export class TransactionCreate {

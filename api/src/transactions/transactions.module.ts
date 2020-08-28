@@ -8,10 +8,7 @@ import { BudgetsService } from 'src/budgets/budgets.service';
 import { BudgetsModule } from 'src/budgets/budgets.module';
 
 @Module({
-  imports: [
-    CurrenciesModule,
-    BudgetsModule,
-  ],
+  imports: [CurrenciesModule, BudgetsModule],
   providers: [
     TransactionsResolver,
     TransactionsService,
@@ -19,10 +16,6 @@ import { BudgetsModule } from 'src/budgets/budgets.module';
     BudgetsService,
     DataLoader,
   ],
-  exports: [
-    WalletsService,
-    BudgetsService,
-    TransactionsService
-  ]
+  exports: [WalletsService, BudgetsService, TransactionsService],
 })
-export class TransactionsModule { }
+export class TransactionsModule {}

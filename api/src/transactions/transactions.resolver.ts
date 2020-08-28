@@ -1,12 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import { CategoryDto } from 'src/categories/dto/category.dto';
@@ -24,10 +17,7 @@ import { OrderByDirection } from 'objection';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
-  constructor(
-    private readonly service: TransactionsService,
-    private readonly loader: DataLoader,
-  ) {}
+  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => Transactions)
@@ -36,8 +26,7 @@ export class TransactionsResolver {
     @Args('walletId', { nullable: true }) walletId?: string,
     @Args('currencyId', { nullable: true }) currencyId?: string,
     @Args('categoryId', { nullable: true }) categoryId?: string,
-    @Args('type', { nullable: true, type: () => TransactionType })
-    type?: TransactionType,
+    @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType,
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
     @Args('order', { nullable: true }) order?: OrderByDirection,
@@ -103,9 +92,7 @@ export class TransactionsResolver {
   }
 
   @ResolveField('currency', (returns) => CurrencyDto)
-  async getCurrency(
-    @Parent() transaction: TransactionDto,
-  ): Promise<CurrencyDto> {
+  async getCurrency(@Parent() transaction: TransactionDto): Promise<CurrencyDto> {
     return this.loader.currency.load(transaction.currencyId);
   }
 

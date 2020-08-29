@@ -7,6 +7,7 @@ COPY api/nest-cli.json api/nest-cli.json
 COPY api/tsconfig.build.json api/tsconfig.build.json
 COPY api/tsconfig.json api/tsconfig.json
 COPY api/package.json api/package.json
+COPY api/static api/static
 
 COPY common/src common/src
 COPY common/translations common/translations
@@ -39,6 +40,7 @@ COPY --from=stage /opt/mymoney/api/package.json api/package.json
 COPY --from=stage /opt/mymoney/api/tsconfig.json api/tsconfig.json
 COPY --from=stage /opt/mymoney/api/nest-cli.json api/nest-cli.json
 COPY --from=stage /opt/mymoney/api/node_modules api/node_modules
+COPY --from=stage /opt/mymoney/api/static api/static
 COPY --from=stage /opt/mymoney/common api/node_modules/common
 
 EXPOSE 4000

@@ -2,10 +2,10 @@ import { useQuery } from '@apollo/client';
 import { Col, Popover, Row, Table } from 'antd';
 import { loader } from 'graphql.macro';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { GetTransactionsQuery } from 'src/generated/graphql';
+import { GetTransactionsQuery, Transaction } from 'src/generated/graphql';
 
 const TransactionsQuery = loader('src/queries/transactions.graphql');
 const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
@@ -13,10 +13,16 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
 }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [transactions, setTransactions] = useState<GetTransactionsQuery>();
   const { loading, data, error } = useQuery<GetTransactionsQuery>(
     TransactionsQuery,
-    { variables: { type, limit: pageSize, offset: (pageSize - 1) * current } },
+    { variables: { type, limit: pageSize, offset: pageSize * (current - 1) } },
   );
+  useEffect(() => {
+    if (data?.transactions?.items) {
+      setTransactions(data);
+    }
+  }, [data]);
 
   const { t } = useTranslation();
   return (
@@ -35,7 +41,7 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
         setCurrent(pagination.current || 1);
         setPageSize(pagination.pageSize || 1);
       }}
-      dataSource={data?.transactions?.items || []}
+      dataSource={transactions?.transactions?.items || []}
     >
       <Table.Column
         title="id"
@@ -76,9 +82,7 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
                   />
                 </div>
               </Col>
-              <Col span={16}>
-                {t(category.name)}
-              </Col>
+              <Col span={16}>{t(category.name)}</Col>
             </Row>
           );
         }}
@@ -119,8 +123,8 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
           desc ? (
             desc
           ) : (
-              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-            )
+            <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+          )
         }
       />
       <Table.Column

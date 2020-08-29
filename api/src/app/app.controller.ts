@@ -1,20 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
-  @Get()
+  @Get('/health')
   public healthCheck(): string {
     return new Date().toString();
   }

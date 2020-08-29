@@ -37,6 +37,7 @@ import { join } from 'path';
     BanksModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
+      renderPath: '/',
       rootPath: join(__dirname, '..', '..', 'static'),
     }),
     GraphQLModule.forRoot({

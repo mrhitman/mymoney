@@ -1,0 +1,9 @@
+query GetConnectors {
+  connectors {
+    id
+    type
+    meta
+    enabled
+    createdAt
+  }
+}

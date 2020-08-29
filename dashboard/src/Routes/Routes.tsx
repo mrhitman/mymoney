@@ -11,6 +11,7 @@ import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
 import { Accounting } from '../components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
+import Connectors from 'src/components/Connectors/Connectors';
 
 const Routes: FC = () => (
   <Router>
@@ -65,6 +66,12 @@ const Routes: FC = () => (
     <PrivateRoute path="/analysis" exact>
       <Layout activePage="analysis">
         <AnalysisByPeriod />
+      </Layout>
+    </PrivateRoute>
+
+    <PrivateRoute path="/connectors" exact>
+      <Layout activePage="connectors">
+        <Connectors />
       </Layout>
     </PrivateRoute>
 

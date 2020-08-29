@@ -15,7 +15,7 @@ import React, { FC } from 'react';
 
 const WalletsQuery = loader('src/queries/wallets.graphql');
 
-const icons: Record<string, string> = {
+export const icons: Record<string, string> = {
   'monobank-black':
     'https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png',
   'Privat24 Card':
@@ -38,7 +38,7 @@ export const Accounting: FC = () => {
             <Col id={wallet.id} {...layout}>
               <Card style={{ width: 300, marginTop: 16 }} loading={loading}>
                 <Card.Meta
-                  title={wallet.name}
+                  title={wallet.name.slice(0, 6) + '******'}
                   description={wallet.description}
                   avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
                 />

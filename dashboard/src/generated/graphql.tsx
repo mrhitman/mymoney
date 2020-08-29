@@ -535,6 +535,17 @@ export type GetCategoriesQuery = (
   )> }
 );
 
+export type GetConnectorsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetConnectorsQuery = (
+  { __typename?: 'Query' }
+  & { connectors: Array<(
+    { __typename?: 'BankConnection' }
+    & Pick<BankConnection, 'id' | 'type' | 'meta' | 'enabled' | 'createdAt'>
+  )> }
+);
+
 export type GetCurrenciesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -663,6 +674,42 @@ export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const GetConnectorsDocument = gql`
+    query GetConnectors {
+  connectors {
+    id
+    type
+    meta
+    enabled
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetConnectorsQuery__
+ *
+ * To run a query within a React component, call `useGetConnectorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetConnectorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetConnectorsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetConnectorsQuery(baseOptions?: Apollo.QueryHookOptions<GetConnectorsQuery, GetConnectorsQueryVariables>) {
+        return Apollo.useQuery<GetConnectorsQuery, GetConnectorsQueryVariables>(GetConnectorsDocument, baseOptions);
+      }
+export function useGetConnectorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetConnectorsQuery, GetConnectorsQueryVariables>) {
+          return Apollo.useLazyQuery<GetConnectorsQuery, GetConnectorsQueryVariables>(GetConnectorsDocument, baseOptions);
+        }
+export type GetConnectorsQueryHookResult = ReturnType<typeof useGetConnectorsQuery>;
+export type GetConnectorsLazyQueryHookResult = ReturnType<typeof useGetConnectorsLazyQuery>;
+export type GetConnectorsQueryResult = Apollo.QueryResult<GetConnectorsQuery, GetConnectorsQueryVariables>;
 export const GetCurrenciesDocument = gql`
     query GetCurrencies {
   currencies {

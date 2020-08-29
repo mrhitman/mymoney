@@ -85,9 +85,10 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               <Menu.Item
                 key="accounting"
                 icon={<WalletOutlined />}
-                onClick={navigate('accounting')}
               >
-                Wallets
+                <Link to="/accounting">
+                  Wallets
+                </Link>
               </Menu.Item>
               <Menu.Item key="2" icon={<TrophyOutlined />}>
                 Goals
@@ -153,8 +154,10 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             <Menu.Item key="13" icon={<MoneyCollectOutlined />}>
               Currencies
             </Menu.Item>
-            <Menu.Item key="14" icon={<LinkOutlined />}>
-              Connectors
+            <Menu.Item key="connectors" icon={<LinkOutlined />}>
+              <Link to="/connectors">
+                Connectors
+              </Link>
             </Menu.Item>
           </Menu>
         </AntdLayout.Sider>

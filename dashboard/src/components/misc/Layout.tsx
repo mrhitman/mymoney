@@ -151,8 +151,10 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 Categories
               </Link>
             </Menu.Item>
-            <Menu.Item key="13" icon={<MoneyCollectOutlined />}>
-              Currencies
+            <Menu.Item key="currencies" icon={<MoneyCollectOutlined />}>
+              <Link to="/currencies">
+                Currencies
+              </Link>
             </Menu.Item>
             <Menu.Item key="connectors" icon={<LinkOutlined />}>
               <Link to="/connectors">

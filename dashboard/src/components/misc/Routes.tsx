@@ -9,9 +9,10 @@ import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
-import { Accounting } from '../components/Accounting/Accounting';
+import { Accounting } from 'src/components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
 import Connectors from 'src/components/Connectors/Connectors';
+import Currencies from 'src/components/Currencies/Currencies';
 
 const Routes: FC = () => (
   <Router>
@@ -72,6 +73,12 @@ const Routes: FC = () => (
     <PrivateRoute path="/connectors" exact>
       <Layout activePage="connectors">
         <Connectors />
+      </Layout>
+    </PrivateRoute>
+
+    <PrivateRoute path="/currencies" exact>
+      <Layout activePage="currencies">
+        <Currencies />
       </Layout>
     </PrivateRoute>
 

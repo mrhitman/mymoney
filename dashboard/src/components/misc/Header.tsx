@@ -24,6 +24,7 @@ export type ActivePage =
   | 'analysis-category'
   | 'settings'
   | 'categories'
+  | 'currencies'
   | 'connectors'
   | undefined;
 

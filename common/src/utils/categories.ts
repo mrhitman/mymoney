@@ -40,7 +40,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'cart-outline',
       backgroundColor: Colors.pink900,
     },
-    codes: [5499],
+    codes: [5499, 5411, 5441],
   },
   {
     id: '064e5ddc-6e9d-4573-817e-da5aa5d8cdbf',

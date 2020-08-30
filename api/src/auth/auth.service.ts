@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { defaultCategories } from 'common/src/utils/categories';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import { omit } from 'lodash';
@@ -7,6 +8,7 @@ import User from 'src/database/models/user.model';
 import { UsersService } from 'src/users/users.service';
 import { v4 as uuid } from 'uuid';
 import { RegisterInput } from 'src/app/input/register-input';
+import Category from 'src/database/models/category.model';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +56,22 @@ export class AuthService {
         ...data,
         password: await bcrypt.hash(data.password, 10)
       });
+
+      await Promise.all(
+        defaultCategories.map((c) =>
+          Category
+            .query()
+            .insert({
+              id: c.id,
+              name: c.name,
+              parent: c.parentId,
+              icon: c.icon,
+              type: c.type,
+              codes: JSON.stringify(c.codes || []),
+              user_id: user.id,
+            } as any)
+        ),
+      );
 
     return user;
   }

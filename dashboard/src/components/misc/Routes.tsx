@@ -14,6 +14,7 @@ import PrivateRoute from './PrivateRoute';
 import Connectors from 'src/components/Connectors/Connectors';
 import Currencies from 'src/components/Currencies/Currencies';
 import WalletTransactions from '../Transactions/WalletTransactions';
+import Register from '../Register/Register';
 
 const Routes: FC = () => (
   <Router>
@@ -100,7 +101,7 @@ const Routes: FC = () => (
     </Route>
 
     <Route path="/register">
-      <div>register</div>
+      <Register />
     </Route>
   </Router>
 );

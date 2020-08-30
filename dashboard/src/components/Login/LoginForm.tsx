@@ -5,6 +5,7 @@ import { loader } from 'graphql.macro';
 import React, { FC } from 'react';
 import { LoginMutation } from 'src/generated/graphql';
 import { loginLayout, loginTailLayout } from '../misc/layouts';
+import { Link } from 'react-router-dom';
 
 export interface LoginFormValues {
   email: string;
@@ -77,6 +78,8 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             >
               Submit
             </Button>
+            {'    or    '}
+            <Link to="/register">Register</Link>
           </Form.Item>
         </Form>
       )}

@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { defaultCategories } from 'common/src/utils/categories';
+import { defaultCategories } from 'common/lib/utils/categories';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import { omit } from 'lodash';
@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     protected readonly usersService: UsersService,
     protected readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   public async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
@@ -51,27 +51,24 @@ export class AuthService {
       throw new BadRequestException('User with such email is busy');
     }
 
-    const user = await User.query()
-      .insert({
-        ...data,
-        password: await bcrypt.hash(data.password, 10)
-      });
+    const user = await User.query().insert({
+      ...data,
+      password: await bcrypt.hash(data.password, 10),
+    });
 
-      await Promise.all(
-        defaultCategories.map((c) =>
-          Category
-            .query()
-            .insert({
-              id: c.id,
-              name: c.name,
-              parent: c.parentId,
-              icon: c.icon,
-              type: c.type,
-              codes: JSON.stringify(c.codes || []),
-              user_id: user.id,
-            } as any)
-        ),
-      );
+    await Promise.all(
+      defaultCategories.map((c) =>
+        Category.query().insert({
+          id: c.id,
+          name: c.name,
+          parent: c.parentId,
+          icon: c.icon,
+          type: c.type,
+          codes: JSON.stringify(c.codes || []),
+          user_id: user.id,
+        } as any),
+      ),
+    );
 
     return user;
   }

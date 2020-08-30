@@ -1,0 +1,42 @@
+query getWalletTransactions(
+  $type: TransactionType
+  $limit: Float
+  $offset: Float
+  $walletId: String!
+) {
+  wallet(id: $walletId) {
+    id
+    name
+    description
+  }
+  transactions(
+    type: $type
+    limit: $limit
+    offset: $offset
+    walletId: $walletId
+  ) {
+    totalCount
+    items {
+      id
+      type
+      currency {
+        id
+        name
+        description
+        symbol
+      }
+      category {
+        name
+        type
+        icon {
+          type
+          name
+          backgroundColor
+          color
+        }
+      }
+      description
+      amount
+    }
+  }
+}

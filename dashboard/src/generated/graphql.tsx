@@ -626,6 +626,40 @@ export type GetTransactionsQuery = (
   ) }
 );
 
+export type GetWalletTransactionsQueryVariables = Exact<{
+  type?: Maybe<TransactionType>;
+  limit?: Maybe<Scalars['Float']>;
+  offset?: Maybe<Scalars['Float']>;
+  walletId: Scalars['String'];
+}>;
+
+
+export type GetWalletTransactionsQuery = (
+  { __typename?: 'Query' }
+  & { wallet: (
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'description'>
+  ), transactions: (
+    { __typename?: 'GetTransaction' }
+    & Pick<GetTransaction, 'totalCount'>
+    & { items: Array<(
+      { __typename?: 'Transaction' }
+      & Pick<Transaction, 'id' | 'type' | 'description' | 'amount'>
+      & { currency: (
+        { __typename?: 'Currency' }
+        & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
+      ), category: (
+        { __typename?: 'Category' }
+        & Pick<Category, 'name' | 'type'>
+        & { icon?: Maybe<(
+          { __typename?: 'IconDto' }
+          & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
+        )> }
+      ) }
+    )> }
+  ) }
+);
+
 export type GetWalletsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -897,6 +931,69 @@ export function useGetTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetTransactionsQueryHookResult = ReturnType<typeof useGetTransactionsQuery>;
 export type GetTransactionsLazyQueryHookResult = ReturnType<typeof useGetTransactionsLazyQuery>;
 export type GetTransactionsQueryResult = Apollo.QueryResult<GetTransactionsQuery, GetTransactionsQueryVariables>;
+export const GetWalletTransactionsDocument = gql`
+    query getWalletTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletId: String!) {
+  wallet(id: $walletId) {
+    id
+    name
+    description
+  }
+  transactions(type: $type, limit: $limit, offset: $offset, walletId: $walletId) {
+    totalCount
+    items {
+      id
+      type
+      currency {
+        id
+        name
+        description
+        symbol
+      }
+      category {
+        name
+        type
+        icon {
+          type
+          name
+          backgroundColor
+          color
+        }
+      }
+      description
+      amount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetWalletTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetWalletTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWalletTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWalletTransactionsQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      walletId: // value for 'walletId'
+ *   },
+ * });
+ */
+export function useGetWalletTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
+        return Apollo.useQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
+      }
+export function useGetWalletTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
+          return Apollo.useLazyQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
+        }
+export type GetWalletTransactionsQueryHookResult = ReturnType<typeof useGetWalletTransactionsQuery>;
+export type GetWalletTransactionsLazyQueryHookResult = ReturnType<typeof useGetWalletTransactionsLazyQuery>;
+export type GetWalletTransactionsQueryResult = Apollo.QueryResult<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>;
 export const GetWalletsDocument = gql`
     query GetWallets {
   wallets {

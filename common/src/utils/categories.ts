@@ -40,7 +40,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'cart-outline',
       backgroundColor: Colors.pink900,
     },
-    codes: [5499]
+    codes: [5499],
   },
   {
     id: '064e5ddc-6e9d-4573-817e-da5aa5d8cdbf',
@@ -63,7 +63,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink600,
     },
     parentId: '822d7512-1643-4a05-8386-b0f6d0038cf9',
-    codes: [5812, 5814]
+    codes: [5812, 5814],
   },
   {
     id: '9999e114-2359-4eb8-832d-03e037ee7754',
@@ -75,7 +75,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink400,
     },
     parentId: '822d7512-1643-4a05-8386-b0f6d0038cf9',
-    codes: [5813]
+    codes: [5813],
   },
   {
     id: '973e1ef1-5801-4d00-8045-7129a12b06a6',
@@ -96,6 +96,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'home-city-outline',
       backgroundColor: Colors.purple800,
     },
+    codes: [5211],
     parentId: '973e1ef1-5801-4d00-8045-7129a12b06a6',
   },
   {
@@ -281,7 +282,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'holiday-village',
       backgroundColor: Colors.indigo900,
     },
-    codes: [4722]
+    codes: [4722],
   },
   {
     id: '30a85193-a3a4-4d9c-8a0e-e86232f7f4b3',
@@ -316,7 +317,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'theater-masks',
       backgroundColor: Colors.pink800,
     },
-    codes: [7996]
+    codes: [7996],
   },
   {
     id: '40e4d8c1-26ec-4544-9ccb-9a0fa3b0dc0b',
@@ -328,7 +329,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink700,
     },
     parentId: 'f5b5bb95-1863-40e3-a69b-3a279ccef280',
-    codes: [5815]
+    codes: [5815],
   },
   {
     id: 'c85ec419-47c0-413c-8138-99a10eab2c99',
@@ -340,7 +341,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.pink700,
     },
     parentId: 'f5b5bb95-1863-40e3-a69b-3a279ccef280',
-    codes: [5816, 7994]
+    codes: [5816, 7994],
   },
   {
     id: '4fa40799-2e28-4c6b-bf18-0c1e93efd9af',
@@ -351,7 +352,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'dumbbell',
       backgroundColor: Colors.pink400,
     },
-    codes: [5941]
+    codes: [5941],
   },
   {
     id: 'd9e10b9b-cee9-47e5-a8d0-729991107d8b',
@@ -362,7 +363,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'heart-pulse',
       backgroundColor: Colors.indigo900,
     },
-    codes: [5122, 5122, 8071, 8099, 8062, 8031, 8041, 8042]
+    codes: [5122, 5122, 8071, 8099, 8062, 8031, 8041, 8042],
   },
   {
     id: '080a42e9-32b1-4b4a-bda5-b5b1203f3c0c',
@@ -373,7 +374,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'graduation-cap',
       backgroundColor: Colors.purple700,
     },
-    codes: [8299]
+    codes: [8299, 5942],
   },
   {
     id: '0b9e9f63-7e12-430f-9b07-05f5ff6fe8ce',
@@ -384,7 +385,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'child',
       backgroundColor: Colors.blue700,
     },
-    codes: [8351, 5641]
+    codes: [8351, 5641],
   },
   {
     id: '2321279b-56be-4ef1-872f-b7f8a3304247',
@@ -395,7 +396,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'baidu',
       backgroundColor: Colors.deepOrange700,
     },
-    codes: [5995]
+    codes: [5995],
   },
   {
     id: '0edf8617-9ceb-4416-9f02-0e2ad36881dc',

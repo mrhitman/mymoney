@@ -13,6 +13,7 @@ import { Accounting } from 'src/components/Accounting/Accounting';
 import PrivateRoute from './PrivateRoute';
 import Connectors from 'src/components/Connectors/Connectors';
 import Currencies from 'src/components/Currencies/Currencies';
+import WalletTransactions from '../Transactions/WalletTransactions';
 
 const Routes: FC = () => (
   <Router>
@@ -46,9 +47,9 @@ const Routes: FC = () => (
       </Layout>
     </PrivateRoute>
 
-    <PrivateRoute path="/operations" exact>
+    <PrivateRoute path="/operations/:walletId" exact>
       <Layout activePage="operations">
-        <TransactionList />
+        <WalletTransactions />
       </Layout>
     </PrivateRoute>
 

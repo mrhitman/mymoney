@@ -1,22 +1,32 @@
-# fragment wallet on Wallet {
-#   id
-#   name
-#   type
-#   description
-# }
+fragment wallet on Wallet {
+  id
+  name
+  type
+  description
+}
 
-query getTransactions($type: TransactionType, $limit: Float, $offset: Float) {
-  transactions(type: $type, limit: $limit, offset: $offset) {
+query getTransactions(
+  $type: TransactionType
+  $limit: Float
+  $offset: Float
+  $walletId: String
+) {
+  transactions(
+    type: $type
+    limit: $limit
+    offset: $offset
+    walletId: $walletId
+  ) {
     totalCount
     items {
       id
       type
-      # sourceWallet {
-      #   ...wallet
-      # }
-      # destinationWallet {
-      #   ...wallet
-      # }
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
       currency {
         id
         name

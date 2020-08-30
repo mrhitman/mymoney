@@ -584,10 +584,16 @@ export type RefreshMutation = (
   ) }
 );
 
+export type WalletFragment = (
+  { __typename?: 'Wallet' }
+  & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
+);
+
 export type GetTransactionsQueryVariables = Exact<{
   type?: Maybe<TransactionType>;
   limit?: Maybe<Scalars['Float']>;
   offset?: Maybe<Scalars['Float']>;
+  walletId?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -599,7 +605,13 @@ export type GetTransactionsQuery = (
     & { items: Array<(
       { __typename?: 'Transaction' }
       & Pick<Transaction, 'id' | 'type' | 'description' | 'amount'>
-      & { currency: (
+      & { sourceWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )>, destinationWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )>, currency: (
         { __typename?: 'Currency' }
         & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
       ), category: (
@@ -633,7 +645,14 @@ export type GetWalletsQuery = (
   )> }
 );
 
-
+export const WalletFragmentDoc = gql`
+    fragment wallet on Wallet {
+  id
+  name
+  type
+  description
+}
+    `;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
@@ -815,12 +834,18 @@ export type RefreshMutationHookResult = ReturnType<typeof useRefreshMutation>;
 export type RefreshMutationResult = Apollo.MutationResult<RefreshMutation>;
 export type RefreshMutationOptions = Apollo.BaseMutationOptions<RefreshMutation, RefreshMutationVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($type: TransactionType, $limit: Float, $offset: Float) {
-  transactions(type: $type, limit: $limit, offset: $offset) {
+    query getTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletId: String) {
+  transactions(type: $type, limit: $limit, offset: $offset, walletId: $walletId) {
     totalCount
     items {
       id
       type
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
       currency {
         id
         name
@@ -842,7 +867,7 @@ export const GetTransactionsDocument = gql`
     }
   }
 }
-    `;
+    ${WalletFragmentDoc}`;
 
 /**
  * __useGetTransactionsQuery__
@@ -859,6 +884,7 @@ export const GetTransactionsDocument = gql`
  *      type: // value for 'type'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
+ *      walletId: // value for 'walletId'
  *   },
  * });
  */

@@ -12,6 +12,7 @@ import {
 import { loader } from 'graphql.macro';
 import { GetWalletsQuery } from 'src/generated/graphql';
 import React, { FC } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 const WalletsQuery = loader('src/queries/wallets.graphql');
 
@@ -36,22 +37,24 @@ export const Accounting: FC = () => {
         {wallets.map((wallet) => {
           return (
             <Col id={wallet.id} {...layout}>
-              <Card style={{ width: 300, marginTop: 16 }} loading={loading}>
-                <Card.Meta
-                  title={wallet.name.slice(0, 6) + '******'}
-                  description={wallet.description}
-                  avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
-                />
-                <Divider />
-                <List
-                  dataSource={wallet.pockets}
-                  renderItem={(pocket) => (
-                    <Typography>
-                      {pocket.currency.symbol} {pocket.amount}{' '}
-                      {pocket.currency.name}
-                    </Typography>
-                  )}
-                />
+              <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
+                <Link to={`/operations/${wallet.id}`}>
+                  <Card.Meta
+                    title={wallet.name.slice(0, 6) + '******'}
+                    description={wallet.description}
+                    avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
+                  />
+                  <Divider />
+                  <List
+                    dataSource={wallet.pockets}
+                    renderItem={(pocket) => (
+                      <Typography>
+                        {pocket.currency.symbol} {pocket.amount}{' '}
+                        {pocket.currency.name}
+                      </Typography>
+                    )}
+                  />
+                </Link>
               </Card>
             </Col>
           );

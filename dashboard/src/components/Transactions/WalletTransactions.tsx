@@ -2,21 +2,22 @@ import { useQuery } from '@apollo/client';
 import { Col, Popover, Row, Table } from 'antd';
 import { loader } from 'graphql.macro';
 import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { GetTransactionsQuery, Transaction } from 'src/generated/graphql';
+import { GetTransactionsQuery } from 'src/generated/graphql';
+import { useRouteMatch } from 'react-router'
 
 const TransactionsQuery = loader('src/queries/transactions.graphql');
-const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
-  type,
-}) => {
+const WalletTransactions: React.FC = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [transactions, setTransactions] = useState<GetTransactionsQuery>();
+
+  const { params } = useRouteMatch<{ walletId: string }>();
   const { loading, data, error } = useQuery<GetTransactionsQuery>(
     TransactionsQuery,
-    { variables: { type, limit: pageSize, offset: pageSize * (current - 1) } },
+    { variables: { walletId: params.walletId, limit: pageSize, offset: pageSize * (current - 1) } },
   );
   useEffect(() => {
     if (data?.transactions?.items) {
@@ -53,9 +54,7 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
           </Popover>
         )}
       />
-      <Table.Column title="Wallet" render={transaction => {
-        return [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ');
-      }} />
+      <Table.Column title="Type" dataIndex="type" key="type" />
       <Table.Column
         title="Currency"
         dataIndex="currency"
@@ -139,4 +138,4 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
   );
 };
 
-export default TransactionList;
+export default WalletTransactions;

@@ -40,7 +40,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'cart-outline',
       backgroundColor: Colors.pink900,
     },
-    codes: [5499, 5411, 5441],
+    codes: [5499, 5441],
   },
   {
     id: '064e5ddc-6e9d-4573-817e-da5aa5d8cdbf',
@@ -86,6 +86,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'shopping-bag',
       backgroundColor: Colors.purple900,
     },
+    codes: [5411, 5999],
   },
   {
     id: 'ac904eb0-6d4b-474a-bc90-0005e85e76e4',
@@ -141,6 +142,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'car',
       backgroundColor: Colors.teal900,
     },
+    codes: [5541],
   },
   {
     id: '73fe51e1-baad-4473-b553-981a76490208',
@@ -363,7 +365,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: 'heart-pulse',
       backgroundColor: Colors.indigo900,
     },
-    codes: [5122, 5122, 8071, 8099, 8062, 8031, 8041, 8042],
+    codes: [5122, 5122, 8071, 8099, 8062, 8031, 8041, 8042, 5912],
   },
   {
     id: '080a42e9-32b1-4b4a-bda5-b5b1203f3c0c',
@@ -469,5 +471,15 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.deepOrange900,
     },
     type: CategoryType.income,
+  },
+  {
+    id: '9cd05dfb-1710-4858-af83-6d9d0c55ec04',
+    name: 'category_cosmetics',
+    icon: {
+      type: 'MaterialIcons',
+      name: 'face',
+      backgroundColor: Colors.amberA400,
+    },
+    codes: [5977],
   },
 ];

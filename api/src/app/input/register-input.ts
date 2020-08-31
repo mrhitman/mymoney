@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsObject } from 'class-validator';
+import graphqlTypeJson from 'graphql-type-json';
 
 @InputType()
 export class RegisterInput {
@@ -20,6 +21,16 @@ export class RegisterInput {
   @Field()
   @IsEmail()
   email: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  imageUrl: string;
+
+  @Field(() => graphqlTypeJson, { nullable: true })
+  @IsOptional()
+  @IsObject()
+  additional: any;
 
   @Field()
   @IsString()

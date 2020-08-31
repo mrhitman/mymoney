@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import graphqlTypeJson from 'graphql-type-json';
 
 @ObjectType('User')
 export class UserDto {
@@ -13,6 +14,12 @@ export class UserDto {
 
   @Field({ nullable: true })
   lastName: string;
+
+  @Field({ nullable: true })
+  imageUrl: string;
+
+  @Field(() => graphqlTypeJson)
+  additional: object;
 
   @Field()
   email: string;

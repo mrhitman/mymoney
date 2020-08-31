@@ -9,6 +9,8 @@ export class User extends Model {
   public password: string;
   public settings: any;
   public syncAt: Date;
+  public imageUrl: string;
+  public additional: any;
   public createdAt: Date;
   public updatedAt: Date;
   public deletedAt: Date;
@@ -22,6 +24,7 @@ export class User extends Model {
       type: 'object',
       properties: {
         settings: { type: 'object' },
+        additional: { type: 'object' },
       },
     };
   }

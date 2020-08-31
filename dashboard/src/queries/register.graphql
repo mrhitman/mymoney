@@ -4,6 +4,8 @@ mutation Register(
   $firstName: String!
   $middleName: String
   $lastName: String
+  $imageUrl: String
+  $additional: JSON
 ) {
   register(
     registerData: {
@@ -12,6 +14,8 @@ mutation Register(
       firstName: $firstName
       middleName: $middleName
       lastName: $lastName
+      imageUrl: $imageUrl
+      additional: $additional
     }
   ) {
     id

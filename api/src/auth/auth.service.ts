@@ -64,7 +64,7 @@ export class AuthService {
           parent: c.parentId,
           icon: c.icon,
           type: c.type,
-          codes: JSON.stringify(c.codes || []),
+          codes: c.codes || [],
           user_id: user.id,
         } as any),
       ),

@@ -31,6 +31,8 @@ export type User = {
   firstName: Scalars['String'];
   middleName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  additional: Scalars['JSON'];
   email: Scalars['String'];
 };
 
@@ -513,6 +515,8 @@ export type RegisterInput = {
   middleName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
+  imageUrl?: Maybe<Scalars['String']>;
+  additional?: Maybe<Scalars['JSON']>;
   password: Scalars['String'];
 };
 
@@ -590,6 +594,8 @@ export type RegisterMutationVariables = Exact<{
   firstName: Scalars['String'];
   middleName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  additional?: Maybe<Scalars['JSON']>;
 }>;
 
 
@@ -885,8 +891,8 @@ export type RefreshMutationHookResult = ReturnType<typeof useRefreshMutation>;
 export type RefreshMutationResult = Apollo.MutationResult<RefreshMutation>;
 export type RefreshMutationOptions = Apollo.BaseMutationOptions<RefreshMutation, RefreshMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($email: String!, $password: String!, $firstName: String!, $middleName: String, $lastName: String) {
-  register(registerData: {email: $email, password: $password, firstName: $firstName, middleName: $middleName, lastName: $lastName}) {
+    mutation Register($email: String!, $password: String!, $firstName: String!, $middleName: String, $lastName: String, $imageUrl: String, $additional: JSON) {
+  register(registerData: {email: $email, password: $password, firstName: $firstName, middleName: $middleName, lastName: $lastName, imageUrl: $imageUrl, additional: $additional}) {
     id
   }
 }
@@ -911,6 +917,8 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *      firstName: // value for 'firstName'
  *      middleName: // value for 'middleName'
  *      lastName: // value for 'lastName'
+ *      imageUrl: // value for 'imageUrl'
+ *      additional: // value for 'additional'
  *   },
  * });
  */

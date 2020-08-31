@@ -20,6 +20,8 @@ type User {
   firstName: String!
   middleName: String
   lastName: String
+  imageUrl: String
+  additional: JSON!
   email: String!
 }
 
@@ -341,6 +343,8 @@ input RegisterInput {
   middleName: String
   lastName: String
   email: String!
+  imageUrl: String
+  additional: JSON
   password: String!
 }
 

@@ -290,6 +290,7 @@ export type QueryStatisticByCurrencyArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   import: Scalars['String'];
+  addConnector: Scalars['String'];
   connectMonobank: Scalars['String'];
   disconnectMonobank: Scalars['String'];
   connectPrivat24: Scalars['String'];
@@ -315,6 +316,11 @@ export type Mutation = {
 
 export type MutationImportArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationAddConnectorArgs = {
+  args: AddConnectorArgs;
 };
 
 
@@ -416,6 +422,13 @@ export type MutationRegisterArgs = {
 
 export type MutationRefreshArgs = {
   refreshData: RefreshInput;
+};
+
+export type AddConnectorArgs = {
+  interval: Scalars['Float'];
+  enabled: Scalars['Boolean'];
+  params: Scalars['JSON'];
+  type: Scalars['String'];
 };
 
 export type BudgetCategoryCreate = {
@@ -524,6 +537,19 @@ export type RefreshInput = {
   refreshToken: Scalars['String'];
 };
 
+export type AddConnectorMutationVariables = Exact<{
+  type: Scalars['String'];
+  interval: Scalars['Float'];
+  params: Scalars['JSON'];
+  enabled: Scalars['Boolean'];
+}>;
+
+
+export type AddConnectorMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addConnector'>
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -572,6 +598,17 @@ export type LoginMutation = (
   & { login: (
     { __typename?: 'Login' }
     & Pick<Login, 'accessToken' | 'refreshToken'>
+  ) }
+);
+
+export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProfileQuery = (
+  { __typename?: 'Query' }
+  & { profile: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'middleName' | 'email' | 'imageUrl' | 'additional'>
   ) }
 );
 
@@ -710,6 +747,39 @@ export const WalletFragmentDoc = gql`
   description
 }
     `;
+export const AddConnectorDocument = gql`
+    mutation addConnector($type: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
+  addConnector(args: {type: $type, interval: $interval, params: $params, enabled: $enabled})
+}
+    `;
+export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutation, AddConnectorMutationVariables>;
+
+/**
+ * __useAddConnectorMutation__
+ *
+ * To run a mutation, you first call `useAddConnectorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddConnectorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addConnectorMutation, { data, loading, error }] = useAddConnectorMutation({
+ *   variables: {
+ *      type: // value for 'type'
+ *      interval: // value for 'interval'
+ *      params: // value for 'params'
+ *      enabled: // value for 'enabled'
+ *   },
+ * });
+ */
+export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions<AddConnectorMutation, AddConnectorMutationVariables>) {
+        return Apollo.useMutation<AddConnectorMutation, AddConnectorMutationVariables>(AddConnectorDocument, baseOptions);
+      }
+export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
+export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
+export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
@@ -857,6 +927,44 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GetProfileDocument = gql`
+    query GetProfile {
+  profile {
+    id
+    firstName
+    lastName
+    middleName
+    email
+    imageUrl
+    additional
+  }
+}
+    `;
+
+/**
+ * __useGetProfileQuery__
+ *
+ * To run a query within a React component, call `useGetProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, baseOptions);
+      }
+export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, baseOptions);
+        }
+export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
+export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
+export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
 export const RefreshDocument = gql`
     mutation Refresh($token: String!) {
   refresh(refreshData: {refreshToken: $token}) {

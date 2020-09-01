@@ -9,7 +9,6 @@ import {
   LaptopOutlined,
   LinkOutlined,
   LogoutOutlined,
-  MenuOutlined,
   MoneyCollectOutlined,
   PieChartOutlined,
   RiseOutlined,
@@ -19,10 +18,10 @@ import {
   TrophyOutlined,
   WalletOutlined
 } from '@ant-design/icons';
-import { Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
+import { Avatar, Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
 import { upperFirst } from 'lodash';
 import React, { FC, useState } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { ActivePage } from './Header';
 
 export const formLayout = {
@@ -65,7 +64,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
       <AntdLayout.Header className="header">
         <div className="logo" />
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
-          <Menu.SubMenu key="1" icon={<MenuOutlined />}>
+          <Menu.SubMenu key="1" icon={<Avatar src={"https://lh3.googleusercontent.com/a-/AOh14GgF5IoS1LX9sCbDtj_jVSDCQ7601im0Koug3CmK=s96-c"} />}>
             <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout}>
               Logout
             </Menu.Item>

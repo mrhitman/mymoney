@@ -1,0 +1,11 @@
+query GetProfile {
+  profile {
+    id
+    firstName
+    lastName
+    middleName
+    email
+    imageUrl
+    additional
+  }
+}

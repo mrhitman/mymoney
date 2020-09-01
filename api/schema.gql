@@ -224,6 +224,7 @@ type Query {
 
 type Mutation {
   import(id: String!): String!
+  addConnector(args: AddConnectorArgs!): String!
   connectMonobank(token: String!): String!
   disconnectMonobank(token: String!): String!
   connectPrivat24(password: String!, merchant_id: String!): String!
@@ -244,6 +245,13 @@ type Mutation {
   login(loginData: LoginInput!): Login!
   register(registerData: RegisterInput!): User!
   refresh(refreshData: RefreshInput!): Refresh!
+}
+
+input AddConnectorArgs {
+  interval: Float!
+  enabled: Boolean!
+  params: JSON!
+  type: String!
 }
 
 input BudgetCategoryCreate {

@@ -1,0 +1,15 @@
+mutation addConnector(
+  $type: String!
+  $interval: Float!
+  $params: JSON!
+  $enabled: Boolean!
+) {
+  addConnector(
+    args: {
+      type: $type
+      interval: $interval
+      params: $params
+      enabled: $enabled
+    }
+  )
+}

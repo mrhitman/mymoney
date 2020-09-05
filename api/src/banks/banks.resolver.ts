@@ -42,12 +42,12 @@ export class BanksResolver {
   public async addConnector(@CurrentUser() user: User, @Args('args') args: AddConnectorDto) {
     const type = args.type.toLowerCase();
     switch (type) {
-        case 'monobank':
-            return this.connectMonobank(user, args.params?.token);
-        case 'privat24':
-            return this.connectPrivat24(user, args.params?.merchantId, args.params?.password);
-        default: 
-            return 'no such connector type';
+      case 'monobank':
+        return this.connectMonobank(user, args.params?.token);
+      case 'privat24':
+        return this.connectPrivat24(user, args.params?.merchantId, args.params?.password);
+      default:
+        return 'no such connector type';
     }
   }
 
@@ -64,6 +64,7 @@ export class BanksResolver {
         type: BankConnectorType.MONOBANK,
         meta: { token },
       });
+      await this.mono.import(user, token);
     }
 
     return 'OK';
@@ -97,6 +98,7 @@ export class BanksResolver {
         type: BankConnectorType.PRIVAT24,
         meta: { merchant_id: merchantId, password },
       });
+      await this.privat24.import(user, merchantId, password);
     }
 
     return 'OK';

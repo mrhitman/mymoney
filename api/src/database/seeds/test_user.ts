@@ -12,9 +12,7 @@ export async function seed(knex: Knex): Promise<any> {
   await knex('goals').del();
   await knex('wallets').del();
   const password = await bcrypt.hash('1', 10);
-  const [first_name, middle_name, last_name] = chance()
-    .name({ middle_initial: true })
-    .split(' ');
+  const [first_name, middle_name, last_name] = chance().name({ middle_initial: true }).split(' ');
   await knex('users').insert({
     first_name,
     middle_name,
@@ -36,8 +34,8 @@ export async function seed(knex: Knex): Promise<any> {
           parent: category.parentId,
           icon: category.icon,
           type: category.type,
+          is_fixed: true,
           codes: JSON.stringify(category.codes || []),
-          user_id: id,
         })
         .into('categories'),
     ),

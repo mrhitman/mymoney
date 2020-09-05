@@ -40,10 +40,7 @@ export async function up(knex: Knex): Promise<any> {
   await knex.schema.createTable('goals', (t) => {
     t.string('id').primary();
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
-    t.string('wallet_id')
-      .references('id')
-      .inTable('wallets')
-      .onDelete('CASCADE');
+    t.string('wallet_id').references('id').inTable('wallets').onDelete('CASCADE');
     t.string('currency_id').references('id').inTable('currencies');
     t.decimal('goal');
     t.decimal('progress');
@@ -57,14 +54,8 @@ export async function up(knex: Knex): Promise<any> {
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('category_id').references('id').inTable('categories');
     t.string('currency_id').references('id').inTable('currencies');
-    t.string('source_wallet_id')
-      .references('id')
-      .inTable('wallets')
-      .onDelete('CASCADE');
-    t.string('destination_wallet_id')
-      .references('id')
-      .inTable('wallets')
-      .onDelete('CASCADE');
+    t.string('source_wallet_id').references('id').inTable('wallets').onDelete('CASCADE');
+    t.string('destination_wallet_id').references('id').inTable('wallets').onDelete('CASCADE');
     t.decimal('fine');
     t.decimal('amount');
     t.string('type');

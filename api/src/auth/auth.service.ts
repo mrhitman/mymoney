@@ -56,20 +56,6 @@ export class AuthService {
       password: await bcrypt.hash(data.password, 10),
     });
 
-    await Promise.all(
-      defaultCategories.map((c) =>
-        Category.query().insert({
-          id: c.id,
-          name: c.name,
-          parent: c.parentId,
-          icon: c.icon,
-          type: c.type,
-          codes: c.codes || [],
-          user_id: user.id,
-        } as any),
-      ),
-    );
-
     return user;
   }
 

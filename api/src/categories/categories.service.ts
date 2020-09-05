@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import Category from 'src/database/models/category.model';
 import User from 'src/database/models/user.model';
@@ -12,7 +8,7 @@ import { CategoryUpdate } from './input/category-update';
 @Injectable()
 export class CategoriesService {
   public async getAll(user: User, params?: { type?: string }) {
-    const query = Category.query().where({ userId: user.id });
+    const query = Category.query().where({ userId: user.id }).orWhereNull('userId');
 
     if (params && params.type) {
       query.andWhere({ type: params.type });
@@ -28,7 +24,7 @@ export class CategoriesService {
       throw new BadRequestException('No such category');
     }
 
-    if (category.userId !== user.id) {
+    if (category.userId && category.userId !== user.id) {
       throw new ForbiddenException('You are not access to this item');
     }
 
@@ -47,17 +43,21 @@ export class CategoriesService {
   public async update(data: CategoryUpdate, user: User) {
     const category = await this.findOne(data.id, user);
 
-    await category.$query().update({
-      ...data,
-      updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
-      deletedAt: data.deletedAt
-        ? DateTime.fromSeconds(data.deletedAt).toJSDate()
-        : null,
-    });
+    if (category.userId) {
+      await category.$query().update({
+        ...data,
+        updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
+        deletedAt: data.deletedAt ? DateTime.fromSeconds(data.deletedAt).toJSDate() : null,
+      });
+    }
   }
 
   public async delete(id: string, user: User) {
     const category = await this.findOne(id, user);
+
+    if (!category.userId) {
+      return;
+    }
 
     return category.$query().delete();
   }

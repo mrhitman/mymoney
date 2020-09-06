@@ -67,7 +67,7 @@ export class Privat24Provider {
   public async import(user: User, id: string, token: string) {
     const account = await this.getClientInfo(id, token);
 
-    if (!account) {
+    if (!account?.info) {
       return;
     }
 
@@ -75,9 +75,7 @@ export class Privat24Provider {
       .select(['id'])
       .findOne({ name: account.info.cardbalance.card.currency });
 
-    const wallet = await Wallet.query().findById(
-      account.info.cardbalance.card.account,
-    );
+    const wallet = await Wallet.query().findById(account.info.cardbalance.card.account);
     const walletData = {
       id: account.info.cardbalance.card.account,
       userId: user.id,
@@ -112,8 +110,7 @@ export class Privat24Provider {
         }
 
         const amount = parseFloat(statement.cardamount);
-        const type =
-          amount > 0 ? TransactionType.income : TransactionType.outcome;
+        const type = amount > 0 ? TransactionType.income : TransactionType.outcome;
         const categoryInId = '39da1fbc-1937-41b2-a46f-d2dce9a1f788';
         const categoryOutId = '07c0ba04-d1a2-4a17-b526-ac7bb80e78b1';
         const trxData = {
@@ -141,10 +138,7 @@ export class Privat24Provider {
     }
   }
 
-  protected getClientInfo(
-    id: string,
-    token: string,
-  ): Promise<GetClientInfoResponse | undefined> {
+  protected getClientInfo(id: string, token: string): Promise<GetClientInfoResponse | undefined> {
     const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""></payment>`;
     return this.query('balance', this.getBody(data, id, token));
   }
@@ -162,10 +156,7 @@ export class Privat24Provider {
     to: string,
   ): Promise<GetStatementsResponse> {
     const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""><prop name="sd" value="${from}" /><prop name="ed" value="${to}" /></payment>`;
-    return this.query(
-      'https://api.privatbank.ua/p24api/rest_fiz',
-      this.getBody(data, id, token),
-    );
+    return this.query('https://api.privatbank.ua/p24api/rest_fiz', this.getBody(data, id, token));
   }
 
   private sha1(data) {

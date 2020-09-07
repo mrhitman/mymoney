@@ -6,6 +6,7 @@ import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
 import { TransactionType } from 'src/transactions/transaction-type';
+import { v4 as uuid } from 'uuid';
 
 export interface CurrencyResponse {
   currencyCodeA: number;
@@ -100,13 +101,19 @@ export class MonobankProvider {
         .select(['id'])
         .findOne({ code: account.currencyCode });
 
-      const wallet = await Wallet.query().findById(account.id);
+      const wallet = await Wallet
+        .query()
+        .whereRaw(`meta ->> 'id' = ${account.id}`)
+        .andWhere({ isImported: true })
+        .first();
       const walletData = {
-        id: account.id,
+        id: uuid(),
         userId: user.id,
         name: account.maskedPan.join(''),
         type: 'monobank-' + account.type,
         description: 'imported from monobank',
+        meta: JSON.stringify(account),
+        isImported: true,
         pockets: [
           {
             currencyId: currency.id,
@@ -131,14 +138,18 @@ export class MonobankProvider {
           category = categories.find(c => c.type === type.toString() && c.name === 'SYSTEM_EMPTY')
         }
 
-        const trx = await Transaction.query().findById(statement.id);
+        const trx = await Transaction
+          .query()
+          .where({ isImported: true })
+          .andWhereRaw(`meta ->> 'id' = ${statement.id}`)
+          .first()
 
         if (trx) {
           continue;
         }
 
         const trxData = {
-          id: statement.id,
+          id: uuid(),
           description: statement.description,
           amount: Math.abs(statement.amount) / 100,
           userId: user.id,
@@ -146,15 +157,16 @@ export class MonobankProvider {
           currencyId: currency.id,
           type,
           date: new Date(statement.time * 1000),
-          additional: JSON.stringify(statement)
+          meta: JSON.stringify(statement),
+          isImported: true,
         } as Partial<Transaction>;
 
         if (type === TransactionType.income) {
-          trxData.destinationWalletId = account.id;
+          trxData.destinationWalletId = walletData.id;
         }
 
         if (type === TransactionType.outcome) {
-          trxData.sourceWalletId = account.id;
+          trxData.sourceWalletId = walletData.id;
         }
 
         await Transaction.query().insert(trxData);

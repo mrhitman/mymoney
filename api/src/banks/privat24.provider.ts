@@ -75,15 +75,18 @@ export class Privat24Provider {
       .select(['id'])
       .findOne({ name: account.info.cardbalance.card.currency });
 
-    const wallet = await Wallet.query().findById(
-      account.info.cardbalance.card.account,
-    );
+    const wallet = await Wallet.query()
+      .where({ isImported: true })
+      .andWhereRaw(`meta->> 'account' = ${account.info.cardbalance.card.account}`)
+      .first();
     const walletData = {
       id: account.info.cardbalance.card.account,
       userId: user.id,
       name: account.info.cardbalance.card.card_number,
       type: 'Privat24 Card',
       description: 'imported from privat24',
+      isImported: true,
+      meta: JSON.stringify(account.info.cardbalance.card),
       pockets: [
         {
           currencyId: currency.id,
@@ -105,7 +108,10 @@ export class Privat24Provider {
 
     if (statements) {
       for (let statement of statements.info.statements.statement) {
-        const trx = await Transaction.query().findById(statement.appcode);
+        const trx = await Transaction.query()
+          .where({ isImported: true })
+          .andWhereRaw(`meta->> 'appcode' = ${statement.appcode}`)
+          .first();
 
         if (trx) {
           continue;
@@ -125,7 +131,8 @@ export class Privat24Provider {
           currencyId: currency.id,
           type,
           date: new Date(),
-          additional: JSON.stringify(statement),
+          meta: JSON.stringify(statement),
+          isImported: true,
         } as Partial<Transaction>;
 
         if (type === TransactionType.income) {

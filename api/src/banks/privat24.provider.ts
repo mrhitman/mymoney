@@ -8,6 +8,7 @@ import Wallet from 'src/database/models/wallet.model';
 import { DateTime } from 'luxon';
 import Transaction from 'src/database/models/transaction.model';
 import { TransactionType } from 'src/transactions/transaction-type';
+import { v4 as uuid } from 'uuid';
 
 interface GetClientInfoResponse {
   info: {
@@ -67,20 +68,20 @@ export class Privat24Provider {
   public async import(user: User, id: string, token: string) {
     const account = await this.getClientInfo(id, token);
 
-    if (!account) {
+    if (!account?.info?.cardbalance?.card) {
       return;
     }
 
     const currency = await Currency.query()
       .select(['id'])
-      .findOne({ name: account.info.cardbalance.card.currency });
+      .findOne({ name: account.info?.cardbalance?.card?.currency });
 
     const wallet = await Wallet.query()
       .where({ isImported: true })
-      .andWhereRaw(`meta->> 'account' = ${account.info.cardbalance.card.account}`)
+      .andWhereRaw(`meta->> 'account' = '${account.info.cardbalance.card.account}'`)
       .first();
     const walletData = {
-      id: account.info.cardbalance.card.account,
+      id: uuid(),
       userId: user.id,
       name: account.info.cardbalance.card.card_number,
       type: 'Privat24 Card',
@@ -110,7 +111,7 @@ export class Privat24Provider {
       for (let statement of statements.info.statements.statement) {
         const trx = await Transaction.query()
           .where({ isImported: true })
-          .andWhereRaw(`meta->> 'appcode' = ${statement.appcode}`)
+          .andWhereRaw(`meta->> 'appcode' = '${statement.appcode}'`)
           .first();
 
         if (trx) {

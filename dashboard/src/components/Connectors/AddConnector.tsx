@@ -16,6 +16,8 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
             initialValues={{
                 type: "monobank",
                 token: "",
+                password: "",
+                merchantId: "",
                 enabled: true,
                 interval: 800
             }}
@@ -26,7 +28,9 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                         interval: 800,
                         enabled: values.enabled,
                         params: {
-                            token: values.token
+                            token: values.token,
+                            merchantId: values.merchantId,
+                            password: values.password
                         }
                     }
                 });
@@ -48,12 +52,20 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                                 <Select.Option value="privat24">Privat24</Select.Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item label='Token' name='token'>
-                            <Input value={bag.values.token} onChange={bag.handleChange('token')} />
-                        </Form.Item>
                         <Form.Item label='Sync interval (in seconds)' name='interval'>
                             <Input type="number" value={bag.values.interval} onChange={bag.handleChange('interval')} />
                         </Form.Item>
+                        {bag.values.type === 'monobank' && <Form.Item label='Token' name='token'>
+                            <Input value={bag.values.token} onChange={bag.handleChange('token')} />
+                        </Form.Item>}
+                        {bag.values.type === 'privat24' && <>
+                            <Form.Item label='Password' name='password'>
+                                <Input value={bag.values.password} onChange={bag.handleChange('password')} />
+                            </Form.Item>
+                            <Form.Item label='Merchant Id' name='merchantId'>
+                                <Input value={bag.values.merchantId} onChange={bag.handleChange('merchantId')} />
+                            </Form.Item>
+                        </>}
                         <Form.Item label="Enable sync"  >
                             <div style={{ float: 'right' }}>
                                 <Switch checked={bag.values.enabled} onChange={checked => bag.setFieldValue('enabled', checked)} />

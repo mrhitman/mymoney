@@ -103,7 +103,7 @@ export class MonobankProvider {
 
       const wallet = await Wallet
         .query()
-        .whereRaw(`meta ->> 'id' = ${account.id}`)
+        .whereRaw(`meta ->> 'id' = '${account.id}'`)
         .andWhere({ isImported: true })
         .first();
       const walletData = {
@@ -141,7 +141,7 @@ export class MonobankProvider {
         const trx = await Transaction
           .query()
           .where({ isImported: true })
-          .andWhereRaw(`meta ->> 'id' = ${statement.id}`)
+          .andWhereRaw(`meta ->> 'id' = '${statement.id}'`)
           .first()
 
         if (trx) {

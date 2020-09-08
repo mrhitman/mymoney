@@ -40,7 +40,12 @@ export const Connectors: React.FC = () => {
                         loading={loading}
                         onClick={() => setShowForm(true)}
                     >
-                        <Row justify="center" align="middle" style={{ minHeight: '300px' }}>
+                        <Row justify="center" align="middle" style={{
+                            minHeight: '280px',
+                            maxHeight: '280px',
+                            minWidth: '200px',
+                            maxWidth: '200px'
+                        }}>
                             <AppstoreAddOutlined style={{ fontSize: 160 }} />
                         </Row>
                         <Card.Meta title={"Add connector"} />

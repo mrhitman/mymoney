@@ -53,6 +53,18 @@ export class BanksResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation((returns) => String)
+  public async removeConnector(@CurrentUser() user: User, @Args('id') id: number) {
+
+    const connector = await BankConnector
+      .query()
+      .where({ userId: user.id})
+      .deleteById(id)
+
+    return JSON.stringify(connector, null, '\t')
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation((returns) => String)
   public async connectMonobank(@CurrentUser() user: User, @Args('token') token: string) {
     const existConnection = await BankConnector.query()
       .where({ userId: user.id, meta: { token } })

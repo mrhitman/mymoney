@@ -19,13 +19,13 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                 password: "",
                 merchantId: "",
                 enabled: true,
-                interval: 800
+                interval: 900
             }}
             onSubmit={values => {
                 addConector({
                     variables: {
                         type: values.type,
-                        interval: 800,
+                        interval: 900,
                         enabled: values.enabled,
                         params: {
                             token: values.token,
@@ -43,6 +43,7 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                     visible={show}
                     onOk={() => bag.handleSubmit()}
                     onCancel={onClose}
+                    width={'80%'}
                     closable
                 >
                     <Form labelCol={{ span: 8 }}>
@@ -51,9 +52,6 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                                 <Select.Option value="monobank">Monobank</Select.Option>
                                 <Select.Option value="privat24">Privat24</Select.Option>
                             </Select>
-                        </Form.Item>
-                        <Form.Item label='Sync interval (in seconds)' name='interval'>
-                            <Input type="number" value={bag.values.interval} onChange={bag.handleChange('interval')} />
                         </Form.Item>
                         {bag.values.type === 'monobank' && <Form.Item label='Token' name='token'>
                             <Input value={bag.values.token} onChange={bag.handleChange('token')} />

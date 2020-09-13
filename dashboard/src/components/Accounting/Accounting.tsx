@@ -5,6 +5,7 @@ import {
   List,
   Typography,
   Divider,
+  Breadcrumb,
   Avatar,
   Row,
   Col,
@@ -32,35 +33,45 @@ export const Accounting: FC = () => {
   const wallets = data ? data.wallets : [];
 
   return (
-    <Skeleton loading={loading}>
-      <Row gutter={16}>
-        {wallets.map((wallet) => {
-          return (
-            <Col id={wallet.id} {...layout}>
-              <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
-                <Link to={`/operations/${wallet.id}`}>
-                  <Card.Meta
-                    title={wallet.name.slice(0, 6) + '******'}
-                    description={wallet.description}
-                    avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
-                  />
-                  <Divider />
-                  <List
-                    dataSource={wallet.pockets}
-                    renderItem={(pocket) => (
-                      <Typography>
-                        {pocket.currency.symbol} {pocket.amount}{' '}
-                        {pocket.currency.name}
-                      </Typography>
-                    )}
-                  />
-                </Link>
-              </Card>
-            </Col>
-          );
-        })}
-      </Row>
-    </Skeleton>
+    <>
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item>
+          <Link to="/">
+            Home
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Wallets</Breadcrumb.Item>
+      </Breadcrumb>
+      <Skeleton loading={loading}>
+        <Row gutter={16}>
+          {wallets.map((wallet) => {
+            return (
+              <Col id={wallet.id} {...layout}>
+                <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
+                  <Link to={`/operations/${wallet.id}`}>
+                    <Card.Meta
+                      title={wallet.name.slice(0, 6) + '******'}
+                      description={wallet.description}
+                      avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
+                    />
+                    <Divider />
+                    <List
+                      dataSource={wallet.pockets}
+                      renderItem={(pocket) => (
+                        <Typography>
+                          {pocket.currency.symbol} {pocket.amount}{' '}
+                          {pocket.currency.name}
+                        </Typography>
+                      )}
+                    />
+                  </Link>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
+      </Skeleton>
+    </>
   );
 };
 

@@ -18,8 +18,7 @@ import {
   TrophyOutlined,
   WalletOutlined
 } from '@ant-design/icons';
-import { Avatar, Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
-import { upperFirst } from 'lodash';
+import { Avatar, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { ActivePage } from './Header';
@@ -163,14 +162,6 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
           </Menu>
         </AntdLayout.Sider>
         <AntdLayout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>
-              <Link to="/">
-                Home
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>{upperFirst(activePage)}</Breadcrumb.Item>
-          </Breadcrumb>
           <AntdLayout.Content
             className="site-layout-background"
             style={{

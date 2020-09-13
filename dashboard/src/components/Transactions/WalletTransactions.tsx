@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Col, Popover, Row, Table, Typography } from 'antd';
+import { Col, Popover, Breadcrumb, Row, Table, Typography, Card } from 'antd';
 import { loader } from 'graphql.macro';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
 import { GetWalletTransactionsQuery } from 'src/generated/graphql';
 import { useRouteMatch } from 'react-router'
+import { Link } from 'react-router-dom';
 
 const TransactionsQuery = loader('src/queries/wallet-transactions.graphql');
 const WalletTransactions: React.FC = () => {
@@ -28,8 +29,27 @@ const WalletTransactions: React.FC = () => {
   const { t } = useTranslation();
   return (
     <>
-      <Typography>{data?.wallet.name} </Typography>
-      <Typography>{data?.wallet.description} </Typography>
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item>
+          <Link to="/">
+            Home
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/accounting">
+            Wallets
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Operations for {data?.wallet.name}</Breadcrumb.Item>
+      </Breadcrumb>
+      <Row>
+        <Col offset={20} />
+        <Col span={4}>
+          <Card>
+            <Card.Meta title={data?.wallet.name} description={data?.wallet.description} />
+          </Card>
+        </Col>
+      </Row>
       <Table
         bordered
         showSorterTooltip

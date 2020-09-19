@@ -84,7 +84,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 key="accounting"
                 icon={<WalletOutlined />}
               >
-                <Link to="/accounting">
+                <Link to="/accounting" >
                   Wallets
                 </Link>
               </Menu.Item>
@@ -99,10 +99,9 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             >
               <Menu.Item
                 key="incomes"
-                onClick={navigate('incomes')}
                 icon={<RiseOutlined />}
               >
-                <Link to="/incomes">
+                <Link to="/incomes" >
                   Incomes
                 </Link>
               </Menu.Item>
@@ -110,7 +109,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 key="outcomes"
                 icon={<FallOutlined />}
               >
-                <Link to="/outcomes">
+                <Link to="/outcomes" >
                   Outcomes
                 </Link>
               </Menu.Item>
@@ -145,12 +144,12 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.Item key="categories" icon={<BookOutlined />}>
-              <Link to="/categories">
+              <Link to="/categories" >
                 Categories
               </Link>
             </Menu.Item>
             <Menu.Item key="currencies" icon={<MoneyCollectOutlined />}>
-              <Link to="/currencies">
+              <Link to="/currencies" >
                 Currencies
               </Link>
             </Menu.Item>

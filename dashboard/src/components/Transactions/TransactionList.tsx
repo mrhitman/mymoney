@@ -1,30 +1,20 @@
-import { useQuery } from '@apollo/client';
 import { Col, Popover, Row, Table } from 'antd';
-import { loader } from 'graphql.macro';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { GetTransactionsQuery } from 'src/generated/graphql';
+import { useGetTransactionsQuery } from 'src/generated/graphql';
 
-const TransactionsQuery = loader('src/queries/transactions.graphql');
 const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
   type,
 }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [transactions, setTransactions] = useState<GetTransactionsQuery>();
-  const { loading, data, error } = useQuery<GetTransactionsQuery>(
-    TransactionsQuery,
-    { variables: { type, limit: pageSize, offset: pageSize * (current - 1) } },
+  const { loading, data, error } = useGetTransactionsQuery(
+    { variables: { type: type as any, limit: pageSize, offset: pageSize * (current - 1) } }
   );
-  useEffect(() => {
-    if (data?.transactions?.items) {
-      setTransactions(data);
-    }
-  }, [data]);
-
   const { t } = useTranslation();
+
   return (
     <Table
       bordered
@@ -41,7 +31,7 @@ const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
         setCurrent(pagination.current || 1);
         setPageSize(pagination.pageSize || 1);
       }}
-      dataSource={transactions?.transactions?.items || []}
+      dataSource={data?.transactions?.items || []}
     >
       <Table.Column
         title="id"

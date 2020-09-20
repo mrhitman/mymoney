@@ -5,6 +5,7 @@
 type BankConnection {
   id: String!
   type: String!
+  description: String!
   enabled: Boolean
   createdAt: String!
   meta: JSON!
@@ -225,9 +226,10 @@ type Query {
 type Mutation {
   import(id: String!): String!
   addConnector(args: AddConnectorArgs!): String!
-  connectMonobank(token: String!): String!
+  removeConnector(id: Float!): String!
+  connectMonobank(token: String!, description: String!): String!
   disconnectMonobank(token: String!): String!
-  connectPrivat24(password: String!, merchant_id: String!): String!
+  connectPrivat24(password: String!, merchant_id: String!, description: String!): String!
   disconnectPrivat24(merchant_id: String!): String!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveOutcomeCategory(categoryId: String!): Budget!
@@ -252,6 +254,7 @@ input AddConnectorArgs {
   enabled: Boolean!
   params: JSON!
   type: String!
+  description: String!
 }
 
 input BudgetCategoryCreate {

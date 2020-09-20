@@ -43,6 +43,7 @@ query getTransactions(
           color
         }
       }
+      date
       description
       amount
     }

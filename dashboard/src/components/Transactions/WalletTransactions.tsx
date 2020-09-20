@@ -1,30 +1,20 @@
-import { useQuery } from '@apollo/client';
 import { Col, Popover, Breadcrumb, Row, Table, Typography, Card } from 'antd';
-import { loader } from 'graphql.macro';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { GetWalletTransactionsQuery } from 'src/generated/graphql';
+import { useGetTransactionsQuery, useGetWalletTransactionsQuery } from 'src/generated/graphql';
 import { useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom';
 
-const TransactionsQuery = loader('src/queries/wallet-transactions.graphql');
 const WalletTransactions: React.FC = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [transactions, setTransactions] = useState<GetWalletTransactionsQuery>();
 
   const { params } = useRouteMatch<{ walletId: string }>();
-  const { loading, data, error } = useQuery<GetWalletTransactionsQuery>(
-    TransactionsQuery,
+  const { loading, data, error } = useGetWalletTransactionsQuery(
     { variables: { walletId: params.walletId, limit: pageSize, offset: pageSize * (current - 1) } },
   );
-  useEffect(() => {
-    if (data?.transactions?.items) {
-      setTransactions(data);
-    }
-  }, [data]);
 
   const { t } = useTranslation();
   return (
@@ -65,7 +55,7 @@ const WalletTransactions: React.FC = () => {
           setCurrent(pagination.current || 1);
           setPageSize(pagination.pageSize || 1);
         }}
-        dataSource={transactions?.transactions?.items || []}
+        dataSource={data?.transactions?.items || []}
       >
         <Table.Column
           title="id"

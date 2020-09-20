@@ -35,6 +35,7 @@ query getWalletTransactions(
           color
         }
       }
+      date
       description
       amount
     }

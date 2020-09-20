@@ -42,7 +42,7 @@ import { join } from 'path';
     }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
-      plugins: [new ApolloComplexityPlugin(30)],
+      plugins: [new ApolloComplexityPlugin(+process.env.MAX_QUERY_COMPLEXITY || 32)],
       autoSchemaFile: 'schema.gql',
     }),
   ],

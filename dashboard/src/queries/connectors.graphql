@@ -1,6 +1,7 @@
 query GetConnectors {
   connectors {
     id
+    description
     type
     meta
     enabled

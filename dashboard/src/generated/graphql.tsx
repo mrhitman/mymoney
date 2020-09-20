@@ -19,6 +19,7 @@ export type BankConnection = {
   __typename?: 'BankConnection';
   id: Scalars['String'];
   type: Scalars['String'];
+  description: Scalars['String'];
   enabled?: Maybe<Scalars['Boolean']>;
   createdAt: Scalars['String'];
   meta: Scalars['JSON'];
@@ -291,6 +292,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   import: Scalars['String'];
   addConnector: Scalars['String'];
+  removeConnector: Scalars['String'];
   connectMonobank: Scalars['String'];
   disconnectMonobank: Scalars['String'];
   connectPrivat24: Scalars['String'];
@@ -324,8 +326,14 @@ export type MutationAddConnectorArgs = {
 };
 
 
+export type MutationRemoveConnectorArgs = {
+  id: Scalars['Float'];
+};
+
+
 export type MutationConnectMonobankArgs = {
   token: Scalars['String'];
+  description: Scalars['String'];
 };
 
 
@@ -337,6 +345,7 @@ export type MutationDisconnectMonobankArgs = {
 export type MutationConnectPrivat24Args = {
   password: Scalars['String'];
   merchant_id: Scalars['String'];
+  description: Scalars['String'];
 };
 
 
@@ -429,6 +438,7 @@ export type AddConnectorArgs = {
   enabled: Scalars['Boolean'];
   params: Scalars['JSON'];
   type: Scalars['String'];
+  description: Scalars['String'];
 };
 
 export type BudgetCategoryCreate = {
@@ -539,6 +549,7 @@ export type RefreshInput = {
 
 export type AddConnectorMutationVariables = Exact<{
   type: Scalars['String'];
+  description: Scalars['String'];
   interval: Scalars['Float'];
   params: Scalars['JSON'];
   enabled: Scalars['Boolean'];
@@ -572,7 +583,7 @@ export type GetConnectorsQuery = (
   { __typename?: 'Query' }
   & { connectors: Array<(
     { __typename?: 'BankConnection' }
-    & Pick<BankConnection, 'id' | 'type' | 'meta' | 'enabled' | 'createdAt'>
+    & Pick<BankConnection, 'id' | 'description' | 'type' | 'meta' | 'enabled' | 'createdAt'>
   )> }
 );
 
@@ -664,7 +675,7 @@ export type GetTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
-      & Pick<Transaction, 'id' | 'type' | 'description' | 'amount'>
+      & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
       & { sourceWallet?: Maybe<(
         { __typename?: 'Wallet' }
         & WalletFragment
@@ -704,7 +715,7 @@ export type GetWalletTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
-      & Pick<Transaction, 'id' | 'type' | 'description' | 'amount'>
+      & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
       & { currency: (
         { __typename?: 'Currency' }
         & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
@@ -748,8 +759,8 @@ export const WalletFragmentDoc = gql`
 }
     `;
 export const AddConnectorDocument = gql`
-    mutation addConnector($type: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
-  addConnector(args: {type: $type, interval: $interval, params: $params, enabled: $enabled})
+    mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
+  addConnector(args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled})
 }
     `;
 export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutation, AddConnectorMutationVariables>;
@@ -768,6 +779,7 @@ export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutatio
  * const [addConnectorMutation, { data, loading, error }] = useAddConnectorMutation({
  *   variables: {
  *      type: // value for 'type'
+ *      description: // value for 'description'
  *      interval: // value for 'interval'
  *      params: // value for 'params'
  *      enabled: // value for 'enabled'
@@ -824,6 +836,7 @@ export const GetConnectorsDocument = gql`
     query GetConnectors {
   connectors {
     id
+    description
     type
     meta
     enabled
@@ -1065,6 +1078,7 @@ export const GetTransactionsDocument = gql`
           color
         }
       }
+      date
       description
       amount
     }
@@ -1128,6 +1142,7 @@ export const GetWalletTransactionsDocument = gql`
           color
         }
       }
+      date
       description
       amount
     }

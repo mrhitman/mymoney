@@ -28,7 +28,7 @@ export const Connectors: React.FC = () => {
                                 style={{ width: 256 }}
                                 cover={<img src={images[connector.type]} />}
                             >
-                                <Card.Meta title={connector.type} />
+                                <Card.Meta title={connector.type} description={connector.description} />
                                 <Divider />
                                 <Typography>Added: {moment.unix(Number(connector.createdAt) / 1000).format('L HH:mm')}</Typography>
                             </Card>

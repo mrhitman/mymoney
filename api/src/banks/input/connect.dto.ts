@@ -18,4 +18,8 @@ export class AddConnectorDto {
   @Field()
   @IsString()
   readonly type: string;
+
+  @Field()
+  @IsString()
+  readonly description: string;
 }

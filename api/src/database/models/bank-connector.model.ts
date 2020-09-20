@@ -3,11 +3,12 @@ import User from './user.model';
 
 export enum BankConnectorType {
   MONOBANK = 'monobank',
-  PRIVAT24 = 'privat24'
+  PRIVAT24 = 'privat24',
 }
 
 export class BankConnector extends Model {
   public id: number;
+  public description: string;
   public type: BankConnectorType;
   public userId: number;
   public enabled: boolean;
@@ -32,9 +33,8 @@ export class BankConnector extends Model {
           to: 'users.id',
         },
       },
-    }
+    };
   }
-
 }
 
 export default BankConnector;

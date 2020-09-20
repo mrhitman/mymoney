@@ -25,7 +25,8 @@ export const Connectors: React.FC = () => {
                             <Card
                                 hoverable
                                 loading={loading}
-                                cover={<img src={images[connector.type]} style={{ width: 256 }} />}
+                                style={{ width: 256 }}
+                                cover={<img src={images[connector.type]} />}
                             >
                                 <Card.Meta title={connector.type} />
                                 <Divider />
@@ -38,14 +39,10 @@ export const Connectors: React.FC = () => {
                     <Card
                         hoverable
                         loading={loading}
+                        style={{ width: 256 }}
                         onClick={() => setShowForm(true)}
                     >
-                        <Row justify="center" align="middle" style={{
-                            minHeight: '280px',
-                            maxHeight: '280px',
-                            minWidth: '200px',
-                            maxWidth: '200px'
-                        }}>
+                        <Row justify="center" align="middle" style={{ height: 278 }}>
                             <AppstoreAddOutlined style={{ fontSize: 160 }} />
                         </Row>
                         <Card.Meta title={"Add connector"} />

@@ -15,6 +15,7 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
         <Formik
             initialValues={{
                 type: "monobank",
+                description: "",
                 token: "",
                 password: "",
                 merchantId: "",
@@ -25,6 +26,7 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                 addConector({
                     variables: {
                         type: values.type,
+                        description: values.description,
                         interval: 900,
                         enabled: values.enabled,
                         params: {
@@ -44,9 +46,13 @@ export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSub
                     onOk={() => bag.handleSubmit()}
                     onCancel={onClose}
                     width={'80%'}
+                    style={{ maxWidth: 900 }}
                     closable
                 >
                     <Form labelCol={{ span: 8 }}>
+                        <Form.Item label='Description' name='description'>
+                            <Input value={bag.values.description} onChange={bag.handleChange('description')} />
+                        </Form.Item>
                         <Form.Item label='Type' name='type'>
                             <Select value={bag.values.type} defaultValue={bag.initialValues.type} onChange={bag.handleChange('type')}>
                                 <Select.Option value="monobank">Monobank</Select.Option>

@@ -1,5 +1,6 @@
 mutation addConnector(
   $type: String!
+  $description: String!
   $interval: Float!
   $params: JSON!
   $enabled: Boolean!
@@ -7,6 +8,7 @@ mutation addConnector(
   addConnector(
     args: {
       type: $type
+      description: $description
       interval: $interval
       params: $params
       enabled: $enabled

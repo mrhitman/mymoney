@@ -7,11 +7,11 @@ import { TransactionType, useAnalysByCategoriesQuery } from 'src/generated/graph
 import { VictoryPie } from 'victory';
 
 export const AnalysisByCategory: FC = () => {
-  const [type, setType] = useState<TransactionType>(TransactionType.Income);
+  const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
   const [from, setFrom] = useState<number | undefined>(moment().startOf('month').unix());
   const [to, setTo] = useState<number | undefined>(moment().unix());
   const { t } = useTranslation();
-  const { loading, data, error, refetch } = useAnalysByCategoriesQuery({ variables: { type, from, to } });
+  const { loading, data, refetch } = useAnalysByCategoriesQuery({ variables: { type, from, to } });
 
   useEffect(() => {
     refetch({ type, from, to });
@@ -47,21 +47,22 @@ export const AnalysisByCategory: FC = () => {
         </Col>
         <Col span={18} >
           <Row align="middle" justify="center" gutter={[10, 10]} >
-            <Col span={12}>
+            <Col span={18}>
               <Spin spinning={loading}>
                 <VictoryPie
                   colorScale={'qualitative'}
                   style={{ labels: { fill: 'black' } }}
-                  innerRadius={80}
-                  labelRadius={120}
+                  innerRadius={60}
+                  labelRadius={70}
                   cornerRadius={2}
                   labelPosition={'centroid'}
-                  labels={({ datum }) => `${t(datum.x)}`}
+                  labels={({ datum }) => `${t(datum.x)} (${datum.amount?.toFixed(2)})`}
                   data={data?.statisticByCategory
                     // .filter(data => data.category.name !== 'SYSTEM_EMPTY')
                     .map(data => ({
                       x: data.category.name,
-                      y: Math.abs(data.amount)
+                      y: Math.abs(data.amount),
+                      amount: data.amount,
                     }))}
                 />
               </Spin>

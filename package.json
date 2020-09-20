@@ -10,7 +10,8 @@
     "stop:api:services": "cd api && docker-compose down",
     "start:api:services": "cd api && docker-compose up -d",
     "start:dashboard": "cd dashboard && yarn start",
-    "start": "concurrently \"yarn start:api\" \"yarn start:dashboard\""
+    "start": "concurrently \"yarn start:api\" \"yarn start:dashboard\"",
+    "deploy": "bash heroku.sh deploy"
   },
   "workspaces": {
     "nohoist": [

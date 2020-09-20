@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Categories from 'src/components/Categories/Categories';
-import AnalysisByCategory from 'src/components/Analysis/AnalysisByCategory';
+import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory';
 import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
 import Info from 'src/components/Info/Info';
 import Login from 'src/components/Login/Login';

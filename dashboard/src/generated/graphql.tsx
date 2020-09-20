@@ -561,6 +561,31 @@ export type AddConnectorMutation = (
   & Pick<Mutation, 'addConnector'>
 );
 
+export type AnalysByCategoriesQueryVariables = Exact<{
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  type?: Maybe<TransactionType>;
+}>;
+
+
+export type AnalysByCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { statisticByCategory: Array<(
+    { __typename?: 'StatisticByCategory' }
+    & Pick<StatisticByCategory, 'amount'>
+    & { category: (
+      { __typename?: 'Category' }
+      & Pick<Category, 'name' | 'type'>
+      & { icon?: Maybe<(
+        { __typename?: 'IconDto' }
+        & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
+      )> }
+    ) }
+  )> }
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -792,6 +817,53 @@ export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions
 export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
 export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
 export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
+export const AnalysByCategoriesDocument = gql`
+    query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
+  statisticByCategory(from: $from, to: $to, currencyName: $currencyName, walletIds: $walletIds, type: $type) {
+    amount
+    category {
+      name
+      type
+      icon {
+        name
+        type
+        backgroundColor
+        color
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAnalysByCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAnalysByCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAnalysByCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAnalysByCategoriesQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *      currencyName: // value for 'currencyName'
+ *      walletIds: // value for 'walletIds'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useAnalysByCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
+        return Apollo.useQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+      }
+export function useAnalysByCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
+          return Apollo.useLazyQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+        }
+export type AnalysByCategoriesQueryHookResult = ReturnType<typeof useAnalysByCategoriesQuery>;
+export type AnalysByCategoriesLazyQueryHookResult = ReturnType<typeof useAnalysByCategoriesLazyQuery>;
+export type AnalysByCategoriesQueryResult = Apollo.QueryResult<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {

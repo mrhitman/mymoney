@@ -35,7 +35,8 @@ interface LayoutProps {
 const MenuMap: Record<string, string> = {
   'accounting': 'ledgers',
   'incomes': 'transactions',
-  'outcomes': 'transactions'
+  'outcomes': 'transactions',
+  'analys-by-category': 'analys'
 };
 
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
@@ -129,12 +130,14 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu
-              key="sub4"
+              key="analys"
               icon={<AreaChartOutlined />}
               title="Statistics"
             >
-              <Menu.Item key="15" icon={<PieChartOutlined />}>
-                By Categories
+              <Menu.Item key="analys-by-cateogories" icon={<PieChartOutlined />}>
+                <Link to="/analysis-category">
+                  By Categories
+                </Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>
                 By Currencies

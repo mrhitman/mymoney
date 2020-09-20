@@ -1,78 +1,64 @@
-import {SyncOutlined} from '@ant-design/icons';
-import {Dropdown, Menu, Button} from 'antd';
-import React, {PureComponent} from 'react';
-import {withTranslation, WithTranslation} from 'react-i18next';
-import {VictoryPie} from 'victory';
+import { SyncOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Button, Row, Col, Spin } from 'antd';
+import React, { FC, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TransactionType, useAnalysByCategoriesQuery } from 'src/generated/graphql';
+import { VictoryPie } from 'victory';
 
-interface AnalysisByCategoryState {
-  data: Array<any>;
-  loading: boolean;
-  type: 'income' | 'outcome';
+export const AnalysisByCategory: FC = () => {
+  const [type, setType] = useState<TransactionType>(TransactionType.Income);
+  const { t } = useTranslation();
+  const { loading, data, error, refetch } = useAnalysByCategoriesQuery({ variables: { type } });
+
+  useEffect(() => {
+    refetch({ type });
+  }, [type]);
+
+  return (
+    <>
+      <Row>
+        <Col>
+          <Dropdown
+            overlay={() => (
+              <Menu>
+                <Menu.Item key="income" onClick={() => setType(TransactionType.Income)} >
+                  Income
+              </Menu.Item>
+                <Menu.Item key="outcome" onClick={() => setType(TransactionType.Outcome)} >
+                  Outcome
+              </Menu.Item>
+              </Menu>
+            )}
+            trigger={['click']}
+            placement="bottomCenter"
+          >
+            <Button className="ant-dropdown-link" onClick={() => refetch({ type })}>{type}</Button>
+          </Dropdown>
+          <Button >
+            <SyncOutlined />
+          </Button>
+        </Col>
+      </Row>
+      <Row align="middle" justify="center" gutter={[10, 10]} >
+        <Col span={12}>
+          <Spin spinning={loading}>
+            <VictoryPie
+              colorScale={'qualitative'}
+              style={{ labels: { fill: 'black' } }}
+              innerRadius={80}
+              labelRadius={120}
+              cornerRadius={2}
+              labelPosition={'centroid'}
+              labels={({ datum }) => `${t(datum.x)}`}
+              data={data?.statisticByCategory.map(data => ({
+                x: data.category.name,
+                y: Math.abs(data.amount)
+              }))}
+            />
+          </Spin>
+        </Col>
+      </Row>
+    </>
+  );
 }
 
-class AnalysisByCategory extends PureComponent<WithTranslation, AnalysisByCategoryState> {
-  public state: AnalysisByCategoryState = {
-    data: [],
-    loading: false,
-    type: 'outcome',
-  };
-
-  public componentDidMount() {
-    return this.fetchData();
-  }
-
-  protected fetchData = async () => {
-    // const response = await api.client('/transactions/statistic-categories/');
-    // this.setState({ loading: true });
-    // const data = response.data as any[];
-    // this.setState({ data, loading: false });
-  };
-
-  public render() {
-    return (
-      <div>
-        <Dropdown
-          overlay={() => (
-            <Menu>
-              <Menu.Item
-                key="income"
-                onClick={() => this.setState({type: 'income'})}
-              >
-                Income
-              </Menu.Item>
-              <Menu.Item
-                key="outcome"
-                onClick={() => this.setState({type: 'outcome'})}
-              >
-                Outcome
-              </Menu.Item>
-            </Menu>
-          )}
-          trigger={['click']}
-          placement="bottomCenter"
-        >
-          <Button className="ant-dropdown-link">{this.state.type}</Button>
-        </Dropdown>
-        <Button onClick={this.fetchData}>
-          <SyncOutlined spin={this.state.loading} />
-        </Button>
-        <VictoryPie
-          colorScale={'qualitative'}
-          style={{labels: {fill: 'black'}}}
-          innerRadius={80}
-          labelRadius={120}
-          cornerRadius={2}
-          labelPosition={'centroid'}
-          labels={({datum}) => `${this.props.t(datum.x)}`}
-          data={this.state.data
-              .filter(({category}) => category.type === this.state.type)
-              .map(({category, amount}) => {
-                return {x: category.name, y: Math.abs(amount)};
-              })}
-        />
-      </div>
-    );
-  }
-}
-
-export default withTranslation()(AnalysisByCategory);

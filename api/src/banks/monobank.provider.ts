@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
+import { omit } from 'lodash';
 import Category from 'src/database/models/category.model';
 import Currency from 'src/database/models/currency.model';
 import Transaction from 'src/database/models/transaction.model';
@@ -28,13 +29,13 @@ export interface ClientInfoResponse {
     cashbackType: string;
     maskedPan: string[];
     type: string;
-  }>
+  }>;
 }
 
 export interface StatementResponse {
   id: string;
   time: number;
-  description: string,
+  description: string;
   mcc: number;
   hold: boolean;
   amount: number;
@@ -44,7 +45,6 @@ export interface StatementResponse {
   cashbackAmount: number;
   balance: number;
 }
-
 
 @Injectable()
 export class MonobankProvider {
@@ -76,7 +76,12 @@ export class MonobankProvider {
     }
   }
 
-  public async getStatements(from: number, to: number, account: string = '0', token: string = ''): Promise<StatementResponse[]> {
+  public async getStatements(
+    from: number,
+    to: number,
+    account: string = '0',
+    token: string = '',
+  ): Promise<StatementResponse[]> {
     try {
       const response = await this.client.get<StatementResponse[]>(
         `personal/statement/${account}/${from}/${to}`,
@@ -96,13 +101,11 @@ export class MonobankProvider {
     const from = to - 31 * 24 * 60 * 60;
 
     for (let account of clientInfo.accounts) {
-      const currency = await Currency
-        .query()
+      const currency = await Currency.query()
         .select(['id'])
         .findOne({ code: account.currencyCode });
 
-      const wallet = await Wallet
-        .query()
+      const wallet = await Wallet.query()
         .whereRaw(`meta ->> 'id' = '${account.id}'`)
         .andWhere({ isImported: true })
         .first();
@@ -117,13 +120,13 @@ export class MonobankProvider {
         pockets: [
           {
             currencyId: currency.id,
-            amount: (account.balance - account.creditLimit) / 100
-          }
-        ]
-      }
+            amount: (account.balance - account.creditLimit) / 100,
+          },
+        ],
+      };
 
       if (wallet) {
-        await wallet.$query().update(walletData);
+        await wallet.$query().update(omit(walletData, 'id'));
       } else {
         await Wallet.query().insert(walletData);
       }
@@ -132,17 +135,18 @@ export class MonobankProvider {
       const categories = await Category.query();
       for (let statement of statements) {
         const type = statement.amount > 0 ? TransactionType.income : TransactionType.outcome;
-        let category = categories.find(c => c.codes.includes(statement.mcc));
+        let category = categories.find((c) => c.codes.includes(statement.mcc));
 
         if (!category) {
-          category = categories.find(c => c.type === type.toString() && c.name === 'SYSTEM_EMPTY')
+          category = categories.find(
+            (c) => c.type === type.toString() && c.name === 'SYSTEM_EMPTY',
+          );
         }
 
-        const trx = await Transaction
-          .query()
+        const trx = await Transaction.query()
           .where({ isImported: true })
           .andWhereRaw(`meta ->> 'id' = '${statement.id}'`)
-          .first()
+          .first();
 
         if (trx) {
           continue;

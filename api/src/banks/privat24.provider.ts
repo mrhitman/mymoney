@@ -1,14 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { createHash } from 'crypto';
-import { toJson } from 'xml2json';
-import User from 'src/database/models/user.model';
-import Currency from 'src/database/models/currency.model';
-import Wallet from 'src/database/models/wallet.model';
+import { omit } from 'lodash';
 import { DateTime } from 'luxon';
+import Currency from 'src/database/models/currency.model';
 import Transaction from 'src/database/models/transaction.model';
+import User from 'src/database/models/user.model';
+import Wallet from 'src/database/models/wallet.model';
 import { TransactionType } from 'src/transactions/transaction-type';
 import { v4 as uuid } from 'uuid';
+import { toJson } from 'xml2json';
 
 interface GetClientInfoResponse {
   info: {
@@ -97,7 +98,7 @@ export class Privat24Provider {
     };
 
     if (wallet) {
-      await wallet.$query().update(walletData);
+      await wallet.$query().update(omit(walletData, 'id'));
     } else {
       await Wallet.query().insert(walletData);
     }
@@ -119,8 +120,7 @@ export class Privat24Provider {
         }
 
         const amount = parseFloat(statement.cardamount);
-        const type =
-          amount > 0 ? TransactionType.income : TransactionType.outcome;
+        const type = amount > 0 ? TransactionType.income : TransactionType.outcome;
         const categoryInId = '39da1fbc-1937-41b2-a46f-d2dce9a1f788';
         const categoryOutId = '07c0ba04-d1a2-4a17-b526-ac7bb80e78b1';
         const trxData = {
@@ -149,10 +149,7 @@ export class Privat24Provider {
     }
   }
 
-  protected getClientInfo(
-    id: string,
-    token: string,
-  ): Promise<GetClientInfoResponse | undefined> {
+  protected getClientInfo(id: string, token: string): Promise<GetClientInfoResponse | undefined> {
     const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""></payment>`;
     return this.query('balance', this.getBody(data, id, token));
   }
@@ -170,10 +167,7 @@ export class Privat24Provider {
     to: string,
   ): Promise<GetStatementsResponse> {
     const data = `<oper>cmt</oper><wait>0</wait><test>0</test><payment id=""><prop name="sd" value="${from}" /><prop name="ed" value="${to}" /></payment>`;
-    return this.query(
-      'https://api.privatbank.ua/p24api/rest_fiz',
-      this.getBody(data, id, token),
-    );
+    return this.query('https://api.privatbank.ua/p24api/rest_fiz', this.getBody(data, id, token));
   }
 
   private sha1(data) {

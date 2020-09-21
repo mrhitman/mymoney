@@ -3,15 +3,25 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { useGetTransactionsQuery } from 'src/generated/graphql';
+import { TransactionType, useGetTransactionsQuery } from 'src/generated/graphql';
 
-const TransactionList: React.FC<{ type?: 'income' | 'outcome' }> = ({
+const TransactionList: React.FC<{ type?: TransactionType }> = ({
   type,
 }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const { loading, data, error } = useGetTransactionsQuery(
-    { variables: { type: type as any, limit: pageSize, offset: pageSize * (current - 1) } }
+  const { loading, data } = useGetTransactionsQuery(
+    {
+      variables: {
+        type,
+        limit: pageSize, offset: pageSize * (current - 1)
+      },
+      context: {
+        headers: {
+          Authorization: localStorage.getItem('accessToken')
+        }
+      }
+    }
   );
   const { t } = useTranslation();
 

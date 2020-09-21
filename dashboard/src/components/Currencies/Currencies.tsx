@@ -1,17 +1,17 @@
-import { useQuery } from '@apollo/client';
 import { Popover, Table } from 'antd';
-import { loader } from 'graphql.macro';
 import React from 'react';
-import { GetCurrenciesQuery } from 'src/generated/graphql';
-import { useTranslation } from 'react-i18next';
 import Flag from 'react-world-flags';
+import { useGetCurrenciesQuery } from 'src/generated/graphql';
 
-const CurrenciesQuery = loader('src/queries/currencies.graphql')
 export const Currencies: React.FC = () => {
-  const { t } = useTranslation();
-  const { loading, data, error } = useQuery<GetCurrenciesQuery>(
-    CurrenciesQuery,
-  );
+  const { loading, data } = useGetCurrenciesQuery({
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('accessToken')
+      }
+    }
+  });
+
   return (
     <>
       <Table
@@ -37,7 +37,8 @@ export const Currencies: React.FC = () => {
         <Table.Column title="Code" dataIndex="code" key="code" />
         <Table.Column title="Rate (to EUR)" dataIndex="rate" key="rate" render={rate => rate.toFixed(3)} />
       </Table>
-    </>)
+    </>
+  );
 }
 
 export default Currencies;

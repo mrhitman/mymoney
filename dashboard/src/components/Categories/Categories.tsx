@@ -1,17 +1,18 @@
-import { useQuery } from '@apollo/client';
 import { Popover, Table } from 'antd';
-import { loader } from 'graphql.macro';
 import Icon from 'src/components/misc/Icon';
 import React from 'react';
-import { GetCategoriesQuery } from 'src/generated/graphql';
+import { useGetCategoriesQuery } from 'src/generated/graphql';
 import { useTranslation } from 'react-i18next';
 
-const CategoriesQuery = loader('src/queries/categories.graphql');
 export const Categories: React.FC = () => {
   const { t } = useTranslation();
-  const { loading, data, error } = useQuery<GetCategoriesQuery>(
-    CategoriesQuery,
-  );
+  const { loading, data } = useGetCategoriesQuery({
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('accessToken')
+      }
+    }
+  });
   return (
     <Table
       bordered

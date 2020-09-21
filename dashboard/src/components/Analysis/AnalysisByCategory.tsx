@@ -17,6 +17,11 @@ export const AnalysisByCategory: FC = () => {
   const [focused, setFocused] = useState<any | undefined>();
   const [to, setTo] = useState<number | undefined>(moment().unix());
   const { t } = useTranslation();
+  console.log({
+    headers: {
+      "Authorization": localStorage.getItem('accessToken')
+    }
+  })
   const { loading, data, refetch } = useAnalysByCategoriesQuery({
     variables: { type, from, to },
     context: {

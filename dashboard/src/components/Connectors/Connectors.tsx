@@ -12,7 +12,13 @@ const images: Record<string, string> = {
 }
 
 export const Connectors: React.FC = () => {
-    let { loading, error, data, refetch } = useGetConnectorsQuery();
+    let { loading, data, refetch } = useGetConnectorsQuery({
+        context: {
+            headers: {
+                Authorization: localStorage.getItem('accessToken')
+            }
+        }
+    });
     const [showForm, setShowForm] = useState(false);
 
     const connectors = data ? data.connectors : [];

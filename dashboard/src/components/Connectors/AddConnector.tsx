@@ -10,7 +10,13 @@ interface AddConnectorProps {
 }
 
 export const AddConnector: React.FC<AddConnectorProps> = ({ show, onClose, onSubmit }) => {
-    const [addConector] = useAddConnectorMutation()
+    const [addConector] = useAddConnectorMutation({
+        context: {
+            headers: {
+                Authorization: localStorage.getItem('accessToken')
+            }
+        }
+    })
     return (
         <Formik
             initialValues={{

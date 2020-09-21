@@ -1,19 +1,25 @@
-import { useQuery } from '@apollo/client';
 import {
-  Skeleton,
-  Card,
-  List,
-  Typography,
-  Divider,
-  Breadcrumb,
-  Avatar,
-  Row,
-  Col,
+  Avatar, Breadcrumb, Card,
+
+
+
+
+
+
+  Col, Divider, List,
+
+
+
+
+  Row, Skeleton,
+
+
+  Typography
 } from 'antd';
 import { loader } from 'graphql.macro';
-import { GetWalletsQuery } from 'src/generated/graphql';
 import React, { FC } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useGetWalletsQuery } from 'src/generated/graphql';
 
 const WalletsQuery = loader('src/queries/wallets.graphql');
 
@@ -29,7 +35,13 @@ export const icons: Record<string, string> = {
 const layout = { xs: 24, sm: 24, md: 12, lg: 6 };
 
 export const Accounting: FC = () => {
-  const { loading, error, data } = useQuery<GetWalletsQuery>(WalletsQuery);
+  const { loading, data } = useGetWalletsQuery({
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('accessToken')
+      }
+    }
+  });
   const wallets = data ? data.wallets : [];
 
   return (

@@ -1,18 +1,18 @@
-import { Col, Popover, Breadcrumb, Row, Table, Typography, Card } from 'antd';
+import { Breadcrumb, Card, Col, Popover, Row, Table } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from 'src/components/misc/Icon';
-import { useGetTransactionsQuery, useGetWalletTransactionsQuery } from 'src/generated/graphql';
-import { useRouteMatch } from 'react-router'
+import { useRouteMatch } from 'react-router';
 import { Link } from 'react-router-dom';
+import Icon from 'src/components/misc/Icon';
+import { useGetWalletTransactionsQuery } from 'src/generated/graphql';
 
 const WalletTransactions: React.FC = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   const { params } = useRouteMatch<{ walletId: string }>();
-  const { loading, data, error } = useGetWalletTransactionsQuery(
+  const { loading, data } = useGetWalletTransactionsQuery(
     {
       variables: {
         walletId: params.walletId,

@@ -1,20 +1,21 @@
 import React, { FC } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import Categories from 'src/components/Categories/Categories';
+import { Accounting } from 'src/components/Accounting/Accounting';
 import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory';
 import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
+import Categories from 'src/components/Categories/Categories';
+import Connectors from 'src/components/Connectors/Connectors';
+import Currencies from 'src/components/Currencies/Currencies';
 import Info from 'src/components/Info/Info';
 import Login from 'src/components/Login/Login';
 import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
-import { Accounting } from 'src/components/Accounting/Accounting';
-import PrivateRoute from './PrivateRoute';
-import Connectors from 'src/components/Connectors/Connectors';
-import Currencies from 'src/components/Currencies/Currencies';
-import WalletTransactions from '../Transactions/WalletTransactions';
+import { TransactionType } from 'src/generated/graphql';
 import Register from '../Register/Register';
+import WalletTransactions from '../Transactions/WalletTransactions';
+import PrivateRoute from './PrivateRoute';
 
 const Routes: FC = () => (
   <Router>
@@ -40,13 +41,13 @@ const Routes: FC = () => (
 
       <PrivateRoute path="/incomes" >
         <Layout activePage="incomes">
-          <TransactionList type="income" />
+          <TransactionList type={TransactionType.Income} />
         </Layout>
       </PrivateRoute>
 
       <PrivateRoute path="/outcomes" >
         <Layout activePage="outcomes">
-          <TransactionList type="outcome" />
+          <TransactionList type={TransactionType.Outcome} />
         </Layout>
       </PrivateRoute>
 

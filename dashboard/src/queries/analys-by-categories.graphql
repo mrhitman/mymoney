@@ -24,4 +24,10 @@ query AnalysByCategories(
       }
     }
   }
+
+  wallets {
+    id
+    name
+    description
+  }
 }

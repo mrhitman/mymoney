@@ -1,43 +1,37 @@
 import { SyncOutlined } from "@ant-design/icons";
-import { Dropdown, Menu, Button, Row, Col, Spin, DatePicker } from "antd";
+import { Dropdown, Menu, Button, Row, List, Col, Spin, DatePicker, Checkbox } from "antd";
 import moment from "moment";
 import React, { FC, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  TransactionType,
-  useAnalysByCategoriesQuery,
-} from "src/generated/graphql";
+import { TransactionType, useAnalysByCategoriesQuery } from "src/generated/graphql";
 import { VictoryPie, VictoryLegend, VictoryLabel } from "victory";
 
 export const AnalysisByCategory: FC = () => {
   const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
-  const [from, setFrom] = useState<number | undefined>(
-    moment().startOf("month").unix()
-  );
+  const [from, setFrom] = useState<number | undefined>(moment().startOf("month").unix());
   const [focused, setFocused] = useState<any | undefined>();
+  const [walletIds, setWalletIds] = useState<string[]>([]);
   const [to, setTo] = useState<number | undefined>(moment().unix());
   const { t } = useTranslation();
-  console.log({
-    headers: {
-      "Authorization": localStorage.getItem('accessToken')
-    }
-  })
   const { loading, data, refetch } = useAnalysByCategoriesQuery({
     variables: { type, from, to },
     context: {
       headers: {
-        "Authorization": localStorage.getItem('accessToken')
-      }
-    }
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    },
   });
-  const total = data?.statisticByCategory.reduce(
-    (acc, item) => acc + Math.abs(item.amount),
-    0
-  ) || 0;
+  const total =
+    data?.statisticByCategory.reduce((acc, item) => acc + Math.abs(item.amount), 0) || 0;
 
   useEffect(() => {
-    refetch({ type, from, to });
-  }, [type]);
+    refetch({
+      type,
+      from,
+      to,
+      walletIds: data?.wallets.map((w) => w.id).filter((id) => !walletIds.includes(id)),
+    });
+  }, [type, walletIds]);
 
   return (
     <>
@@ -55,16 +49,10 @@ export const AnalysisByCategory: FC = () => {
               <Dropdown
                 overlay={() => (
                   <Menu>
-                    <Menu.Item
-                      key="income"
-                      onClick={() => setType(TransactionType.Income)}
-                    >
+                    <Menu.Item key="income" onClick={() => setType(TransactionType.Income)}>
                       Income
                     </Menu.Item>
-                    <Menu.Item
-                      key="outcome"
-                      onClick={() => setType(TransactionType.Outcome)}
-                    >
+                    <Menu.Item key="outcome" onClick={() => setType(TransactionType.Outcome)}>
                       Outcome
                     </Menu.Item>
                   </Menu>
@@ -72,10 +60,7 @@ export const AnalysisByCategory: FC = () => {
                 trigger={["click"]}
                 placement="bottomCenter"
               >
-                <Button
-                  className="ant-dropdown-link"
-                  onClick={() => refetch({ type, from, to })}
-                >
+                <Button className="ant-dropdown-link" onClick={() => refetch({ type, from, to })}>
                   {type}
                 </Button>
               </Dropdown>
@@ -83,7 +68,28 @@ export const AnalysisByCategory: FC = () => {
                 <SyncOutlined />
               </Button>
             </Col>
-            <Col span={24}></Col>
+            <Col span={24}>
+              <List
+                bordered
+                dataSource={data?.wallets}
+                renderItem={(wallet) => (
+                  <List.Item key={wallet.id}>
+                    <Checkbox
+                      checked={!walletIds.includes(wallet.id)}
+                      onChange={(e) =>
+                        setWalletIds(
+                          !e.target.checked
+                            ? [...walletIds, wallet.id]
+                            : walletIds.filter((id) => id !== wallet.id)
+                        )
+                      }
+                    >
+                      {wallet.name} {wallet.description}
+                    </Checkbox>
+                  </List.Item>
+                )}
+              />
+            </Col>
           </Row>
         </Col>
         <Col span={18}>
@@ -94,27 +100,29 @@ export const AnalysisByCategory: FC = () => {
                 centerTitle
                 orientation="horizontal"
                 itemsPerRow={3}
+                width={425}
                 colorScale="qualitative"
                 gutter={20}
                 style={{
-                  title: { fontSize: 22 },
-                  labels: { fontSize: 16 },
+                  title: { fontSize: 18 },
+                  labels: { fontSize: 14 },
                 }}
                 data={data?.statisticByCategory.map((item) => ({
                   name: t(item.category.name),
                 }))}
               />
-
             </Col>
           </Row>
           <Row align="middle" justify="center" gutter={[10, 10]}>
-            <Col span={17}>
+            <Col span={15}>
               <Spin spinning={loading}>
                 <VictoryPie
-                  padAngle={1}
+                  animate
+                  padAngle={0.5}
                   colorScale="qualitative"
-                  style={{ labels: { fill: "black" } }}
-                  innerRadius={60}
+                  labelRadius={90}
+                  labelPosition="centroid"
+                  style={{ labels: { fill: "black", fontSize: 10 } }}
                   events={[
                     {
                       target: "data",
@@ -124,7 +132,6 @@ export const AnalysisByCategory: FC = () => {
                             target: "data",
                             mutation: (data) => setFocused(data),
                           },
-                          { target: "labels", mutation: (data) => { } },
                         ],
                       },
                     },
@@ -135,7 +142,9 @@ export const AnalysisByCategory: FC = () => {
                     isFocused: data.category.name === focused?.datum.x,
                     amount: data.amount,
                   }))}
-                  labels={({ datum }) => datum.isFocused || (datum.y / total) > 0.15 ? t(datum.x)! : ''}
+                  labels={({ datum }) =>
+                    datum.isFocused || datum.y / total > 0.14 ? t(datum.x)! : ""
+                  }
                 />
               </Spin>
             </Col>

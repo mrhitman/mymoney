@@ -583,6 +583,9 @@ export type AnalysByCategoriesQuery = (
         & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
       )> }
     ) }
+  )>, wallets: Array<(
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'description'>
   )> }
 );
 
@@ -831,6 +834,11 @@ export const AnalysByCategoriesDocument = gql`
         color
       }
     }
+  }
+  wallets {
+    id
+    name
+    description
   }
 }
     `;

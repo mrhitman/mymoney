@@ -144,5 +144,6 @@
   "lockscreen_after": "Lock screen after",
   "<Not selected>": "<Not selected>",
   "SYSTEM_EMPTY": "Не известно",
-  "category_games": "Игры"
+  "category_games": "Игры",
+  "category_cosmetics": "Косметика"
 }

@@ -19,6 +19,11 @@ export const AnalysisByCategory: FC = () => {
   const { t } = useTranslation();
   const { loading, data, refetch } = useAnalysByCategoriesQuery({
     variables: { type, from, to },
+    context: {
+      headers: {
+        "Authorization": localStorage.getItem('accessToken')
+      }
+    }
   });
   const total = data?.statisticByCategory.reduce(
     (acc, item) => acc + Math.abs(item.amount),

@@ -13,7 +13,19 @@ const WalletTransactions: React.FC = () => {
 
   const { params } = useRouteMatch<{ walletId: string }>();
   const { loading, data, error } = useGetWalletTransactionsQuery(
-    { variables: { walletId: params.walletId, limit: pageSize, offset: pageSize * (current - 1) } },
+    {
+      variables: {
+        walletId: params.walletId,
+        limit: pageSize,
+        offset: pageSize * (current - 1)
+      },
+      context: {
+        headers: {
+          "Authorization": localStorage.getItem('accessToken')
+        }
+      }
+    },
+
   );
 
   const { t } = useTranslation();

@@ -110,7 +110,7 @@ export class MonobankProvider {
         .andWhere({ isImported: true })
         .first();
       const walletData = {
-        id: uuid(),
+        id: wallet?.id || uuid(),
         userId: user.id,
         name: account.maskedPan.join(''),
         type: 'monobank-' + account.type,

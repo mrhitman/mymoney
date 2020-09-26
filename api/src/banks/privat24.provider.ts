@@ -1,13 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { createHash } from 'crypto';
-import { toJson } from 'xml2json';
-import User from 'src/database/models/user.model';
-import Currency from 'src/database/models/currency.model';
-import Wallet from 'src/database/models/wallet.model';
+import { omit } from 'lodash';
 import { DateTime } from 'luxon';
+import Currency from 'src/database/models/currency.model';
 import Transaction from 'src/database/models/transaction.model';
+import User from 'src/database/models/user.model';
+import Wallet from 'src/database/models/wallet.model';
 import { TransactionType } from 'src/transactions/transaction-type';
+import { v4 as uuid } from 'uuid';
+import { toJson } from 'xml2json';
 
 interface GetClientInfoResponse {
   info: {
@@ -67,21 +69,26 @@ export class Privat24Provider {
   public async import(user: User, id: string, token: string) {
     const account = await this.getClientInfo(id, token);
 
-    if (!account?.info) {
+    if (!account?.info?.cardbalance?.card) {
       return;
     }
 
     const currency = await Currency.query()
       .select(['id'])
-      .findOne({ name: account.info.cardbalance.card.currency });
+      .findOne({ name: account.info?.cardbalance?.card?.currency });
 
-    const wallet = await Wallet.query().findById(account.info.cardbalance.card.account);
+    const wallet = await Wallet.query()
+      .where({ isImported: true })
+      .andWhereRaw(`meta->> 'account' = '${account.info.cardbalance.card.account}'`)
+      .first();
     const walletData = {
-      id: account.info.cardbalance.card.account,
+      id: uuid(),
       userId: user.id,
       name: account.info.cardbalance.card.card_number,
       type: 'Privat24 Card',
       description: 'imported from privat24',
+      isImported: true,
+      meta: JSON.stringify(account.info.cardbalance.card),
       pockets: [
         {
           currencyId: currency.id,
@@ -91,7 +98,7 @@ export class Privat24Provider {
     };
 
     if (wallet) {
-      await wallet.$query().update(walletData);
+      await wallet.$query().update(omit(walletData, 'id'));
     } else {
       await Wallet.query().insert(walletData);
     }
@@ -103,7 +110,10 @@ export class Privat24Provider {
 
     if (statements) {
       for (let statement of statements.info.statements.statement) {
-        const trx = await Transaction.query().findById(statement.appcode);
+        const trx = await Transaction.query()
+          .where({ isImported: true })
+          .andWhereRaw(`meta->> 'appcode' = '${statement.appcode}'`)
+          .first();
 
         if (trx) {
           continue;
@@ -122,7 +132,8 @@ export class Privat24Provider {
           currencyId: currency.id,
           type,
           date: new Date(),
-          additional: JSON.stringify(statement),
+          meta: JSON.stringify(statement),
+          isImported: true,
         } as Partial<Transaction>;
 
         if (type === TransactionType.income) {

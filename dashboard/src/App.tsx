@@ -10,9 +10,6 @@ import Routes from 'src/components/misc/Routes';
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_SERVER + 'graphql',
-  headers: {
-    authorization: localStorage.getItem('accessToken'),
-  },
 });
 
 const App: FC = () => {

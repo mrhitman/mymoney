@@ -43,9 +43,14 @@ export class BanksResolver {
     const type = args.type.toLowerCase();
     switch (type) {
       case 'monobank':
-        return this.connectMonobank(user, args.params?.token);
+        return this.connectMonobank(user, args.description, args.params?.token);
       case 'privat24':
-        return this.connectPrivat24(user, args.params?.merchantId, args.params?.password);
+        return this.connectPrivat24(
+          user,
+          args.description,
+          args.params?.merchantId,
+          args.params?.password,
+        );
       default:
         return 'no such connector type';
     }
@@ -53,7 +58,19 @@ export class BanksResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation((returns) => String)
-  public async connectMonobank(@CurrentUser() user: User, @Args('token') token: string) {
+  public async removeConnector(@CurrentUser() user: User, @Args('id') id: number) {
+    const connector = await BankConnector.query().where({ userId: user.id }).deleteById(id);
+
+    return JSON.stringify(connector, null, '\t');
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation((returns) => String)
+  public async connectMonobank(
+    @CurrentUser() user: User,
+    @Args('description') description: string,
+    @Args('token') token: string,
+  ) {
     const existConnection = await BankConnector.query()
       .where({ userId: user.id, meta: { token } })
       .first();
@@ -61,6 +78,7 @@ export class BanksResolver {
     if (!existConnection) {
       await BankConnector.query().insert({
         userId: user.id,
+        description,
         type: BankConnectorType.MONOBANK,
         meta: { token },
       });
@@ -85,6 +103,7 @@ export class BanksResolver {
   @Mutation((returns) => String)
   public async connectPrivat24(
     @CurrentUser() user: User,
+    @Args('description') description: string,
     @Args('merchant_id') merchantId: string,
     @Args('password') password: string,
   ) {
@@ -95,6 +114,7 @@ export class BanksResolver {
     if (!existConnection) {
       await BankConnector.query().insert({
         userId: user.id,
+        description,
         type: BankConnectorType.PRIVAT24,
         meta: { merchant_id: merchantId, password },
       });

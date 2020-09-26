@@ -1,20 +1,23 @@
-import graphqlTypeJson from 'graphql-type-json'
+import graphqlTypeJson from 'graphql-type-json';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('BankConnection')
 export class BankConnectionDto {
-    @Field()
-    readonly id: string;
+  @Field()
+  readonly id: string;
 
-    @Field()
-    readonly type: string;
+  @Field()
+  readonly type: string;
 
-    @Field({ nullable: true })
-    readonly enabled: boolean;
+  @Field()
+  readonly description: string;
 
-    @Field(() => String)
-    readonly createdAt: String;
+  @Field({ nullable: true })
+  readonly enabled: boolean;
 
-    @Field(() => graphqlTypeJson)
-    readonly meta: object;
+  @Field(() => String)
+  readonly createdAt: String;
+
+  @Field(() => graphqlTypeJson)
+  readonly meta: object;
 }

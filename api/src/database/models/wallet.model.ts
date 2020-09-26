@@ -14,6 +14,8 @@ export class Wallet extends Model {
   public type: string;
   public pockets: Pocket[];
   public allowNegativeBalance: boolean;
+  public isImported: boolean;
+  public meta: any;
   public syncAt: Date;
   public createdAt: Date;
   public updatedAt: Date;

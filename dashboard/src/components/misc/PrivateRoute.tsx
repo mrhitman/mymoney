@@ -1,5 +1,5 @@
 import React from 'react';
-import {Redirect, Route} from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
 const PrivateRoute: React.FC<{ path?: string; exact?: boolean }> = ({
   children,
@@ -8,14 +8,14 @@ const PrivateRoute: React.FC<{ path?: string; exact?: boolean }> = ({
   return (
     <Route
       {...rest}
-      render={({location}) =>
-        true ? (
+      render={({ location }) =>
+        true ? ( // @TODO check auth
           children
         ) : (
             <Redirect
               to={{
                 pathname: '/login',
-                state: {from: location},
+                state: { from: location },
               }}
             />
           )

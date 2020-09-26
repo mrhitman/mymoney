@@ -19,6 +19,7 @@ export type BankConnection = {
   __typename?: 'BankConnection';
   id: Scalars['String'];
   type: Scalars['String'];
+  description: Scalars['String'];
   enabled?: Maybe<Scalars['Boolean']>;
   createdAt: Scalars['String'];
   meta: Scalars['JSON'];
@@ -291,6 +292,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   import: Scalars['String'];
   addConnector: Scalars['String'];
+  removeConnector: Scalars['String'];
   connectMonobank: Scalars['String'];
   disconnectMonobank: Scalars['String'];
   connectPrivat24: Scalars['String'];
@@ -324,8 +326,14 @@ export type MutationAddConnectorArgs = {
 };
 
 
+export type MutationRemoveConnectorArgs = {
+  id: Scalars['Float'];
+};
+
+
 export type MutationConnectMonobankArgs = {
   token: Scalars['String'];
+  description: Scalars['String'];
 };
 
 
@@ -337,6 +345,7 @@ export type MutationDisconnectMonobankArgs = {
 export type MutationConnectPrivat24Args = {
   password: Scalars['String'];
   merchant_id: Scalars['String'];
+  description: Scalars['String'];
 };
 
 
@@ -429,6 +438,7 @@ export type AddConnectorArgs = {
   enabled: Scalars['Boolean'];
   params: Scalars['JSON'];
   type: Scalars['String'];
+  description: Scalars['String'];
 };
 
 export type BudgetCategoryCreate = {
@@ -539,6 +549,7 @@ export type RefreshInput = {
 
 export type AddConnectorMutationVariables = Exact<{
   type: Scalars['String'];
+  description: Scalars['String'];
   interval: Scalars['Float'];
   params: Scalars['JSON'];
   enabled: Scalars['Boolean'];
@@ -548,6 +559,34 @@ export type AddConnectorMutationVariables = Exact<{
 export type AddConnectorMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'addConnector'>
+);
+
+export type AnalysByCategoriesQueryVariables = Exact<{
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  type?: Maybe<TransactionType>;
+}>;
+
+
+export type AnalysByCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { statisticByCategory: Array<(
+    { __typename?: 'StatisticByCategory' }
+    & Pick<StatisticByCategory, 'amount'>
+    & { category: (
+      { __typename?: 'Category' }
+      & Pick<Category, 'name' | 'type'>
+      & { icon?: Maybe<(
+        { __typename?: 'IconDto' }
+        & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
+      )> }
+    ) }
+  )>, wallets: Array<(
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'description'>
+  )> }
 );
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -572,7 +611,7 @@ export type GetConnectorsQuery = (
   { __typename?: 'Query' }
   & { connectors: Array<(
     { __typename?: 'BankConnection' }
-    & Pick<BankConnection, 'id' | 'type' | 'meta' | 'enabled' | 'createdAt'>
+    & Pick<BankConnection, 'id' | 'description' | 'type' | 'meta' | 'enabled' | 'createdAt'>
   )> }
 );
 
@@ -664,7 +703,7 @@ export type GetTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
-      & Pick<Transaction, 'id' | 'type' | 'description' | 'amount'>
+      & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
       & { sourceWallet?: Maybe<(
         { __typename?: 'Wallet' }
         & WalletFragment
@@ -704,7 +743,7 @@ export type GetWalletTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
-      & Pick<Transaction, 'id' | 'type' | 'description' | 'amount'>
+      & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
       & { currency: (
         { __typename?: 'Currency' }
         & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
@@ -748,8 +787,8 @@ export const WalletFragmentDoc = gql`
 }
     `;
 export const AddConnectorDocument = gql`
-    mutation addConnector($type: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
-  addConnector(args: {type: $type, interval: $interval, params: $params, enabled: $enabled})
+    mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
+  addConnector(args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled})
 }
     `;
 export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutation, AddConnectorMutationVariables>;
@@ -768,6 +807,7 @@ export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutatio
  * const [addConnectorMutation, { data, loading, error }] = useAddConnectorMutation({
  *   variables: {
  *      type: // value for 'type'
+ *      description: // value for 'description'
  *      interval: // value for 'interval'
  *      params: // value for 'params'
  *      enabled: // value for 'enabled'
@@ -780,6 +820,58 @@ export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions
 export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
 export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
 export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
+export const AnalysByCategoriesDocument = gql`
+    query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
+  statisticByCategory(from: $from, to: $to, currencyName: $currencyName, walletIds: $walletIds, type: $type) {
+    amount
+    category {
+      name
+      type
+      icon {
+        name
+        type
+        backgroundColor
+        color
+      }
+    }
+  }
+  wallets {
+    id
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useAnalysByCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAnalysByCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAnalysByCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAnalysByCategoriesQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *      currencyName: // value for 'currencyName'
+ *      walletIds: // value for 'walletIds'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useAnalysByCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
+        return Apollo.useQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+      }
+export function useAnalysByCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
+          return Apollo.useLazyQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+        }
+export type AnalysByCategoriesQueryHookResult = ReturnType<typeof useAnalysByCategoriesQuery>;
+export type AnalysByCategoriesLazyQueryHookResult = ReturnType<typeof useAnalysByCategoriesLazyQuery>;
+export type AnalysByCategoriesQueryResult = Apollo.QueryResult<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
@@ -824,6 +916,7 @@ export const GetConnectorsDocument = gql`
     query GetConnectors {
   connectors {
     id
+    description
     type
     meta
     enabled
@@ -1065,6 +1158,7 @@ export const GetTransactionsDocument = gql`
           color
         }
       }
+      date
       description
       amount
     }
@@ -1128,6 +1222,7 @@ export const GetWalletTransactionsDocument = gql`
           color
         }
       }
+      date
       description
       amount
     }

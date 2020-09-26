@@ -1,11 +1,9 @@
-import { useMutation } from '@apollo/client';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { Formik } from 'formik';
-import { loader } from 'graphql.macro';
 import React, { FC } from 'react';
-import { LoginMutation } from 'src/generated/graphql';
-import { loginLayout, loginTailLayout } from '../misc/layouts';
 import { Link } from 'react-router-dom';
+import { useLoginMutation } from 'src/generated/graphql';
+import { loginLayout, loginTailLayout } from '../misc/layouts';
 
 export interface LoginFormValues {
   email: string;
@@ -16,10 +14,8 @@ interface LoginFormProps {
   afterLogin: () => void;
 }
 
-const LoginQuery = loader('src/queries/login.graphql');
-
 const LoginForm: FC<LoginFormProps> = (props) => {
-  const [login] = useMutation<LoginMutation>(LoginQuery);
+  const [login] = useLoginMutation();
 
   const handleSubmit = async (values: LoginFormValues) => {
     const { data } = await login({ variables: values });

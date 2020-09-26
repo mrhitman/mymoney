@@ -4,7 +4,7 @@ import {
   RollbackOutlined
 } from '@ant-design/icons';
 import { Button, Col, Input, Layout, Row, Space } from 'antd';
-import React from 'react';
+import React, { FC, useState } from 'react';
 import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
 import { Link, Redirect } from 'react-router-dom';
 import { useRegisterMutation } from 'src/generated/graphql';
@@ -14,11 +14,12 @@ enum RegistrationStep {
   setPassword,
   done,
 }
-export const Register: React.FC = () => {
+
+export const Register: FC = () => {
   const [registerMutation] = useRegisterMutation();
-  const [profile, setProfile] = React.useState<GoogleLoginResponse>();
-  const [password, setPassword] = React.useState('');
-  const [step, setStep] = React.useState(RegistrationStep.connect);
+  const [profile, setProfile] = useState<GoogleLoginResponse>();
+  const [password, setPassword] = useState('');
+  const [step, setStep] = useState(RegistrationStep.connect);
 
   function finishRegister(response: GoogleLoginResponse) {
     const profile = response.getBasicProfile();

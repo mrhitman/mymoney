@@ -1,35 +1,57 @@
-import { useQuery } from '@apollo/client';
-import { Col, Popover, Row, Table, Typography } from 'antd';
-import { loader } from 'graphql.macro';
+import { Breadcrumb, Card, Col, Popover, Row, Table } from 'antd';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRouteMatch } from 'react-router';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/misc/Icon';
-import { GetWalletTransactionsQuery } from 'src/generated/graphql';
-import { useRouteMatch } from 'react-router'
+import { useGetWalletTransactionsQuery } from 'src/generated/graphql';
 
-const TransactionsQuery = loader('src/queries/wallet-transactions.graphql');
 const WalletTransactions: React.FC = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [transactions, setTransactions] = useState<GetWalletTransactionsQuery>();
 
   const { params } = useRouteMatch<{ walletId: string }>();
-  const { loading, data, error } = useQuery<GetWalletTransactionsQuery>(
-    TransactionsQuery,
-    { variables: { walletId: params.walletId, limit: pageSize, offset: pageSize * (current - 1) } },
+  const { loading, data } = useGetWalletTransactionsQuery(
+    {
+      variables: {
+        walletId: params.walletId,
+        limit: pageSize,
+        offset: pageSize * (current - 1)
+      },
+      context: {
+        headers: {
+          "Authorization": localStorage.getItem('accessToken')
+        }
+      }
+    },
+
   );
-  useEffect(() => {
-    if (data?.transactions?.items) {
-      setTransactions(data);
-    }
-  }, [data]);
 
   const { t } = useTranslation();
   return (
     <>
-      <Typography>{data?.wallet.name} </Typography>
-      <Typography>{data?.wallet.description} </Typography>
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item>
+          <Link to="/">
+            Home
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/accounting">
+            Wallets
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Operations for {data?.wallet.name}</Breadcrumb.Item>
+      </Breadcrumb>
+      <Row>
+        <Col offset={20} />
+        <Col span={4}>
+          <Card>
+            <Card.Meta title={data?.wallet.name} description={data?.wallet.description} />
+          </Card>
+        </Col>
+      </Row>
       <Table
         bordered
         showSorterTooltip
@@ -45,7 +67,7 @@ const WalletTransactions: React.FC = () => {
           setCurrent(pagination.current || 1);
           setPageSize(pagination.pageSize || 1);
         }}
-        dataSource={transactions?.transactions?.items || []}
+        dataSource={data?.transactions?.items || []}
       >
         <Table.Column
           title="id"

@@ -12,7 +12,13 @@ const images: Record<string, string> = {
 }
 
 export const Connectors: React.FC = () => {
-    let { loading, error, data, refetch } = useGetConnectorsQuery();
+    let { loading, data, refetch } = useGetConnectorsQuery({
+        context: {
+            headers: {
+                Authorization: localStorage.getItem('accessToken')
+            }
+        }
+    });
     const [showForm, setShowForm] = useState(false);
 
     const connectors = data ? data.connectors : [];
@@ -25,9 +31,10 @@ export const Connectors: React.FC = () => {
                             <Card
                                 hoverable
                                 loading={loading}
-                                cover={<img src={images[connector.type]} style={{ width: 256 }} />}
+                                style={{ width: 256 }}
+                                cover={<img src={images[connector.type]} />}
                             >
-                                <Card.Meta title={connector.type} />
+                                <Card.Meta title={connector.type} description={connector.description} />
                                 <Divider />
                                 <Typography>Added: {moment.unix(Number(connector.createdAt) / 1000).format('L HH:mm')}</Typography>
                             </Card>
@@ -38,9 +45,10 @@ export const Connectors: React.FC = () => {
                     <Card
                         hoverable
                         loading={loading}
+                        style={{ width: 256 }}
                         onClick={() => setShowForm(true)}
                     >
-                        <Row justify="center" align="middle" style={{ minHeight: '300px' }}>
+                        <Row justify="center" align="middle" style={{ height: 278 }}>
                             <AppstoreAddOutlined style={{ fontSize: 160 }} />
                         </Row>
                         <Card.Meta title={"Add connector"} />

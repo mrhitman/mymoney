@@ -18,8 +18,7 @@ import {
   TrophyOutlined,
   WalletOutlined
 } from '@ant-design/icons';
-import { Avatar, Breadcrumb, Layout as AntdLayout, Menu } from 'antd';
-import { upperFirst } from 'lodash';
+import { Avatar, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { ActivePage } from './Header';
@@ -36,7 +35,8 @@ interface LayoutProps {
 const MenuMap: Record<string, string> = {
   'accounting': 'ledgers',
   'incomes': 'transactions',
-  'outcomes': 'transactions'
+  'outcomes': 'transactions',
+  'analys-by-category': 'analys'
 };
 
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
@@ -85,7 +85,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 key="accounting"
                 icon={<WalletOutlined />}
               >
-                <Link to="/accounting">
+                <Link to="/accounting" >
                   Wallets
                 </Link>
               </Menu.Item>
@@ -100,10 +100,9 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             >
               <Menu.Item
                 key="incomes"
-                onClick={navigate('incomes')}
                 icon={<RiseOutlined />}
               >
-                <Link to="/incomes">
+                <Link to="/incomes" >
                   Incomes
                 </Link>
               </Menu.Item>
@@ -111,7 +110,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 key="outcomes"
                 icon={<FallOutlined />}
               >
-                <Link to="/outcomes">
+                <Link to="/outcomes" >
                   Outcomes
                 </Link>
               </Menu.Item>
@@ -131,12 +130,14 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu
-              key="sub4"
+              key="analys"
               icon={<AreaChartOutlined />}
               title="Statistics"
             >
-              <Menu.Item key="15" icon={<PieChartOutlined />}>
-                By Categories
+              <Menu.Item key="analys-by-cateogories" icon={<PieChartOutlined />}>
+                <Link to="/analysis-category">
+                  By Categories
+                </Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>
                 By Currencies
@@ -146,12 +147,12 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.Item key="categories" icon={<BookOutlined />}>
-              <Link to="/categories">
+              <Link to="/categories" >
                 Categories
               </Link>
             </Menu.Item>
             <Menu.Item key="currencies" icon={<MoneyCollectOutlined />}>
-              <Link to="/currencies">
+              <Link to="/currencies" >
                 Currencies
               </Link>
             </Menu.Item>
@@ -163,14 +164,6 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
           </Menu>
         </AntdLayout.Sider>
         <AntdLayout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>
-              <Link to="/">
-                Home
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>{upperFirst(activePage)}</Breadcrumb.Item>
-          </Breadcrumb>
           <AntdLayout.Content
             className="site-layout-background"
             style={{

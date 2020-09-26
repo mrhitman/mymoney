@@ -1,0 +1,33 @@
+query AnalysByCategories(
+  $from: Float
+  $to: Float
+  $currencyName: String
+  $walletIds: [String!]
+  $type: TransactionType
+) {
+  statisticByCategory(
+    from: $from
+    to: $to
+    currencyName: $currencyName
+    walletIds: $walletIds
+    type: $type
+  ) {
+    amount
+    category {
+      name
+      type
+      icon {
+        name
+        type
+        backgroundColor
+        color
+      }
+    }
+  }
+
+  wallets {
+    id
+    name
+    description
+  }
+}

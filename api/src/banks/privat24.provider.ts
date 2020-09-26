@@ -82,7 +82,7 @@ export class Privat24Provider {
       .andWhereRaw(`meta->> 'account' = '${account.info.cardbalance.card.account}'`)
       .first();
     const walletData = {
-      id: uuid(),
+      id: wallet.id || uuid(),
       userId: user.id,
       name: account.info.cardbalance.card.card_number,
       type: 'Privat24 Card',

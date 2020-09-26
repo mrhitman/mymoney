@@ -23,9 +23,9 @@ export class TransactionsResolver {
   @Query((returns) => Transactions)
   public async transactions(
     @CurrentUser() user: User,
-    @Args('walletId', { nullable: true }) walletIds?: string[],
-    @Args('currencyIds', { nullable: true }) currencyId?: string,
-    @Args('categoryIds', { nullable: true }) categoryIds?: string[],
+    @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
+    @Args('categoryIds', { nullable: true, type: () => [String] }) categoryIds?: string[],
+    @Args('currencyId', { nullable: true }) currencyId?: string,
     @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType,
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,

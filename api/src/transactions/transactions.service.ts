@@ -22,10 +22,10 @@ export class TransactionsService {
   public getAll(
     user: User,
     filter: {
-      walletIds?: string;
+      walletIds?: string[];
       type?: TransactionType;
       currencyId?: string;
-      categoryIds?: string;
+      categoryIds?: string[];
     } = {},
   ) {
     const query = Transaction.query().where({ userId: user.id });

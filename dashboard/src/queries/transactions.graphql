@@ -9,7 +9,8 @@ query getTransactions(
   $type: TransactionType
   $limit: Float
   $offset: Float
-  $walletId: String
+  $walletIds: [String!]
+  $categoryIds: [String!]
 ) {
   transactions(
     type: $type

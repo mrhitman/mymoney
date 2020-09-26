@@ -22,19 +22,19 @@ export class TransactionsService {
   public getAll(
     user: User,
     filter: {
-      walletId?: string;
+      walletIds?: string;
       type?: TransactionType;
       currencyId?: string;
-      categoryId?: string;
+      categoryIds?: string;
     } = {},
   ) {
     const query = Transaction.query().where({ userId: user.id });
 
-    if (filter.walletId) {
+    if (filter.walletIds) {
       query.where((subquery) =>
         subquery
-          .where({ sourceWalletId: filter.walletId })
-          .orWhere({ destinationWalletId: filter.walletId }),
+          .whereIn('sourceWalletId', filter.walletIds)
+          .orWhereIn('destinationWalletId', filter.walletIds),
       );
     }
 
@@ -42,8 +42,8 @@ export class TransactionsService {
       query.where({ currencyId: filter.currencyId });
     }
 
-    if (filter.categoryId) {
-      query.where({ categoryId: filter.categoryId });
+    if (filter.categoryIds) {
+      query.whereIn('categoryId', filter.categoryIds);
     }
 
     if (filter.type) {

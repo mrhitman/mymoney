@@ -1,27 +1,17 @@
 import {
-  Avatar, Breadcrumb, Card,
-
-
-
-
-
-
-  Col, Divider, List,
-
-
-
-
-  Row, Skeleton,
-
-
-  Typography
+  Avatar,
+  Breadcrumb,
+  Card,
+  Col,
+  Divider,
+  List,
+  Row,
+  Skeleton,
+  Typography,
 } from 'antd';
-import { loader } from 'graphql.macro';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useGetWalletsQuery } from 'src/generated/graphql';
-
-const WalletsQuery = loader('src/queries/wallets.graphql');
 
 export const icons: Record<string, string> = {
   'monobank-black':
@@ -38,9 +28,9 @@ export const Accounting: FC = () => {
   const { loading, data } = useGetWalletsQuery({
     context: {
       headers: {
-        Authorization: localStorage.getItem('accessToken')
-      }
-    }
+        Authorization: localStorage.getItem('accessToken'),
+      },
+    },
   });
   const wallets = data ? data.wallets : [];
 
@@ -48,9 +38,7 @@ export const Accounting: FC = () => {
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>
-          <Link to="/">
-            Home
-          </Link>
+          <Link to="/">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Wallets</Breadcrumb.Item>
       </Breadcrumb>
@@ -59,12 +47,18 @@ export const Accounting: FC = () => {
           {wallets.map((wallet) => {
             return (
               <Col id={wallet.id} {...layout}>
-                <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
+                <Card
+                  hoverable
+                  style={{ width: 300, marginTop: 16 }}
+                  loading={loading}
+                >
                   <Link to={`/operations/${wallet.id}`}>
                     <Card.Meta
                       title={wallet.name.slice(0, 6) + '******'}
                       description={wallet.description}
-                      avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
+                      avatar={
+                        <Avatar src={icons[wallet.type || 'default-card']} />
+                      }
                     />
                     <Divider />
                     <List

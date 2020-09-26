@@ -1,15 +1,33 @@
-import { SyncOutlined } from "@ant-design/icons";
-import { Dropdown, Menu, Button, Row, List, Col, Spin, DatePicker, Checkbox } from "antd";
-import moment from "moment";
-import React, { FC, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { TransactionType, useAnalysByCategoriesQuery } from "src/generated/graphql";
-import { VictoryPie, VictoryLegend, VictoryLabel } from "victory";
+import { SyncOutlined } from '@ant-design/icons';
+import {
+  Dropdown,
+  Menu,
+  Button,
+  Row,
+  List,
+  Col,
+  Spin,
+  DatePicker,
+  Checkbox,
+  Drawer,
+  Table,
+} from 'antd';
+import moment from 'moment';
+import React, { FC, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  TransactionType,
+  useAnalysByCategoriesQuery,
+} from 'src/generated/graphql';
+import { VictoryPie, VictoryLegend, VictoryLabel } from 'victory';
 
 export const AnalysisByCategory: FC = () => {
   const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
-  const [from, setFrom] = useState<number | undefined>(moment().startOf("month").unix());
+  const [from, setFrom] = useState<number | undefined>(
+    moment().startOf('month').unix(),
+  );
   const [focused, setFocused] = useState<any | undefined>();
+  const [selected, setSelected] = useState<any | undefined>();
   const [walletIds, setWalletIds] = useState<string[]>([]);
   const [to, setTo] = useState<number | undefined>(moment().unix());
   const { t } = useTranslation();
@@ -17,22 +35,28 @@ export const AnalysisByCategory: FC = () => {
     variables: { type, from, to },
     context: {
       headers: {
-        Authorization: localStorage.getItem("accessToken"),
+        Authorization: localStorage.getItem('accessToken'),
       },
     },
   });
   const total =
-    data?.statisticByCategory.reduce((acc, item) => acc + Math.abs(item.amount), 0) || 0;
+    data?.statisticByCategory.reduce(
+      (acc, item) => acc + Math.abs(item.amount),
+      0,
+    ) || 0;
 
-  useEffect(() => {
+  const doRefetch = () => {
     refetch({
       type,
       from,
       to,
-      walletIds: data?.wallets.map((w) => w.id).filter((id) => !walletIds.includes(id)),
+      walletIds: data?.wallets
+        .map((w) => w.id)
+        .filter((id) => !walletIds.includes(id)),
     });
-  }, [type, walletIds]);
+  };
 
+  useEffect(doRefetch, [type]);
   return (
     <>
       <Row>
@@ -49,18 +73,24 @@ export const AnalysisByCategory: FC = () => {
               <Dropdown
                 overlay={() => (
                   <Menu>
-                    <Menu.Item key="income" onClick={() => setType(TransactionType.Income)}>
+                    <Menu.Item
+                      key="income"
+                      onClick={() => setType(TransactionType.Income)}
+                    >
                       Income
                     </Menu.Item>
-                    <Menu.Item key="outcome" onClick={() => setType(TransactionType.Outcome)}>
+                    <Menu.Item
+                      key="outcome"
+                      onClick={() => setType(TransactionType.Outcome)}
+                    >
                       Outcome
                     </Menu.Item>
                   </Menu>
                 )}
-                trigger={["click"]}
+                trigger={['click']}
                 placement="bottomCenter"
               >
-                <Button className="ant-dropdown-link" onClick={() => refetch({ type, from, to })}>
+                <Button className="ant-dropdown-link" onClick={doRefetch}>
                   {type}
                 </Button>
               </Dropdown>
@@ -72,6 +102,7 @@ export const AnalysisByCategory: FC = () => {
               <List
                 bordered
                 dataSource={data?.wallets}
+                footer={<Button onClick={doRefetch}>{t('apply')}</Button>}
                 renderItem={(wallet) => (
                   <List.Item key={wallet.id}>
                     <Checkbox
@@ -80,7 +111,7 @@ export const AnalysisByCategory: FC = () => {
                         setWalletIds(
                           !e.target.checked
                             ? [...walletIds, wallet.id]
-                            : walletIds.filter((id) => id !== wallet.id)
+                            : walletIds.filter((id) => id !== wallet.id),
                         )
                       }
                     >
@@ -93,7 +124,12 @@ export const AnalysisByCategory: FC = () => {
           </Row>
         </Col>
         <Col span={18}>
-          <Row align="middle" justify="center" gutter={[10, 10]} style={{ marginBottom: -200 }}>
+          <Row
+            align="middle"
+            justify="center"
+            gutter={[10, 10]}
+            style={{ marginBottom: -200 }}
+          >
             <Col>
               <VictoryLegend
                 title="Spends by categories"
@@ -122,14 +158,20 @@ export const AnalysisByCategory: FC = () => {
                   colorScale="qualitative"
                   labelRadius={90}
                   labelPosition="centroid"
-                  style={{ labels: { fill: "black", fontSize: 10 } }}
+                  style={{ labels: { fill: 'black', fontSize: 10 } }}
                   events={[
                     {
-                      target: "data",
+                      target: 'data',
                       eventHandlers: {
+                        onClick: () => [
+                          {
+                            target: 'data',
+                            mutation: (data) => setSelected(data),
+                          },
+                        ],
                         onMouseOver: () => [
                           {
-                            target: "data",
+                            target: 'data',
                             mutation: (data) => setFocused(data),
                           },
                         ],
@@ -143,7 +185,7 @@ export const AnalysisByCategory: FC = () => {
                     amount: data.amount,
                   }))}
                   labels={({ datum }) =>
-                    datum.isFocused || datum.y / total > 0.14 ? t(datum.x)! : ""
+                    datum.isFocused || datum.y / total > 0.14 ? t(datum.x)! : ''
                   }
                 />
               </Spin>
@@ -151,6 +193,18 @@ export const AnalysisByCategory: FC = () => {
           </Row>
         </Col>
       </Row>
+      <Drawer
+        placement="bottom"
+        visible={!!selected}
+        height={300}
+        keyboard
+        closable
+        onClose={() => {
+          setSelected(null);
+        }}
+      >
+        <Table dataSource={[]} />
+      </Drawer>
     </>
   );
 };

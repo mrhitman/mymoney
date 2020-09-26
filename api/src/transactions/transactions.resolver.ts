@@ -23,19 +23,19 @@ export class TransactionsResolver {
   @Query((returns) => Transactions)
   public async transactions(
     @CurrentUser() user: User,
-    @Args('walletId', { nullable: true }) walletId?: string,
-    @Args('currencyId', { nullable: true }) currencyId?: string,
-    @Args('categoryId', { nullable: true }) categoryId?: string,
+    @Args('walletId', { nullable: true }) walletIds?: string[],
+    @Args('currencyIds', { nullable: true }) currencyId?: string,
+    @Args('categoryIds', { nullable: true }) categoryIds?: string[],
     @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType,
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
     @Args('order', { nullable: true }) order?: OrderByDirection,
   ) {
     const query = this.service.getAll(user, {
-      walletId,
+      walletIds,
       type,
       currencyId,
-      categoryId,
+      categoryIds,
     });
 
     const countQuery = query.clone();

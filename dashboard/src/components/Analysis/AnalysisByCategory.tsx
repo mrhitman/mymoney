@@ -20,6 +20,7 @@ import {
   useAnalysByCategoriesQuery,
 } from 'src/generated/graphql';
 import { VictoryPie, VictoryLegend, VictoryLabel } from 'victory';
+import CategoryOperations from './CategoryOperations';
 
 export const AnalysisByCategory: FC = () => {
   const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
@@ -30,6 +31,7 @@ export const AnalysisByCategory: FC = () => {
   const [selected, setSelected] = useState<any | undefined>();
   const [walletIds, setWalletIds] = useState<string[]>([]);
   const [to, setTo] = useState<number | undefined>(moment().unix());
+  console.log(selected);
   const { t } = useTranslation();
   const { loading, data, refetch } = useAnalysByCategoriesQuery({
     variables: { type, from, to },
@@ -181,6 +183,7 @@ export const AnalysisByCategory: FC = () => {
                   data={data?.statisticByCategory.map((data) => ({
                     x: data.category.name,
                     y: Math.abs(data.amount),
+                    id: data.category.id,
                     isFocused: data.category.name === focused?.datum.x,
                     amount: data.amount,
                   }))}
@@ -200,10 +203,11 @@ export const AnalysisByCategory: FC = () => {
         keyboard
         closable
         onClose={() => {
+          console.log(selected)
           setSelected(null);
         }}
       >
-        <Table dataSource={[]} />
+        <CategoryOperations from={from} to={to} categoryId={selected?.datum?.id} />
       </Drawer>
     </>
   );

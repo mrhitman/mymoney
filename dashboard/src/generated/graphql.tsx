@@ -244,9 +244,9 @@ export type QueryTransactionsArgs = {
   offset?: Maybe<Scalars['Float']>;
   limit?: Maybe<Scalars['Float']>;
   type?: Maybe<TransactionType>;
-  categoryId?: Maybe<Scalars['String']>;
   currencyId?: Maybe<Scalars['String']>;
-  walletId?: Maybe<Scalars['String']>;
+  categoryIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
 };
 
 
@@ -577,7 +577,7 @@ export type AnalysByCategoriesQuery = (
     & Pick<StatisticByCategory, 'amount'>
     & { category: (
       { __typename?: 'Category' }
-      & Pick<Category, 'name' | 'type'>
+      & Pick<Category, 'id' | 'name' | 'type'>
       & { icon?: Maybe<(
         { __typename?: 'IconDto' }
         & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
@@ -692,7 +692,8 @@ export type GetTransactionsQueryVariables = Exact<{
   type?: Maybe<TransactionType>;
   limit?: Maybe<Scalars['Float']>;
   offset?: Maybe<Scalars['Float']>;
-  walletId?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  categoryIds?: Maybe<Array<Scalars['String']>>;
 }>;
 
 
@@ -825,6 +826,7 @@ export const AnalysByCategoriesDocument = gql`
   statisticByCategory(from: $from, to: $to, currencyName: $currencyName, walletIds: $walletIds, type: $type) {
     amount
     category {
+      id
       name
       type
       icon {
@@ -1130,8 +1132,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletId: String) {
-  transactions(type: $type, limit: $limit, offset: $offset, walletId: $walletId) {
+    query getTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!]) {
+  transactions(type: $type, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds) {
     totalCount
     items {
       id
@@ -1181,7 +1183,8 @@ export const GetTransactionsDocument = gql`
  *      type: // value for 'type'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
- *      walletId: // value for 'walletId'
+ *      walletIds: // value for 'walletIds'
+ *      categoryIds: // value for 'categoryIds'
  *   },
  * });
  */
@@ -1201,7 +1204,7 @@ export const GetWalletTransactionsDocument = gql`
     name
     description
   }
-  transactions(type: $type, limit: $limit, offset: $offset, walletId: $walletId) {
+  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
     totalCount
     items {
       id

@@ -9,12 +9,7 @@ query getWalletTransactions(
     name
     description
   }
-  transactions(
-    type: $type
-    limit: $limit
-    offset: $offset
-    walletId: $walletId
-  ) {
+  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
     totalCount
     items {
       id

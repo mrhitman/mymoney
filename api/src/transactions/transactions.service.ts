@@ -24,6 +24,8 @@ export class TransactionsService {
     filter: {
       walletIds?: string[];
       type?: TransactionType;
+      from?: string;
+      to?: string;
       currencyId?: string;
       categoryIds?: string[];
     } = {},
@@ -48,6 +50,14 @@ export class TransactionsService {
 
     if (filter.type) {
       query.where({ type: filter.type });
+    }
+
+    if (filter.from) {
+      query.where('>=', 'created_at', filter.from);
+    }
+
+    if (filter.to) {
+      query.where('<=', 'created_at', filter.to);
     }
 
     return query;

@@ -203,11 +203,14 @@ export const AnalysisByCategory: FC = () => {
         keyboard
         closable
         onClose={() => {
-          console.log(selected)
           setSelected(null);
         }}
       >
-        <CategoryOperations from={from} to={to} categoryId={selected?.datum?.id} />
+        <CategoryOperations
+          from={from}
+          to={to}
+          categoryId={selected?.datum?.id}
+        />
       </Drawer>
     </>
   );

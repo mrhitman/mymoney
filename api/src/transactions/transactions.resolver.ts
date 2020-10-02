@@ -26,6 +26,8 @@ export class TransactionsResolver {
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
     @Args('categoryIds', { nullable: true, type: () => [String] }) categoryIds?: string[],
     @Args('currencyId', { nullable: true }) currencyId?: string,
+    @Args('from', { nullable: true }) from?: string,
+    @Args('to', { nullable: true }) to?: string,
     @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType,
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
@@ -34,6 +36,8 @@ export class TransactionsResolver {
     const query = this.service.getAll(user, {
       walletIds,
       type,
+      from,
+      to,
       currencyId,
       categoryIds,
     });

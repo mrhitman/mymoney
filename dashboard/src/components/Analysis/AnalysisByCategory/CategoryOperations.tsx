@@ -31,6 +31,7 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
       dataSource={data?.transactions.items}
       pagination={{
         pageSize: 3,
+        position: ['topRight'],
       }}
     >
       <Table.Column

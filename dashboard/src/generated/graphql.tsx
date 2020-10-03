@@ -244,8 +244,8 @@ export type QueryTransactionsArgs = {
   offset?: Maybe<Scalars['Float']>;
   limit?: Maybe<Scalars['Float']>;
   type?: Maybe<TransactionType>;
-  to?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
   currencyId?: Maybe<Scalars['String']>;
   categoryIds?: Maybe<Array<Scalars['String']>>;
   walletIds?: Maybe<Array<Scalars['String']>>;
@@ -692,8 +692,8 @@ export type WalletFragment = (
 
 export type GetTransactionsQueryVariables = Exact<{
   type?: Maybe<TransactionType>;
-  from?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
   limit?: Maybe<Scalars['Float']>;
   offset?: Maybe<Scalars['Float']>;
   walletIds?: Maybe<Array<Scalars['String']>>;
@@ -1136,7 +1136,7 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($type: TransactionType, $from: String, $to: String, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!]) {
+    query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!]) {
   transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds) {
     totalCount
     items {

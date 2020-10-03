@@ -16,6 +16,8 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
   const { loading, data } = useGetTransactionsQuery({
     variables: {
       categoryIds: [props.categoryId],
+      from: props.from,
+      to: props.to,
     },
     context: {
       headers: {

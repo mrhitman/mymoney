@@ -7,8 +7,8 @@ fragment wallet on Wallet {
 
 query getTransactions(
   $type: TransactionType
-  $from: String
-  $to: String
+  $from: Float
+  $to: Float
   $limit: Float
   $offset: Float
   $walletIds: [String!]

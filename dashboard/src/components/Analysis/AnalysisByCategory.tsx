@@ -67,6 +67,17 @@ export const AnalysisByCategory: FC = () => {
             <Col>
               <DatePicker.RangePicker
                 showTime
+                ranges={{
+                  Today: [moment(), moment()],
+                  'This Week': [
+                    moment().startOf('week'),
+                    moment().endOf('week'),
+                  ],
+                  'This Month': [
+                    moment().startOf('month'),
+                    moment().endOf('month'),
+                  ],
+                }}
                 onCalendarChange={(values) => {
                   setFrom(values?.[0]?.unix());
                   setTo(values?.[1]?.unix());

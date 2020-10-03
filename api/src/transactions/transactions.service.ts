@@ -24,8 +24,8 @@ export class TransactionsService {
     filter: {
       walletIds?: string[];
       type?: TransactionType;
-      from?: string;
-      to?: string;
+      from?: number;
+      to?: number;
       currencyId?: string;
       categoryIds?: string[];
     } = {},
@@ -53,14 +53,14 @@ export class TransactionsService {
     }
 
     if (filter.from) {
-      query.where('>=', 'created_at', filter.from);
+      query.where('date', '>=', DateTime.fromSeconds(filter.from).toString());
     }
 
     if (filter.to) {
-      query.where('<=', 'created_at', filter.to);
+      query.where('date', '<=', DateTime.fromSeconds(filter.to).toString());
     }
 
-    return query;
+    return query.debug();
   }
 
   public async getOne(user: User, id: string) {

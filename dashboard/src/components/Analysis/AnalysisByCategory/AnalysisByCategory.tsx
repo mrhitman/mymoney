@@ -10,7 +10,6 @@ import {
   DatePicker,
   Checkbox,
   Drawer,
-  Table,
 } from 'antd';
 import moment from 'moment';
 import React, { FC, useState, useEffect } from 'react';
@@ -19,22 +18,22 @@ import {
   TransactionType,
   useAnalysByCategoriesQuery,
 } from 'src/generated/graphql';
-import { VictoryPie, VictoryLegend, VictoryLabel } from 'victory';
+import { VictoryPie, VictoryLegend } from 'victory';
 import CategoryOperations from './CategoryOperations';
+import { round } from 'lodash';
 
 export const AnalysisByCategory: FC = () => {
   const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
-  const [from, setFrom] = useState<number | undefined>(
-    moment().startOf('month').unix(),
+  const [from, setFrom] = useState<moment.Moment | null>(
+    moment().subtract(1, 'week'),
   );
+  const [to, setTo] = useState<moment.Moment | null>(moment());
   const [focused, setFocused] = useState<any | undefined>();
   const [selected, setSelected] = useState<any | undefined>();
   const [walletIds, setWalletIds] = useState<string[]>([]);
-  const [to, setTo] = useState<number | undefined>(moment().unix());
-  console.log(selected);
   const { t } = useTranslation();
   const { loading, data, refetch } = useAnalysByCategoriesQuery({
-    variables: { type, from, to },
+    variables: { type, from: from?.unix(), to: to?.unix() },
     context: {
       headers: {
         Authorization: localStorage.getItem('accessToken'),
@@ -50,8 +49,8 @@ export const AnalysisByCategory: FC = () => {
   const doRefetch = () => {
     refetch({
       type,
-      from,
-      to,
+      from: from?.unix(),
+      to: to?.unix(),
       walletIds: data?.wallets
         .map((w) => w.id)
         .filter((id) => !walletIds.includes(id)),
@@ -67,6 +66,7 @@ export const AnalysisByCategory: FC = () => {
             <Col>
               <DatePicker.RangePicker
                 showTime
+                value={[from, to]}
                 ranges={{
                   Today: [moment(), moment()],
                   'This Week': [
@@ -77,10 +77,11 @@ export const AnalysisByCategory: FC = () => {
                     moment().startOf('month'),
                     moment().endOf('month'),
                   ],
+                  'Last 30 Days': [moment().subtract(30, 'days'), moment()],
                 }}
                 onCalendarChange={(values) => {
-                  setFrom(values?.[0]?.unix());
-                  setTo(values?.[1]?.unix());
+                  setFrom(values?.[0] || null);
+                  setTo(values?.[1] || null);
                 }}
               />
               <Dropdown
@@ -174,6 +175,17 @@ export const AnalysisByCategory: FC = () => {
                   style={{ labels: { fill: 'black', fontSize: 10 } }}
                   events={[
                     {
+                      target: 'labels',
+                      eventHandlers: {
+                        onClick: () => [
+                          {
+                            target: 'data',
+                            mutation: (data) => setSelected(data),
+                          },
+                        ],
+                      },
+                    },
+                    {
                       target: 'data',
                       eventHandlers: {
                         onClick: () => [
@@ -199,7 +211,9 @@ export const AnalysisByCategory: FC = () => {
                     amount: data.amount,
                   }))}
                   labels={({ datum }) =>
-                    datum.isFocused || datum.y / total > 0.14 ? t(datum.x)! : ''
+                    datum.isFocused || datum.y / total > 0.14
+                      ? `${t(datum.x)} Σ${round(datum.y, 1)}`
+                      : ''
                   }
                 />
               </Spin>
@@ -210,7 +224,7 @@ export const AnalysisByCategory: FC = () => {
       <Drawer
         placement="bottom"
         visible={!!selected}
-        height={300}
+        height={360}
         keyboard
         closable
         onClose={() => {
@@ -218,8 +232,8 @@ export const AnalysisByCategory: FC = () => {
         }}
       >
         <CategoryOperations
-          from={from}
-          to={to}
+          from={from?.unix()}
+          to={to?.unix()}
           categoryId={selected?.datum?.id}
         />
       </Drawer>

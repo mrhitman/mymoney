@@ -26,7 +26,13 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
     },
   });
   return (
-    <Table loading={loading} dataSource={data?.transactions.items}>
+    <Table
+      loading={loading}
+      dataSource={data?.transactions.items}
+      pagination={{
+        pageSize: 3,
+      }}
+    >
       <Table.Column
         title="id"
         dataIndex="id"

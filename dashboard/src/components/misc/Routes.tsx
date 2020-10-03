@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Accounting } from 'src/components/Accounting/Accounting';
-import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory';
+import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory/AnalysisByCategory';
 import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
 import Categories from 'src/components/Categories/Categories';
 import Connectors from 'src/components/Connectors/Connectors';
@@ -20,7 +20,6 @@ import PrivateRoute from './PrivateRoute';
 const Routes: FC = () => (
   <Router>
     <Switch>
-
       <PrivateRoute path="/" exact>
         <Layout>
           <div>Home</div>
@@ -39,13 +38,13 @@ const Routes: FC = () => (
         </Layout>
       </PrivateRoute>
 
-      <PrivateRoute path="/incomes" >
+      <PrivateRoute path="/incomes">
         <Layout activePage="incomes">
           <TransactionList type={TransactionType.Income} />
         </Layout>
       </PrivateRoute>
 
-      <PrivateRoute path="/outcomes" >
+      <PrivateRoute path="/outcomes">
         <Layout activePage="outcomes">
           <TransactionList type={TransactionType.Outcome} />
         </Layout>

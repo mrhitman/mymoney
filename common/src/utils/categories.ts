@@ -109,7 +109,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: "skin",
       backgroundColor: Colors.purple700,
     },
-    codes: [5137, 5651, 5661],
+    codes: [5137, 5651, 5661, 5931],
     parentId: "973e1ef1-5801-4d00-8045-7129a12b06a6",
   },
   {

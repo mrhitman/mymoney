@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 interface CategoryOperationsProps {
   from?: number;
   to?: number;
+  walletIds: string[];
   categoryId: string;
 }
 
@@ -18,6 +19,7 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
       categoryIds: [props.categoryId],
       from: props.from,
       to: props.to,
+      walletIds: props.walletIds,
     },
     context: {
       headers: {

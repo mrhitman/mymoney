@@ -30,7 +30,7 @@ export const AnalysisByCategory: FC = () => {
   const [to, setTo] = useState<moment.Moment | null>(moment());
   const [focused, setFocused] = useState<any | undefined>();
   const [selected, setSelected] = useState<any | undefined>();
-  const [walletIds, setWalletIds] = useState<string[]>([]);
+  const [ignoreWalletIds, setWalletIds] = useState<string[]>([]);
   const { t } = useTranslation();
   const { loading, data, refetch } = useAnalysByCategoriesQuery({
     variables: { type, from: from?.unix(), to: to?.unix() },
@@ -53,7 +53,7 @@ export const AnalysisByCategory: FC = () => {
       to: to?.unix(),
       walletIds: data?.wallets
         .map((w) => w.id)
-        .filter((id) => !walletIds.includes(id)),
+        .filter((id) => !ignoreWalletIds.includes(id)),
     });
   };
 
@@ -120,12 +120,12 @@ export const AnalysisByCategory: FC = () => {
                 renderItem={(wallet) => (
                   <List.Item key={wallet.id}>
                     <Checkbox
-                      checked={!walletIds.includes(wallet.id)}
+                      checked={!ignoreWalletIds.includes(wallet.id)}
                       onChange={(e) =>
                         setWalletIds(
                           !e.target.checked
-                            ? [...walletIds, wallet.id]
-                            : walletIds.filter((id) => id !== wallet.id),
+                            ? [...ignoreWalletIds, wallet.id]
+                            : ignoreWalletIds.filter((id) => id !== wallet.id),
                         )
                       }
                     >
@@ -234,6 +234,11 @@ export const AnalysisByCategory: FC = () => {
         <CategoryOperations
           from={from?.unix()}
           to={to?.unix()}
+          walletIds={
+            data?.wallets
+              .map((w) => w.id)
+              .filter((id) => !ignoreWalletIds.includes(id)) || []
+          }
           categoryId={selected?.datum?.id}
         />
       </Drawer>

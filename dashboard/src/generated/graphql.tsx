@@ -720,7 +720,7 @@ export type GetTransactionsQuery = (
         & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
       ), category: (
         { __typename?: 'Category' }
-        & Pick<Category, 'name' | 'type'>
+        & Pick<Category, 'id' | 'name' | 'type'>
         & { icon?: Maybe<(
           { __typename?: 'IconDto' }
           & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
@@ -1155,6 +1155,7 @@ export const GetTransactionsDocument = gql`
         symbol
       }
       category {
+        id
         name
         type
         icon {

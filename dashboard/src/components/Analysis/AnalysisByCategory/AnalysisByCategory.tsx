@@ -207,8 +207,9 @@ export const AnalysisByCategory: FC = () => {
                   data={data?.statisticByCategory.map((data) => ({
                     x: data.category.name,
                     y: Math.abs(data.amount),
-                    id: data.category.id,
-                    isFocused: data.category.name === focused?.datum.x,
+                    category: data.category,
+                    isFocused:
+                      data.category.name === focused?.datum.category.name,
                     amount: data.amount,
                   }))}
                   labels={({ datum }) =>
@@ -222,8 +223,7 @@ export const AnalysisByCategory: FC = () => {
           </Row>
         </Col>
       </Row>
-      {selected?.datum?.id}
-      {selected?.datum?.id && (
+      {selected?.datum?.category && (
         <Drawer
           placement="bottom"
           visible={!!selected}
@@ -242,7 +242,11 @@ export const AnalysisByCategory: FC = () => {
                 .map((w) => w.id)
                 .filter((id) => !walletIgnoreIds.includes(id)) || []
             }
-            categoryId={selected.datum.id}
+            categoryId={
+              data?.statisticByCategory.find(
+                (s) => s.category.name === selected.datum.category.name,
+              )!.category.id!
+            }
           />
         </Drawer>
       )}

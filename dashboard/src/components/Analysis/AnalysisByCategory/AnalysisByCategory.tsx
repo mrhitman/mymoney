@@ -16,7 +16,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TransactionType,
-  useAnalysByCategoriesQuery,
+  useAnalysByCategoriesLazyQuery,
 } from 'src/generated/graphql';
 import { VictoryPie, VictoryLegend } from 'victory';
 import CategoryOperations from './CategoryOperations';
@@ -30,16 +30,10 @@ export const AnalysisByCategory: FC = () => {
   const [to, setTo] = useState<moment.Moment | null>(moment());
   const [focused, setFocused] = useState<any | undefined>();
   const [selected, setSelected] = useState<any | undefined>();
-  const [ignoreWalletIds, setWalletIds] = useState<string[]>([]);
+  const [walletIgnoreIds, setWalletIgnoreIds] = useState<string[]>([]);
   const { t } = useTranslation();
-  const { loading, data, refetch } = useAnalysByCategoriesQuery({
-    variables: { type, from: from?.unix(), to: to?.unix() },
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('accessToken'),
-      },
-    },
-  });
+
+  const [getData, { data, loading }] = useAnalysByCategoriesLazyQuery();
   const total =
     data?.statisticByCategory.reduce(
       (acc, item) => acc + Math.abs(item.amount),
@@ -47,17 +41,24 @@ export const AnalysisByCategory: FC = () => {
     ) || 0;
 
   const doRefetch = () => {
-    refetch({
-      type,
-      from: from?.unix(),
-      to: to?.unix(),
-      walletIds: data?.wallets
-        .map((w) => w.id)
-        .filter((id) => !ignoreWalletIds.includes(id)),
+    getData({
+      variables: {
+        type,
+        from: from?.unix(),
+        to: to?.unix(),
+        walletIds: data?.wallets
+          .map((w) => w.id)
+          .filter((id) => !walletIgnoreIds.includes(id)),
+      },
+      context: {
+        headers: {
+          Authorization: localStorage.getItem('accessToken'),
+        },
+      },
     });
   };
 
-  useEffect(doRefetch, [type]);
+  useEffect(doRefetch, []);
   return (
     <>
       <Row>
@@ -120,12 +121,12 @@ export const AnalysisByCategory: FC = () => {
                 renderItem={(wallet) => (
                   <List.Item key={wallet.id}>
                     <Checkbox
-                      checked={!ignoreWalletIds.includes(wallet.id)}
+                      checked={!walletIgnoreIds.includes(wallet.id)}
                       onChange={(e) =>
-                        setWalletIds(
+                        setWalletIgnoreIds(
                           !e.target.checked
-                            ? [...ignoreWalletIds, wallet.id]
-                            : ignoreWalletIds.filter((id) => id !== wallet.id),
+                            ? [...walletIgnoreIds, wallet.id]
+                            : walletIgnoreIds.filter((id) => id !== wallet.id),
                         )
                       }
                     >
@@ -221,27 +222,30 @@ export const AnalysisByCategory: FC = () => {
           </Row>
         </Col>
       </Row>
-      <Drawer
-        placement="bottom"
-        visible={!!selected}
-        height={360}
-        keyboard
-        closable
-        onClose={() => {
-          setSelected(null);
-        }}
-      >
-        <CategoryOperations
-          from={from?.unix()}
-          to={to?.unix()}
-          walletIds={
-            data?.wallets
-              .map((w) => w.id)
-              .filter((id) => !ignoreWalletIds.includes(id)) || []
-          }
-          categoryId={selected?.datum?.id}
-        />
-      </Drawer>
+      {selected?.datum?.id}
+      {selected?.datum?.id && (
+        <Drawer
+          placement="bottom"
+          visible={!!selected}
+          height={400}
+          keyboard
+          closable
+          onClose={() => {
+            setSelected(null);
+          }}
+        >
+          <CategoryOperations
+            from={from?.unix()}
+            to={to?.unix()}
+            walletIds={
+              data?.wallets
+                .map((w) => w.id)
+                .filter((id) => !walletIgnoreIds.includes(id)) || []
+            }
+            categoryId={selected.datum.id}
+          />
+        </Drawer>
+      )}
     </>
   );
 };

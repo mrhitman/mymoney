@@ -1,14 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { defaultCategories } from 'common/lib/utils/categories';
+import { BadRequestException, Injectable, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import { omit } from 'lodash';
+import { RegisterInput } from 'src/app/input/register-input';
 import RefreshToken from 'src/database/models/refresh-token.model';
 import User from 'src/database/models/user.model';
 import { UsersService } from 'src/users/users.service';
 import { v4 as uuid } from 'uuid';
-import { RegisterInput } from 'src/app/input/register-input';
-import Category from 'src/database/models/category.model';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +25,11 @@ export class AuthService {
     }
   }
 
-  public async login(user: Omit<User, 'password'>, token?: RefreshToken) {
+  public async login(
+    user: Omit<User, 'password'>,
+    @Res() response: Response,
+    token?: RefreshToken,
+  ) {
     const payload = { id: user.id };
     const refreshToken = token?.token || uuid();
 
@@ -38,10 +41,11 @@ export class AuthService {
       });
     }
 
-    return {
+    response.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true });
+    return response.json({
       accessToken: 'Bearer ' + this.jwtService.sign(payload),
       refreshToken,
-    };
+    });
   }
 
   public async register(data: RegisterInput) {

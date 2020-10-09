@@ -67,7 +67,7 @@ export class AuthService {
     await RefreshToken.query().delete().where({ userId: user.id });
   }
 
-  public async refresh(token: string) {
+  public async refresh(token: string, @Res() response: Response) {
     const refreshToken = await RefreshToken.query().where({ token }).first();
 
     if (!refreshToken) {
@@ -75,7 +75,7 @@ export class AuthService {
     }
 
     const user = await this.usersService.findById(refreshToken.userId);
-    return this.login(user, refreshToken);
+    return this.login(user, response, refreshToken);
   }
 
   public async getUser(id: number) {

@@ -1,5 +1,4 @@
-import { BadRequestException, Injectable, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import { omit } from 'lodash';
@@ -25,11 +24,7 @@ export class AuthService {
     }
   }
 
-  public async login(
-    user: Omit<User, 'password'>,
-    @Res() response: Response,
-    token?: RefreshToken,
-  ) {
+  public async login(user: Omit<User, 'password'>, token?: RefreshToken) {
     const payload = { id: user.id };
     const refreshToken = token?.token || uuid();
 
@@ -41,11 +36,10 @@ export class AuthService {
       });
     }
 
-    response.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true });
-    return response.json({
+    return {
       accessToken: 'Bearer ' + this.jwtService.sign(payload),
       refreshToken,
-    });
+    };
   }
 
   public async register(data: RegisterInput) {
@@ -67,7 +61,7 @@ export class AuthService {
     await RefreshToken.query().delete().where({ userId: user.id });
   }
 
-  public async refresh(token: string, @Res() response: Response) {
+  public async refresh(token: string) {
     const refreshToken = await RefreshToken.query().where({ token }).first();
 
     if (!refreshToken) {
@@ -75,7 +69,7 @@ export class AuthService {
     }
 
     const user = await this.usersService.findById(refreshToken.userId);
-    return this.login(user, response, refreshToken);
+    return this.login(user, refreshToken);
   }
 
   public async getUser(id: number) {

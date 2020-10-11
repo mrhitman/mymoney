@@ -69,16 +69,26 @@ export const AnalysisByCategory: FC = () => {
                 showTime
                 value={[from, to]}
                 ranges={{
-                  Today: [moment(), moment()],
+                  Today: [
+                    moment().utc().startOf('day'),
+                    moment().utc().endOf('day'),
+                  ],
                   'This Week': [
-                    moment().startOf('week'),
-                    moment().endOf('week'),
+                    moment().utc().startOf('week'),
+                    moment().utc().endOf('week'),
                   ],
                   'This Month': [
-                    moment().startOf('month'),
-                    moment().endOf('month'),
+                    moment().utc().startOf('month'),
+                    moment().utc().endOf('month'),
                   ],
-                  'Last 30 Days': [moment().subtract(30, 'days'), moment()],
+                  'Last 7 Days': [
+                    moment().utc().subtract(7, 'days'),
+                    moment().endOf('day'),
+                  ],
+                  'Last 30 Days': [
+                    moment().utc().subtract(30, 'days'),
+                    moment().utc().endOf('day'),
+                  ],
                 }}
                 onCalendarChange={(values) => {
                   setFrom(values?.[0] || null);
@@ -209,7 +219,7 @@ export const AnalysisByCategory: FC = () => {
                     y: Math.abs(data.amount),
                     category: data.category,
                     isFocused:
-                      data.category.name === focused?.datum.category.name,
+                      data?.category?.name === focused?.datum?.category?.name,
                     amount: data.amount,
                   }))}
                   labels={({ datum }) =>
@@ -244,7 +254,7 @@ export const AnalysisByCategory: FC = () => {
             }
             categoryId={
               data?.statisticByCategory.find(
-                (s) => s.category.name === selected.datum.category.name,
+                (s) => s.category.name === selected?.datum?.category?.name,
               )!.category.id!
             }
           />

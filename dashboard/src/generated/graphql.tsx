@@ -591,6 +591,21 @@ export type AnalysByCategoriesQuery = (
   )> }
 );
 
+export type GetStatisticByCurrencyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStatisticByCurrencyQuery = (
+  { __typename?: 'Query' }
+  & { statisticByCurrency: Array<(
+    { __typename?: 'StatisticByCurrency' }
+    & Pick<StatisticByCurrency, 'amount'>
+    & { currency: (
+      { __typename?: 'Currency' }
+      & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
+    ) }
+  )> }
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -878,6 +893,44 @@ export function useAnalysByCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AnalysByCategoriesQueryHookResult = ReturnType<typeof useAnalysByCategoriesQuery>;
 export type AnalysByCategoriesLazyQueryHookResult = ReturnType<typeof useAnalysByCategoriesLazyQuery>;
 export type AnalysByCategoriesQueryResult = Apollo.QueryResult<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>;
+export const GetStatisticByCurrencyDocument = gql`
+    query GetStatisticByCurrency {
+  statisticByCurrency {
+    amount
+    currency {
+      id
+      name
+      description
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetStatisticByCurrencyQuery__
+ *
+ * To run a query within a React component, call `useGetStatisticByCurrencyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatisticByCurrencyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatisticByCurrencyQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetStatisticByCurrencyQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
+        return Apollo.useQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
+      }
+export function useGetStatisticByCurrencyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
+          return Apollo.useLazyQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
+        }
+export type GetStatisticByCurrencyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyQuery>;
+export type GetStatisticByCurrencyLazyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyLazyQuery>;
+export type GetStatisticByCurrencyQueryResult = Apollo.QueryResult<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {

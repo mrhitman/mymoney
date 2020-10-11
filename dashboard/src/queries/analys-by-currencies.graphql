@@ -1,0 +1,11 @@
+query GetStatisticByCurrency {
+  statisticByCurrency {
+    amount
+    currency {
+      id
+      name
+      description
+      symbol
+    }
+  }
+}

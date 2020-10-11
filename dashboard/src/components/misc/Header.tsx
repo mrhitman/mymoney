@@ -22,6 +22,7 @@ export type ActivePage =
   | 'outcomes'
   | 'analysis'
   | 'analysis-category'
+  | 'analysis-currency'
   | 'settings'
   | 'categories'
   | 'currencies'

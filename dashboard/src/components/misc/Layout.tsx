@@ -135,7 +135,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 <Link to="/analysis-category">By Categories</Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>
-                By Currencies
+                <Link to="/analysis-currency">By Currencies</Link>
               </Menu.Item>
               <Menu.Item key="17" icon={<BarChartOutlined />}>
                 By Period

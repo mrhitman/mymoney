@@ -320,7 +320,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: "theater-masks",
       backgroundColor: Colors.pink800,
     },
-    codes: [7996],
+    codes: [7996, 5818],
   },
   {
     id: "40e4d8c1-26ec-4544-9ccb-9a0fa3b0dc0b",

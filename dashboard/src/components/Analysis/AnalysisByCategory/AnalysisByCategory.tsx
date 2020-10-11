@@ -157,7 +157,9 @@ export const AnalysisByCategory: FC = () => {
           >
             <Col>
               <VictoryLegend
-                title="Spends by categories"
+                title={`Spends by categories (total: ${data?.statisticByCategory
+                  .reduce((acc, v) => acc + v.amount, 0)
+                  .toFixed(2)} UAH)`}
                 centerTitle
                 orientation="horizontal"
                 itemsPerRow={3}

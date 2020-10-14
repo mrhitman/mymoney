@@ -1,6 +1,6 @@
 import { WalletOutlined } from "@ant-design/icons";
 import { Avatar, Breadcrumb, Card, Col, Divider, List, Row, Skeleton, Typography } from "antd";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetWalletsQuery } from "src/generated/graphql";
 import AddWallet from "./AddWallet";
@@ -15,6 +15,7 @@ export const icons: Record<string, string> = {
 const layout = { xs: 24, sm: 24, md: 12, lg: 6 };
 
 export const Accounting: FC = () => {
+  const [visible, setVisible] = useState(false);
   const { loading, data } = useGetWalletsQuery({
     context: {
       headers: {
@@ -36,11 +37,11 @@ export const Accounting: FC = () => {
         <Row gutter={16}>
           {wallets.map((wallet) => {
             return (
-              <Col id={wallet.id} {...layout}>
+              <Col key={wallet.id} id={wallet.id} {...layout}>
                 <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
                   <Link to={`/operations/${wallet.id}`}>
                     <Card.Meta
-                      title={wallet.name.slice(0, 6) + "******"}
+                      title={wallet.name}
                       description={wallet.description}
                       avatar={<Avatar src={icons[wallet.type || "default-card"]} />}
                     />
@@ -58,13 +59,17 @@ export const Accounting: FC = () => {
               </Col>
             );
           })}
-          <Card hoverable style={{ width: 298, height: 166, marginTop: 16 }}>
+          <Card
+            hoverable
+            style={{ width: 298, height: 166, marginTop: 16 }}
+            onClick={() => setVisible(true)}
+          >
             <Row>
               <WalletOutlined style={{ fontSize: 30 }} />
             </Row>
             <Divider />
             <Card.Meta title={"Add wallet"} />
-            <AddWallet />
+            <AddWallet visible={visible} onClose={() => setVisible(false)} />
           </Card>
         </Row>
       </Skeleton>

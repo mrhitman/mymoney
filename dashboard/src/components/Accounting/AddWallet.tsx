@@ -1,24 +1,49 @@
-import { Button, Modal } from "antd";
-import React, { FC, useState } from "react";
+import { Modal } from "antd";
+import { useFormik } from "formik";
+import React, { FC } from "react";
 import AddWalletForm from "./AddWalletForm";
+import { AddWalletValues } from "./types";
 
-export const AddWallet: FC = () => {
-  const [visible, setVisible] = useState(false);
-  const [bag, setBag] = useState<any>();
+export const initialValues: AddWalletValues = {
+  name: "",
+  description: "",
+  allowNegativeBalance: true,
+  useInBalance: true,
+  useInAnalytics: true,
+  pockets: [],
+  tags: [],
+};
+
+export interface AddWalletProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+export const AddWallet: FC<AddWalletProps> = ({ visible, onClose }) => {
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => {
+      console.log(values);
+      formik.setSubmitting(false);
+      formik.resetForm();
+      onClose();
+    },
+  });
 
   return (
     <div>
-      <Button onClick={() => setVisible(true)}>Create new wallet</Button>
       <Modal
         title="Add new wallet"
+        width={720}
         visible={visible}
-        onOk={() => bag?.handleSubmit()}
-        onCancel={() => setVisible(false)}
+        onOk={() => formik.handleSubmit()}
+        onCancel={(e) => {
+          e.stopPropagation();
+          formik.resetForm();
+          onClose();
+        }}
       >
-        <AddWalletForm
-          onInit={(bag: any) => !bag && setBag(bag)}
-          onSubmit={() => setVisible(false)}
-        />
+        <AddWalletForm formik={formik} />
       </Modal>
     </div>
   );

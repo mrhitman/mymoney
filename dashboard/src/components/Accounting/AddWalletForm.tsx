@@ -1,47 +1,21 @@
-import { AppstoreAddOutlined, PlusOutlined } from "@ant-design/icons";
-import { AutoComplete, Button, Checkbox, Collapse, Form, Input, List, Tag } from "antd";
-import { FormikProps, useFormik } from "formik";
+import { PlusOutlined } from "@ant-design/icons";
+import { AutoComplete, Checkbox, Collapse, Form, Input, List, Tag } from "antd";
+import { FormikProps } from "formik";
 import React, { FC, useState } from "react";
+import { useGetCurrenciesQuery } from "src/generated/graphql";
 import { formLayout } from "../misc/Layout";
-import { PocketItem, PocketValues } from "./PocketItem";
-
-export interface AddWalletValues {
-  name: string;
-  description: string;
-  allow_negative_balance: boolean;
-  use_in_balance: boolean;
-  use_in_analytics: boolean;
-  tags: string[];
-  pockets: Array<PocketValues>;
-}
+import { PocketItem } from "./PocketItem";
+import { AddWalletValues } from "./types";
+import ReactCountryFlag from "react-country-flag";
 
 interface AddWalletFormProps {
-  onSubmit: () => void;
-  onInit: (bag: FormikProps<any>) => void;
+  formik: FormikProps<AddWalletValues>;
 }
 
-const AddWalletForm: FC<AddWalletFormProps> = (props) => {
+const AddWalletForm: FC<AddWalletFormProps> = ({ formik }) => {
   const [currencyFilter, setCurrencyFilter] = useState("");
   const [addingTag, setAddingTag] = useState(false);
-  const [selectedCurrencyId, setSelectedCurrencyId] = useState<string>();
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      description: "",
-      allow_negative_balance: true,
-      use_in_balance: true,
-      use_in_analytics: true,
-      pockets: [
-        {
-          currencyId: "",
-          amount: 0,
-        },
-      ],
-      tags: [] as string[],
-    },
-    onSubmit: console.log,
-  });
+  const { data, loading } = useGetCurrenciesQuery();
 
   return (
     <Form {...formLayout} onSubmitCapture={formik.handleSubmit}>
@@ -71,74 +45,85 @@ const AddWalletForm: FC<AddWalletFormProps> = (props) => {
             }}
           />
         ) : (
-            <Tag className="site-tag-plus" onClick={() => setAddingTag(true)}>
-              <PlusOutlined /> New Tag
-            </Tag>
-          )}
+          <Tag className="site-tag-plus" onClick={() => setAddingTag(true)}>
+            <PlusOutlined /> New Tag
+          </Tag>
+        )}
+      </Form.Item>
+      <Form.Item label="Pockets" name="pockets">
+        <List
+          itemLayout="horizontal"
+          dataSource={formik.values.pockets}
+          locale={{ emptyText: "No pockets added yet" }}
+          loading={loading}
+          renderItem={(pocket) => <PocketItem formik={formik} pocket={pocket} />}
+        />
+        <AutoComplete
+          value={currencyFilter}
+          onSearch={(text) => setCurrencyFilter(text)}
+          onSelect={(id) => {
+            formik.setFieldValue("pockets", [
+              ...formik.values.pockets,
+              {
+                currencyId: id,
+                amount: undefined,
+              },
+            ]);
+            setCurrencyFilter("");
+          }}
+          options={data?.currencies
+            .filter((c) => !formik.values.pockets.map((p) => p.currencyId).includes(c.id))
+            .filter(
+              (c) =>
+                c.name.toLowerCase().includes(currencyFilter.toLowerCase()) ||
+                c.description?.toLowerCase().includes(currencyFilter.toLowerCase()) ||
+                c.symbol.toLowerCase().includes(currencyFilter.toLowerCase())
+            )
+            .map((c) => ({
+              value: c.id,
+              label: (
+                <div>
+                  <span style={{ marginRight: 10 }}>
+                    <ReactCountryFlag className="emojiFlag" countryCode={c.name.slice(0, 2)} />
+                  </span>
+                  <span>{c.description} </span>
+                  <span>({c.name})</span>
+                </div>
+              ),
+            }))}
+        >
+          <Input.Search
+            placeholder="Input here currency name or symbol or description"
+            enterButton
+          />
+        </AutoComplete>
       </Form.Item>
       <Collapse accordion>
         <Collapse.Panel key="1" header="Options">
           <Form.Item
             label="Allow negative balance"
-            name="allow_negative_balance"
+            name="allowNegativeBalance"
             labelCol={{ span: 22 }}
           >
             <Checkbox
-              defaultChecked={formik.values.allow_negative_balance}
-              onChange={(e) => formik.setFieldValue("allow_negative_balance", e.target.checked)}
+              defaultChecked={formik.values.allowNegativeBalance}
+              onChange={(e) => formik.setFieldValue("allowNegativeBalance", e.target.checked)}
             />
           </Form.Item>
-          <Form.Item label="Allow negative balance" name="use_in_balance" labelCol={{ span: 22 }}>
+          <Form.Item label="Use in balance" name="useInBalance" labelCol={{ span: 22 }}>
             <Checkbox
-              defaultChecked={formik.values.use_in_balance}
-              onChange={(e) => formik.setFieldValue("use_in_balance", e.target.checked)}
+              defaultChecked={formik.values.useInBalance}
+              onChange={(e) => formik.setFieldValue("useInBalance", e.target.checked)}
             />
           </Form.Item>
-          <Form.Item label="Allow negative balance" name="use_in_analytics" labelCol={{ span: 22 }}>
+          <Form.Item label="Use in analytics" name="useInAnalytics" labelCol={{ span: 22 }}>
             <Checkbox
-              defaultChecked={formik.values.use_in_analytics}
-              onChange={(e) => formik.setFieldValue("use_in_analytics", e.target.checked)}
+              defaultChecked={formik.values.useInAnalytics}
+              onChange={(e) => formik.setFieldValue("useInAnalytics", e.target.checked)}
             />
-          </Form.Item>
-        </Collapse.Panel>
-        <Collapse.Panel key="2" header="Pockets">
-          <Form.Item label="Pockets" name="pockets">
-            <List
-              itemLayout="horizontal"
-              dataSource={formik.values.pockets}
-              renderItem={(pocket) => <PocketItem formik={formik} pocket={pocket} />}
-            />
-
-            <AutoComplete
-              value={currencyFilter}
-              onSearch={(text) => setCurrencyFilter(text)}
-              onSelect={(name) => { }}
-              options={[]}
-            >
-              <Input.Search placeholder="input here" enterButton />
-            </AutoComplete>
-            <Button
-              type="dashed"
-              icon={<AppstoreAddOutlined />}
-              disabled={!selectedCurrencyId}
-              onClick={() => {
-                formik.setFieldValue("pockets", [
-                  ...formik.values.pockets,
-                  {
-                    currencyId: selectedCurrencyId,
-                    amount: 0,
-                  },
-                ]);
-                setSelectedCurrencyId(undefined);
-                setCurrencyFilter("");
-              }}
-            >
-              Add pocket
-            </Button>
           </Form.Item>
         </Collapse.Panel>
       </Collapse>
-      {props.onInit(formik)}
     </Form>
   );
 };

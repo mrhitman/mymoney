@@ -1,0 +1,16 @@
+mutation AddWallet($walletCreateData: WalletCreate!) {
+  createWallet(walletCreateData: $walletCreateData) {
+    id
+    name
+    type
+    description
+    pockets {
+      amount
+      currency {
+        id
+        name
+        symbol
+      }
+    }
+  }
+}

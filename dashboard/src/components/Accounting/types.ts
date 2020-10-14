@@ -1,3 +1,5 @@
+import { PocketInput } from "src/generated/graphql";
+
 export interface AddWalletPocket {
   currencyId: string;
   amount: number;
@@ -9,6 +11,6 @@ export interface AddWalletValues {
   allowNegativeBalance: boolean;
   useInBalance: boolean;
   useInAnalytics: boolean;
-  pockets: AddWalletPocket[];
+  pockets: PocketInput[];
   tags: string[];
 }

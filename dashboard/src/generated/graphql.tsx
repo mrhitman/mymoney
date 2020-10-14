@@ -563,6 +563,27 @@ export type AddConnectorMutation = (
   & Pick<Mutation, 'addConnector'>
 );
 
+export type AddWalletMutationVariables = Exact<{
+  walletCreateData: WalletCreate;
+}>;
+
+
+export type AddWalletMutation = (
+  { __typename?: 'Mutation' }
+  & { createWallet: (
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
+    & { pockets: Array<(
+      { __typename?: 'Pocket' }
+      & Pick<Pocket, 'amount'>
+      & { currency: (
+        { __typename?: 'Currency' }
+        & Pick<Currency, 'id' | 'name' | 'symbol'>
+      ) }
+    )> }
+  ) }
+);
+
 export type AnalysByCategoriesQueryVariables = Exact<{
   from?: Maybe<Scalars['Float']>;
   to?: Maybe<Scalars['Float']>;
@@ -840,6 +861,49 @@ export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions
 export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
 export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
 export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
+export const AddWalletDocument = gql`
+    mutation AddWallet($walletCreateData: WalletCreate!) {
+  createWallet(walletCreateData: $walletCreateData) {
+    id
+    name
+    type
+    description
+    pockets {
+      amount
+      currency {
+        id
+        name
+        symbol
+      }
+    }
+  }
+}
+    `;
+export type AddWalletMutationFn = Apollo.MutationFunction<AddWalletMutation, AddWalletMutationVariables>;
+
+/**
+ * __useAddWalletMutation__
+ *
+ * To run a mutation, you first call `useAddWalletMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddWalletMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addWalletMutation, { data, loading, error }] = useAddWalletMutation({
+ *   variables: {
+ *      walletCreateData: // value for 'walletCreateData'
+ *   },
+ * });
+ */
+export function useAddWalletMutation(baseOptions?: Apollo.MutationHookOptions<AddWalletMutation, AddWalletMutationVariables>) {
+        return Apollo.useMutation<AddWalletMutation, AddWalletMutationVariables>(AddWalletDocument, baseOptions);
+      }
+export type AddWalletMutationHookResult = ReturnType<typeof useAddWalletMutation>;
+export type AddWalletMutationResult = Apollo.MutationResult<AddWalletMutation>;
+export type AddWalletMutationOptions = Apollo.BaseMutationOptions<AddWalletMutation, AddWalletMutationVariables>;
 export const AnalysByCategoriesDocument = gql`
     query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
   statisticByCategory(from: $from, to: $to, currencyName: $currencyName, walletIds: $walletIds, type: $type) {

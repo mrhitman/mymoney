@@ -4,11 +4,11 @@ import { FormikProps } from "formik";
 import React, { FC } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useGetCurrenciesQuery } from "src/generated/graphql";
-import { AddWalletPocket, AddWalletValues } from "./types";
+import { AddWalletValues } from "./types";
 
 interface PocketItemProps {
   formik: FormikProps<AddWalletValues>;
-  pocket: AddWalletPocket;
+  pocket: AddWalletValues["pockets"][number];
 }
 
 export const PocketItem: FC<PocketItemProps> = ({ formik, pocket }) => {

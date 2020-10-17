@@ -378,7 +378,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: "graduation-cap",
       backgroundColor: Colors.purple700,
     },
-    codes: [8299, 5942],
+    codes: [8299, 5942, 5943],
   },
   {
     id: "0b9e9f63-7e12-430f-9b07-05f5ff6fe8ce",

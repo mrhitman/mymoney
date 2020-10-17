@@ -133,6 +133,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: "ios-bus",
       backgroundColor: Colors.yellow900,
     },
+    codes: [4121],
   },
   {
     id: "2d701d0e-cefe-49da-a57f-ffeeba8dfa51",

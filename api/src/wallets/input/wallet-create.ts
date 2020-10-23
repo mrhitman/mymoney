@@ -18,6 +18,11 @@ export class WalletCreate {
   @IsString()
   readonly description: string;
 
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  readonly image: string;
+
   @Field({ nullable: true, defaultValue: 'credit' })
   @IsOptional()
   @IsString()

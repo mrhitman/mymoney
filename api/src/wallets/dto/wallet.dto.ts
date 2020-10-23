@@ -12,6 +12,9 @@ export class WalletDto {
   @Field({ nullable: true })
   readonly description: string;
 
+  @Field({ nullable: true })
+  readonly image: string;
+
   @Field()
   readonly type: string;
 

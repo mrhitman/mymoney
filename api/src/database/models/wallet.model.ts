@@ -11,6 +11,7 @@ export class Wallet extends Model {
   public name: string;
   public description: string;
   public cardNumber: string;
+  public image: string;
   public type: string;
   public pockets: Pocket[];
   public allowNegativeBalance: boolean;

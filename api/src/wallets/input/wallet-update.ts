@@ -21,6 +21,11 @@ export class WalletUpdate {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
+  readonly image: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
   readonly type: string;
 
   @Field(() => Boolean)

@@ -121,7 +121,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       name: "television",
       backgroundColor: Colors.purple500,
     },
-    codes: [5722],
+    codes: [5722, 5045],
     parentId: "973e1ef1-5801-4d00-8045-7129a12b06a6",
   },
   {

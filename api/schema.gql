@@ -85,6 +85,7 @@ type Wallet {
   id: ID!
   name: String!
   description: String
+  image: String
   type: String!
   allowNegativeBalance: Boolean!
   pockets: [Pocket!]!
@@ -298,6 +299,7 @@ input WalletCreate {
   id: String
   name: String!
   description: String
+  image: String
   type: String = "credit"
   allowNegativeBalance: Boolean = true
   pockets: [PocketInput!] = []
@@ -313,6 +315,7 @@ input WalletUpdate {
   id: String!
   name: String
   description: String
+  image: String
   type: String
   allowNegativeBalance: Boolean!
   pockets: [PocketInput!]

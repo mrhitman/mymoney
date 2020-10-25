@@ -9,6 +9,17 @@ import Wallet from 'src/database/models/wallet.model';
 import { chain, first } from 'lodash';
 import { GetRateResponse } from 'common/responses';
 
+interface GetStatisticByCategoryFilter {
+  walletIds?: string[];
+  currencyName?: string;
+  type?: TransactionType;
+  from?: number, to?: number;
+}
+
+interface GetStatisticByCurrencyFilter {
+  walletIds?: string[];
+}
+
 @Injectable()
 export class StatisticsService {
   constructor(
@@ -36,7 +47,7 @@ export class StatisticsService {
   }
 
 
-  public async getStatisticByCategory(user: User, filter: { walletIds?: string[], currencyName?: string, type?: TransactionType, from?: number, to?: number } = {}) {
+  public async getStatisticByCategory(user: User, filter: GetStatisticByCategoryFilter = {}) {
     const query = Transaction.query()
       .withGraphFetched('[category,currency]')
       .where({ userId: user.id });
@@ -53,11 +64,11 @@ export class StatisticsService {
     }
 
     if (filter.from) {
-      query.where('date', '>=', DateTime.fromSeconds(filter.from).toISODate());
+      query.where('date', '>=', DateTime.fromSeconds(filter.from).toRFC2822());
     }
 
     if (filter.to) {
-      query.where('date', '<=', DateTime.fromSeconds(filter.to).toISODate());
+      query.where('date', '<=', DateTime.fromSeconds(filter.to).toRFC2822());
     }
 
     const items = await query.debug();
@@ -79,7 +90,7 @@ export class StatisticsService {
     )
   }
 
-  public async getStatisticByCurrency(user: User, filter: { walletIds?: string[] } = {}) {
+  public async getStatisticByCurrency(user: User, filter: GetStatisticByCurrencyFilter = {}) {
     const query = Wallet.query()
       .where({ userId: user.id })
       .whereNot({ type: 'goal' });

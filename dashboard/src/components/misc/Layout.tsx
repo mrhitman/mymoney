@@ -21,6 +21,7 @@ import {
 import { Avatar, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { useGetProfileQuery } from 'src/generated/graphql';
 import { ActivePage } from './Header';
 
 export const formLayout = {
@@ -41,6 +42,7 @@ const MenuMap: Record<string, string> = {
 
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
   const [redirect, setRedirect] = useState<string | undefined>(undefined);
+  const { data } = useGetProfileQuery()
 
   if (redirect) {
     return <Redirect to={redirect} exact />;
@@ -62,13 +64,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
           <Menu.SubMenu
             key="1"
-            icon={
-              <Avatar
-                src={
-                  'https://lh3.googleusercontent.com/a-/AOh14GgF5IoS1LX9sCbDtj_jVSDCQ7601im0Koug3CmK=s96-c'
-                }
-              />
-            }
+            icon={<Avatar src={data?.profile.imageUrl?.toString()} />}
           >
             <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout}>
               Logout

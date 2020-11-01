@@ -1,18 +1,11 @@
-import { WalletOutlined } from "@ant-design/icons";
-import { Avatar, Breadcrumb, Card, Col, Divider, List, Row, Skeleton, Typography } from "antd";
+import { Breadcrumb, Row, Skeleton } from "antd";
 import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useGetWalletsQuery } from "src/generated/graphql";
 import AddWallet from "./AddWallet";
-
-export const icons: Record<string, string> = {
-  "monobank-black": "https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png",
-  "Privat24 Card": "https://xpc.com.ua/image/catalog/general/page/a_icon/privat24.svg",
-  "default-card":
-    "https://www.nicepng.com/png/full/104-1044427_png-library-download-drawing-at-getdrawings-com-free.png",
-};
-
-const layout = { xs: 24, sm: 24, md: 12, lg: 6 };
+import EmptyWalletCard from "./EmptyWalletCard";
+import WalletCard from "./WalletCard";
 
 export const Accounting: FC = () => {
   const [visible, setVisible] = useState(false);
@@ -24,53 +17,21 @@ export const Accounting: FC = () => {
     },
   });
   const wallets = data ? data.wallets : [];
+  const { t } = useTranslation();
 
   return (
     <>
       <Breadcrumb style={{ margin: "16px 0" }}>
         <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+          <Link to="/">{t('home')}</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>Wallets</Breadcrumb.Item>
+        <Breadcrumb.Item>{t('wallets')}</Breadcrumb.Item>
       </Breadcrumb>
       <Skeleton loading={loading}>
         <Row gutter={16}>
-          {wallets.map((wallet) => {
-            return (
-              <Col key={wallet.id} id={wallet.id} {...layout}>
-                <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
-                  <Link to={`/operations/${wallet.id}`}>
-                    <Card.Meta
-                      title={wallet.name}
-                      description={wallet.description}
-                      avatar={<Avatar src={icons[wallet.type || "default-card"]} />}
-                    />
-                    <Divider />
-                    <List
-                      dataSource={wallet.pockets}
-                      renderItem={(pocket) => (
-                        <Typography>
-                          {pocket.currency.symbol} {pocket.amount} {pocket.currency.name}
-                        </Typography>
-                      )}
-                    />
-                  </Link>
-                </Card>
-              </Col>
-            );
-          })}
-          <Card
-            hoverable
-            style={{ width: 298, height: 166, marginTop: 16 }}
-            onClick={() => setVisible(true)}
-          >
-            <Row>
-              <WalletOutlined style={{ fontSize: 30 }} />
-            </Row>
-            <Divider />
-            <Card.Meta title={"Add wallet"} />
-            <AddWallet visible={visible} onClose={() => setVisible(false)} />
-          </Card>
+          {wallets.map(wallet => <WalletCard key={wallet.id} wallet={wallet} loading={loading} />)}
+          <EmptyWalletCard onClick={() => setVisible(true)} />
+          <AddWallet visible={visible} onClose={() => setVisible(false)} />
         </Row>
       </Skeleton>
     </>

@@ -99,6 +99,7 @@ export type Wallet = {
   id: Scalars['ID'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
   type: Scalars['String'];
   allowNegativeBalance: Scalars['Boolean'];
   pockets: Array<Pocket>;
@@ -484,6 +485,7 @@ export type WalletCreate = {
   id?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   allowNegativeBalance?: Maybe<Scalars['Boolean']>;
   pockets?: Maybe<Array<PocketInput>>;
@@ -499,6 +501,7 @@ export type WalletUpdate = {
   id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   allowNegativeBalance: Scalars['Boolean'];
   pockets?: Maybe<Array<PocketInput>>;

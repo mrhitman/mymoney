@@ -13,6 +13,7 @@ import {
   PieChartOutlined,
   RiseOutlined,
   ScheduleOutlined,
+  SettingOutlined,
   SolutionOutlined,
   TableOutlined,
   TrophyOutlined,
@@ -22,7 +23,23 @@ import { Avatar, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useGetProfileQuery } from 'src/generated/graphql';
-import { ActivePage } from './Header';
+
+export type ActivePage =
+  | 'info'
+  | 'accounting'
+  | 'planning'
+  | 'scheduler'
+  | 'operations'
+  | 'incomes'
+  | 'outcomes'
+  | 'analysis'
+  | 'analysis-category'
+  | 'analysis-currency'
+  | 'settings'
+  | 'categories'
+  | 'currencies'
+  | 'connectors'
+  | undefined;
 
 export const formLayout = {
   labelCol: { span: 8 },
@@ -42,7 +59,7 @@ const MenuMap: Record<string, string> = {
 
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
   const [redirect, setRedirect] = useState<string | undefined>(undefined);
-  const { data } = useGetProfileQuery()
+  const { data } = useGetProfileQuery();
 
   if (redirect) {
     return <Redirect to={redirect} exact />;
@@ -66,7 +83,10 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             key="1"
             icon={<Avatar src={data?.profile.imageUrl?.toString()} />}
           >
-            <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout}>
+            <Menu.Item key="2" icon={<SettingOutlined />}>
+              Settings
+            </Menu.Item>
+            <Menu.Item key="3" icon={<LogoutOutlined />} onClick={logout}>
               Logout
             </Menu.Item>
           </Menu.SubMenu>

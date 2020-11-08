@@ -1,6 +1,6 @@
-import {Button, Dropdown, Menu} from 'antd';
-import React, {PureComponent} from 'react';
-import {withTranslation, WithTranslation} from 'react-i18next';
+import { Button, Dropdown, Menu } from 'antd';
+import React, { PureComponent } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import {
   DomainTuple,
   VictoryAxis,
@@ -19,14 +19,17 @@ interface AnalysisByPeriodState {
   };
 }
 
-class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodState> {
+class AnalysisByPeriod extends PureComponent<
+  WithTranslation,
+  AnalysisByPeriodState
+> {
   public state: AnalysisByPeriodState = {
     interval: 'day',
     data: [],
   };
 
   public handleZoom = (domain: { x?: DomainTuple; y?: DomainTuple }) => {
-    this.setState({zoomDomain: domain});
+    this.setState({ zoomDomain: domain });
   };
 
   public componentDidMount() {
@@ -38,7 +41,6 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
     //   '/transactions/statistic/' + this.state.interval
     // );
     // const data = response.data;
-
     // this.setState({
     //   data: Object.keys(data).map((time) => {
     //     return { a: moment.unix(+time).toDate(), b: data[time] };
@@ -48,7 +50,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
 
   public render() {
     return (
-      <div style={{display: 'flex'}}>
+      <div style={{ display: 'flex' }}>
         <div>
           <Dropdown
             overlay={() => (
@@ -56,7 +58,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
                 <Menu.Item
                   key="day"
                   onClick={() =>
-                    this.setState({interval: 'day'}, this.fetchData)
+                    this.setState({ interval: 'day' }, this.fetchData)
                   }
                 >
                   Day
@@ -64,7 +66,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
                 <Menu.Item
                   key="week"
                   onClick={() =>
-                    this.setState({interval: 'week'}, this.fetchData)
+                    this.setState({ interval: 'week' }, this.fetchData)
                   }
                 >
                   Week
@@ -72,7 +74,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
                 <Menu.Item
                   key="month"
                   onClick={() =>
-                    this.setState({interval: 'month'}, this.fetchData)
+                    this.setState({ interval: 'month' }, this.fetchData)
                   }
                 >
                   Month
@@ -80,7 +82,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
                 <Menu.Item
                   key="year"
                   onClick={() =>
-                    this.setState({interval: 'year'}, this.fetchData)
+                    this.setState({ interval: 'year' }, this.fetchData)
                   }
                 >
                   Year
@@ -96,7 +98,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
         <VictoryChart
           width={600}
           height={470}
-          scale={{x: 'time'}}
+          scale={{ x: 'time' }}
           containerComponent={
             <VictoryZoomContainer
               zoomDimension="x"
@@ -107,7 +109,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
         >
           <VictoryLine
             style={{
-              data: {stroke: 'tomato'},
+              data: { stroke: 'tomato' },
             }}
             data={this.state.data}
             x="a"
@@ -115,10 +117,10 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
           />
         </VictoryChart>
         <VictoryChart
-          padding={{top: 0, left: 50, right: 50, bottom: 30}}
+          padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
           width={600}
           height={100}
-          scale={{x: 'time'}}
+          scale={{ x: 'time' }}
           containerComponent={
             <VictoryBrushContainer
               brushDimension="x"
@@ -130,7 +132,7 @@ class AnalysisByPeriod extends PureComponent<WithTranslation, AnalysisByPeriodSt
           <VictoryAxis tickFormat={(x) => new Date(x).getFullYear()} />
           <VictoryLine
             style={{
-              data: {stroke: 'tomato'},
+              data: { stroke: 'tomato' },
             }}
             data={this.state.data}
             x="a"

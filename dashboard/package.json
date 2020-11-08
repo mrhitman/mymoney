@@ -16,6 +16,7 @@
     "antd": "^4.6.2",
     "apollo-boost": "^0.4.9",
     "axios": "^0.19.2",
+    "bizcharts": "^4.0.14",
     "common": "^0.1.1",
     "customize-cra": "^0.9.1",
     "formik": "^2.1.4",

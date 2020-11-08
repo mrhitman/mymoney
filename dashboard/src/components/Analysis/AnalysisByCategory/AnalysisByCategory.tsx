@@ -1,26 +1,26 @@
 import { SyncOutlined } from '@ant-design/icons';
 import {
-  Dropdown,
-  Menu,
   Button,
-  Row,
-  List,
-  Col,
-  Spin,
-  DatePicker,
   Checkbox,
+  Col,
+  DatePicker,
   Drawer,
+  Dropdown,
+  List,
+  Menu,
+  Row,
+  Spin,
 } from 'antd';
+import { DonutChart } from 'bizcharts';
+import { round } from 'lodash';
 import moment from 'moment';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TransactionType,
   useAnalysByCategoriesLazyQuery,
 } from 'src/generated/graphql';
-import { VictoryPie, VictoryLegend } from 'victory';
 import CategoryOperations from './CategoryOperations';
-import { round } from 'lodash';
 
 export const AnalysisByCategory: FC = () => {
   const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
@@ -28,7 +28,6 @@ export const AnalysisByCategory: FC = () => {
     moment().subtract(1, 'week'),
   );
   const [to, setTo] = useState<moment.Moment | null>(moment());
-  const [focused, setFocused] = useState<any | undefined>();
   const [selected, setSelected] = useState<any | undefined>();
   const [walletIgnoreIds, setWalletIgnoreIds] = useState<string[]>([]);
   const { t } = useTranslation();
@@ -149,93 +148,42 @@ export const AnalysisByCategory: FC = () => {
           </Row>
         </Col>
         <Col span={18}>
-          <Row
-            align="middle"
-            justify="center"
-            gutter={[10, 10]}
-            style={{ marginBottom: -200 }}
-          >
-            <Col>
-              <VictoryLegend
-                title={`Spends by categories (total: ${data?.statisticByCategory
-                  .reduce((acc, v) => acc + v.amount, 0)
-                  .toFixed(2)} UAH)`}
-                centerTitle
-                orientation="horizontal"
-                itemsPerRow={3}
-                width={425}
-                colorScale="qualitative"
-                gutter={20}
-                style={{
-                  title: { fontSize: 18 },
-                  labels: { fontSize: 14 },
-                }}
-                data={data?.statisticByCategory.map((item) => ({
-                  name: t(item.category.name),
-                }))}
-              />
-            </Col>
-          </Row>
           <Row align="middle" justify="center" gutter={[10, 10]}>
             <Col span={15}>
               <Spin spinning={loading}>
-                <VictoryPie
-                  animate
-                  padAngle={0.5}
-                  colorScale="qualitative"
-                  labelRadius={90}
-                  labelPosition="centroid"
-                  style={{ labels: { fill: 'black', fontSize: 10 } }}
-                  events={[
-                    {
-                      target: 'labels',
-                      eventHandlers: {
-                        onClick: () => [
-                          {
-                            target: 'data',
-                            mutation: (data) => setSelected(data),
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      target: 'data',
-                      eventHandlers: {
-                        onClick: () => [
-                          {
-                            target: 'data',
-                            mutation: (data) => setSelected(data),
-                          },
-                        ],
-                        onMouseOver: () => [
-                          {
-                            target: 'data',
-                            mutation: (data) => setFocused(data),
-                          },
-                        ],
-                      },
-                    },
-                  ]}
-                  data={data?.statisticByCategory.map((data) => ({
-                    x: data.category.name,
-                    y: Math.abs(data.amount),
-                    category: data.category,
-                    isFocused:
-                      data?.category?.name === focused?.datum?.category?.name,
-                    amount: data.amount,
-                  }))}
-                  labels={({ datum }) =>
-                    datum.isFocused || datum.y / total > 0.14
-                      ? `${t(datum.x)} Σ${round(datum.y, 1)}`
-                      : ''
+                <DonutChart
+                  animation={false}
+                  events={{
+                    onRingClick: (event) => setSelected(event.data.id),
+                  }}
+                  data={
+                    data?.statisticByCategory.map((item) => ({
+                      id: item.category.id,
+                      type: t(item.category.name) as string,
+                      value: round(Math.abs(item.amount), 1),
+                    })) || []
                   }
+                  height={800}
+                  title={{
+                    visible: true,
+                    text: 'Analysis by category (UAH)',
+                  }}
+                  statistic={{
+                    visible: true,
+                    totalLabel: 'Total in UAH',
+                  }}
+                  forceFit
+                  radius={0.95}
+                  padding="auto"
+                  angleField="value"
+                  colorField="type"
                 />
               </Spin>
             </Col>
           </Row>
         </Col>
       </Row>
-      {selected?.datum?.category && (
+      {selected && (
         <Drawer
           placement="bottom"
           visible={!!selected}
@@ -255,9 +203,8 @@ export const AnalysisByCategory: FC = () => {
                 .filter((id) => !walletIgnoreIds.includes(id)) || []
             }
             categoryId={
-              data?.statisticByCategory.find(
-                (s) => s.category.name === selected?.datum?.category?.name,
-              )!.category.id!
+              data?.statisticByCategory.find((s) => s.category.id === selected)!
+                .category.id!
             }
           />
         </Drawer>

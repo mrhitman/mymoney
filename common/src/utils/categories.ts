@@ -266,7 +266,7 @@ export const defaultCategories: CreateCategoryDto[] = [
       backgroundColor: Colors.lightGreen500,
     },
     parentId: "a1e65d28-4034-439e-993d-b32c142204b3",
-    codes: [4900]
+    codes: [4900, 9399]
   },
   {
     id: "e99e87f0-f824-4c05-a544-0e77568047f0",

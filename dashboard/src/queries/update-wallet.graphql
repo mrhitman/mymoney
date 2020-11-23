@@ -1,0 +1,16 @@
+mutation UpdateWallet($walletUpdateData: WalletUpdate!) {
+  updateWallet(walletUpdateData: $walletUpdateData) {
+    id
+    name
+    type
+    description
+    pockets {
+      amount
+      currency {
+        id
+        name
+        symbol
+      }
+    }
+  }
+}

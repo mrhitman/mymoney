@@ -769,6 +769,27 @@ export type GetTransactionsQuery = (
   ) }
 );
 
+export type UpdateWalletMutationVariables = Exact<{
+  walletUpdateData: WalletUpdate;
+}>;
+
+
+export type UpdateWalletMutation = (
+  { __typename?: 'Mutation' }
+  & { updateWallet: (
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
+    & { pockets: Array<(
+      { __typename?: 'Pocket' }
+      & Pick<Pocket, 'amount'>
+      & { currency: (
+        { __typename?: 'Currency' }
+        & Pick<Currency, 'id' | 'name' | 'symbol'>
+      ) }
+    )> }
+  ) }
+);
+
 export type GetWalletTransactionsQueryVariables = Exact<{
   type?: Maybe<TransactionType>;
   limit?: Maybe<Scalars['Float']>;
@@ -1324,6 +1345,49 @@ export function useGetTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetTransactionsQueryHookResult = ReturnType<typeof useGetTransactionsQuery>;
 export type GetTransactionsLazyQueryHookResult = ReturnType<typeof useGetTransactionsLazyQuery>;
 export type GetTransactionsQueryResult = Apollo.QueryResult<GetTransactionsQuery, GetTransactionsQueryVariables>;
+export const UpdateWalletDocument = gql`
+    mutation UpdateWallet($walletUpdateData: WalletUpdate!) {
+  updateWallet(walletUpdateData: $walletUpdateData) {
+    id
+    name
+    type
+    description
+    pockets {
+      amount
+      currency {
+        id
+        name
+        symbol
+      }
+    }
+  }
+}
+    `;
+export type UpdateWalletMutationFn = Apollo.MutationFunction<UpdateWalletMutation, UpdateWalletMutationVariables>;
+
+/**
+ * __useUpdateWalletMutation__
+ *
+ * To run a mutation, you first call `useUpdateWalletMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateWalletMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateWalletMutation, { data, loading, error }] = useUpdateWalletMutation({
+ *   variables: {
+ *      walletUpdateData: // value for 'walletUpdateData'
+ *   },
+ * });
+ */
+export function useUpdateWalletMutation(baseOptions?: Apollo.MutationHookOptions<UpdateWalletMutation, UpdateWalletMutationVariables>) {
+        return Apollo.useMutation<UpdateWalletMutation, UpdateWalletMutationVariables>(UpdateWalletDocument, baseOptions);
+      }
+export type UpdateWalletMutationHookResult = ReturnType<typeof useUpdateWalletMutation>;
+export type UpdateWalletMutationResult = Apollo.MutationResult<UpdateWalletMutation>;
+export type UpdateWalletMutationOptions = Apollo.BaseMutationOptions<UpdateWalletMutation, UpdateWalletMutationVariables>;
 export const GetWalletTransactionsDocument = gql`
     query getWalletTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletId: String!) {
   wallet(id: $walletId) {

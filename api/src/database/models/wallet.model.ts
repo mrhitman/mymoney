@@ -35,7 +35,6 @@ export class Wallet extends Model {
           items: {
             type: 'object',
             properties: {
-              id: { type: 'string' },
               amount: { type: 'number' },
               currencyId: { type: 'string' },
             },

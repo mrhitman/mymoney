@@ -14,3 +14,7 @@ export interface AddWalletValues {
   pockets: PocketInput[];
   tags: string[];
 }
+
+export interface UpdateWalletValues extends AddWalletValues {
+  id: string;
+}

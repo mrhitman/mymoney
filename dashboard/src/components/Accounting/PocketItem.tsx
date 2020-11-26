@@ -1,19 +1,19 @@
-import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Col, Input, List, Row } from "antd";
-import { FormikProps } from "formik";
-import React, { FC } from "react";
-import ReactCountryFlag from "react-country-flag";
-import { useGetCurrenciesQuery } from "src/generated/graphql";
-import { AddWalletValues } from "./types";
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, Input, List, Row } from 'antd';
+import { FormikProps } from 'formik';
+import React, { FC } from 'react';
+import ReactCountryFlag from 'react-country-flag';
+import { PocketInput, useGetCurrenciesQuery } from 'src/generated/graphql';
 
 interface PocketItemProps {
-  formik: FormikProps<AddWalletValues>;
-  pocket: AddWalletValues["pockets"][number];
+  formik: FormikProps<any>;
+  pocket: PocketInput;
 }
 
 export const PocketItem: FC<PocketItemProps> = ({ formik, pocket }) => {
   const { data } = useGetCurrenciesQuery();
-  const getActiveCurrency = () => data?.currencies.find((c) => c.id === pocket.currencyId);
+  const getActiveCurrency = () =>
+    data?.currencies.find((c) => c.id === pocket.currencyId);
 
   return (
     <List.Item
@@ -25,8 +25,10 @@ export const PocketItem: FC<PocketItemProps> = ({ formik, pocket }) => {
           icon={<DeleteOutlined />}
           onClick={() =>
             formik.setFieldValue(
-              "pockets",
-              formik.values.pockets.filter((p) => p.currencyId !== pocket.currencyId)
+              'pockets',
+              formik.values.pockets.filter(
+                (p: PocketInput) => p.currencyId !== pocket.currencyId,
+              ),
             )
           }
         />,
@@ -54,12 +56,12 @@ export const PocketItem: FC<PocketItemProps> = ({ formik, pocket }) => {
             addonAfter={getActiveCurrency()?.symbol}
             onChange={(e) => {
               formik.setFieldValue(
-                "pockets",
-                formik.values.pockets.map((p) =>
+                'pockets',
+                formik.values.pockets.map((p: PocketInput) =>
                   p.currencyId === pocket.currencyId
                     ? { ...p, amount: parseFloat(e.target.value) || 0 }
-                    : p
-                )
+                    : p,
+                ),
               );
             }}
           />

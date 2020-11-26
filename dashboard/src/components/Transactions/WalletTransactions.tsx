@@ -12,35 +12,29 @@ const WalletTransactions: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const { params } = useRouteMatch<{ walletId: string }>();
-  const { loading, data } = useGetWalletTransactionsQuery(
-    {
-      variables: {
-        walletId: params.walletId,
-        limit: pageSize,
-        offset: pageSize * (current - 1)
-      },
-      context: {
-        headers: {
-          "Authorization": localStorage.getItem('accessToken')
-        }
-      }
+  const { loading, data } = useGetWalletTransactionsQuery({
+    variables: {
+      walletId: params.walletId,
+      limit: pageSize,
+      offset: pageSize * (current - 1),
     },
-
-  );
+    fetchPolicy: 'no-cache',
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('accessToken'),
+      },
+    },
+  });
 
   const { t } = useTranslation();
   return (
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>
-          <Link to="/">
-            Home
-          </Link>
+          <Link to="/">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/accounting">
-            Wallets
-          </Link>
+          <Link to="/accounting">Wallets</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Operations for {data?.wallet.name}</Breadcrumb.Item>
       </Breadcrumb>
@@ -48,7 +42,10 @@ const WalletTransactions: React.FC = () => {
         <Col offset={20} />
         <Col span={4}>
           <Card>
-            <Card.Meta title={data?.wallet.name} description={data?.wallet.description} />
+            <Card.Meta
+              title={data?.wallet.name}
+              description={data?.wallet.description}
+            />
           </Card>
         </Col>
       </Row>
@@ -149,8 +146,8 @@ const WalletTransactions: React.FC = () => {
             desc ? (
               desc
             ) : (
-                <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-              )
+              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            )
           }
         />
         <Table.Column

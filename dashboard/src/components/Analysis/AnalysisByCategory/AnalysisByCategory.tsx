@@ -33,12 +33,6 @@ export const AnalysisByCategory: FC = () => {
   const { t } = useTranslation();
 
   const [getData, { data, loading }] = useAnalysByCategoriesLazyQuery();
-  const total =
-    data?.statisticByCategory.reduce(
-      (acc, item) => acc + Math.abs(item.amount),
-      0,
-    ) || 0;
-
   const doRefetch = () => {
     getData({
       variables: {

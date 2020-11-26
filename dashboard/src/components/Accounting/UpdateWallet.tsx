@@ -2,8 +2,8 @@ import { Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC } from 'react';
 import { useUpdateWalletMutation } from 'src/generated/graphql';
-import AddWalletForm from './AddWalletForm';
 import { UpdateWalletValues } from './types';
+import UpdateWalletForm from './UpdateWalletForm';
 
 const initialValues: UpdateWalletValues = {
   id: '',
@@ -21,12 +21,11 @@ export interface UpdateWalletProps {
   onClose: () => void;
 }
 
-export const AddWallet: FC<UpdateWalletProps> = ({ visible, onClose }) => {
+export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose }) => {
   const [updateWallet] = useUpdateWalletMutation();
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
-      console.log(values);
       await updateWallet({
         variables: {
           walletUpdateData: {
@@ -63,4 +62,4 @@ export const AddWallet: FC<UpdateWalletProps> = ({ visible, onClose }) => {
   );
 };
 
-export default AddWallet;
+export default UpdateWallet;

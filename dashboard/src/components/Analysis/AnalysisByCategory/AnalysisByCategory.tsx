@@ -164,7 +164,12 @@ export const AnalysisByCategory: FC = () => {
                   }}
                   statistic={{
                     visible: true,
-                    totalLabel: 'Total in UAH',
+                    content: {
+                      name: 'Total in UAH',
+                      value: data?.statisticByCategory
+                        .reduce((acc, v) => acc + Math.abs(v.amount), 0)
+                        .toFixed(1),
+                    },
                   }}
                   forceFit
                   radius={0.95}

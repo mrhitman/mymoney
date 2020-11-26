@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { dataByCategory, dataByPeriod, Interval } from 'common';
+import { dataByCategory, Interval } from 'common';
 import { DateTime } from 'luxon';
 import { CurrenciesService } from 'src/currencies/currencies.service';
 import Transaction, { categoryInId, categoryOutId } from 'src/database/models/transaction.model';
+import WalletHistory from 'src/database/models/wallet-history.model';
 import User from 'src/database/models/user.model';
 import { TransactionType } from 'src/transactions/transaction-type';
 import Wallet from 'src/database/models/wallet.model';
-import { chain, first } from 'lodash';
+import { chain, first, groupBy } from 'lodash';
 import { GetRateResponse } from 'common/responses';
 
 interface GetStatisticByCategoryFilter {
@@ -29,21 +30,13 @@ export class StatisticsService {
   public async getStatisticByPeriod(
     user: User,
     params: { interval: Interval } = { interval: 'month' },
-  ): Promise<Array<{ date: string, amount: number }>> {
-    const items = await Transaction.query()
-      .withGraphFetched('[currency]')
-      .where({ userId: user.id })
-      .whereNot({ type: TransactionType.transfer })
-      .whereNotIn('categoryId', [categoryInId, categoryOutId]);
+  ) {
 
-    const data = dataByPeriod(items, params.interval);
-    const keys = Object.keys(data);
-    const rates = await this.currencyService.rates();
+    const items = await WalletHistory
+      .query()
+      .where({ userId: user.id });
 
-    return keys.map(date => ({
-      date: DateTime.fromSeconds(+date).toISO(),
-      amount: this.sumTransactionsAmount(data[date], rates, "UAH"),
-    }))
+    return items;
   }
 
 

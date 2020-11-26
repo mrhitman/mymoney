@@ -5,6 +5,7 @@ import { WalletsService } from 'src/wallets/wallets.service';
 import { StatisticsByCurrencyResolver } from './statistics-by-currency.resolver';
 import { StatisticsResolver } from './statistics.resolver';
 import { StatisticsService } from './statistics.service';
+import { WalletHistoryResolver } from './wallet-history.resolver';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { StatisticsService } from './statistics.service';
     StatisticsResolver,
     StatisticsByCurrencyResolver,
     StatisticsService,
+    WalletHistoryResolver,
     WalletsService,
     DataLoader
   ],

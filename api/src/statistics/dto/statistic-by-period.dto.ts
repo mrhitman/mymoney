@@ -1,12 +1,23 @@
-import { ObjectType, Field, Float } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { PocketDto } from 'src/wallets/dto/pocket.dto';
+import { WalletDto } from 'src/wallets/dto/wallet.dto';
 
 @ObjectType('StatisticByPeriod', {
   description: "Statistic info about transactions",
 })
 export class StatisticByPeriodDto {
-  @Field({ complexity: 6 })
-  readonly date: string;
+  @Field()
+  readonly walletId: string;
 
-  @Field(() => Float, { complexity: 6 })
-  readonly amount: number;
+  @Field(() => Float)
+  readonly userId: number;
+
+  @Field((type) => [PocketDto])
+  readonly pockets: PocketDto[];
+
+  @Field(() => Float)
+  readonly createdAt: Date;
+
+  @Field(() => WalletDto)
+  readonly wallet: WalletDto;
 }

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver, ResolveField, Parent } from '@nestjs/graphql';
 import { Interval } from 'common';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
@@ -9,10 +9,15 @@ import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
 import { StatisticsService } from './statistics.service';
+import { WalletDto } from '../wallets/dto/wallet.dto';
+import { DataLoader } from '../dataloader';
 
 @Resolver()
 export class StatisticsResolver {
-  constructor(protected readonly service: StatisticsService) {
+  constructor(
+    protected readonly service: StatisticsService,
+    private readonly loader: DataLoader
+  ) {
   }
 
   @UseGuards(GqlAuthGuard)
@@ -25,7 +30,7 @@ export class StatisticsResolver {
     @Args('type', { nullable: true, type: () => TransactionType }) type: TransactionType,
     @Args('from', { nullable: true, description: "Unix timestamp" }) from: number,
     @Args('to', { nullable: true, description: "Unix timestamp" }) to: number,
-  ): Promise<StatisticByPeriodDto[]> {
+  ) {
     return this.service.getStatisticByPeriod(user, { interval });
   }
 

@@ -8,6 +8,7 @@ export class WalletHistory extends Model {
     public pockets: Pocket[];
     public createdAt: Date;
     public updatedAt: Date;
+    public wallet: Wallet;
 
     static get tableName() {
         return 'wallets_history'

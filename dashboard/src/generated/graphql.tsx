@@ -177,8 +177,11 @@ export type StatisticByCategory = {
 /** Statistic info about transactions */
 export type StatisticByPeriod = {
   __typename?: 'StatisticByPeriod';
-  date: Scalars['String'];
-  amount: Scalars['Float'];
+  walletId: Scalars['String'];
+  userId: Scalars['Float'];
+  pockets: Array<Pocket>;
+  createdAt: Scalars['Float'];
+  wallet: Wallet;
 };
 
 export type Login = {
@@ -630,6 +633,28 @@ export type GetStatisticByCurrencyQuery = (
   )> }
 );
 
+export type GetStatisticByPeriodQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStatisticByPeriodQuery = (
+  { __typename?: 'Query' }
+  & { statisticByPeriod: Array<(
+    { __typename?: 'StatisticByPeriod' }
+    & Pick<StatisticByPeriod, 'walletId' | 'createdAt'>
+    & { wallet: (
+      { __typename?: 'Wallet' }
+      & Pick<Wallet, 'id' | 'name' | 'description'>
+    ), pockets: Array<(
+      { __typename?: 'Pocket' }
+      & Pick<Pocket, 'amount'>
+      & { currency: (
+        { __typename?: 'Currency' }
+        & Pick<Currency, 'id' | 'name'>
+      ) }
+    )> }
+  )> }
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1019,6 +1044,51 @@ export function useGetStatisticByCurrencyLazyQuery(baseOptions?: Apollo.LazyQuer
 export type GetStatisticByCurrencyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyQuery>;
 export type GetStatisticByCurrencyLazyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyLazyQuery>;
 export type GetStatisticByCurrencyQueryResult = Apollo.QueryResult<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>;
+export const GetStatisticByPeriodDocument = gql`
+    query GetStatisticByPeriod {
+  statisticByPeriod {
+    walletId
+    wallet {
+      id
+      name
+      description
+    }
+    pockets {
+      amount
+      currency {
+        id
+        name
+      }
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetStatisticByPeriodQuery__
+ *
+ * To run a query within a React component, call `useGetStatisticByPeriodQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatisticByPeriodQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatisticByPeriodQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetStatisticByPeriodQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
+        return Apollo.useQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
+      }
+export function useGetStatisticByPeriodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
+          return Apollo.useLazyQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
+        }
+export type GetStatisticByPeriodQueryHookResult = ReturnType<typeof useGetStatisticByPeriodQuery>;
+export type GetStatisticByPeriodLazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriodLazyQuery>;
+export type GetStatisticByPeriodQueryResult = Apollo.QueryResult<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {

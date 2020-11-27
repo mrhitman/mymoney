@@ -1,0 +1,18 @@
+query GetStatisticByPeriod {
+  statisticByPeriod {
+    walletId
+    wallet {
+      id
+      name
+      description
+    }
+    pockets {
+      amount
+      currency {
+        id
+        name
+      }
+    }
+    createdAt
+  }
+}

@@ -14,6 +14,7 @@ import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
 import { TransactionType } from 'src/generated/graphql';
+import MainPage from '../MainPage/MainPage';
 import Register from '../Register/Register';
 import WalletTransactions from '../Transactions/WalletTransactions';
 import PrivateRoute from './PrivateRoute';
@@ -23,7 +24,7 @@ const Routes: FC = () => (
     <Switch>
       <PrivateRoute path="/" exact>
         <Layout>
-          <div>Home</div>
+          <MainPage />
         </Layout>
       </PrivateRoute>
 

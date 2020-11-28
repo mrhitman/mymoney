@@ -10,14 +10,11 @@ import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
 import { StatisticsService } from './statistics.service';
+import { DateTime } from 'luxon';
 
 @Resolver()
 export class StatisticsResolver {
-  constructor(
-    protected readonly service: StatisticsService,
-    private readonly loader: DataLoader
-  ) {
-  }
+  constructor(protected readonly service: StatisticsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [StatisticByPeriodDto])
@@ -25,23 +22,25 @@ export class StatisticsResolver {
     @CurrentUser() user: User,
     @Args('interval', { nullable: true, defaultValue: 'month' }) interval: Interval = 'month',
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
-    @Args('currencyName', { nullable: true, description: "Currency short name, eg. USD" }) currencyName: string,
+    @Args('currencyName', { nullable: true, description: 'Currency short name, eg. USD' })
+    currencyName: string,
     @Args('type', { nullable: true, type: () => TransactionType }) type: TransactionType,
-    @Args('from', { nullable: true, description: "Unix timestamp" }) from: number,
-    @Args('to', { nullable: true, description: "Unix timestamp" }) to: number,
+    @Args('from', { nullable: true, description: 'Unix timestamp' }) from: number,
+    @Args('to', { nullable: true, description: 'Unix timestamp' }) to: number,
   ) {
     return this.service.getStatisticByPeriod(user, { interval });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [StatisticByCategoryDto], { description: "Statistic grouped by categories" })
+  @Query((returns) => [StatisticByCategoryDto], { description: 'Statistic grouped by categories' })
   public async statisticByCategory(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
-    @Args('currencyName', { nullable: true, description: "Currency short name, eg. USD" }) currencyName: string,
+    @Args('currencyName', { nullable: true, description: 'Currency short name, eg. USD' })
+    currencyName: string,
     @Args('type', { nullable: true, type: () => TransactionType }) type: TransactionType,
-    @Args('from', { nullable: true, description: "Unix timestamp" }) from: number,
-    @Args('to', { nullable: true, description: "Unix timestamp" }) to: number,
+    @Args('from', { nullable: true, description: 'Unix timestamp' }) from: number,
+    @Args('to', { nullable: true, description: 'Unix timestamp' }) to: number,
   ) {
     return this.service.getStatisticByCategory(user, { walletIds, currencyName, type, from, to });
   }
@@ -53,5 +52,21 @@ export class StatisticsResolver {
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
   ) {
     return this.service.getStatisticByCurrency(user, { walletIds });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Query((returns) => String)
+  public async generateHistory(
+    @CurrentUser() user: User,
+    @Args('walletId') walletId: string,
+    @Args('clearOldHistory') clearOldHistory: boolean,
+  ) {
+    try {
+      // @todo temporary endpoint
+      await this.service.generateHistory(user, walletId, clearOldHistory);
+      return 'OK';
+    } catch (e) {
+      return 'FAIL';
+    }
   }
 }

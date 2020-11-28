@@ -2,10 +2,7 @@ import { Skeleton } from 'antd';
 import { Axis, Chart, Geom, Legend, Tooltip } from 'bizcharts';
 import { chain } from 'lodash';
 import React, { FC } from 'react';
-import {
-  useGetStatisticByPeriodQuery,
-  GetStatisticByPeriodQuery,
-} from 'src/generated/graphql';
+import { useGetStatisticByPeriodQuery, GetStatisticByPeriodQuery } from 'src/generated/graphql';
 import moment from 'moment';
 
 function prepareData(data?: GetStatisticByPeriodQuery) {
@@ -42,7 +39,7 @@ export const MainPage: FC = () => {
         height={400}
         data={prepareData(data)}
         scale={{
-          date: { range: [0, 1] },
+          date: { range: [1, 0] },
         }}
         autoFit
       >
@@ -59,13 +56,7 @@ export const MainPage: FC = () => {
           crosshairs={{ type: 'y' }}
           style={{ color: 'red' }}
         />
-        <Geom
-          type="line"
-          position="date*amount"
-          size={2}
-          color={'currency'}
-          shape={'smooth'}
-        />
+        <Geom type="line" position="date*amount" size={2} color={'currency'} shape={'smooth'} />
         <Geom
           type="point"
           position="date*amount"

@@ -225,6 +225,7 @@ type Query {
     walletIds: [String!]
   ): [StatisticByCategory!]!
   statisticByCurrency(walletIds: [String!]): [StatisticByCurrency!]!
+  generateHistory(clearOldHistory: Boolean!, walletId: String!): String!
 }
 
 type Mutation {

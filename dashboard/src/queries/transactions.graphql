@@ -13,6 +13,7 @@ query getTransactions(
   $offset: Float
   $walletIds: [String!]
   $categoryIds: [String!]
+  $order: String
 ) {
   transactions(
     type: $type
@@ -22,6 +23,7 @@ query getTransactions(
     offset: $offset
     walletIds: $walletIds
     categoryIds: $categoryIds
+    order: $order
   ) {
     totalCount
     items {

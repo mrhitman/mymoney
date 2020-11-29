@@ -28,11 +28,19 @@ export class StatisticsService {
 
   public async getStatisticByPeriod(
     user: User,
-    params: { interval: Interval } = { interval: 'month' },
+    params: { interval: Interval; from?: number; to?: number } = { interval: 'month' },
   ) {
-    const items = await WalletHistory.query().where({ userId: user.id });
+    const query = WalletHistory.query().where({ userId: user.id });
 
-    return items;
+    if (params.from) {
+      query.where('createdAt', '>=', DateTime.fromSeconds(params.from).toRFC2822());
+    }
+
+    if (params.to) {
+      query.where('createdAt', '<=', DateTime.fromSeconds(params.to).toRFC2822());
+    }
+
+    return query;
   }
 
   public async generateHistory(user: User, walletId: string, clearOldHistory: boolean = false) {
@@ -69,7 +77,7 @@ export class StatisticsService {
         }
       });
 
-      const wh = await WalletHistory.query().insert({
+      await WalletHistory.query().insert({
         userId: user.id,
         walletId,
         pockets,
@@ -157,7 +165,7 @@ export class StatisticsService {
       .value();
   }
 
-  private async getTransactionsByDays(user: User, walletId) {
+  private async getTransactionsByDays(user: User, walletId: string) {
     const query = Transaction.query()
       .withGraphFetched('[currency]')
       .where({ userId: user.id })

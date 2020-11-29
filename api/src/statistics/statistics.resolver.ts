@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Interval } from 'common';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
@@ -10,7 +10,6 @@ import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
 import { StatisticsService } from './statistics.service';
-import { DateTime } from 'luxon';
 
 @Resolver()
 export class StatisticsResolver {
@@ -28,7 +27,7 @@ export class StatisticsResolver {
     @Args('from', { nullable: true, description: 'Unix timestamp' }) from: number,
     @Args('to', { nullable: true, description: 'Unix timestamp' }) to: number,
   ) {
-    return this.service.getStatisticByPeriod(user, { interval });
+    return this.service.getStatisticByPeriod(user, { interval, from, to });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -55,14 +54,14 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => String)
+  @Mutation((returns) => String)
   public async generateHistory(
     @CurrentUser() user: User,
     @Args('walletId') walletId: string,
     @Args('clearOldHistory') clearOldHistory: boolean,
   ) {
     try {
-      // @todo temporary endpoint
+      // @TODO: remove temporary endpoint
       await this.service.generateHistory(user, walletId, clearOldHistory);
       return 'OK';
     } catch (e) {

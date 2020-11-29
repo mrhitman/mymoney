@@ -1,5 +1,5 @@
-query GetStatisticByPeriod {
-  statisticByPeriod {
+query GetStatisticByPeriod($from: Float, $to: Float) {
+  statisticByPeriod(from: $from, to: $to) {
     walletId
     wallet {
       id

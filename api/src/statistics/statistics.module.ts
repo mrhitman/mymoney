@@ -8,16 +8,15 @@ import { StatisticsService } from './statistics.service';
 import { WalletHistoryResolver } from './wallet-history.resolver';
 
 @Module({
-  imports: [
-    CurrenciesModule
-  ],
+  imports: [CurrenciesModule],
   providers: [
     StatisticsResolver,
     StatisticsByCurrencyResolver,
     StatisticsService,
     WalletHistoryResolver,
     WalletsService,
-    DataLoader
+    DataLoader,
   ],
+  exports: [StatisticsService],
 })
-export class StatisticsModule { }
+export class StatisticsModule {}

@@ -26,15 +26,22 @@ export type BankConnection = {
 };
 
 
-export type User = {
-  __typename?: 'User';
+export type Currency = {
+  __typename?: 'Currency';
   id: Scalars['ID'];
-  firstName: Scalars['String'];
-  middleName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  imageUrl?: Maybe<Scalars['String']>;
-  additional: Scalars['JSON'];
-  email: Scalars['String'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  symbol: Scalars['String'];
+  code: Scalars['Float'];
+  rate: Scalars['Float'];
+};
+
+/** Statistic info about transactions */
+export type StatisticByCurrency = {
+  __typename?: 'StatisticByCurrency';
+  currencyId: Scalars['String'];
+  currency: Currency;
+  amount: Scalars['Float'];
 };
 
 export type IconDto = {
@@ -60,31 +67,12 @@ export enum CategoryType {
   Transfer = 'transfer'
 }
 
-export type BudgetCategory = {
-  __typename?: 'BudgetCategory';
+/** Statistic info about transactions */
+export type StatisticByCategory = {
+  __typename?: 'StatisticByCategory';
   categoryId: Scalars['String'];
   category: Category;
   amount: Scalars['Float'];
-  progress: Scalars['Float'];
-};
-
-export type Budget = {
-  __typename?: 'Budget';
-  id: Scalars['String'];
-  outcomes: Array<BudgetCategory>;
-  date: Scalars['DateTime'];
-  deadline: Scalars['DateTime'];
-};
-
-
-export type Currency = {
-  __typename?: 'Currency';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  symbol: Scalars['String'];
-  code: Scalars['Float'];
-  rate: Scalars['Float'];
 };
 
 export type Pocket = {
@@ -106,6 +94,44 @@ export type Wallet = {
   syncAt: Scalars['Int'];
   createdAt: Scalars['Int'];
 };
+
+/** Statistic info about transactions */
+export type StatisticByPeriod = {
+  __typename?: 'StatisticByPeriod';
+  walletId: Scalars['String'];
+  userId: Scalars['Float'];
+  pockets: Array<Pocket>;
+  createdAt: Scalars['Float'];
+  wallet: Wallet;
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  firstName: Scalars['String'];
+  middleName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  additional: Scalars['JSON'];
+  email: Scalars['String'];
+};
+
+export type BudgetCategory = {
+  __typename?: 'BudgetCategory';
+  categoryId: Scalars['String'];
+  category: Category;
+  amount: Scalars['Float'];
+  progress: Scalars['Float'];
+};
+
+export type Budget = {
+  __typename?: 'Budget';
+  id: Scalars['String'];
+  outcomes: Array<BudgetCategory>;
+  date: Scalars['DateTime'];
+  deadline: Scalars['DateTime'];
+};
+
 
 export type Transaction = {
   __typename?: 'Transaction';
@@ -158,32 +184,6 @@ export type GoalSaveResponse = {
   wallet: Wallet;
 };
 
-/** Statistic info about transactions */
-export type StatisticByCurrency = {
-  __typename?: 'StatisticByCurrency';
-  currencyId: Scalars['String'];
-  currency: Currency;
-  amount: Scalars['Float'];
-};
-
-/** Statistic info about transactions */
-export type StatisticByCategory = {
-  __typename?: 'StatisticByCategory';
-  categoryId: Scalars['String'];
-  category: Category;
-  amount: Scalars['Float'];
-};
-
-/** Statistic info about transactions */
-export type StatisticByPeriod = {
-  __typename?: 'StatisticByPeriod';
-  walletId: Scalars['String'];
-  userId: Scalars['Float'];
-  pockets: Array<Pocket>;
-  createdAt: Scalars['Float'];
-  wallet: Wallet;
-};
-
 export type Login = {
   __typename?: 'Login';
   accessToken: Scalars['ID'];
@@ -200,34 +200,24 @@ export type Refresh = {
 export type Query = {
   __typename?: 'Query';
   connectors: Array<BankConnection>;
+  currencies: Array<Currency>;
+  currency: Currency;
+  exchange: Scalars['Float'];
+  statisticByPeriod: Array<StatisticByPeriod>;
+  /** Statistic grouped by categories */
+  statisticByCategory: Array<StatisticByCategory>;
+  statisticByCurrency: Array<StatisticByCurrency>;
   profile: User;
   budgets: Array<Budget>;
   activeBudget: Budget;
   categories: Array<Category>;
   category: Category;
-  currencies: Array<Currency>;
-  currency: Currency;
-  exchange: Scalars['Float'];
   transactions: GetTransaction;
   transaction: Transaction;
   wallets: Array<Wallet>;
   wallet: Wallet;
   goals: Array<Goal>;
   goal: Array<Goal>;
-  statisticByPeriod: Array<StatisticByPeriod>;
-  /** Statistic grouped by categories */
-  statisticByCategory: Array<StatisticByCategory>;
-  statisticByCurrency: Array<StatisticByCurrency>;
-};
-
-
-export type QueryCategoriesArgs = {
-  type?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryCategoryArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -240,6 +230,40 @@ export type QueryExchangeArgs = {
   to: Scalars['String'];
   from: Scalars['String'];
   amount: Scalars['Float'];
+};
+
+
+export type QueryStatisticByPeriodArgs = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  interval?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryStatisticByCategoryArgs = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryStatisticByCurrencyArgs = {
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryCategoriesArgs = {
+  type?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -270,30 +294,6 @@ export type QueryGoalArgs = {
   id: Scalars['String'];
 };
 
-
-export type QueryStatisticByPeriodArgs = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-  interval?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryStatisticByCategoryArgs = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
-
-export type QueryStatisticByCurrencyArgs = {
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   import: Scalars['String'];
@@ -303,6 +303,7 @@ export type Mutation = {
   disconnectMonobank: Scalars['String'];
   connectPrivat24: Scalars['String'];
   disconnectPrivat24: Scalars['String'];
+  generateHistory: Scalars['String'];
   budgetAddOutcomeCategory: Budget;
   budgetRemoveOutcomeCategory: Budget;
   budgetAddIncomeCategory: Budget;
@@ -357,6 +358,12 @@ export type MutationConnectPrivat24Args = {
 
 export type MutationDisconnectPrivat24Args = {
   merchant_id: Scalars['String'];
+};
+
+
+export type MutationGenerateHistoryArgs = {
+  clearOldHistory: Scalars['Boolean'];
+  walletId: Scalars['String'];
 };
 
 
@@ -633,7 +640,10 @@ export type GetStatisticByCurrencyQuery = (
   )> }
 );
 
-export type GetStatisticByPeriodQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetStatisticByPeriodQueryVariables = Exact<{
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+}>;
 
 
 export type GetStatisticByPeriodQuery = (
@@ -762,6 +772,7 @@ export type GetTransactionsQueryVariables = Exact<{
   offset?: Maybe<Scalars['Float']>;
   walletIds?: Maybe<Array<Scalars['String']>>;
   categoryIds?: Maybe<Array<Scalars['String']>>;
+  order?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1045,8 +1056,8 @@ export type GetStatisticByCurrencyQueryHookResult = ReturnType<typeof useGetStat
 export type GetStatisticByCurrencyLazyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyLazyQuery>;
 export type GetStatisticByCurrencyQueryResult = Apollo.QueryResult<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>;
 export const GetStatisticByPeriodDocument = gql`
-    query GetStatisticByPeriod {
-  statisticByPeriod {
+    query GetStatisticByPeriod($from: Float, $to: Float) {
+  statisticByPeriod(from: $from, to: $to) {
     walletId
     wallet {
       id
@@ -1077,6 +1088,8 @@ export const GetStatisticByPeriodDocument = gql`
  * @example
  * const { data, loading, error } = useGetStatisticByPeriodQuery({
  *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
  *   },
  * });
  */
@@ -1347,8 +1360,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!]) {
-  transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds) {
+    query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!], $order: String) {
+  transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds, order: $order) {
     totalCount
     items {
       id
@@ -1403,6 +1416,7 @@ export const GetTransactionsDocument = gql`
  *      offset: // value for 'offset'
  *      walletIds: // value for 'walletIds'
  *      categoryIds: // value for 'categoryIds'
+ *      order: // value for 'order'
  *   },
  * });
  */

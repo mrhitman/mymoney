@@ -55,7 +55,7 @@ export class TransactionsResolver {
     }
 
     if (order) {
-      query.orderBy('id', order);
+      query.orderBy('date', order);
     }
 
     return {

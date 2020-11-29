@@ -77,12 +77,11 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
   return (
     <AntdLayout>
       <AntdLayout.Header className="header">
-        <div className="logo" />
+        <Link to="/">
+          <div className="logo" />
+        </Link>
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
-          <Menu.SubMenu
-            key="1"
-            icon={<Avatar src={data?.profile.imageUrl?.toString()} />}
-          >
+          <Menu.SubMenu key="1" icon={<Avatar src={data?.profile.imageUrl?.toString()} />}>
             <Menu.Item key="2" icon={<SettingOutlined />}>
               Settings
             </Menu.Item>
@@ -101,11 +100,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             selectedKeys={activePage ? [activePage] : activePage}
             style={{ height: '100vh', borderRight: 0 }}
           >
-            <Menu.SubMenu
-              key="ledgers"
-              icon={<DollarOutlined />}
-              title="Ledgers"
-            >
+            <Menu.SubMenu key="ledgers" icon={<DollarOutlined />} title="Ledgers">
               <Menu.Item key="accounting" icon={<WalletOutlined />}>
                 <Link to="/accounting">Wallets</Link>
               </Menu.Item>
@@ -113,11 +108,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 Goals
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu
-              key="transactions"
-              icon={<LaptopOutlined />}
-              title="Transactions"
-            >
+            <Menu.SubMenu key="transactions" icon={<LaptopOutlined />} title="Transactions">
               <Menu.Item key="incomes" icon={<RiseOutlined />}>
                 <Link to="/incomes">Incomes</Link>
               </Menu.Item>
@@ -139,15 +130,8 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 Archive
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu
-              key="analys"
-              icon={<AreaChartOutlined />}
-              title="Statistics"
-            >
-              <Menu.Item
-                key="analys-by-cateogories"
-                icon={<PieChartOutlined />}
-              >
+            <Menu.SubMenu key="analys" icon={<AreaChartOutlined />} title="Statistics">
+              <Menu.Item key="analys-by-cateogories" icon={<PieChartOutlined />}>
                 <Link to="/analysis-category">By Categories</Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>

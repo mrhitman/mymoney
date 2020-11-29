@@ -8,7 +8,7 @@ export const MainPage: FC = () => {
     <>
       <Row>
         <Col span={12}>
-          <LastTransactions count={7} />
+          <LastTransactions count={10} />
         </Col>
         <Col span={12}>
           <WalletsDinamic />

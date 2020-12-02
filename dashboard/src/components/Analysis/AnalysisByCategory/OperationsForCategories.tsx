@@ -1,18 +1,18 @@
-import { Popover, Table, Col, Row } from 'antd';
-import React, { FC } from 'react';
-import { useGetTransactionsQuery } from 'src/generated/graphql';
-import Icon from 'src/components/misc/Icon';
+import { Col, Popover, Row, Table } from 'antd';
 import moment from 'moment';
+import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import Icon from 'src/components/misc/Icon';
+import { useGetTransactionsQuery } from 'src/generated/graphql';
 
-interface CategoryOperationsProps {
+interface OperationsForCategoriesProps {
   from?: number;
   to?: number;
   walletIds: string[];
   categoryId: string;
 }
 
-const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
+const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
   const { t } = useTranslation();
   const { loading, data } = useGetTransactionsQuery({
     variables: {
@@ -49,10 +49,7 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
       <Table.Column
         title="Wallet"
         render={(transaction) => {
-          return [
-            transaction.sourceWallet?.name,
-            transaction.destinationWallet?.name,
-          ].join(' ');
+          return [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ');
         }}
       />
       <Table.Column
@@ -121,11 +118,7 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
         key="description"
         width="24%"
         render={(desc) =>
-          desc ? (
-            desc
-          ) : (
-            <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-          )
+          desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
         }
       />
       <Table.Column
@@ -138,4 +131,4 @@ const CategoryOperations: FC<CategoryOperationsProps> = (props) => {
   );
 };
 
-export default CategoryOperations;
+export default OperationsForCategories;

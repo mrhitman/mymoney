@@ -1,213 +1,177 @@
-import { SyncOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
   Col,
   DatePicker,
+  Divider,
   Drawer,
   Dropdown,
   List,
   Menu,
   Row,
-  Spin,
 } from 'antd';
-import { DonutChart } from 'bizcharts';
+import { Axis, Chart, Coordinate, Interaction, Interval, Legend, Tooltip } from 'bizcharts';
 import { round } from 'lodash';
 import moment from 'moment';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  AnalysByCategoriesQuery,
   TransactionType,
-  useAnalysByCategoriesLazyQuery,
+  useAnalysByCategoriesQuery,
 } from 'src/generated/graphql';
-import CategoryOperations from './CategoryOperations';
+import OperationsForCategories from './OperationsForCategories';
+
+const cols = {
+  percent: {
+    formatter: (val: number) => round(val * 100, 2) + '%',
+  },
+};
+
+function getSum(data?: AnalysByCategoriesQuery) {
+  return data ? data.statisticByCategory.reduce((acc, s) => acc + Math.abs(s.amount), 0) : 1;
+}
 
 export const AnalysisByCategory: FC = () => {
-  const [type, setType] = useState<TransactionType>(TransactionType.Outcome);
-  const [from, setFrom] = useState<moment.Moment | null>(
-    moment().subtract(1, 'week'),
-  );
-  const [to, setTo] = useState<moment.Moment | null>(moment());
-  const [selected, setSelected] = useState<any | undefined>();
-  const [walletIgnoreIds, setWalletIgnoreIds] = useState<string[]>([]);
   const { t } = useTranslation();
-
-  const [getData, { data, loading }] = useAnalysByCategoriesLazyQuery();
-  const doRefetch = () => {
-    getData({
-      variables: {
-        type,
-        from: from?.unix(),
-        to: to?.unix(),
-        walletIds: data?.wallets
-          .map((w) => w.id)
-          .filter((id) => !walletIgnoreIds.includes(id)),
-      },
-      context: {
-        headers: {
-          Authorization: localStorage.getItem('accessToken'),
-        },
-      },
-    });
-  };
-
-  useEffect(doRefetch, []);
+  const [from, setFrom] = useState<moment.Moment | null>(moment().subtract(1, 'week'));
+  const [to, setTo] = useState<moment.Moment | null>(moment());
+  const [selected, setSelected] = useState<null | string>(null);
+  const [type, setType] = useState(TransactionType.Outcome);
+  const [walletIgnoreIds, setWalletIgnoreIds] = useState<string[]>([]);
+  const { data, refetch } = useAnalysByCategoriesQuery({
+    variables: {
+      from: from?.unix(),
+      to: to?.unix(),
+      type,
+      walletIds: walletIgnoreIds.length ? walletIgnoreIds : undefined,
+    },
+  });
+  const total = getSum(data);
   return (
     <>
       <Row>
-        <Col span={6}>
-          <Row>
-            <Col>
-              <DatePicker.RangePicker
-                showTime
-                value={[from, to]}
-                ranges={{
-                  Today: [
-                    moment().utc().startOf('day'),
-                    moment().utc().endOf('day'),
-                  ],
-                  'This Week': [
-                    moment().utc().startOf('week'),
-                    moment().utc().endOf('week'),
-                  ],
-                  'This Month': [
-                    moment().utc().startOf('month'),
-                    moment().utc().endOf('month'),
-                  ],
-                  'Last 7 Days': [
-                    moment().utc().subtract(7, 'days'),
-                    moment().endOf('day'),
-                  ],
-                  'Last 30 Days': [
-                    moment().utc().subtract(30, 'days'),
-                    moment().utc().endOf('day'),
-                  ],
-                }}
-                onCalendarChange={(values) => {
-                  setFrom(values?.[0] || null);
-                  setTo(values?.[1] || null);
-                }}
-              />
-              <Dropdown
-                overlay={() => (
-                  <Menu>
-                    <Menu.Item
-                      key="income"
-                      onClick={() => setType(TransactionType.Income)}
-                    >
-                      Income
-                    </Menu.Item>
-                    <Menu.Item
-                      key="outcome"
-                      onClick={() => setType(TransactionType.Outcome)}
-                    >
-                      Outcome
-                    </Menu.Item>
-                  </Menu>
-                )}
-                trigger={['click']}
-                placement="bottomCenter"
-              >
-                <Button className="ant-dropdown-link" onClick={doRefetch}>
-                  {type}
-                </Button>
-              </Dropdown>
-              <Button>
-                <SyncOutlined />
-              </Button>
-            </Col>
-            <Col span={24}>
-              <List
-                bordered
-                dataSource={data?.wallets}
-                footer={<Button onClick={doRefetch}>{t('apply')}</Button>}
-                renderItem={(wallet) => (
-                  <List.Item key={wallet.id}>
-                    <Checkbox
-                      checked={!walletIgnoreIds.includes(wallet.id)}
-                      onChange={(e) =>
-                        setWalletIgnoreIds(
-                          !e.target.checked
-                            ? [...walletIgnoreIds, wallet.id]
-                            : walletIgnoreIds.filter((id) => id !== wallet.id),
-                        )
-                      }
-                    >
-                      {wallet.name} {wallet.description}
-                    </Checkbox>
-                  </List.Item>
-                )}
-              />
-            </Col>
-          </Row>
-        </Col>
-        <Col span={18}>
-          <Row align="middle" justify="center" gutter={[10, 10]}>
-            <Col span={15}>
-              <Spin spinning={loading}>
-                <DonutChart
-                  animation={false}
-                  events={{
-                    onRingClick: (event) => setSelected(event.data.id),
-                  }}
-                  data={
-                    data?.statisticByCategory.map((item) => ({
-                      id: item.category.id,
-                      type: t(item.category.name) as string,
-                      value: round(Math.abs(item.amount), 1),
-                    })) || []
+        <Col span={8}>
+          <DatePicker.RangePicker
+            showTime
+            value={[from, to]}
+            ranges={{
+              Today: [moment().utc().startOf('day'), moment().utc().endOf('day')],
+              'This Week': [moment().utc().startOf('week'), moment().utc().endOf('week')],
+              'This Month': [moment().utc().startOf('month'), moment().utc().endOf('month')],
+              'Last 7 Days': [moment().utc().subtract(7, 'days'), moment().endOf('day')],
+              'Last 30 Days': [moment().utc().subtract(30, 'days'), moment().utc().endOf('day')],
+            }}
+            onCalendarChange={(values) => {
+              setFrom(values?.[0] || null);
+              setTo(values?.[1] || null);
+            }}
+          />
+          <Divider />
+          <List
+            dataSource={data?.wallets}
+            renderItem={(wallet) => (
+              <List.Item key={wallet.id}>
+                <Checkbox
+                  checked={!walletIgnoreIds?.includes(wallet.id)}
+                  onChange={(e) =>
+                    setWalletIgnoreIds(
+                      !e.target.checked
+                        ? [...walletIgnoreIds, wallet.id]
+                        : walletIgnoreIds.filter((id) => id !== wallet.id),
+                    )
                   }
-                  height={800}
-                  title={{
-                    visible: true,
-                    text: 'Analysis by category (UAH)',
-                  }}
-                  statistic={{
-                    visible: true,
-                    content: {
-                      name: 'Total in UAH',
-                      value: data?.statisticByCategory
-                        .reduce((acc, v) => acc + Math.abs(v.amount), 0)
-                        .toFixed(1),
-                    },
-                  }}
-                  forceFit
-                  radius={0.95}
-                  padding="auto"
-                  angleField="value"
-                  colorField="type"
-                />
-              </Spin>
-            </Col>
-          </Row>
+                >
+                  {wallet.name} {wallet.description}
+                </Checkbox>
+              </List.Item>
+            )}
+          />
+          <Divider />
+          <Dropdown
+            overlay={() => (
+              <Menu>
+                <Menu.Item key="income" onClick={() => setType(TransactionType.Income)}>
+                  Income
+                </Menu.Item>
+                <Menu.Item key="outcome" onClick={() => setType(TransactionType.Outcome)}>
+                  Outcome
+                </Menu.Item>
+              </Menu>
+            )}
+            trigger={['click']}
+            placement="bottomCenter"
+          >
+            <Button className="ant-dropdown-link" onClick={() => refetch()}>
+              Show {type} categories
+            </Button>
+          </Dropdown>
+          <Divider />
+        </Col>
+        <Col span={16}>
+          <Chart
+            height={global.screen.availHeight * 0.75}
+            data={data?.statisticByCategory.map((s) => ({
+              item: t(s.category.name),
+              categoryId: s.category.id,
+              count: round(Math.abs(s.amount), 2),
+              percent: Math.abs(s.amount) / total,
+            }))}
+            onClick={(event: { data: { data: { categoryId: string } } }) =>
+              setSelected(event?.data?.data?.categoryId)
+            }
+            scale={cols}
+            autoFit
+          >
+            <Legend position="right" />
+            <Coordinate type="theta" radius={0.75} />
+            <Tooltip />
+            <Axis visible={false} />
+            <Interval
+              position="percent"
+              adjust="stack"
+              color="item"
+              style={{
+                lineWidth: 1,
+                stroke: '#fff',
+              }}
+              label={[
+                'count',
+                {
+                  content: (data) => `${data.item}: ${round(data.percent * 100, 2)}%`,
+                },
+              ]}
+            />
+            <Interaction type="element-single-selected" />
+          </Chart>
+          {selected && (
+            <Drawer
+              placement="bottom"
+              visible={!!selected}
+              height={400}
+              keyboard
+              closable
+              onClose={() => {
+                setSelected(null);
+              }}
+            >
+              <OperationsForCategories
+                from={from?.unix()}
+                to={to?.unix()}
+                walletIds={
+                  data?.wallets.map((w) => w.id).filter((id) => !walletIgnoreIds?.includes(id)) ||
+                  []
+                }
+                categoryId={
+                  data?.statisticByCategory.find((s) => s.category.id === selected)!.category.id!
+                }
+              />
+            </Drawer>
+          )}
         </Col>
       </Row>
-      {selected && (
-        <Drawer
-          placement="bottom"
-          visible={!!selected}
-          height={400}
-          keyboard
-          closable
-          onClose={() => {
-            setSelected(null);
-          }}
-        >
-          <CategoryOperations
-            from={from?.unix()}
-            to={to?.unix()}
-            walletIds={
-              data?.wallets
-                .map((w) => w.id)
-                .filter((id) => !walletIgnoreIds.includes(id)) || []
-            }
-            categoryId={
-              data?.statisticByCategory.find((s) => s.category.id === selected)!
-                .category.id!
-            }
-          />
-        </Drawer>
-      )}
     </>
   );
 };
+
+export default AnalysisByCategory;

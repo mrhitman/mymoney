@@ -28,9 +28,7 @@ export const CategoriesDinamic: FC = () => {
     },
   });
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useEffect(getData, []);
 
   return (
     <Chart

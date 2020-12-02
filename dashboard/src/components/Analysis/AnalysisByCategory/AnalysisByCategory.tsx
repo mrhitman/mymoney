@@ -138,7 +138,7 @@ export const AnalysisByCategory: FC = () => {
               label={[
                 'count',
                 {
-                  content: (data) => `${data.item}: ${round(data.percent * 100, 2)}%`,
+                  content: (data) => `${data.item}: ${round(data.count, 2)} UAH`,
                 },
               ]}
             />

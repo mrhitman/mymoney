@@ -1,30 +1,32 @@
 import { Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC } from 'react';
-import { useUpdateWalletMutation } from 'src/generated/graphql';
+import { useUpdateWalletMutation, GetWalletsQuery } from 'src/generated/graphql';
 import { UpdateWalletValues } from './types';
 import UpdateWalletForm from './UpdateWalletForm';
 
-const initialValues: UpdateWalletValues = {
-  id: '',
-  name: '',
-  description: '',
-  allowNegativeBalance: true,
-  useInBalance: true,
-  useInAnalytics: true,
-  pockets: [],
-  tags: [],
-};
-
 export interface UpdateWalletProps {
   visible: boolean;
+  wallet: GetWalletsQuery['wallets'][number];
   onClose: () => void;
 }
 
-export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose }) => {
+export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose, wallet }) => {
   const [updateWallet] = useUpdateWalletMutation();
+  const initialValues: UpdateWalletValues = {
+    id: wallet.id,
+    name: wallet.name,
+    description: wallet.description || '',
+    allowNegativeBalance: false,
+    useInBalance: true,
+    useInAnalytics: true,
+    pockets: wallet.pockets.map((p) => ({ currencyId: p.currency.id, amount: p.amount })),
+    tags: [],
+  };
+
   const formik = useFormik({
     initialValues,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       await updateWallet({
         variables: {
@@ -46,7 +48,7 @@ export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose }) => {
   return (
     <div>
       <Modal
-        title="Update new wallet"
+        title="Update wallet"
         width={720}
         visible={visible}
         onOk={() => formik.handleSubmit()}

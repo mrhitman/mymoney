@@ -19,11 +19,12 @@ const UpdateWalletForm: FC<UpdateWalletFormProps> = ({ formik }) => {
 
   return (
     <Form {...formLayout} onSubmitCapture={formik.handleSubmit}>
-      <Form.Item label="Name" name="name">
+      <Form.Item label="Name" name="name" initialValue={formik.values.name}>
         <Input onChange={(e) => formik.setFieldValue('name', e.target.value)} />
       </Form.Item>
-      <Form.Item label="Description" name="description">
+      <Form.Item label="Description" name="description" initialValue={formik.values.description}>
         <Input.TextArea
+          value={formik.values.description}
           onChange={(e) => formik.setFieldValue('description', e.target.value)}
         />
       </Form.Item>
@@ -58,9 +59,7 @@ const UpdateWalletForm: FC<UpdateWalletFormProps> = ({ formik }) => {
           dataSource={formik.values.pockets}
           locale={{ emptyText: 'No pockets added yet' }}
           loading={loading}
-          renderItem={(pocket) => (
-            <PocketItem formik={formik} pocket={pocket} />
-          )}
+          renderItem={(pocket) => <PocketItem formik={formik} pocket={pocket} />}
         />
         <AutoComplete
           value={currencyFilter}
@@ -76,16 +75,11 @@ const UpdateWalletForm: FC<UpdateWalletFormProps> = ({ formik }) => {
             setCurrencyFilter('');
           }}
           options={data?.currencies
-            .filter(
-              (c) =>
-                !formik.values.pockets.map((p) => p.currencyId).includes(c.id),
-            )
+            .filter((c) => !formik.values.pockets.map((p) => p.currencyId).includes(c.id))
             .filter(
               (c) =>
                 c.name.toLowerCase().includes(currencyFilter.toLowerCase()) ||
-                c.description
-                  ?.toLowerCase()
-                  .includes(currencyFilter.toLowerCase()) ||
+                c.description?.toLowerCase().includes(currencyFilter.toLowerCase()) ||
                 c.symbol.toLowerCase().includes(currencyFilter.toLowerCase()),
             )
             .map((c) => ({
@@ -93,10 +87,7 @@ const UpdateWalletForm: FC<UpdateWalletFormProps> = ({ formik }) => {
               label: (
                 <div>
                   <span style={{ marginRight: 10 }}>
-                    <ReactCountryFlag
-                      className="emojiFlag"
-                      countryCode={c.name.slice(0, 2)}
-                    />
+                    <ReactCountryFlag className="emojiFlag" countryCode={c.name.slice(0, 2)} />
                   </span>
                   <span>{c.description} </span>
                   <span>({c.name})</span>
@@ -119,33 +110,19 @@ const UpdateWalletForm: FC<UpdateWalletFormProps> = ({ formik }) => {
           >
             <Checkbox
               defaultChecked={formik.values.allowNegativeBalance}
-              onChange={(e) =>
-                formik.setFieldValue('allowNegativeBalance', e.target.checked)
-              }
+              onChange={(e) => formik.setFieldValue('allowNegativeBalance', e.target.checked)}
             />
           </Form.Item>
-          <Form.Item
-            label="Use in balance"
-            name="useInBalance"
-            labelCol={{ span: 22 }}
-          >
+          <Form.Item label="Use in balance" name="useInBalance" labelCol={{ span: 22 }}>
             <Checkbox
               defaultChecked={formik.values.useInBalance}
-              onChange={(e) =>
-                formik.setFieldValue('useInBalance', e.target.checked)
-              }
+              onChange={(e) => formik.setFieldValue('useInBalance', e.target.checked)}
             />
           </Form.Item>
-          <Form.Item
-            label="Use in analytics"
-            name="useInAnalytics"
-            labelCol={{ span: 22 }}
-          >
+          <Form.Item label="Use in analytics" name="useInAnalytics" labelCol={{ span: 22 }}>
             <Checkbox
               defaultChecked={formik.values.useInAnalytics}
-              onChange={(e) =>
-                formik.setFieldValue('useInAnalytics', e.target.checked)
-              }
+              onChange={(e) => formik.setFieldValue('useInAnalytics', e.target.checked)}
             />
           </Form.Item>
         </Collapse.Panel>

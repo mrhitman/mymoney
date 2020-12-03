@@ -2,13 +2,22 @@ import { Breadcrumb, Row, Skeleton } from 'antd';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useGetWalletsQuery } from 'src/generated/graphql';
+import {
+  GetWalletsQuery,
+  useDeleteWalletMutation,
+  useGetWalletsQuery,
+} from 'src/generated/graphql';
 import AddWallet from './AddWallet';
 import EmptyWalletCard from './EmptyWalletCard';
+import UpdateWallet from './UpdateWallet';
 import WalletCard from './WalletCard';
 
 export const Accounting: FC = () => {
-  const [visible, setVisible] = useState(false);
+  const [state, setState] = useState<{
+    name: 'edit' | 'create';
+    wallet?: GetWalletsQuery['wallets'][number];
+  } | null>(null);
+  const [deleteWallet] = useDeleteWalletMutation();
   const { loading, data, refetch } = useGetWalletsQuery({
     context: {
       headers: {
@@ -33,18 +42,32 @@ export const Accounting: FC = () => {
             <WalletCard
               key={wallet.id}
               wallet={wallet}
-              onDelete={() => refetch()}
+              onEdit={async () => setState({ name: 'edit', wallet })}
+              onDelete={async (id) => {
+                await deleteWallet({ variables: { id } });
+                await refetch();
+              }}
               loading={loading}
             />
           ))}
-          <EmptyWalletCard onClick={() => setVisible(true)} />
+          <EmptyWalletCard onClick={() => setState({ name: 'create' })} />
           <AddWallet
-            visible={visible}
-            onClose={() => {
-              setVisible(false);
-              refetch();
+            visible={state?.name === 'create'}
+            onClose={async () => {
+              setState(null);
+              await refetch();
             }}
           />
+          {state?.wallet && (
+            <UpdateWallet
+              visible={state?.name === 'edit'}
+              wallet={state?.wallet}
+              onClose={async () => {
+                setState(null);
+                await refetch();
+              }}
+            />
+          )}
         </Row>
       </Skeleton>
     </>

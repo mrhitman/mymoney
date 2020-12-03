@@ -1,4 +1,4 @@
-import { PocketInput } from "src/generated/graphql";
+import { PocketInput } from 'src/generated/graphql';
 
 export interface AddWalletPocket {
   currencyId: string;

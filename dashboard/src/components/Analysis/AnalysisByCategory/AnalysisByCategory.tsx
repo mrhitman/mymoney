@@ -50,8 +50,8 @@ export const AnalysisByCategory: FC = () => {
   const total = getSum(data);
   return (
     <>
-      <Row>
-        <Col span={8}>
+      <Row gutter={22}>
+        <Col span={4}>
           <DatePicker.RangePicker
             showTime
             value={[from, to]}
@@ -108,7 +108,7 @@ export const AnalysisByCategory: FC = () => {
           </Dropdown>
           <Divider />
         </Col>
-        <Col span={16}>
+        <Col span={20}>
           <Chart
             height={global.screen.availHeight * 0.75}
             data={data?.statisticByCategory.map((s) => ({

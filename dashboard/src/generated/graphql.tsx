@@ -702,6 +702,19 @@ export type GetCurrenciesQuery = (
   )> }
 );
 
+export type DeleteWalletMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteWalletMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteWallet: (
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id'>
+  ) }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1216,6 +1229,38 @@ export function useGetCurrenciesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCurrenciesQueryHookResult = ReturnType<typeof useGetCurrenciesQuery>;
 export type GetCurrenciesLazyQueryHookResult = ReturnType<typeof useGetCurrenciesLazyQuery>;
 export type GetCurrenciesQueryResult = Apollo.QueryResult<GetCurrenciesQuery, GetCurrenciesQueryVariables>;
+export const DeleteWalletDocument = gql`
+    mutation deleteWallet($id: String!) {
+  deleteWallet(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteWalletMutationFn = Apollo.MutationFunction<DeleteWalletMutation, DeleteWalletMutationVariables>;
+
+/**
+ * __useDeleteWalletMutation__
+ *
+ * To run a mutation, you first call `useDeleteWalletMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWalletMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWalletMutation, { data, loading, error }] = useDeleteWalletMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteWalletMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWalletMutation, DeleteWalletMutationVariables>) {
+        return Apollo.useMutation<DeleteWalletMutation, DeleteWalletMutationVariables>(DeleteWalletDocument, baseOptions);
+      }
+export type DeleteWalletMutationHookResult = ReturnType<typeof useDeleteWalletMutation>;
+export type DeleteWalletMutationResult = Apollo.MutationResult<DeleteWalletMutation>;
+export type DeleteWalletMutationOptions = Apollo.BaseMutationOptions<DeleteWalletMutation, DeleteWalletMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(loginData: {email: $email, password: $password}) {

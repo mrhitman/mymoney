@@ -1,23 +1,12 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Divider,
-  List,
-  Row,
-  Typography,
-} from 'antd';
-import React, { FC } from 'react';
+import { Avatar, Button, Card, Col, Divider, List, Row, Typography, Popconfirm } from 'antd';
+import React, { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GetWalletsQuery } from 'src/generated/graphql';
+import { GetWalletsQuery, useDeleteWalletMutation } from 'src/generated/graphql';
 
 export const icons: Record<string, string> = {
-  'monobank-black':
-    'https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png',
-  'Privat24 Card':
-    'https://xpc.com.ua/image/catalog/general/page/a_icon/privat24.svg',
+  'monobank-black': 'https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png',
+  'Privat24 Card': 'https://xpc.com.ua/image/catalog/general/page/a_icon/privat24.svg',
   'default-card':
     'https://www.nicepng.com/png/full/104-1044427_png-library-download-drawing-at-getdrawings-com-free.png',
 };
@@ -27,9 +16,13 @@ type Wallet = Required<GetWalletsQuery>['wallets'][number];
 interface WalletCardProps {
   wallet: Wallet;
   loading: boolean;
+  onDelete: (id: string) => void;
 }
 
-const WalletCard: FC<WalletCardProps> = ({ wallet, loading }) => {
+const WalletCard: FC<WalletCardProps> = ({ wallet, loading, onDelete }) => {
+  const [edit, setEdit] = useState(false);
+  const [deleteWallet] = useDeleteWalletMutation();
+
   return (
     <Col key={wallet.id} id={wallet.id} {...layout}>
       <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
@@ -51,15 +44,22 @@ const WalletCard: FC<WalletCardProps> = ({ wallet, loading }) => {
               <Button
                 icon={<EditOutlined />}
                 onClick={(e) => {
+                  setEdit(true);
                   e.preventDefault();
                 }}
               />
-              <Button
-                icon={<DeleteOutlined />}
-                onClick={(e) => {
-                  e.preventDefault();
+              <Popconfirm
+                title="Are you sure to delete this wallet?"
+                onConfirm={async (e) => {
+                  e?.preventDefault();
+                  await deleteWallet({ variables: { id: wallet.id } });
+                  onDelete(wallet.id);
                 }}
-              />
+                okText="Yes, I want"
+                cancelText="No"
+              >
+                <Button icon={<DeleteOutlined />} />
+              </Popconfirm>
             </Col>
           </Row>
           <Divider />
@@ -69,8 +69,7 @@ const WalletCard: FC<WalletCardProps> = ({ wallet, loading }) => {
               <Row>
                 <Col offset={1}>
                   <Typography>
-                    {pocket.currency.symbol} {pocket.amount}{' '}
-                    {pocket.currency.name}
+                    {pocket.currency.symbol} {pocket.amount} {pocket.currency.name}
                   </Typography>
                 </Col>
               </Row>

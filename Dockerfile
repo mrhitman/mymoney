@@ -1,7 +1,7 @@
 FROM node:12-alpine as stage
 RUN mkdir /opt/mymoney
 WORKDIR /opt/mymoney
-
+RUN printenv 
 COPY api/src api/src
 COPY api/nest-cli.json api/nest-cli.json
 COPY api/tsconfig.build.json api/tsconfig.build.json
@@ -35,7 +35,7 @@ RUN yarn install
 RUN npm i -g lerna
 
 RUN cd common && ls -al && yarn build
-RUN cd dashboard && yarn build --max_old_space_size=8192 -p
+RUN cd dashboard && REACT_APP_SERVER=$REACT_APP_SERVER REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID yarn build --max_old_space_size=8192 -p
 RUN cd api && yarn build
 RUN lerna bootstrap --nohoist=**
 

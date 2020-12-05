@@ -15,6 +15,15 @@ COPY common/package.json common/package.json
 COPY common/responses.d.ts common/responses.d.ts
 COPY common/tsconfig.build.json common/tsconfig.build.json
 COPY common/tsconfig.json common/tsconfig.json
+
+COPY dashboard/src dashboard/src
+COPY dashboard/public dashboard/public
+COPY dashboard/.eslintignore dashboard/.eslintignore
+COPY dashboard/.eslintrc.js dashboard/.eslintrc.js
+COPY dashboard/config-overrides.js dashboard/config-overrides.js
+COPY dashboard/package.json dashboard/package.json
+COPY dashboard/tsconfig.json dashboard/tsconfig.json
+
 COPY package.json package.json
 COPY tsconfig.json tsconfig.json
 COPY tsconfig.build.json tsconfig.build.json
@@ -27,6 +36,7 @@ RUN yarn install
 RUN npm i -g lerna
 
 RUN cd common && ls -al && yarn build
+RUN cd dashboard && yarn build --max_old_space_size=8192 -p
 RUN cd api && yarn build
 RUN lerna bootstrap --nohoist=**
 

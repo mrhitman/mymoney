@@ -78,7 +78,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
     <AntdLayout>
       <AntdLayout.Header className="header">
         <Link to="/">
-          <div className="logo" />
+          <div className="logo" />v 0.0.1
         </Link>
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
           <Menu.SubMenu key="1" icon={<Avatar src={data?.profile.imageUrl?.toString()} />}>

@@ -7,7 +7,6 @@ COPY api/nest-cli.json api/nest-cli.json
 COPY api/tsconfig.build.json api/tsconfig.build.json
 COPY api/tsconfig.json api/tsconfig.json
 COPY api/package.json api/package.json
-COPY api/static api/static
 
 COPY common/src common/src
 COPY common/translations common/translations
@@ -29,7 +28,6 @@ COPY tsconfig.json tsconfig.json
 COPY tsconfig.build.json tsconfig.build.json
 COPY lerna.json lerna.json
 COPY yarn.lock yarn.lock
-RUN rm -rf api/static && cp dashboard/build api/static
 
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*

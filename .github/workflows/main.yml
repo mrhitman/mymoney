@@ -2,15 +2,11 @@ name: Deploy
 
 on:
   push:
-    branch:
+    branches:
       - master
 
 jobs:
   build:
-    env:
-      REACT_APP_SERVER: 'https://mymoney-server-api.herokuapp.com/'
-      REACT_APP_GOOGLE_CLIENT_ID: '172140808548-71g0juh12o6o8jltjkp9pnmq76lkht9v'
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,4 +16,8 @@ jobs:
           heroku_app_name: 'mymoney-server-api'
           heroku_email: 'kabalx47@gmail.com'
           usedocker: true
+        env:
+          REACT_APP_SERVER: 'https://mymoney-server-api.herokuapp.com/'
+          REACT_APP_GOOGLE_CLIENT_ID: '172140808548-71g0juh12o6o8jltjkp9pnmq76lkht9v' 
+          HD_VERSION: ${{ github.sha }} 
       - run: heroku run yarn migrate

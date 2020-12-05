@@ -16,4 +16,5 @@ jobs:
           heroku_app_name: 'mymoney-server-api'
           heroku_email: 'kabalx47@gmail.com'
           usedocker: true
+          dontuseforce: true 
       - run: heroku run yarn migrate

@@ -29,6 +29,7 @@ COPY tsconfig.json tsconfig.json
 COPY tsconfig.build.json tsconfig.build.json
 COPY lerna.json lerna.json
 COPY yarn.lock yarn.lock
+RUN rm -rf api/static && cp dashboard/build api/static
 
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
@@ -50,7 +51,7 @@ COPY --from=stage /opt/mymoney/api/package.json api/package.json
 COPY --from=stage /opt/mymoney/api/tsconfig.json api/tsconfig.json
 COPY --from=stage /opt/mymoney/api/nest-cli.json api/nest-cli.json
 COPY --from=stage /opt/mymoney/api/node_modules api/node_modules
-COPY --from=stage /opt/mymoney/dashboard/build api/static
+COPY --from=stage /opt/mymoney/api/static api/static
 COPY --from=stage /opt/mymoney/common api/node_modules/common
 
 EXPOSE 4000

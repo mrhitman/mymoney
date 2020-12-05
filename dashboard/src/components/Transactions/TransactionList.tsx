@@ -9,6 +9,7 @@ import {
   useGetTransactionsQuery,
 } from 'src/generated/graphql';
 import { TransactionAmount } from './TransactionAmount';
+import { FilterGroup } from './FilterGroup';
 
 type Transaction = GetTransactionsQuery['transactions']['items'][number];
 const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
@@ -29,94 +30,97 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
   const { t } = useTranslation();
 
   return (
-    <Table
-      bordered
-      showSorterTooltip
-      loading={loading}
-      pagination={{
-        position: ['bottomRight'],
-        responsive: true,
-        total: data?.transactions?.totalCount || 0,
-        pageSize,
-        current,
-      }}
-      onChange={(pagination) => {
-        setCurrent(pagination.current || 1);
-        setPageSize(pagination.pageSize || 1);
-      }}
-      dataSource={data?.transactions?.items || []}
-    >
-      <Table.Column
-        title="id"
-        dataIndex="id"
-        key="id"
-        render={(id) => (
-          <Popover content={id}>
-            <div>{id.slice(0, 3)}</div>
-          </Popover>
-        )}
-      />
-      <Table.Column
-        title="Wallet"
-        render={(transaction) =>
-          [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ')
-        }
-      />
-      <Table.Column
-        title="Currency"
-        dataIndex="currency"
-        key="currency"
-        render={(currency) => `${currency.description} (${currency.name})`}
-      />
-      <Table.Column
-        title="Category"
-        dataIndex="category"
-        key="category"
-        render={(category) => {
-          return (
-            <Row gutter={8}>
-              <Col span={8}>
-                <div
-                  className="category-icon"
-                  style={{
-                    backgroundColor: category.icon?.backgroundColor || 'grey',
-                  }}
-                >
-                  <Icon
-                    name={category.icon?.name || 'warning'}
-                    type={category.icon?.type || 'AntDesign'}
-                    color={'white'}
-                    size={16}
-                  />
-                </div>
-              </Col>
-              <Col span={16}>{t(category.name)}</Col>
-            </Row>
-          );
+    <>
+      <FilterGroup onFilter={console.log} />
+      <Table
+        bordered
+        showSorterTooltip
+        loading={loading}
+        pagination={{
+          position: ['bottomRight'],
+          responsive: true,
+          total: data?.transactions?.totalCount || 0,
+          pageSize,
+          current,
         }}
-      />
-      <Table.Column
-        title="Amount"
-        dataIndex="amount"
-        key="amount"
-        render={(_, record: Transaction) => <TransactionAmount record={record} />}
-      />
-      <Table.Column
-        title="Description"
-        dataIndex="description"
-        key="description"
-        width="24%"
-        render={(desc) =>
-          desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-        }
-      />
-      <Table.Column
-        title="Date"
-        dataIndex="date"
-        key="date"
-        render={(date) => moment(date).format('LL')}
-      />
-    </Table>
+        onChange={(pagination) => {
+          setCurrent(pagination.current || 1);
+          setPageSize(pagination.pageSize || 1);
+        }}
+        dataSource={data?.transactions?.items || []}
+      >
+        <Table.Column
+          title="id"
+          dataIndex="id"
+          key="id"
+          render={(id) => (
+            <Popover content={id}>
+              <div>{id.slice(0, 3)}</div>
+            </Popover>
+          )}
+        />
+        <Table.Column
+          title="Wallet"
+          render={(transaction) =>
+            [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ')
+          }
+        />
+        <Table.Column
+          title="Currency"
+          dataIndex="currency"
+          key="currency"
+          render={(currency) => `${currency.description} (${currency.name})`}
+        />
+        <Table.Column
+          title="Category"
+          dataIndex="category"
+          key="category"
+          render={(category) => {
+            return (
+              <Row gutter={8}>
+                <Col span={8}>
+                  <div
+                    className="category-icon"
+                    style={{
+                      backgroundColor: category.icon?.backgroundColor || 'grey',
+                    }}
+                  >
+                    <Icon
+                      name={category.icon?.name || 'warning'}
+                      type={category.icon?.type || 'AntDesign'}
+                      color={'white'}
+                      size={16}
+                    />
+                  </div>
+                </Col>
+                <Col span={16}>{t(category.name)}</Col>
+              </Row>
+            );
+          }}
+        />
+        <Table.Column
+          title="Amount"
+          dataIndex="amount"
+          key="amount"
+          render={(_, record: Transaction) => <TransactionAmount record={record} />}
+        />
+        <Table.Column
+          title="Description"
+          dataIndex="description"
+          key="description"
+          width="24%"
+          render={(desc) =>
+            desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+          }
+        />
+        <Table.Column
+          title="Date"
+          dataIndex="date"
+          key="date"
+          render={(date) => moment(date).format('LL')}
+        />
+      </Table>
+    </>
   );
 };
 

@@ -9,6 +9,7 @@ interface FilterCriteries {
   range: [moment.Moment, moment.Moment] | undefined;
   categories: string[];
   currencies: string[];
+  wallets: string[];
   amountFrom: number | undefined;
   amountTo: number | undefined;
 }
@@ -25,6 +26,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter }) => {
       range: undefined,
       categories: [],
       currencies: [],
+      wallets: [],
       amountFrom: undefined,
       amountTo: undefined,
     },
@@ -68,6 +70,12 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter }) => {
       </Row>
       {expanded && (
         <Row gutter={12} style={{ margin: 4 }}>
+          <Col>
+            <Select mode="multiple" placeholder="Wallets" style={{ width: 230 }} allowClear>
+              <Select.Option value={'537541******9300'}>537541******9300</Select.Option>
+              <Select.Option value={'537541******8526'}>537541******8526</Select.Option>
+            </Select>
+          </Col>
           <Col>
             <Select mode="multiple" placeholder="Currency" style={{ width: 200 }} allowClear>
               <Select.Option value={'UAH'}>UAH</Select.Option>

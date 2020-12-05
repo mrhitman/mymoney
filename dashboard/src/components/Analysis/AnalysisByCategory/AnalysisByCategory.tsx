@@ -123,7 +123,7 @@ export const AnalysisByCategory: FC = () => {
             scale={cols}
             autoFit
           >
-            <Legend position="right" />
+            <Legend position="top" />
             <Coordinate type="theta" radius={0.75} />
             <Tooltip />
             <Axis visible={false} />

@@ -3,26 +3,29 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { TransactionType, useGetTransactionsQuery } from 'src/generated/graphql';
+import {
+  GetTransactionsQuery,
+  TransactionType,
+  useGetTransactionsQuery,
+} from 'src/generated/graphql';
+import { TransactionAmount } from './TransactionAmount';
 
-const TransactionList: React.FC<{ type?: TransactionType }> = ({
-  type,
-}) => {
+type Transaction = GetTransactionsQuery['transactions']['items'][number];
+const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const { loading, data } = useGetTransactionsQuery(
-    {
-      variables: {
-        type,
-        limit: pageSize, offset: pageSize * (current - 1)
+  const { loading, data } = useGetTransactionsQuery({
+    variables: {
+      type,
+      limit: pageSize,
+      offset: pageSize * (current - 1),
+    },
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('accessToken'),
       },
-      context: {
-        headers: {
-          Authorization: localStorage.getItem('accessToken')
-        }
-      }
-    }
-  );
+    },
+  });
   const { t } = useTranslation();
 
   return (
@@ -31,7 +34,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({
       showSorterTooltip
       loading={loading}
       pagination={{
-        position: ['topRight'],
+        position: ['bottomRight'],
         responsive: true,
         total: data?.transactions?.totalCount || 0,
         pageSize,
@@ -53,9 +56,12 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({
           </Popover>
         )}
       />
-      <Table.Column title="Wallet" render={transaction => {
-        return [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ');
-      }} />
+      <Table.Column
+        title="Wallet"
+        render={(transaction) =>
+          [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ')
+        }
+      />
       <Table.Column
         title="Currency"
         dataIndex="currency"
@@ -93,28 +99,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({
         title="Amount"
         dataIndex="amount"
         key="amount"
-        render={(amount, record: any) => {
-          switch (record.type) {
-            case 'income':
-              return (
-                <div className={`tbl-${record.type}`}>
-                  +{amount} {record.currency.symbol}
-                </div>
-              );
-            case 'outcome':
-              return (
-                <div className={`tbl-${record.type}`}>
-                  -{amount} {record.currency.symbol}
-                </div>
-              );
-            case 'transfer':
-              return (
-                <div className={`tbl-${record.type}`}>
-                  {amount} {record.currency.symbol}
-                </div>
-              );
-          }
-        }}
+        render={(_, record: Transaction) => <TransactionAmount record={record} />}
       />
       <Table.Column
         title="Description"
@@ -122,11 +107,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({
         key="description"
         width="24%"
         render={(desc) =>
-          desc ? (
-            desc
-          ) : (
-              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-            )
+          desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
         }
       />
       <Table.Column

@@ -6,6 +6,8 @@ import { useRouteMatch } from 'react-router';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/misc/Icon';
 import { useGetWalletTransactionsQuery } from 'src/generated/graphql';
+import { TransactionAmount } from './TransactionAmount';
+import { GetTransactionsQuery } from '../../generated/graphql';
 
 const WalletTransactions: React.FC = () => {
   const [current, setCurrent] = useState(1);
@@ -42,10 +44,7 @@ const WalletTransactions: React.FC = () => {
         <Col offset={20} />
         <Col span={4}>
           <Card>
-            <Card.Meta
-              title={data?.wallet.name}
-              description={data?.wallet.description}
-            />
+            <Card.Meta title={data?.wallet.name} description={data?.wallet.description} />
           </Card>
         </Col>
       </Row>
@@ -114,28 +113,9 @@ const WalletTransactions: React.FC = () => {
           title="Amount"
           dataIndex="amount"
           key="amount"
-          render={(amount, record: any) => {
-            switch (record.type) {
-              case 'income':
-                return (
-                  <div className={`tbl-${record.type}`}>
-                    +{amount} {record.currency.symbol}
-                  </div>
-                );
-              case 'outcome':
-                return (
-                  <div className={`tbl-${record.type}`}>
-                    -{amount} {record.currency.symbol}
-                  </div>
-                );
-              case 'transfer':
-                return (
-                  <div className={`tbl-${record.type}`}>
-                    {amount} {record.currency.symbol}
-                  </div>
-                );
-            }
-          }}
+          render={(_, record: GetTransactionsQuery['transactions']['items'][number]) => (
+            <TransactionAmount record={record} />
+          )}
         />
         <Table.Column
           title="Description"
@@ -143,11 +123,7 @@ const WalletTransactions: React.FC = () => {
           key="description"
           width="24%"
           render={(desc) =>
-            desc ? (
-              desc
-            ) : (
-              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
-            )
+            desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
           }
         />
         <Table.Column

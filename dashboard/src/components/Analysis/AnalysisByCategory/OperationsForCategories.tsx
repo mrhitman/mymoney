@@ -3,7 +3,8 @@ import moment from 'moment';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from 'src/components/misc/Icon';
-import { useGetTransactionsQuery } from 'src/generated/graphql';
+import { TransactionAmount } from 'src/components/Transactions/TransactionAmount';
+import { GetTransactionsQuery, useGetTransactionsQuery } from 'src/generated/graphql';
 
 interface OperationsForCategoriesProps {
   from?: number;
@@ -89,28 +90,9 @@ const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
         title="Amount"
         dataIndex="amount"
         key="amount"
-        render={(amount, record: any) => {
-          switch (record.type) {
-            case 'income':
-              return (
-                <div className={`tbl-${record.type}`}>
-                  +{amount} {record.currency.symbol}
-                </div>
-              );
-            case 'outcome':
-              return (
-                <div className={`tbl-${record.type}`}>
-                  -{amount} {record.currency.symbol}
-                </div>
-              );
-            case 'transfer':
-              return (
-                <div className={`tbl-${record.type}`}>
-                  {amount} {record.currency.symbol}
-                </div>
-              );
-          }
-        }}
+        render={(_, record: GetTransactionsQuery['transactions']['items'][number]) => (
+          <TransactionAmount record={record} />
+        )}
       />
       <Table.Column
         title="Description"

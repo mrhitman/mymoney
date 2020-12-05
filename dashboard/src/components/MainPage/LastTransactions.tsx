@@ -2,11 +2,8 @@ import { List, Typography } from 'antd';
 import moment from 'moment';
 import React, { FC } from 'react';
 import Icon from 'src/components/misc/Icon';
-import {
-  useGetTransactionsQuery,
-  GetTransactionsQuery,
-  Transaction,
-} from '../../generated/graphql';
+import { useGetTransactionsQuery } from 'src/generated/graphql';
+import { TransactionAmount } from '../Transactions/TransactionAmount';
 
 export const LastTransactions: FC<{ count: number }> = ({ count }) => {
   const { loading, data } = useGetTransactionsQuery({
@@ -44,34 +41,13 @@ export const LastTransactions: FC<{ count: number }> = ({ count }) => {
               </div>
             }
           />
-          <div>{renderAmount(item)}</div>
+          <div>
+            <TransactionAmount record={item} />
+          </div>
         </List.Item>
       )}
     />
   );
 };
-
-function renderAmount(record: GetTransactionsQuery['transactions']['items'][number]) {
-  switch (record.type) {
-    case 'income':
-      return (
-        <div className={`tbl-${record.type}`}>
-          +{record.amount} {record.currency.symbol}
-        </div>
-      );
-    case 'outcome':
-      return (
-        <div className={`tbl-${record.type}`}>
-          -{record.amount} {record.currency.symbol}
-        </div>
-      );
-    case 'transfer':
-      return (
-        <div className={`tbl-${record.type}`}>
-          {record.amount} {record.currency.symbol}
-        </div>
-      );
-  }
-}
 
 export default LastTransactions;

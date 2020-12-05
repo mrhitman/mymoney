@@ -7,6 +7,10 @@ on:
 
 jobs:
   build:
+    env:
+      REACT_APP_SERVER: 'https://mymoney-server-api.herokuapp.com/'
+      REACT_APP_GOOGLE_CLIENT_ID: '172140808548-71g0juh12o6o8jltjkp9pnmq76lkht9v'
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

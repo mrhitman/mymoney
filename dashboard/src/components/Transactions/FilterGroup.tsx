@@ -144,7 +144,14 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
             <InputNumber style={{ width: 160 }} placeholder="Amount <=" />
           </Col>
           <Col>
-            <Button danger icon={<ClearOutlined />} onClick={() => formik.resetForm()}>
+            <Button
+              danger
+              icon={<ClearOutlined />}
+              onClick={() => {
+                formik.resetForm();
+                formik.submitForm();
+              }}
+            >
               Clear filters
             </Button>
           </Col>

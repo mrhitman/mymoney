@@ -9,15 +9,28 @@ import {
   useGetTransactionsQuery,
 } from 'src/generated/graphql';
 import { TransactionAmount } from './TransactionAmount';
-import { FilterGroup } from './FilterGroup';
+import { FilterGroup, FilterCriteries } from './FilterGroup';
 
 type Transaction = GetTransactionsQuery['transactions']['items'][number];
 const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [filters, setFilters] = useState<FilterCriteries>({
+    search: undefined,
+    range: undefined,
+    categories: [],
+    currencies: [],
+    wallets: [],
+    amountFrom: undefined,
+    amountTo: undefined,
+  });
   const { loading, data } = useGetTransactionsQuery({
     variables: {
       type,
+      walletIds: filters.wallets.length ? filters.wallets : undefined,
+      categoryIds: filters.categories.length ? filters.categories : undefined,
+      from: filters.range ? filters.range[0].unix() : undefined,
+      to: filters.range ? filters.range[1].unix() : undefined,
       limit: pageSize,
       offset: pageSize * (current - 1),
     },
@@ -31,7 +44,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
 
   return (
     <>
-      <FilterGroup onFilter={console.log} type={type} />
+      <FilterGroup onFilter={setFilters} type={type} />
       <Table
         bordered
         showSorterTooltip

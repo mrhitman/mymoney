@@ -7,7 +7,7 @@ import { useGetFilterGroupQuery } from 'src/generated/graphql';
 import { TransactionType } from '../../generated/graphql';
 import { useTranslation } from 'react-i18next';
 
-interface FilterCriteries {
+export interface FilterCriteries {
   search: string | undefined;
   range: [moment.Moment, moment.Moment] | undefined;
   categories: string[];

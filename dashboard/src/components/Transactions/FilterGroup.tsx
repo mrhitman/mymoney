@@ -86,6 +86,10 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
               placeholder="Wallets"
               style={{ width: 230 }}
               allowClear
+              value={formik.values.wallets}
+              filterOption={(inputValue, option) =>
+                option?.children.toLowerCase().includes(inputValue.toLowerCase())
+              }
               onChange={(wallets) => formik.setFieldValue('wallets', wallets)}
             >
               {data?.wallets.map((wallet) => (
@@ -101,6 +105,10 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
               placeholder="Currencies"
               style={{ width: 200 }}
               allowClear
+              value={formik.values.currencies}
+              filterOption={(inputValue, option) =>
+                option?.children.toLowerCase().includes(inputValue.toLowerCase())
+              }
               onChange={(currencies) => formik.setFieldValue('currencies', currencies)}
             >
               {data?.currencies.map((currency) => (
@@ -116,6 +124,10 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
               placeholder="Categories"
               style={{ width: 230 }}
               allowClear
+              value={formik.values.categories}
+              filterOption={(inputValue, option) =>
+                option?.children.toLowerCase().includes(inputValue.toLowerCase())
+              }
               onChange={(categories) => formik.setFieldValue('categories', categories)}
             >
               {data?.categories

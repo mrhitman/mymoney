@@ -3,9 +3,9 @@ import { Button, Col, DatePicker, Input, InputNumber, Row, Select } from 'antd';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
-import { useGetFilterGroupQuery } from 'src/generated/graphql';
-import { TransactionType } from '../../generated/graphql';
 import { useTranslation } from 'react-i18next';
+import { TransactionType, useGetFilterGroupQuery } from 'src/generated/graphql';
+import ranges from '../misc/DateRanges';
 
 export interface FilterCriteries {
   search: string | undefined;
@@ -57,13 +57,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
           <DatePicker.RangePicker
             showTime
             value={formik.values.range}
-            ranges={{
-              Today: [moment().utc().startOf('day'), moment().utc().endOf('day')],
-              'This Week': [moment().utc().startOf('week'), moment().utc().endOf('week')],
-              'This Month': [moment().utc().startOf('month'), moment().utc().endOf('month')],
-              'Last 7 Days': [moment().utc().subtract(7, 'days'), moment().endOf('day')],
-              'Last 30 Days': [moment().utc().subtract(30, 'days'), moment().utc().endOf('day')],
-            }}
+            ranges={ranges}
             onCalendarChange={(values) => {
               formik.setFieldValue('range', values);
             }}

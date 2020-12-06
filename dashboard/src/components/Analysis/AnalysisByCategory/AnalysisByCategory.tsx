@@ -21,6 +21,7 @@ import {
   useAnalysByCategoriesQuery,
 } from 'src/generated/graphql';
 import OperationsForCategories from './OperationsForCategories';
+import ranges from '../../misc/DateRanges';
 
 const cols = {
   percent: {
@@ -55,13 +56,7 @@ export const AnalysisByCategory: FC = () => {
           <DatePicker.RangePicker
             showTime
             value={[from, to]}
-            ranges={{
-              Today: [moment().utc().startOf('day'), moment().utc().endOf('day')],
-              'This Week': [moment().utc().startOf('week'), moment().utc().endOf('week')],
-              'This Month': [moment().utc().startOf('month'), moment().utc().endOf('month')],
-              'Last 7 Days': [moment().utc().subtract(7, 'days'), moment().endOf('day')],
-              'Last 30 Days': [moment().utc().subtract(30, 'days'), moment().utc().endOf('day')],
-            }}
+            ranges={ranges}
             onCalendarChange={(values) => {
               setFrom(values?.[0] || null);
               setTo(values?.[1] || null);

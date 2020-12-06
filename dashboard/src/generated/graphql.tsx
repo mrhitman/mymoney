@@ -715,6 +715,25 @@ export type DeleteWalletMutation = (
   ) }
 );
 
+export type GetFilterGroupQueryVariables = Exact<{
+  type?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetFilterGroupQuery = (
+  { __typename?: 'Query' }
+  & { wallets: Array<(
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'description'>
+  )>, currencies: Array<(
+    { __typename?: 'Currency' }
+    & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
+  )>, categories: Array<(
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name' | 'type'>
+  )> }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1261,6 +1280,52 @@ export function useDeleteWalletMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteWalletMutationHookResult = ReturnType<typeof useDeleteWalletMutation>;
 export type DeleteWalletMutationResult = Apollo.MutationResult<DeleteWalletMutation>;
 export type DeleteWalletMutationOptions = Apollo.BaseMutationOptions<DeleteWalletMutation, DeleteWalletMutationVariables>;
+export const GetFilterGroupDocument = gql`
+    query getFilterGroup($type: String = "income") {
+  wallets {
+    id
+    name
+    description
+  }
+  currencies {
+    id
+    name
+    description
+    symbol
+  }
+  categories(type: $type) {
+    id
+    name
+    type
+  }
+}
+    `;
+
+/**
+ * __useGetFilterGroupQuery__
+ *
+ * To run a query within a React component, call `useGetFilterGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFilterGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFilterGroupQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useGetFilterGroupQuery(baseOptions?: Apollo.QueryHookOptions<GetFilterGroupQuery, GetFilterGroupQueryVariables>) {
+        return Apollo.useQuery<GetFilterGroupQuery, GetFilterGroupQueryVariables>(GetFilterGroupDocument, baseOptions);
+      }
+export function useGetFilterGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFilterGroupQuery, GetFilterGroupQueryVariables>) {
+          return Apollo.useLazyQuery<GetFilterGroupQuery, GetFilterGroupQueryVariables>(GetFilterGroupDocument, baseOptions);
+        }
+export type GetFilterGroupQueryHookResult = ReturnType<typeof useGetFilterGroupQuery>;
+export type GetFilterGroupLazyQueryHookResult = ReturnType<typeof useGetFilterGroupLazyQuery>;
+export type GetFilterGroupQueryResult = Apollo.QueryResult<GetFilterGroupQuery, GetFilterGroupQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(loginData: {email: $email, password: $password}) {

@@ -1,8 +1,11 @@
-import React, { FC, useState } from 'react';
-import { Row, Col, Input, Select, Button, Space, DatePicker, InputNumber } from 'antd';
-import moment from 'moment';
 import { ClearOutlined, FilterOutlined, MoreOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Input, InputNumber, Row, Select } from 'antd';
 import { useFormik } from 'formik';
+import moment from 'moment';
+import React, { FC, useState } from 'react';
+import { useGetFilterGroupQuery } from 'src/generated/graphql';
+import { TransactionType } from '../../generated/graphql';
+import { useTranslation } from 'react-i18next';
 
 interface FilterCriteries {
   search: string | undefined;
@@ -15,11 +18,18 @@ interface FilterCriteries {
 }
 
 interface FilterGroupProps {
+  type?: TransactionType;
   onFilter: (values: FilterCriteries) => void;
 }
 
-export const FilterGroup: FC<FilterGroupProps> = ({ onFilter }) => {
+export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useTranslation();
+  const { data } = useGetFilterGroupQuery({
+    variables: {
+      type,
+    },
+  });
   const formik = useFormik<FilterCriteries>({
     initialValues: {
       search: undefined,
@@ -38,7 +48,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter }) => {
       <Row gutter={12} style={{ margin: 4 }}>
         <Col>
           <Input.Search
-            placeholder="Input transaction id, description or wallet name"
+            placeholder="Input transaction id or description "
             style={{ width: 400, marginRight: 10 }}
             value={formik.values.search}
             onChange={(e) => formik.setFieldValue('search', e.target.value)}
@@ -60,7 +70,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter }) => {
           />
         </Col>
         <Col>
-          <Button type="primary" onClick={() => formik.submitForm()} icon={<FilterOutlined />}>
+          <Button type="primary" onClick={formik.submitForm} icon={<FilterOutlined />}>
             Apply filters
           </Button>
           <Button onClick={() => setExpanded(!expanded)} icon={<MoreOutlined />}>
@@ -71,21 +81,48 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter }) => {
       {expanded && (
         <Row gutter={12} style={{ margin: 4 }}>
           <Col>
-            <Select mode="multiple" placeholder="Wallets" style={{ width: 230 }} allowClear>
-              <Select.Option value={'537541******9300'}>537541******9300</Select.Option>
-              <Select.Option value={'537541******8526'}>537541******8526</Select.Option>
+            <Select
+              mode="multiple"
+              placeholder="Wallets"
+              style={{ width: 230 }}
+              allowClear
+              onChange={(wallets) => formik.setFieldValue('wallets', wallets)}
+            >
+              {data?.wallets.map((wallet) => (
+                <Select.Option key={wallet.id} value={wallet.id}>
+                  {wallet.name}
+                </Select.Option>
+              ))}
             </Select>
           </Col>
           <Col>
-            <Select mode="multiple" placeholder="Currency" style={{ width: 200 }} allowClear>
-              <Select.Option value={'UAH'}>UAH</Select.Option>
-              <Select.Option value={'USD'}>USD</Select.Option>
+            <Select
+              mode="multiple"
+              placeholder="Currencies"
+              style={{ width: 200 }}
+              allowClear
+              onChange={(currencies) => formik.setFieldValue('currencies', currencies)}
+            >
+              {data?.currencies.map((currency) => (
+                <Select.Option key={currency.id} value={currency.id}>
+                  {currency.name}
+                </Select.Option>
+              ))}
             </Select>
           </Col>
           <Col>
-            <Select mode="multiple" placeholder="Categories" style={{ width: 230 }} allowClear>
-              <Select.Option value={'Food'}>Food</Select.Option>
-              <Select.Option value={'Salary'}>Salary</Select.Option>
+            <Select
+              mode="multiple"
+              placeholder="Categories"
+              style={{ width: 230 }}
+              allowClear
+              onChange={(categories) => formik.setFieldValue('categories', categories)}
+            >
+              {data?.categories
+                .filter((category) => !['TRANSFER_IN', 'TRANSFER_OUT'].includes(category.name))
+                .map((category) => (
+                  <Select.Option value={category.id}>{t(category.name)}</Select.Option>
+                ))}
             </Select>
           </Col>
           <Col>

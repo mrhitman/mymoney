@@ -1,0 +1,18 @@
+query getFilterGroup($type: String = "income") {
+  wallets {
+    id
+    name
+    description
+  }
+  currencies {
+    id
+    name
+    description
+    symbol
+  }
+  categories(type: $type) {
+    id
+    name
+    type
+  }
+}

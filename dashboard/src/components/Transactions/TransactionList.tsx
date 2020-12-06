@@ -31,7 +31,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
 
   return (
     <>
-      <FilterGroup onFilter={console.log} />
+      <FilterGroup onFilter={console.log} type={type} />
       <Table
         bordered
         showSorterTooltip

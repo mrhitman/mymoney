@@ -13,7 +13,11 @@ query getTransactions(
   $offset: Float
   $walletIds: [String!]
   $categoryIds: [String!]
+  $search: String
+  $amountGte: Float
+  $amountLte: Float
   $order: String
+  $orderBy: String
 ) {
   transactions(
     type: $type
@@ -23,6 +27,10 @@ query getTransactions(
     offset: $offset
     walletIds: $walletIds
     categoryIds: $categoryIds
+    search: $search
+    amountGteFilter: $amountGte
+    amountLteFilter: $amountLte
+    orderBy: $orderBy
     order: $order
   ) {
     totalCount

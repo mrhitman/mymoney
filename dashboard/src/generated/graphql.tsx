@@ -269,6 +269,10 @@ export type QueryCategoryArgs = {
 
 export type QueryTransactionsArgs = {
   order?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<Scalars['String']>;
+  amountLteFilter?: Maybe<Scalars['Float']>;
+  amountGteFilter?: Maybe<Scalars['Float']>;
+  search?: Maybe<Scalars['String']>;
   offset?: Maybe<Scalars['Float']>;
   limit?: Maybe<Scalars['Float']>;
   type?: Maybe<TransactionType>;
@@ -804,7 +808,11 @@ export type GetTransactionsQueryVariables = Exact<{
   offset?: Maybe<Scalars['Float']>;
   walletIds?: Maybe<Array<Scalars['String']>>;
   categoryIds?: Maybe<Array<Scalars['String']>>;
+  search?: Maybe<Scalars['String']>;
+  amountGte?: Maybe<Scalars['Float']>;
+  amountLte?: Maybe<Scalars['Float']>;
   order?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1470,8 +1478,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!], $order: String) {
-  transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds, order: $order) {
+    query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!], $search: String, $amountGte: Float, $amountLte: Float, $order: String, $orderBy: String) {
+  transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds, search: $search, amountGteFilter: $amountGte, amountLteFilter: $amountLte, orderBy: $orderBy, order: $order) {
     totalCount
     items {
       id
@@ -1526,7 +1534,11 @@ export const GetTransactionsDocument = gql`
  *      offset: // value for 'offset'
  *      walletIds: // value for 'walletIds'
  *      categoryIds: // value for 'categoryIds'
+ *      search: // value for 'search'
+ *      amountGte: // value for 'amountGte'
+ *      amountLte: // value for 'amountLte'
  *      order: // value for 'order'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */

@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { transaction, TransactionOrKnex } from 'objection';
+import { transaction, TransactionOrKnex, OrderByDirection } from 'objection';
 import Transaction, {
   categoryInId,
   categoryOutId,
@@ -26,6 +26,11 @@ export class TransactionsService {
       type?: TransactionType;
       from?: number;
       to?: number;
+      orderBy?: string;
+      order?: OrderByDirection;
+      search?: string;
+      amountGteFilter?: number;
+      amountLteFilter?: number;
       currencyId?: string;
       categoryIds?: string[];
     } = {},
@@ -54,6 +59,24 @@ export class TransactionsService {
 
     if (filter.from) {
       query.where('date', '>=', DateTime.fromSeconds(filter.from).toString());
+    }
+
+    if (filter.search) {
+      query.where((builder) =>
+        builder.where({ id: filter.search }).orWhere('description', 'like', `%${filter.search}%`),
+      );
+    }
+
+    if (filter.amountGteFilter) {
+      query.where('amount', '>=', filter.amountGteFilter);
+    }
+
+    if (filter.amountLteFilter) {
+      query.where('amount', '<=', filter.amountLteFilter);
+    }
+
+    if (filter.order) {
+      query.orderBy(filter.orderBy || 'id', filter.order);
     }
 
     if (filter.to) {

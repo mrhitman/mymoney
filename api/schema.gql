@@ -219,7 +219,7 @@ type Query {
   activeBudget: Budget!
   categories(type: String): [Category!]!
   category(id: String!): Category!
-  transactions(order: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
+  transactions(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!

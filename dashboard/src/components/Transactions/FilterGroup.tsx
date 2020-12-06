@@ -132,10 +132,20 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
             </Select>
           </Col>
           <Col>
-            <InputNumber style={{ width: 160 }} placeholder="Amount >=" />
+            <InputNumber
+              value={formik.values.amountFrom}
+              onChange={(value) => formik.setFieldValue('amountFrom', value)}
+              style={{ width: 160 }}
+              placeholder="Amount >="
+            />
           </Col>
           <Col>
-            <InputNumber style={{ width: 160 }} placeholder="Amount <=" />
+            <InputNumber
+              value={formik.values.amountTo}
+              onChange={(value) => formik.setFieldValue('amountTo', value)}
+              style={{ width: 160 }}
+              placeholder="Amount <="
+            />
           </Col>
           <Col>
             <Button

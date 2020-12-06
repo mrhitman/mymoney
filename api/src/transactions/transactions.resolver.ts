@@ -31,6 +31,10 @@ export class TransactionsResolver {
     @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType,
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
+    @Args('search', { nullable: true }) search?: string,
+    @Args('amountGteFilter', { nullable: true }) amountGteFilter?: number,
+    @Args('amountLteFilter', { nullable: true }) amountLteFilter?: number,
+    @Args('orderBy', { nullable: true }) orderBy?: string,
     @Args('order', { nullable: true }) order?: OrderByDirection,
   ) {
     const query = this.service.getAll(user, {
@@ -38,6 +42,11 @@ export class TransactionsResolver {
       type,
       from,
       to,
+      search,
+      amountGteFilter,
+      amountLteFilter,
+      order,
+      orderBy,
       currencyId,
       categoryIds,
     });
@@ -52,10 +61,6 @@ export class TransactionsResolver {
 
     if (offset) {
       query.offset(offset);
-    }
-
-    if (order) {
-      query.orderBy('date', order);
     }
 
     return {

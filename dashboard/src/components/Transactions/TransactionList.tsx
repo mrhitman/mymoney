@@ -31,8 +31,13 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
       categoryIds: filters.categories.length ? filters.categories : undefined,
       from: filters.range ? filters.range[0].unix() : undefined,
       to: filters.range ? filters.range[1].unix() : undefined,
+      search: filters.search,
+      amountGte: filters.amountFrom,
+      amountLte: filters.amountTo,
       limit: pageSize,
       offset: pageSize * (current - 1),
+      // orderBy: 'date',
+      // order: 'desc',
     },
     context: {
       headers: {

@@ -51,7 +51,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
 
   return (
     <>
-      <FilterGroup onFilter={setFilters} type={type} />
+      <FilterGroup onFilter={setFilters} onReset={() => setCurrent(1)} type={type} />
       <Table
         bordered
         showSorterTooltip

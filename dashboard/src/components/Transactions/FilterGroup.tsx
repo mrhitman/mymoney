@@ -20,9 +20,10 @@ export interface FilterCriteries {
 interface FilterGroupProps {
   type?: TransactionType;
   onFilter: (values: FilterCriteries) => void;
+  onReset: () => void;
 }
 
-export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
+export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, onReset, type }) => {
   const [expanded, setExpanded] = useState(false);
   const { t } = useTranslation();
   const { data } = useGetFilterGroupQuery({
@@ -70,7 +71,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
             Apply filters
           </Button>
           <Button onClick={() => setExpanded(!expanded)} icon={<MoreOutlined />}>
-            More filters
+            {expanded ? 'Less' : 'More'} filters
           </Button>
         </Col>
       </Row>
@@ -156,6 +157,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
               onClick={() => {
                 formik.resetForm();
                 formik.submitForm();
+                onReset();
               }}
             >
               Clear filters

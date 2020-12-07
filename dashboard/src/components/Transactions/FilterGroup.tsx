@@ -52,6 +52,8 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, type }) => {
             style={{ width: 400, marginRight: 10 }}
             value={formik.values.search}
             onChange={(e) => formik.setFieldValue('search', e.target.value)}
+            onSubmit={() => formik.handleSubmit()}
+            onPressEnter={() => formik.handleSubmit()}
             enterButton
           />
           <DatePicker.RangePicker

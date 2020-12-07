@@ -45,8 +45,6 @@ export class TransactionsResolver {
       search,
       amountGteFilter,
       amountLteFilter,
-      order,
-      orderBy,
       currencyId,
       categoryIds,
     });
@@ -61,6 +59,10 @@ export class TransactionsResolver {
 
     if (offset) {
       query.offset(offset);
+    }
+
+    if (order) {
+      query.orderBy(orderBy || 'date', order);
     }
 
     return {

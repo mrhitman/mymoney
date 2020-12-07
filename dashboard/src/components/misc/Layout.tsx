@@ -109,11 +109,11 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu key="transactions" icon={<LaptopOutlined />} title="Transactions">
-              <Menu.Item key="incomes" icon={<RiseOutlined />}>
-                <Link to="/incomes">Incomes</Link>
-              </Menu.Item>
               <Menu.Item key="outcomes" icon={<FallOutlined />}>
                 <Link to="/outcomes">Outcomes</Link>
+              </Menu.Item>
+              <Menu.Item key="incomes" icon={<RiseOutlined />}>
+                <Link to="/incomes">Incomes</Link>
               </Menu.Item>
               <Menu.Item key="7" icon={<ArrowsAltOutlined />}>
                 Transfers

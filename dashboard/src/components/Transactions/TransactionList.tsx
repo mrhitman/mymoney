@@ -10,11 +10,13 @@ import {
 } from 'src/generated/graphql';
 import { TransactionAmount } from './TransactionAmount';
 import { FilterGroup, FilterCriteries } from './FilterGroup';
+import { SorterResult } from 'antd/lib/table/interface';
 
 type Transaction = GetTransactionsQuery['transactions']['items'][number];
 const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [sorter, setSorter] = useState<SorterResult<Transaction>>();
   const [filters, setFilters] = useState<FilterCriteries>({
     search: undefined,
     range: undefined,
@@ -36,8 +38,8 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
       amountLte: filters.amountTo,
       limit: pageSize,
       offset: pageSize * (current - 1),
-      // orderBy: 'date',
-      // order: 'desc',
+      orderBy: sorter?.field as string,
+      order: sorter?.order?.split('end')[0],
     },
     context: {
       headers: {
@@ -61,9 +63,10 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           pageSize,
           current,
         }}
-        onChange={(pagination) => {
+        onChange={(pagination, filters, sorter) => {
           setCurrent(pagination.current || 1);
           setPageSize(pagination.pageSize || 1);
+          setSorter(sorter as SorterResult<Transaction>);
         }}
         dataSource={data?.transactions?.items || []}
       >
@@ -71,6 +74,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           title="id"
           dataIndex="id"
           key="id"
+          sorter
           render={(id) => (
             <Popover content={id}>
               <div>{id.slice(0, 3)}</div>
@@ -120,6 +124,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           title="Amount"
           dataIndex="amount"
           key="amount"
+          sorter
           render={(_, record: Transaction) => <TransactionAmount record={record} />}
         />
         <Table.Column
@@ -127,6 +132,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           dataIndex="description"
           key="description"
           width="24%"
+          sorter
           render={(desc) =>
             desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
           }
@@ -135,6 +141,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           title="Date"
           dataIndex="date"
           key="date"
+          sorter
           render={(date) => moment(date).format('LL')}
         />
       </Table>

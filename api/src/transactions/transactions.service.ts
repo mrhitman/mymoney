@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { transaction, TransactionOrKnex, OrderByDirection } from 'objection';
+import { transaction, TransactionOrKnex } from 'objection';
+import { BudgetsService } from 'src/budgets/budgets.service';
 import Transaction, {
   categoryInId,
   categoryOutId,
@@ -13,7 +14,6 @@ import { v4 as uuid } from 'uuid';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionType } from './transaction-type';
-import { BudgetsService } from 'src/budgets/budgets.service';
 
 @Injectable()
 export class TransactionsService {
@@ -26,8 +26,6 @@ export class TransactionsService {
       type?: TransactionType;
       from?: number;
       to?: number;
-      orderBy?: string;
-      order?: OrderByDirection;
       search?: string;
       amountGteFilter?: number;
       amountLteFilter?: number;
@@ -73,10 +71,6 @@ export class TransactionsService {
 
     if (filter.amountLteFilter) {
       query.where('amount', '<=', filter.amountLteFilter);
-    }
-
-    if (filter.order) {
-      query.orderBy(filter.orderBy || 'id', filter.order);
     }
 
     if (filter.to) {

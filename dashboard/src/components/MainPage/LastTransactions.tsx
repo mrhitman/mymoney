@@ -9,7 +9,7 @@ export const LastTransactions: FC<{ count: number }> = ({ count }) => {
   const { loading, data } = useGetTransactionsQuery({
     variables: {
       limit: count,
-      order: 'desc',
+      // order: 'desc',
     },
   });
 

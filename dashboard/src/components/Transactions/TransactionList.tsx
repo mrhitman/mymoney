@@ -11,6 +11,8 @@ import {
 import { TransactionAmount } from './TransactionAmount';
 import { FilterGroup, FilterCriteries } from './FilterGroup';
 import { SorterResult } from 'antd/lib/table/interface';
+import { Link } from 'react-router-dom';
+import { EyeFilled } from '@ant-design/icons';
 
 type Transaction = GetTransactionsQuery['transactions']['items'][number];
 const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
@@ -143,6 +145,19 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           key="date"
           sorter
           render={(date) => moment(date).format('LL')}
+        />
+
+        <Table.Column
+          title="Action"
+          dataIndex=""
+          key="x"
+          render={(_, record: Transaction) => (
+            <>
+              <Link to={`/operation/${record.id}`}>
+                <EyeFilled />
+              </Link>
+            </>
+          )}
         />
       </Table>
     </>

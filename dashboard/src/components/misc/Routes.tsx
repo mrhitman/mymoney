@@ -18,6 +18,7 @@ import MainPage from '../MainPage/MainPage';
 import Register from '../Register/Register';
 import WalletTransactions from '../Transactions/WalletTransactions';
 import PrivateRoute from './PrivateRoute';
+import ViewTransaction from '../Transactions/ViewTransaction';
 
 const Routes: FC = () => (
   <Router>
@@ -55,6 +56,12 @@ const Routes: FC = () => (
       <PrivateRoute path="/operations/:walletId" exact>
         <Layout activePage="operations">
           <WalletTransactions />
+        </Layout>
+      </PrivateRoute>
+
+      <PrivateRoute path="/operation/:trxId" exact>
+        <Layout activePage="operations">
+          <ViewTransaction />
         </Layout>
       </PrivateRoute>
 

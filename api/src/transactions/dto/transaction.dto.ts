@@ -4,6 +4,7 @@ import { CategoryDto } from 'src/categories/dto/category.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { TransactionType } from '../transaction-type';
+import graphqlTypeJson from 'graphql-type-json';
 
 @ObjectType('Transaction')
 export class TransactionDto {
@@ -49,6 +50,15 @@ export class TransactionDto {
 
   @Field({ nullable: true })
   readonly description?: string;
+
+  @Field(() => graphqlTypeJson, { nullable: true })
+  readonly meta?: any;
+
+  @Field((type) => Boolean)
+  readonly isImported: boolean;
+
+  @Field((type) => Boolean)
+  readonly isNecessary: boolean;
 
   @Field((type) => Int)
   readonly createdAt: number;

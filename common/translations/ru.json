@@ -152,5 +152,13 @@
   "first_name": "First name",
   "last_name": "Last name",
   "middle_name": "Middle name",
-  "connectors": "Коннекторы"
+  "connectors": "Коннекторы",
+  "statistics": "Статистика",
+  "by_categories": "По категориям",
+  "by_currencies": "По валютам",
+  "by_period": "По периодам",
+  "current": "Текущий",
+  "planning": "Планирование",
+  "archive": "Архив",
+  "ledgers": "Учет"
 }

@@ -102,7 +102,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             selectedKeys={activePage ? [activePage] : activePage}
             style={{ height: '100vh', borderRight: 0 }}
           >
-            <Menu.SubMenu key="ledgers" icon={<DollarOutlined />} title="Ledgers">
+            <Menu.SubMenu key="ledgers" icon={<DollarOutlined />} title={t('ledgers')}>
               <Menu.Item key="accounting" icon={<WalletOutlined />}>
                 <Link to="/accounting">{t('wallets')}</Link>
               </Menu.Item>
@@ -123,24 +123,24 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             </Menu.SubMenu>
             <Menu.SubMenu key="sub3" icon={<TableOutlined />} title={t('budget')}>
               <Menu.Item key="9" icon={<CarryOutOutlined />}>
-                Current
+                {t('current')}
               </Menu.Item>
               <Menu.Item key="10" icon={<ScheduleOutlined />}>
-                Planning
+                {t('planning')}
               </Menu.Item>
               <Menu.Item key="11" icon={<SolutionOutlined />}>
-                Archive
+                {t('archive')}
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="analys" icon={<AreaChartOutlined />} title="Statistics">
+            <Menu.SubMenu key="analys" icon={<AreaChartOutlined />} title={t('statistics')}>
               <Menu.Item key="analys-by-cateogories" icon={<PieChartOutlined />}>
-                <Link to="/analysis-category">By Categories</Link>
+                <Link to="/analysis-category">{t('by_categories')}</Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>
-                <Link to="/analysis-currency">By Currencies</Link>
+                <Link to="/analysis-currency">{t('by_currencies')}</Link>
               </Menu.Item>
               <Menu.Item key="17" icon={<BarChartOutlined />}>
-                By Period
+                {t('by_period')}
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.Item key="categories" icon={<BookOutlined />}>

@@ -3,7 +3,7 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Accounting } from 'src/components/Accounting/Accounting';
 import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory/AnalysisByCategory';
 import { AnalysisByCurrency } from 'src/components/Analysis/AnalysisByCurrency/AnalysisByCurrency';
-import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
+// import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
 import Categories from 'src/components/Categories/Categories';
 import Connectors from 'src/components/Connectors/Connectors';
 import Currencies from 'src/components/Currencies/Currencies';
@@ -79,7 +79,7 @@ const Routes: FC = () => (
 
       <PrivateRoute path="/analysis" exact>
         <Layout activePage="analysis">
-          <AnalysisByPeriod />
+          <div />
         </Layout>
       </PrivateRoute>
 

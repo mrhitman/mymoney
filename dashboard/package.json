@@ -40,8 +40,7 @@
     "react-scripts": "3.4.1",
     "react-world-flags": "^1.4.0",
     "typescript": "~3.7.2",
-    "uuid": "^8.1.0",
-    "victory": "^34.3.11"
+    "uuid": "^8.1.0"
   },
   "scripts": {
     "start": "react-app-rewired start",

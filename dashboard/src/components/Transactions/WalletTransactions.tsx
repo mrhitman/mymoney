@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/misc/Icon';
 import { useGetWalletTransactionsQuery } from 'src/generated/graphql';
-import { TransactionAmount } from './TransactionAmount';
 import { GetTransactionsQuery } from '../../generated/graphql';
+import CategoryIcon from '../misc/CategoryIcon';
+import { TransactionAmount } from './TransactionAmount';
 
 const WalletTransactions: React.FC = () => {
   const [current, setCurrent] = useState(1);
@@ -90,19 +90,7 @@ const WalletTransactions: React.FC = () => {
             return (
               <Row gutter={8}>
                 <Col span={8}>
-                  <div
-                    className="category-icon"
-                    style={{
-                      backgroundColor: category.icon?.backgroundColor || 'grey',
-                    }}
-                  >
-                    <Icon
-                      name={category.icon?.name || 'warning'}
-                      type={category.icon?.type || 'AntDesign'}
-                      color={'white'}
-                      size={16}
-                    />
-                  </div>
+                  <CategoryIcon icon={category.icon} />
                 </Col>
                 <Col span={16}>{t(category.name)}</Col>
               </Row>

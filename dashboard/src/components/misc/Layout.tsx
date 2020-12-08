@@ -83,7 +83,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
           <Menu.SubMenu key="1" icon={<Avatar src={data?.profile.imageUrl?.toString()} />}>
             <Menu.Item key="2" icon={<SettingOutlined />}>
-              Settings
+              <Link to="/settings">Settings</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<LogoutOutlined />} onClick={logout}>
               Logout

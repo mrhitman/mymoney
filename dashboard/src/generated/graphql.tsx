@@ -149,6 +149,9 @@ export type Transaction = {
   fine?: Maybe<Scalars['Float']>;
   date: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  meta?: Maybe<Scalars['JSON']>;
+  isImported: Scalars['Boolean'];
+  isNecessary: Scalars['Boolean'];
   createdAt: Scalars['Int'];
 };
 
@@ -803,18 +806,12 @@ export type WalletFragment = (
 export type TransactionFragment = (
   { __typename?: 'Transaction' }
   & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
-  & { sourceWallet?: Maybe<(
-    { __typename?: 'Wallet' }
-    & WalletFragment
-  )>, destinationWallet?: Maybe<(
-    { __typename?: 'Wallet' }
-    & WalletFragment
-  )>, currency: (
+  & { currency: (
     { __typename?: 'Currency' }
     & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
   ), category: (
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'type'>
+    & Pick<Category, 'name' | 'type'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
@@ -831,6 +828,14 @@ export type GetTransactionQuery = (
   { __typename?: 'Query' }
   & { transaction: (
     { __typename?: 'Transaction' }
+    & Pick<Transaction, 'meta'>
+    & { sourceWallet?: Maybe<(
+      { __typename?: 'Wallet' }
+      & WalletFragment
+    )>, destinationWallet?: Maybe<(
+      { __typename?: 'Wallet' }
+      & WalletFragment
+    )> }
     & TransactionFragment
   ) }
 );
@@ -858,28 +863,14 @@ export type GetTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
+      & { sourceWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )>, destinationWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )> }
       & TransactionFragment
-    )> }
-  ) }
-);
-
-export type UpdateWalletMutationVariables = Exact<{
-  walletUpdateData: WalletUpdate;
-}>;
-
-
-export type UpdateWalletMutation = (
-  { __typename?: 'Mutation' }
-  & { updateWallet: (
-    { __typename?: 'Wallet' }
-    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
-    & { pockets: Array<(
-      { __typename?: 'Pocket' }
-      & Pick<Pocket, 'amount'>
-      & { currency: (
-        { __typename?: 'Currency' }
-        & Pick<Currency, 'id' | 'name' | 'symbol'>
-      ) }
     )> }
   ) }
 );
@@ -902,17 +893,27 @@ export type GetWalletTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
-      & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
+      & TransactionFragment
+    )> }
+  ) }
+);
+
+export type UpdateWalletMutationVariables = Exact<{
+  walletUpdateData: WalletUpdate;
+}>;
+
+
+export type UpdateWalletMutation = (
+  { __typename?: 'Mutation' }
+  & { updateWallet: (
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
+    & { pockets: Array<(
+      { __typename?: 'Pocket' }
+      & Pick<Pocket, 'amount'>
       & { currency: (
         { __typename?: 'Currency' }
-        & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
-      ), category: (
-        { __typename?: 'Category' }
-        & Pick<Category, 'name' | 'type'>
-        & { icon?: Maybe<(
-          { __typename?: 'IconDto' }
-          & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
-        )> }
+        & Pick<Currency, 'id' | 'name' | 'symbol'>
       ) }
     )> }
   ) }
@@ -949,12 +950,6 @@ export const TransactionFragmentDoc = gql`
     fragment transaction on Transaction {
   id
   type
-  sourceWallet {
-    ...wallet
-  }
-  destinationWallet {
-    ...wallet
-  }
   currency {
     id
     name
@@ -962,7 +957,6 @@ export const TransactionFragmentDoc = gql`
     symbol
   }
   category {
-    id
     name
     type
     icon {
@@ -976,7 +970,7 @@ export const TransactionFragmentDoc = gql`
   description
   amount
 }
-    ${WalletFragmentDoc}`;
+    `;
 export const AddConnectorDocument = gql`
     mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
   addConnector(args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled})
@@ -1531,9 +1525,17 @@ export const GetTransactionDocument = gql`
     query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
+    sourceWallet {
+      ...wallet
+    }
+    destinationWallet {
+      ...wallet
+    }
+    meta
   }
 }
-    ${TransactionFragmentDoc}`;
+    ${TransactionFragmentDoc}
+${WalletFragmentDoc}`;
 
 /**
  * __useGetTransactionQuery__
@@ -1566,10 +1568,17 @@ export const GetTransactionsDocument = gql`
     totalCount
     items {
       ...transaction
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
     }
   }
 }
-    ${TransactionFragmentDoc}`;
+    ${TransactionFragmentDoc}
+${WalletFragmentDoc}`;
 
 /**
  * __useGetTransactionsQuery__
@@ -1607,6 +1616,50 @@ export function useGetTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetTransactionsQueryHookResult = ReturnType<typeof useGetTransactionsQuery>;
 export type GetTransactionsLazyQueryHookResult = ReturnType<typeof useGetTransactionsLazyQuery>;
 export type GetTransactionsQueryResult = Apollo.QueryResult<GetTransactionsQuery, GetTransactionsQueryVariables>;
+export const GetWalletTransactionsDocument = gql`
+    query getWalletTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletId: String!) {
+  wallet(id: $walletId) {
+    id
+    name
+    description
+  }
+  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
+    totalCount
+    items {
+      ...transaction
+    }
+  }
+}
+    ${TransactionFragmentDoc}`;
+
+/**
+ * __useGetWalletTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetWalletTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWalletTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWalletTransactionsQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      walletId: // value for 'walletId'
+ *   },
+ * });
+ */
+export function useGetWalletTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
+        return Apollo.useQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
+      }
+export function useGetWalletTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
+          return Apollo.useLazyQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
+        }
+export type GetWalletTransactionsQueryHookResult = ReturnType<typeof useGetWalletTransactionsQuery>;
+export type GetWalletTransactionsLazyQueryHookResult = ReturnType<typeof useGetWalletTransactionsLazyQuery>;
+export type GetWalletTransactionsQueryResult = Apollo.QueryResult<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>;
 export const UpdateWalletDocument = gql`
     mutation UpdateWallet($walletUpdateData: WalletUpdate!) {
   updateWallet(walletUpdateData: $walletUpdateData) {
@@ -1650,70 +1703,6 @@ export function useUpdateWalletMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateWalletMutationHookResult = ReturnType<typeof useUpdateWalletMutation>;
 export type UpdateWalletMutationResult = Apollo.MutationResult<UpdateWalletMutation>;
 export type UpdateWalletMutationOptions = Apollo.BaseMutationOptions<UpdateWalletMutation, UpdateWalletMutationVariables>;
-export const GetWalletTransactionsDocument = gql`
-    query getWalletTransactions($type: TransactionType, $limit: Float, $offset: Float, $walletId: String!) {
-  wallet(id: $walletId) {
-    id
-    name
-    description
-  }
-  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
-    totalCount
-    items {
-      id
-      type
-      currency {
-        id
-        name
-        description
-        symbol
-      }
-      category {
-        name
-        type
-        icon {
-          type
-          name
-          backgroundColor
-          color
-        }
-      }
-      date
-      description
-      amount
-    }
-  }
-}
-    `;
-
-/**
- * __useGetWalletTransactionsQuery__
- *
- * To run a query within a React component, call `useGetWalletTransactionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetWalletTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetWalletTransactionsQuery({
- *   variables: {
- *      type: // value for 'type'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *      walletId: // value for 'walletId'
- *   },
- * });
- */
-export function useGetWalletTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
-        return Apollo.useQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
-      }
-export function useGetWalletTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
-        }
-export type GetWalletTransactionsQueryHookResult = ReturnType<typeof useGetWalletTransactionsQuery>;
-export type GetWalletTransactionsLazyQueryHookResult = ReturnType<typeof useGetWalletTransactionsLazyQuery>;
-export type GetWalletTransactionsQueryResult = Apollo.QueryResult<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>;
 export const GetWalletsDocument = gql`
     query GetWallets {
   wallets {

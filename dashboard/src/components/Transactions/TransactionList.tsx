@@ -1,18 +1,18 @@
+import { EyeFilled } from '@ant-design/icons';
 import { Col, Popover, Row, Table } from 'antd';
+import { SorterResult } from 'antd/lib/table/interface';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from 'src/components/misc/Icon';
+import { Link } from 'react-router-dom';
 import {
   GetTransactionsQuery,
   TransactionType,
   useGetTransactionsQuery,
 } from 'src/generated/graphql';
+import CategoryIcon from '../misc/CategoryIcon';
+import { FilterCriteries, FilterGroup } from './FilterGroup';
 import { TransactionAmount } from './TransactionAmount';
-import { FilterGroup, FilterCriteries } from './FilterGroup';
-import { SorterResult } from 'antd/lib/table/interface';
-import { Link } from 'react-router-dom';
-import { EyeFilled } from '@ant-design/icons';
 
 type Transaction = GetTransactionsQuery['transactions']['items'][number];
 const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
@@ -99,28 +99,14 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           title="Category"
           dataIndex="category"
           key="category"
-          render={(category) => {
-            return (
-              <Row gutter={8}>
-                <Col span={8}>
-                  <div
-                    className="category-icon"
-                    style={{
-                      backgroundColor: category.icon?.backgroundColor || 'grey',
-                    }}
-                  >
-                    <Icon
-                      name={category.icon?.name || 'warning'}
-                      type={category.icon?.type || 'AntDesign'}
-                      color={'white'}
-                      size={16}
-                    />
-                  </div>
-                </Col>
-                <Col span={16}>{t(category.name)}</Col>
-              </Row>
-            );
-          }}
+          render={(category) => (
+            <Row gutter={8}>
+              <Col span={8}>
+                <CategoryIcon icon={category.icon} />
+              </Col>
+              <Col span={16}>{t(category.name)}</Col>
+            </Row>
+          )}
         />
         <Table.Column
           title="Amount"

@@ -2,9 +2,9 @@ import { Col, Popover, Row, Table } from 'antd';
 import moment from 'moment';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from 'src/components/misc/Icon';
 import { TransactionAmount } from 'src/components/Transactions/TransactionAmount';
 import { GetTransactionsQuery, useGetTransactionsQuery } from 'src/generated/graphql';
+import CategoryIcon from '../../misc/CategoryIcon';
 
 interface OperationsForCategoriesProps {
   from?: number;
@@ -67,19 +67,7 @@ const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
           return (
             <Row gutter={8}>
               <Col span={8}>
-                <div
-                  className="category-icon"
-                  style={{
-                    backgroundColor: category.icon?.backgroundColor || 'grey',
-                  }}
-                >
-                  <Icon
-                    name={category.icon?.name || 'warning'}
-                    type={category.icon?.type || 'AntDesign'}
-                    color={'white'}
-                    size={16}
-                  />
-                </div>
+                <CategoryIcon icon={category.icon} />
               </Col>
               <Col span={16}>{t(category.name)}</Col>
             </Row>

@@ -8,12 +8,6 @@ fragment wallet on Wallet {
 fragment transaction on Transaction {
   id
   type
-  sourceWallet {
-    ...wallet
-  }
-  destinationWallet {
-    ...wallet
-  }
   currency {
     id
     name
@@ -21,7 +15,6 @@ fragment transaction on Transaction {
     symbol
   }
   category {
-    id
     name
     type
     icon {
@@ -39,8 +32,16 @@ fragment transaction on Transaction {
 query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
+    sourceWallet {
+      ...wallet
+    }
+    destinationWallet {
+      ...wallet
+    }
+    meta
   }
 }
+
 query getTransactions(
   $type: TransactionType
   $from: Float
@@ -69,6 +70,31 @@ query getTransactions(
     orderBy: $orderBy
     order: $order
   ) {
+    totalCount
+    items {
+      ...transaction
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
+    }
+  }
+}
+
+query getWalletTransactions(
+  $type: TransactionType
+  $limit: Float
+  $offset: Float
+  $walletId: String!
+) {
+  wallet(id: $walletId) {
+    id
+    name
+    description
+  }
+  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
     totalCount
     items {
       ...transaction

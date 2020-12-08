@@ -23,6 +23,7 @@ import { Avatar, Layout as AntdLayout, Menu } from 'antd';
 import React, { FC, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useGetProfileQuery } from 'src/generated/graphql';
+import { useTranslation } from 'react-i18next';
 
 export type ActivePage =
   | 'info'
@@ -60,6 +61,7 @@ const MenuMap: Record<string, string> = {
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
   const [redirect, setRedirect] = useState<string | undefined>(undefined);
   const { data } = useGetProfileQuery();
+  const { t } = useTranslation();
 
   if (redirect) {
     return <Redirect to={redirect} exact />;
@@ -102,24 +104,24 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
           >
             <Menu.SubMenu key="ledgers" icon={<DollarOutlined />} title="Ledgers">
               <Menu.Item key="accounting" icon={<WalletOutlined />}>
-                <Link to="/accounting">Wallets</Link>
+                <Link to="/accounting">{t('wallets')}</Link>
               </Menu.Item>
               <Menu.Item key="2" icon={<TrophyOutlined />}>
-                Goals
+                {t('goals')}
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="transactions" icon={<LaptopOutlined />} title="Transactions">
+            <Menu.SubMenu key="transactions" icon={<LaptopOutlined />} title={t('transactions')}>
               <Menu.Item key="outcomes" icon={<FallOutlined />}>
-                <Link to="/outcomes">Outcomes</Link>
+                <Link to="/outcomes">{t('outcomes')}</Link>
               </Menu.Item>
               <Menu.Item key="incomes" icon={<RiseOutlined />}>
-                <Link to="/incomes">Incomes</Link>
+                <Link to="/incomes">{t('incomes')}</Link>
               </Menu.Item>
               <Menu.Item key="7" icon={<ArrowsAltOutlined />}>
-                Transfers
+                {t('transfers')}
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="sub3" icon={<TableOutlined />} title="Budget">
+            <Menu.SubMenu key="sub3" icon={<TableOutlined />} title={t('budget')}>
               <Menu.Item key="9" icon={<CarryOutOutlined />}>
                 Current
               </Menu.Item>
@@ -142,13 +144,13 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.Item key="categories" icon={<BookOutlined />}>
-              <Link to="/categories">Categories</Link>
+              <Link to="/categories">{t('categories')}</Link>
             </Menu.Item>
             <Menu.Item key="currencies" icon={<MoneyCollectOutlined />}>
-              <Link to="/currencies">Currencies</Link>
+              <Link to="/currencies">{t('currencies')}</Link>
             </Menu.Item>
             <Menu.Item key="connectors" icon={<LinkOutlined />}>
-              <Link to="/connectors">Connectors</Link>
+              <Link to="/connectors">{t('connectors')}</Link>
             </Menu.Item>
           </Menu>
         </AntdLayout.Sider>

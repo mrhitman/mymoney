@@ -1,9 +1,11 @@
-import { Col, Row } from 'antd';
+import { Col, Row, Select } from 'antd';
 import React, { FC } from 'react';
 import { useGetProfileQuery } from 'src/generated/graphql';
+import { useTranslation } from 'react-i18next';
 
 const Settings: FC = () => {
   const { data } = useGetProfileQuery();
+  const { t, i18n } = useTranslation();
 
   return (
     <Row>
@@ -17,15 +19,15 @@ const Settings: FC = () => {
       </Col>
       <Col span={17}>
         <Row>
-          <Col span={4}>First name:</Col>
+          <Col span={4}>{t('first_name')}:</Col>
           <Col>{data?.profile.firstName}</Col>
         </Row>
         <Row>
-          <Col span={4}>Last name:</Col>
+          <Col span={4}>{t('last_name')}:</Col>
           <Col>{data?.profile.lastName}</Col>
         </Row>
         <Row>
-          <Col span={4}>Middle name:</Col>
+          <Col span={4}>{t('middle_name')}:</Col>
           <Col>{data?.profile.middleName}</Col>
         </Row>
         <Row>
@@ -33,8 +35,19 @@ const Settings: FC = () => {
           <Col>{data?.profile.email}</Col>
         </Row>
         <Row>
-          <Col span={4}>Language</Col>
-          <Col>{data?.profile.additional?.language || 'en'}</Col>
+          <Col span={4}>{t('language')}</Col>
+          <Col>
+            <Select
+              onChange={(e: string) => {
+                i18n.changeLanguage(e);
+                localStorage.setItem('lng', e);
+              }}
+              value={localStorage.getItem('lng') || 'ru'}
+            >
+              <Select.Option value="en">English</Select.Option>
+              <Select.Option value="ru">Русский</Select.Option>
+            </Select>
+          </Col>
         </Row>
       </Col>
     </Row>

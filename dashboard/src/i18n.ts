@@ -3,10 +3,11 @@ import { initReactI18next } from 'react-i18next';
 import en from 'common/translations/en.json';
 import ru from 'common/translations/ru.json';
 
+const lng = localStorage.getItem('lng') || 'ru';
 const languageDetector = {
   type: 'languageDetector' as any,
   async: true,
-  detect: (cb: Function) => cb('ru'),
+  detect: (cb: Function) => cb(lng),
   init: () => {},
   cacheUserLanguage: () => {},
 };
@@ -16,7 +17,7 @@ i18next
   .use(initReactI18next)
   .init(
     {
-      fallbackLng: 'ru',
+      fallbackLng: lng,
       debug: true,
       resources: {
         en: { translation: en },

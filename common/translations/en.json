@@ -145,5 +145,9 @@
   "lockscreen_after": "Lock screen after",
   "<Not selected>": "<Not selected>",
   "SYSTEM_EMPTY": "Unknown",
-  "category_games": "Games"
+  "category_games": "Games",
+  "category_cosmetics": "Cosmetics",
+  "first_name": "First name",
+  "last_name": "Last name",
+  "middle_name": "Middle name"
 }

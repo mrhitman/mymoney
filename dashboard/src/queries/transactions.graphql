@@ -42,6 +42,32 @@ query getTransaction($id: String!) {
   }
 }
 
+query export(
+  $type: TransactionType
+  $from: Float
+  $to: Float
+  $walletIds: [String!]
+  $categoryIds: [String!]
+  $search: String
+  $amountGte: Float
+  $amountLte: Float
+  $order: String
+  $orderBy: String
+) {
+  export(
+    type: $type
+    from: $from
+    to: $to
+    walletIds: $walletIds
+    categoryIds: $categoryIds
+    search: $search
+    amountGteFilter: $amountGte
+    amountLteFilter: $amountLte
+    orderBy: $orderBy
+    order: $order
+  )
+}
+
 query getTransactions(
   $type: TransactionType
   $from: Float

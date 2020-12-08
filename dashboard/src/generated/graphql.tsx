@@ -215,6 +215,7 @@ export type Query = {
   activeBudget: Budget;
   categories: Array<Category>;
   category: Category;
+  export: Scalars['String'];
   transactions: GetTransaction;
   transaction: Transaction;
   wallets: Array<Wallet>;
@@ -270,6 +271,21 @@ export type QueryCategoryArgs = {
 };
 
 
+export type QueryExportArgs = {
+  order?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<Scalars['String']>;
+  amountLteFilter?: Maybe<Scalars['Float']>;
+  amountGteFilter?: Maybe<Scalars['Float']>;
+  search?: Maybe<Scalars['String']>;
+  type?: Maybe<TransactionType>;
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  currencyId?: Maybe<Scalars['String']>;
+  categoryIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
 export type QueryTransactionsArgs = {
   order?: Maybe<Scalars['String']>;
   orderBy?: Maybe<Scalars['String']>;
@@ -311,6 +327,7 @@ export type Mutation = {
   connectPrivat24: Scalars['String'];
   disconnectPrivat24: Scalars['String'];
   generateHistory: Scalars['String'];
+  updateProfile: User;
   budgetAddOutcomeCategory: Budget;
   budgetRemoveOutcomeCategory: Budget;
   budgetAddIncomeCategory: Budget;
@@ -371,6 +388,11 @@ export type MutationDisconnectPrivat24Args = {
 export type MutationGenerateHistoryArgs = {
   clearOldHistory: Scalars['Boolean'];
   walletId: Scalars['String'];
+};
+
+
+export type MutationUpdateProfileArgs = {
+  profileUpdateData: UserUpdate;
 };
 
 
@@ -459,6 +481,13 @@ export type AddConnectorArgs = {
   params: Scalars['JSON'];
   type: Scalars['String'];
   description: Scalars['String'];
+};
+
+export type UserUpdate = {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  middleName?: Maybe<Scalars['String']>;
+  additional?: Maybe<Scalars['JSON']>;
 };
 
 export type BudgetCategoryCreate = {
@@ -838,6 +867,25 @@ export type GetTransactionQuery = (
     )> }
     & TransactionFragment
   ) }
+);
+
+export type ExportQueryVariables = Exact<{
+  type?: Maybe<TransactionType>;
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  categoryIds?: Maybe<Array<Scalars['String']>>;
+  search?: Maybe<Scalars['String']>;
+  amountGte?: Maybe<Scalars['Float']>;
+  amountLte?: Maybe<Scalars['Float']>;
+  order?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ExportQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'export'>
 );
 
 export type GetTransactionsQueryVariables = Exact<{
@@ -1562,6 +1610,46 @@ export function useGetTransactionLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetTransactionQueryHookResult = ReturnType<typeof useGetTransactionQuery>;
 export type GetTransactionLazyQueryHookResult = ReturnType<typeof useGetTransactionLazyQuery>;
 export type GetTransactionQueryResult = Apollo.QueryResult<GetTransactionQuery, GetTransactionQueryVariables>;
+export const ExportDocument = gql`
+    query export($type: TransactionType, $from: Float, $to: Float, $walletIds: [String!], $categoryIds: [String!], $search: String, $amountGte: Float, $amountLte: Float, $order: String, $orderBy: String) {
+  export(type: $type, from: $from, to: $to, walletIds: $walletIds, categoryIds: $categoryIds, search: $search, amountGteFilter: $amountGte, amountLteFilter: $amountLte, orderBy: $orderBy, order: $order)
+}
+    `;
+
+/**
+ * __useExportQuery__
+ *
+ * To run a query within a React component, call `useExportQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExportQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *      walletIds: // value for 'walletIds'
+ *      categoryIds: // value for 'categoryIds'
+ *      search: // value for 'search'
+ *      amountGte: // value for 'amountGte'
+ *      amountLte: // value for 'amountLte'
+ *      order: // value for 'order'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useExportQuery(baseOptions?: Apollo.QueryHookOptions<ExportQuery, ExportQueryVariables>) {
+        return Apollo.useQuery<ExportQuery, ExportQueryVariables>(ExportDocument, baseOptions);
+      }
+export function useExportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExportQuery, ExportQueryVariables>) {
+          return Apollo.useLazyQuery<ExportQuery, ExportQueryVariables>(ExportDocument, baseOptions);
+        }
+export type ExportQueryHookResult = ReturnType<typeof useExportQuery>;
+export type ExportLazyQueryHookResult = ReturnType<typeof useExportLazyQuery>;
+export type ExportQueryResult = Apollo.QueryResult<ExportQuery, ExportQueryVariables>;
 export const GetTransactionsDocument = gql`
     query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!], $search: String, $amountGte: Float, $amountLte: Float, $order: String, $orderBy: String) {
   transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds, search: $search, amountGteFilter: $amountGte, amountLteFilter: $amountLte, orderBy: $orderBy, order: $order) {

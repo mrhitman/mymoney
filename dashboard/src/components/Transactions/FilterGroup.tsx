@@ -1,4 +1,4 @@
-import { ClearOutlined, FilterOutlined, MoreOutlined } from '@ant-design/icons';
+import { ClearOutlined, ExportOutlined, FilterOutlined, MoreOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Input, InputNumber, Row, Select } from 'antd';
 import { useFormik } from 'formik';
 import moment from 'moment';
@@ -72,6 +72,11 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, onReset, type }) =
           </Button>
           <Button onClick={() => setExpanded(!expanded)} icon={<MoreOutlined />}>
             {expanded ? 'Less' : 'More'} filters
+          </Button>
+        </Col>
+        <Col offset={4}>
+          <Button onClick={() => { }} icon={<ExportOutlined />}>
+            Export
           </Button>
         </Col>
       </Row>

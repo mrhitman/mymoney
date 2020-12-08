@@ -1,6 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import { appendFile } from 'fs';
+import { resolve } from 'path';
 import { DateTime } from 'luxon';
-import { transaction, TransactionOrKnex } from 'objection';
+import { OrderByDirection, transaction, TransactionOrKnex } from 'objection';
 import { BudgetsService } from 'src/budgets/budgets.service';
 import Transaction, {
   categoryInId,
@@ -15,23 +17,64 @@ import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
 import { TransactionType } from './transaction-type';
 
+interface TransactionFilters {
+  walletIds?: string[];
+  type?: TransactionType;
+  from?: number;
+  to?: number;
+  search?: string;
+  order?: OrderByDirection;
+  orderBy?: string;
+  amountGteFilter?: number;
+  amountLteFilter?: number;
+  currencyId?: string;
+  categoryIds?: string[];
+}
+
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) {}
+  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) { }
+
+  public async export(user: User, filter: TransactionFilters = {}) {
+    function write(path: string, data: any) {
+      return new Promise((res, rej) => {
+        appendFile(path, data, { encoding: "utf-8" }, (err) => {
+          if (err) {
+            rej(err);
+          } else {
+            res();
+          }
+        })
+      });
+    }
+    const query = this.getAll(user, filter);
+    const limit = 10;
+    let offset = 0;
+    let rows: Transaction[] = [];
+    const name = `${uuid()}.json`;
+    const path = resolve(__dirname, '..', '..', 'static', name);
+    await write(path, '[');
+    while (true) {
+      rows = await query
+        .limit(limit)
+        .offset(offset)
+        .orderBy(filter.orderBy || 'date', filter.order || 'desc');
+
+      if (!rows.length) {
+        break;
+      }
+
+      await write(path, (offset ? ',' : '') + JSON.stringify(rows.map(row => row.toJSON())).slice(1, -1));
+      offset += limit;
+    }
+    await write(path, ']');
+
+    return `/${name}`;
+  }
 
   public getAll(
     user: User,
-    filter: {
-      walletIds?: string[];
-      type?: TransactionType;
-      from?: number;
-      to?: number;
-      search?: string;
-      amountGteFilter?: number;
-      amountLteFilter?: number;
-      currencyId?: string;
-      categoryIds?: string[];
-    } = {},
+    filter: TransactionFilters = {},
   ) {
     const query = Transaction.query().where({ userId: user.id });
 

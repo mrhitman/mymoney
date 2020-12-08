@@ -222,6 +222,7 @@ type Query {
   activeBudget: Budget!
   categories(type: String): [Category!]!
   category(id: String!): Category!
+  export(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): String!
   transactions(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
   transaction(id: String!): Transaction!
   wallets: [Wallet!]!

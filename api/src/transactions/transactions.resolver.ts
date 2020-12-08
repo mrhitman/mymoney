@@ -17,7 +17,39 @@ import { OrderByDirection } from 'objection';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
-  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) {}
+  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) { }
+
+  @UseGuards(GqlAuthGuard)
+  @Query((returns) => String)
+  public async export(
+    @CurrentUser() user: User,
+    @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
+    @Args('categoryIds', { nullable: true, type: () => [String] }) categoryIds?: string[],
+    @Args('currencyId', { nullable: true }) currencyId?: string,
+    @Args('from', { nullable: true }) from?: number,
+    @Args('to', { nullable: true }) to?: number,
+    @Args('type', { nullable: true, type: () => TransactionType }) type?: TransactionType,
+    @Args('search', { nullable: true }) search?: string,
+    @Args('amountGteFilter', { nullable: true }) amountGteFilter?: number,
+    @Args('amountLteFilter', { nullable: true }) amountLteFilter?: number,
+    @Args('orderBy', { nullable: true }) orderBy?: string,
+    @Args('order', { nullable: true }) order?: OrderByDirection,
+  ) {
+    return this.service.export(user,
+      {
+        walletIds,
+        type,
+        from,
+        to,
+        search,
+        order,
+        orderBy,
+        amountGteFilter,
+        amountLteFilter,
+        currencyId,
+        categoryIds,
+      });
+  }
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => Transactions)

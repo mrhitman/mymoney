@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Divider, List, Row, Typography, Popconfirm } from 'antd';
-import React, { FC, useState } from 'react';
+import { Avatar, Button, Card, Col, Divider, List, Popconfirm, Row, Typography } from 'antd';
+import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { GetWalletsQuery } from 'src/generated/graphql';
 

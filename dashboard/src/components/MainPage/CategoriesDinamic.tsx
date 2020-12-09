@@ -1,13 +1,12 @@
+import { Axis, Chart, Coordinate, Interaction, Interval, Tooltip } from 'bizcharts';
 import { round } from 'lodash';
 import moment from 'moment';
-import React, { FC, useEffect, useState } from 'react';
-import {
-  useAnalysByCategoriesLazyQuery,
-  AnalysByCategoriesQuery,
-  TransactionType,
-} from '../../generated/graphql';
-import { Chart, Interval, Tooltip, Axis, Coordinate, Interaction } from 'bizcharts';
+import React, { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  AnalysByCategoriesQuery,
+  TransactionType, useAnalysByCategoriesLazyQuery
+} from 'src/generated/graphql';
 
 const cols = {
   percent: {

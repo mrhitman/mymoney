@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TransactionType, useGetFilterGroupQuery } from 'src/generated/graphql';
+import { TransactionType, useExportLazyQuery, useGetFilterGroupQuery } from 'src/generated/graphql';
 import ranges from '../misc/DateRanges';
 
 export interface FilterCriteries {
@@ -44,6 +44,12 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, onReset, type }) =
     onSubmit: onFilter,
   });
 
+  const [doExport, { data: exportData }] = useExportLazyQuery();
+
+  if (exportData?.export) {
+    window.open(process.env.REACT_APP_SERVER + exportData.export.slice(1), 'Download');
+  }
+
   return (
     <div style={{ marginBottom: 10 }}>
       <Row gutter={12} style={{ margin: 4 }}>
@@ -75,7 +81,19 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, onReset, type }) =
           </Button>
         </Col>
         <Col offset={4}>
-          <Button onClick={() => { }} icon={<ExportOutlined />}>
+          <Button onClick={() => {
+            doExport({
+              variables: {
+                walletIds: formik.values.wallets.length ? formik.values.wallets : undefined,
+                categoryIds: formik.values.categories.length ? formik.values.categories : undefined,
+                from: formik.values.range ? formik.values.range[0].unix() : undefined,
+                to: formik.values.range ? formik.values.range[1].unix() : undefined,
+                search: formik.values.search,
+                amountGte: formik.values.amountFrom,
+                amountLte: formik.values.amountTo,
+              }
+            })
+          }} icon={<ExportOutlined />}>
             Export
           </Button>
         </Col>

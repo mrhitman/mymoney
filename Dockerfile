@@ -33,10 +33,13 @@ RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
 RUN npm i -g pnpm
 
-RUN cd common && pnpm run build
-RUN cd dashboard && REACT_APP_SERVER=$REACT_APP_SERVER REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID pnpm run build --max_old_space_size=8192 -p
-RUN cd api && pnpm run build
 RUN pnpm i -r
+RUN pnpm run build --filter ./common
+RUN pnpm run build --filter ./api
+RUN cd dashboard && \
+    REACT_APP_SERVER=$REACT_APP_SERVER \
+    REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID \
+    SKIP_PREFLIGHT_CHECK=true pnpm run build -p
 
 FROM node:12-alpine
 RUN mkdir /opt/mymoney

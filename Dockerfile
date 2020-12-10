@@ -28,6 +28,7 @@ COPY tsconfig.json tsconfig.json
 COPY tsconfig.build.json tsconfig.build.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
+COPY .npmrc .npmrc
 
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*

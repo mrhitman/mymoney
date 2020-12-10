@@ -1,6 +1,0 @@
-{
-  "packages": ["common", "api", "dashboard", "mobile"],
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "version": "0.0.0"
-}

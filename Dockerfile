@@ -19,28 +19,31 @@ COPY dashboard/src dashboard/src
 COPY dashboard/public dashboard/public
 COPY dashboard/.eslintignore dashboard/.eslintignore
 COPY dashboard/.eslintrc.js dashboard/.eslintrc.js
-COPY dashboard/config-overrides.js dashboard/config-overrides.js
+COPY dashboard/craco.config.js dashboard/craco.config.js
 COPY dashboard/package.json dashboard/package.json
 COPY dashboard/tsconfig.json dashboard/tsconfig.json
 
 COPY package.json package.json
 COPY tsconfig.json tsconfig.json
 COPY tsconfig.build.json tsconfig.build.json
-COPY lerna.json lerna.json
-COPY yarn.lock yarn.lock
+COPY pnpm-lock.yaml pnpm-lock.yaml
+COPY pnpm-workspace.yaml pnpm-workspace.yaml
 
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
-RUN yarn install
-RUN npm i -g lerna
+RUN npm i -g pnpm
 
-RUN cd common && ls -al && yarn build
-RUN cd dashboard && REACT_APP_SERVER=$REACT_APP_SERVER REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID yarn build --max_old_space_size=8192 -p
-RUN cd api && yarn build
-RUN lerna bootstrap --nohoist=**
+RUN pnpm i -r
+RUN pnpm run build --filter ./common
+RUN pnpm run build --filter ./api
+RUN cd dashboard && \
+    REACT_APP_SERVER=$REACT_APP_SERVER \
+    REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID \
+    SKIP_PREFLIGHT_CHECK=true pnpm run build -p
 
 FROM node:12-alpine
 RUN mkdir /opt/mymoney
+RUN npm i -g pnpm
 WORKDIR /opt/mymoney
 
 COPY --from=stage /opt/mymoney/api/dist api/dist
@@ -56,4 +59,4 @@ EXPOSE 4000
 
 RUN cd api
 WORKDIR /opt/mymoney/api
-CMD yarn start:prod
+CMD pnpm run start:prod

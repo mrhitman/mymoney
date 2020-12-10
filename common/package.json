@@ -9,8 +9,8 @@
     "lodash": "^4.17.15",
     "mobx": "^5.15.4",
     "mobx-state-tree": "^3.16.0",
-    "moment": "^2.27.0",
-    "typescript": "^3.9.2"
+    "moment": "2.29.1",
+    "typescript": "3.9.7"
   },
   "directories": {
     "lib": "lib",
@@ -23,13 +23,12 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile",
+    "build": "pnpm run clean && pnpm run compile",
     "clean": "rm -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.157",
-    "@types/moment": "^2.13.0"
+    "@types/lodash": "^4.14.157"
   }
 }

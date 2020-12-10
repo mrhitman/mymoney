@@ -1,7 +1,7 @@
 import { ClearOutlined, ExportOutlined, FilterOutlined, MoreOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Input, InputNumber, Row, Select } from 'antd';
 import { useFormik } from 'formik';
-import moment from 'moment';
+import { Moment } from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TransactionType, useExportLazyQuery, useGetFilterGroupQuery } from 'src/generated/graphql';
@@ -9,7 +9,7 @@ import ranges from '../misc/DateRanges';
 
 export interface FilterCriteries {
   search: string | undefined;
-  range: [moment.Moment, moment.Moment] | undefined;
+  range: [Moment, Moment] | undefined;
   categories: string[];
   currencies: string[];
   wallets: string[];
@@ -80,20 +80,25 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, onReset, type }) =
             {expanded ? 'Less' : 'More'} filters
           </Button>
         </Col>
-        <Col offset={4}>
-          <Button onClick={() => {
-            doExport({
-              variables: {
-                walletIds: formik.values.wallets.length ? formik.values.wallets : undefined,
-                categoryIds: formik.values.categories.length ? formik.values.categories : undefined,
-                from: formik.values.range ? formik.values.range[0].unix() : undefined,
-                to: formik.values.range ? formik.values.range[1].unix() : undefined,
-                search: formik.values.search,
-                amountGte: formik.values.amountFrom,
-                amountLte: formik.values.amountTo,
-              }
-            })
-          }} icon={<ExportOutlined />}>
+        <Col>
+          <Button
+            onClick={() => {
+              doExport({
+                variables: {
+                  walletIds: formik.values.wallets.length ? formik.values.wallets : undefined,
+                  categoryIds: formik.values.categories.length
+                    ? formik.values.categories
+                    : undefined,
+                  from: formik.values.range ? formik.values.range[0].unix() : undefined,
+                  to: formik.values.range ? formik.values.range[1].unix() : undefined,
+                  search: formik.values.search,
+                  amountGte: formik.values.amountFrom,
+                  amountLte: formik.values.amountTo,
+                },
+              });
+            }}
+            icon={<ExportOutlined />}
+          >
             Export
           </Button>
         </Col>

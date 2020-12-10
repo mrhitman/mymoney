@@ -33,18 +33,18 @@ interface TransactionFilters {
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) { }
+  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) {}
 
   public async export(user: User, filter: TransactionFilters = {}) {
     function write(path: string, data: any) {
       return new Promise((res, rej) => {
-        appendFile(path, data, { encoding: "utf-8" }, (err) => {
+        appendFile(path, data, { encoding: 'utf-8' }, (err) => {
           if (err) {
             rej(err);
           } else {
-            res();
+            res(true);
           }
-        })
+        });
       });
     }
     const query = this.getAll(user, filter);
@@ -64,7 +64,10 @@ export class TransactionsService {
         break;
       }
 
-      await write(path, (offset ? ',' : '') + JSON.stringify(rows.map(row => row.toJSON())).slice(1, -1));
+      await write(
+        path,
+        (offset ? ',' : '') + JSON.stringify(rows.map((row) => row.toJSON())).slice(1, -1),
+      );
       offset += limit;
     }
     await write(path, ']');
@@ -72,10 +75,7 @@ export class TransactionsService {
     return `/${name}`;
   }
 
-  public getAll(
-    user: User,
-    filter: TransactionFilters = {},
-  ) {
+  public getAll(user: User, filter: TransactionFilters = {}) {
     const query = Transaction.query().where({ userId: user.id });
 
     if (filter.walletIds) {

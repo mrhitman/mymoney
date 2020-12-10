@@ -47,6 +47,7 @@ RUN mkdir /opt/mymoney
 RUN npm i -g pnpm
 WORKDIR /opt/mymoney
 
+COPY --from=stage /opt/mymoney/node_modules node_modules
 COPY --from=stage /opt/mymoney/api/dist api/dist
 COPY --from=stage /opt/mymoney/api/src api/src
 COPY --from=stage /opt/mymoney/api/package.json api/package.json

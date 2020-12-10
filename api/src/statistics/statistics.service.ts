@@ -1,14 +1,14 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { GetRateResponse } from 'common/responses';
 import { dataByCategory, Interval } from 'common';
+import { chain, first } from 'lodash';
 import { DateTime } from 'luxon';
 import { CurrenciesService } from 'src/currencies/currencies.service';
-import Transaction, { categoryInId, categoryOutId } from 'src/database/models/transaction.model';
-import WalletHistory from 'src/database/models/wallet-history.model';
+import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
-import { TransactionType } from 'src/transactions/transaction-type';
+import WalletHistory from 'src/database/models/wallet-history.model';
 import Wallet from 'src/database/models/wallet.model';
-import { chain, first, groupBy, keyBy } from 'lodash';
-import { GetRateResponse } from 'common/responses';
+import { TransactionType } from 'src/transactions/transaction-type';
 
 interface GetStatisticByCategoryFilter {
   walletIds?: string[];

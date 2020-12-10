@@ -6,11 +6,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start:api": "cd api && docker-compose up -d && yarn start:dev",
+    "start:api": "cd api && docker-compose up -d && pnpm run start:dev",
     "stop:api:services": "cd api && docker-compose down",
     "start:api:services": "cd api && docker-compose up -d",
-    "start:dashboard": "cd dashboard && yarn start",
-    "start": "concurrently \"yarn start:api\" \"yarn start:dashboard\"",
+    "start:dashboard": "cd dashboard && pnpm run start",
+    "start": "concurrently \"pnpm run start:api\" \"pnpm run start:dashboard\"",
     "deploy": "bash heroku.sh deploy"
   },
   "workspaces": {
@@ -24,8 +24,6 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^5.2.0",
-    "lerna": "^3.20.2"
-  },
-  "dependencies": {}
+    "concurrently": "^5.2.0"
+  }
 }

@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "reset:db": "yarn migrate:down && yarn migrate && yarn seed",
+    "reset:db": "pnpm run migrate:down && pnpm run migrate && pnpm run seed",
     "migrate": "knex migrate:latest --cwd src --knexfile knexfile.ts",
     "migrate:prod": "knex migrate:latest --cwd dist --knexfile knexfile.js",
     "migrate:down": "knex migrate:rollback --cwd src --knexfile knexfile.ts",
@@ -72,7 +72,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "s": "^1.0.0",
-    "typescript": "4.1.2",
+    "typescript": "3.9.7",
     "uuid": "^8.0.0",
     "xml2js": "^0.4.23",
     "xml2json": "^0.12.0"

@@ -179,36 +179,39 @@ importers:
       '@ant-design/icons': 4.3.0_react-dom@16.14.0+react@16.14.0
       '@apollo/client': 3.3.4_graphql@15.4.0+react@16.14.0
       '@babel/plugin-proposal-class-properties': 7.12.1
+      '@babel/plugin-transform-react-jsx': 7.12.10
+      '@craco/craco': 5.9.0_react-scripts@3.4.1
+      '@react-native-community/toolbar-android': 0.1.0-rc.2_react@16.14.0
       '@testing-library/jest-dom': 4.2.4
       '@testing-library/react': 9.5.0_react-dom@16.14.0+react@16.14.0
       '@testing-library/user-event': 7.2.1
-      '@types/jest': 24.9.1
-      '@types/node': 12.19.8
-      '@types/react': 16.14.2
-      '@types/react-dom': 16.9.10
       antd: 4.9.2_react-dom@16.14.0+react@16.14.0
       apollo-boost: 0.4.9_graphql@15.4.0
+      apollo-link: 1.2.14_graphql@15.4.0
       axios: 0.19.2
       bizcharts: 4.0.16_react@16.14.0
       common: 'link:../common'
+      craco-babel-loader: 0.1.4_react-scripts@3.4.1
       customize-cra: 0.9.1
       formik: 2.2.5_react@16.14.0
       graphql: 15.4.0
       graphql-request: 2.0.0
       graphql.macro: 1.4.2_graphql@15.4.0
+      history: 5.0.0
       i18next: 19.8.4
       lodash: 4.17.20
       moment: 2.29.1
       mst-gql: 0.12.5_typescript@3.9.7
       react: 16.14.0
-      react-apollo: 3.1.5_e67fb818f3c3980a9afac97031739192
+      react-apollo: 3.1.5_60bbd0a1d504209616e560c72279acda
       react-country-flag: 2.3.0_react-dom@16.14.0+react@16.14.0
       react-dom: 16.14.0_react@16.14.0
       react-google-login: 5.1.25_react-dom@16.14.0+react@16.14.0
       react-i18next: 11.8.3_i18next@19.8.4+react@16.14.0
       react-native-elements: 2.3.2_07b9d3fb3fa75fc65d66c432408cdc3b
-      react-native-vector-icons: 6.7.0
+      react-native-vector-icons: 6.7.0_5b7927cc47d4baf54576f32e2a9a3405
       react-native-web: 0.11.7_react-dom@16.14.0+react@16.14.0
+      react-router: 5.2.0_react@16.14.0
       react-router-dom: 5.2.0_react@16.14.0
       react-scripts: 3.4.1_typescript@3.9.7
       react-world-flags: 1.4.0_react@16.14.0
@@ -220,22 +223,28 @@ importers:
       '@graphql-codegen/typescript': 1.17.8_graphql@15.4.0
       '@graphql-codegen/typescript-operations': 1.17.12_graphql@15.4.0
       '@graphql-codegen/typescript-react-apollo': 2.2.1_graphql@15.4.0
+      '@types/jest': 24.9.1
       '@types/lodash': 4.14.165
+      '@types/node': 12.19.8
+      '@types/react': 16.14.2
+      '@types/react-dom': 16.9.10
       '@types/react-native-vector-icons': 6.4.6
       '@types/react-router-dom': 5.1.6
       '@types/uuid': 8.3.0
       '@types/victory': 33.1.4
       eslint-config-google: 0.14.0
-      react-app-rewired: 2.1.7_react-scripts@3.4.1
     specifiers:
       '@ant-design/icons': ^4.2.2
       '@apollo/client': ^3.1.3
       '@babel/plugin-proposal-class-properties': ^7.12.1
+      '@babel/plugin-transform-react-jsx': ^7.12.10
+      '@craco/craco': 5.9.0
       '@graphql-codegen/cli': 1.17.8
       '@graphql-codegen/introspection': 1.17.8
       '@graphql-codegen/typescript': 1.17.8
       '@graphql-codegen/typescript-operations': ^1.17.8
       '@graphql-codegen/typescript-react-apollo': '*'
+      '@react-native-community/toolbar-android': ^0.1.0-rc.2
       '@testing-library/jest-dom': ^4.2.4
       '@testing-library/react': ^9.3.2
       '@testing-library/user-event': ^7.1.2
@@ -250,22 +259,24 @@ importers:
       '@types/victory': ^33.1.4
       antd: ^4.6.2
       apollo-boost: ^0.4.9
+      apollo-link: ^1.2.14
       axios: ^0.19.2
       bizcharts: ^4.0.14
       common: 'workspace:common'
+      craco-babel-loader: ^0.1.4
       customize-cra: ^0.9.1
       eslint-config-google: ^0.14.0
       formik: ^2.1.4
       graphql: ^15.3.0
       graphql-request: ^2.0.0
       graphql.macro: ^1.4.2
+      history: ^5.0.0
       i18next: ^19.4.5
       lodash: ^4.17.15
       moment: 2.29.1
       mst-gql: ^0.12.0
       react: ^16.13.1
       react-apollo: ^3.1.5
-      react-app-rewired: ^2.1.6
       react-country-flag: ^2.2.0
       react-dom: ^16.13.1
       react-google-login: ^5.1.21
@@ -273,6 +284,7 @@ importers:
       react-native-elements: ^2.0.2
       react-native-vector-icons: ^6.6.0
       react-native-web: 0.11.7
+      react-router: ^5.2.0
       react-router-dom: ^5.2.0
       react-scripts: 3.4.1
       react-world-flags: ^1.4.0
@@ -749,11 +761,12 @@ packages:
       react: ^16.8.0
     resolution:
       integrity: sha512-X5Kyro73bthWSCBJUC5XYQqMnG0dLWuDZmVkzog9dynovhfiVCV4kPSdgSIkqnb++cwCzOVuQ4rDKVwo2XRzQA==
-  /@apollo/react-components/3.1.5_e67fb818f3c3980a9afac97031739192:
+  /@apollo/react-components/3.1.5_60bbd0a1d504209616e560c72279acda:
     dependencies:
       '@apollo/react-common': 3.1.4_172c5b1046fdb50907b1c4c6b20c713e
       '@apollo/react-hooks': 3.1.5_e67fb818f3c3980a9afac97031739192
       '@types/react': 16.14.2
+      apollo-link: 1.2.14_graphql@15.4.0
       graphql: 15.4.0
       prop-types: 15.7.2
       react: 16.14.0
@@ -772,10 +785,10 @@ packages:
       react-dom: ^16.8.0
     resolution:
       integrity: sha512-c82VyUuE9VBnJB7bnX+3dmwpIPMhyjMwyoSLyQWPHxz8jK4ak30XszJtqFf4eC4hwvvLYa+Ou6X73Q8V8e2/jg==
-  /@apollo/react-hoc/3.1.5_e67fb818f3c3980a9afac97031739192:
+  /@apollo/react-hoc/3.1.5_60bbd0a1d504209616e560c72279acda:
     dependencies:
       '@apollo/react-common': 3.1.4_172c5b1046fdb50907b1c4c6b20c713e
-      '@apollo/react-components': 3.1.5_e67fb818f3c3980a9afac97031739192
+      '@apollo/react-components': 3.1.5_60bbd0a1d504209616e560c72279acda
       '@types/react': 16.14.2
       graphql: 15.4.0
       hoist-non-react-statics: 3.3.2
@@ -787,6 +800,7 @@ packages:
     peerDependencies:
       '@types/react': ^16.8.0
       apollo-client: ^2.6.4
+      apollo-link: '*'
       graphql: ^14.3.1
       react: ^16.8.0
       react-dom: ^16.8.0
@@ -1507,6 +1521,14 @@ packages:
       '@babel/core': ^7.0.0-0
     resolution:
       integrity: sha512-lY6kdGpWHvjoe2vk4WrAapEuBR69EMxZl+RoGRhrFGNYVK8mOPAW8VfbT/ZgrFbXlDNiiaxQnAtgVCZ6jv30EA==
+  /@babel/plugin-syntax-jsx/7.12.1:
+    dependencies:
+      '@babel/helper-plugin-utils': 7.10.4
+    dev: false
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    resolution:
+      integrity: sha512-1yRi7yAtB0ETgxdY9ti/p2TivUxJkTdhu/ZbF9MshVGqOx1TdB3b7xCXs49Fupgg50N45KcAsRP/ZqWjs9SRjg==
   /@babel/plugin-syntax-jsx/7.12.1_@babel+core@7.12.10:
     dependencies:
       '@babel/core': 7.12.10
@@ -2086,6 +2108,17 @@ packages:
       '@babel/core': ^7.0.0-0
     resolution:
       integrity: sha512-keQ5kBfjJNRc6zZN1/nVHCd6LLIHq4aUKcVnvE/2l+ZZROSbqoiGFRtT5t3Is89XJxBQaP7NLZX2jgGHdZvvFQ==
+  /@babel/plugin-transform-react-jsx/7.12.10:
+    dependencies:
+      '@babel/helper-builder-react-jsx': 7.10.4
+      '@babel/helper-builder-react-jsx-experimental': 7.12.10
+      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/plugin-syntax-jsx': 7.12.1
+    dev: false
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    resolution:
+      integrity: sha512-MM7/BC8QdHXM7Qc1wdnuk73R4gbuOpfrSUgfV/nODGc86sPY1tgmY2M9E9uAnf2e4DOIp8aKGWqgZfQxnTNGuw==
   /@babel/plugin-transform-react-jsx/7.12.10_@babel+core@7.12.10:
     dependencies:
       '@babel/core': 7.12.10
@@ -2529,6 +2562,20 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==
+  /@craco/craco/5.9.0_react-scripts@3.4.1:
+    dependencies:
+      cross-spawn: 7.0.3
+      lodash: 4.17.20
+      react-scripts: 3.4.1_typescript@3.9.7
+      webpack-merge: 4.2.2
+    dev: false
+    engines:
+      node: '>=6'
+    hasBin: true
+    peerDependencies:
+      react-scripts: '*'
+    resolution:
+      integrity: sha512-2Q8gIB4W0/nPiUxr9iAKUhGsFlXYN0/wngUdK1VWtfV2NtBv+yllNn2AjieaLbttgpQinuOYmDU65vocC0NMDg==
   /@csstools/convert-colors/1.4.0:
     dev: false
     engines:
@@ -3516,7 +3563,6 @@ packages:
       '@types/istanbul-lib-coverage': 2.0.3
       '@types/istanbul-reports': 1.1.2
       '@types/yargs': 13.0.11
-    dev: false
     engines:
       node: '>= 6'
     resolution:
@@ -3912,7 +3958,7 @@ packages:
       '@oclif/config': 1.17.0_supports-color@7.2.0
       '@oclif/errors': 1.3.4
       '@oclif/parser': 3.8.5
-      '@oclif/plugin-help': 3.2.0_supports-color@7.2.0
+      '@oclif/plugin-help': 3.2.0
       debug: 4.3.1_supports-color@7.2.0
       semver: 7.3.4
     dev: false
@@ -4022,24 +4068,6 @@ packages:
       node: '>=8.0.0'
     resolution:
       integrity: sha512-7jxtpwVWAVbp1r46ZnTK/uF+FeZc6y4p1XcGaIUuPAp7wx6NJhIRN/iMT9UfNFX/Cz7mq+OyJz+E+i0zrik86g==
-  /@oclif/plugin-help/3.2.0_supports-color@7.2.0:
-    dependencies:
-      '@oclif/command': 1.8.0_supports-color@7.2.0
-      '@oclif/config': 1.17.0_supports-color@7.2.0
-      chalk: 2.4.2
-      indent-string: 4.0.0
-      lodash.template: 4.5.0
-      string-width: 4.2.0
-      strip-ansi: 6.0.0
-      widest-line: 3.1.0
-      wrap-ansi: 4.0.0
-    dev: false
-    engines:
-      node: '>=8.0.0'
-    peerDependencies:
-      supports-color: '*'
-    resolution:
-      integrity: sha512-7jxtpwVWAVbp1r46ZnTK/uF+FeZc6y4p1XcGaIUuPAp7wx6NJhIRN/iMT9UfNFX/Cz7mq+OyJz+E+i0zrik86g==
   /@oclif/plugin-not-found/1.2.4:
     dependencies:
       '@oclif/color': 0.1.2
@@ -4137,6 +4165,15 @@ packages:
     dev: false
     resolution:
       integrity: sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+  /@react-native-community/toolbar-android/0.1.0-rc.2_react@16.14.0:
+    dependencies:
+      react: 16.14.0
+    dev: false
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    resolution:
+      integrity: sha512-UCblqsitOcoYxVc6QzcaqCKogeRnePPMw7cbGvW5GI/GXIwQel8Kge9d910W3MUPUzw3pFzhIZVug6U3W067Pg==
   /@samverschueren/stream-to-observable/0.3.1_rxjs@6.6.3:
     dependencies:
       any-observable: 0.3.0
@@ -4585,7 +4622,7 @@ packages:
   /@types/jest/24.9.1:
     dependencies:
       jest-diff: 24.9.0
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-Fb38HkXSVA4L8fGKEZ6le5bB8r6MRWlOCZbVuWZcmOMSCd2wCYOwN1ibj8daIoV9naq7aaOZjrLCoCMptKU/4Q==
   /@types/jest/25.2.1:
@@ -4740,7 +4777,6 @@ packages:
   /@types/react-dom/16.9.10:
     dependencies:
       '@types/react': 16.14.2
-    dev: false
     resolution:
       integrity: sha512-ItatOrnXDMAYpv6G8UCk2VhbYVTjZT9aorLtA/OzDN9XJ2GKcfam68jutoAcILdRjsRUO8qb7AmyObF77Q8QFw==
   /@types/react-native-vector-icons/6.4.6:
@@ -4861,7 +4897,7 @@ packages:
       integrity: sha512-y0uROW9/p2ltaZW+VcH1llrtu6Uwp1lSJ8zZbVjcXJJgddU3Is2aUvU6PxFQhbjBMtjaqNdw1tH/44c5bn/Zsw==
   /@types/webpack-sources/2.1.0:
     dependencies:
-      '@types/node': 13.13.35
+      '@types/node': 12.19.8
       '@types/source-list-map': 0.1.2
       source-map: 0.7.3
     dev: true
@@ -4870,7 +4906,7 @@ packages:
   /@types/webpack/4.41.25:
     dependencies:
       '@types/anymatch': 1.3.1
-      '@types/node': 13.13.35
+      '@types/node': 12.19.8
       '@types/tapable': 1.0.6
       '@types/uglify-js': 3.11.1
       '@types/webpack-sources': 2.1.0
@@ -4901,7 +4937,6 @@ packages:
   /@types/yargs/13.0.11:
     dependencies:
       '@types/yargs-parser': 15.0.0
-    dev: false
     resolution:
       integrity: sha512-NRqD6T4gktUrDi1o1wLH3EKC1o2caCr7/wR87ODcbVITQF106OM3sFN92ysZ++wqelOd1CTzatnOBRDYYG6wGQ==
   /@types/yargs/15.0.11:
@@ -8004,6 +8039,14 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-pondGvTuVYDk++upghXJabWzL6Kxu6f26ljFw64Swq9v6sQPUL3EUlVDV56diOjpCayKihL6hVe8exIACU4XcA==
+  /craco-babel-loader/0.1.4_react-scripts@3.4.1:
+    dependencies:
+      '@craco/craco': 5.9.0_react-scripts@3.4.1
+    dev: false
+    peerDependencies:
+      react-scripts: '*'
+    resolution:
+      integrity: sha512-2wl5yEdPYI0dsWlHoEbl602lFCdsopPs/aPqHDp3QjRKkKZFg82+ybkfhY3oGXjAOVxTvkyJLc3g/pxpN5RwEA==
   /create-ecdh/4.0.4:
     dependencies:
       bn.js: 4.11.9
@@ -8722,7 +8765,6 @@ packages:
     resolution:
       integrity: sha512-MdceRRWqltEG2dZqO769g27N/3PXfcKl04VhYnBlo2YhH7zPi88VebsjTKclaOyiuMaGU72hTfw3VkUitGcVCA==
   /diff-sequences/24.9.0:
-    dev: false
     engines:
       node: '>= 6'
     resolution:
@@ -10885,6 +10927,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
+  /history/5.0.0:
+    dependencies:
+      '@babel/runtime': 7.12.5
+    dev: false
+    resolution:
+      integrity: sha512-3NyRMKIiFSJmIPdq7FxkNMJkQ7ZEtVblOQ38VtKaA0zZMW1Eo6Q6W8oDKEflr1kNNTItSnk4JMCO1deeSgbLLg==
   /hmac-drbg/1.0.1:
     dependencies:
       hash.js: 1.1.7
@@ -12173,7 +12221,6 @@ packages:
       diff-sequences: 24.9.0
       jest-get-type: 24.9.0
       pretty-format: 24.9.0
-    dev: false
     engines:
       node: '>= 6'
     resolution:
@@ -12291,7 +12338,6 @@ packages:
     resolution:
       integrity: sha512-iuxK6rQR2En9EID+2k+IBs5fCFd919gVVK5BeND82fYeLWPqvRcFNPKu9+gxTwfB5XwBGBvZ0HFQa+cHtIoslA==
   /jest-get-type/24.9.0:
-    dev: false
     engines:
       node: '>= 6'
     resolution:
@@ -16107,7 +16153,6 @@ packages:
       ansi-regex: 4.1.0
       ansi-styles: 3.2.1
       react-is: 16.13.1
-    dev: false
     engines:
       node: '>= 6'
     resolution:
@@ -16812,11 +16857,11 @@ packages:
       react-dom: '*'
     resolution:
       integrity: sha512-uEeYDQWwQhxR97SekPeGRbzPtHSbSpw/mYb6QpZZ9bA43kf7s1socV3fD3ySYhQVzo0I+/IUD9jFGit6FbM0WA==
-  /react-apollo/3.1.5_e67fb818f3c3980a9afac97031739192:
+  /react-apollo/3.1.5_60bbd0a1d504209616e560c72279acda:
     dependencies:
       '@apollo/react-common': 3.1.4_172c5b1046fdb50907b1c4c6b20c713e
-      '@apollo/react-components': 3.1.5_e67fb818f3c3980a9afac97031739192
-      '@apollo/react-hoc': 3.1.5_e67fb818f3c3980a9afac97031739192
+      '@apollo/react-components': 3.1.5_60bbd0a1d504209616e560c72279acda
+      '@apollo/react-hoc': 3.1.5_60bbd0a1d504209616e560c72279acda
       '@apollo/react-hooks': 3.1.5_e67fb818f3c3980a9afac97031739192
       '@apollo/react-ssr': 3.1.5_e67fb818f3c3980a9afac97031739192
       '@types/react': 16.14.2
@@ -16827,6 +16872,7 @@ packages:
     peerDependencies:
       '@types/react': ^16.8.0
       apollo-client: ^2.6.4
+      apollo-link: '*'
       graphql: ^14.3.1
       react: ^16.8.0
       react-dom: ^16.8.0
@@ -16845,16 +16891,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-OfBnObtnGgLGfweORmdZbyEz+3dgVePQBb3zipiaDsMHV1NpWm0rDFYIVXFV/AK+x4VIIfWHhrdMIeoTLyRr2g==
-  /react-app-rewired/2.1.7_react-scripts@3.4.1:
-    dependencies:
-      react-scripts: 3.4.1_typescript@3.9.7
-      semver: 5.7.1
-    dev: true
-    hasBin: true
-    peerDependencies:
-      react-scripts: '>=2.1.3'
-    resolution:
-      integrity: sha512-SIq7yRIohZzeO432WHlfvEEzOYs4JfOIoUIU663eIFt/ucUoqJxQwW1FClhhL21V6F8bqI+8URJoBlB0yUEKaA==
   /react-country-flag/2.3.0_react-dom@16.14.0+react@16.14.0:
     dependencies:
       react: 16.14.0
@@ -16962,7 +16998,7 @@ packages:
       prop-types: 15.7.2
       react-native-ratings: 7.3.0_react@16.14.0
       react-native-status-bar-height: 2.6.0
-      react-native-vector-icons: 6.7.0
+      react-native-vector-icons: 6.7.0_5b7927cc47d4baf54576f32e2a9a3405
     dev: false
     peerDependencies:
       react: '*'
@@ -16985,8 +17021,9 @@ packages:
     dev: false
     resolution:
       integrity: sha512-z3SGLF0mHT+OlJDq7B7h/jXPjWcdBT3V14Le5L2PjntjjWM3+EJzq2BcXDwV+v67KFNJic5pgA26cCmseYek6w==
-  /react-native-vector-icons/6.7.0:
+  /react-native-vector-icons/6.7.0_5b7927cc47d4baf54576f32e2a9a3405:
     dependencies:
+      '@react-native-community/toolbar-android': 0.1.0-rc.2_react@16.14.0
       lodash: 4.17.20
       prop-types: 15.7.2
       yargs: 15.4.1
@@ -19905,6 +19942,12 @@ packages:
       webpack: 2 || 3 || 4
     resolution:
       integrity: sha512-9S6YyKKKh/Oz/eryM1RyLVDVmy3NSPV0JXMRhZ18fJsq+AwGxUY34X54VNwkzYcEmEkDwNxuEOboCZEebJXBAQ==
+  /webpack-merge/4.2.2:
+    dependencies:
+      lodash: 4.17.20
+    dev: false
+    resolution:
+      integrity: sha512-TUE1UGoTX2Cd42j3krGYqObZbOD+xF7u28WB7tfUordytSjbWTIjK/8V0amkBfTYN4/pB/GIDlJZZ657BGG19g==
   /webpack-node-externals/2.5.2:
     dev: true
     resolution:

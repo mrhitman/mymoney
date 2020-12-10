@@ -80,7 +80,7 @@ export const FilterGroup: FC<FilterGroupProps> = ({ onFilter, onReset, type }) =
             {expanded ? 'Less' : 'More'} filters
           </Button>
         </Col>
-        <Col offset={4}>
+        <Col>
           <Button
             onClick={() => {
               doExport({

@@ -2,7 +2,6 @@ import { Badge, Calendar } from 'antd';
 import moment, { Moment } from 'moment';
 import React, { PureComponent } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { Transaction } from 'common';
 
 interface CalendarViewState {
   view: 'year' | 'month';

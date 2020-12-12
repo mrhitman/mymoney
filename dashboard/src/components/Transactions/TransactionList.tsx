@@ -18,7 +18,10 @@ type Transaction = GetTransactionsQuery['transactions']['items'][number];
 const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sorter, setSorter] = useState<SorterResult<Transaction>>();
+  const [sorter, setSorter] = useState<SorterResult<Transaction>>({
+    order: 'descend',
+    field: 'date',
+  });
   const [filters, setFilters] = useState<FilterCriteries>({
     search: undefined,
     range: undefined,

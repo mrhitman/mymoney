@@ -80,15 +80,15 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
     <AntdLayout>
       <AntdLayout.Header className="header">
         <Link to="/">
-          <div className="logo" />v 0.0.2
+          <div className="logo" />v 0.0.3
         </Link>
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
           <Menu.SubMenu key="1" icon={<Avatar src={data?.profile.imageUrl?.toString()} />}>
             <Menu.Item key="2" icon={<SettingOutlined />}>
-              <Link to="/settings">Settings</Link>
+              <Link to="/settings">{t('settings')}</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<LogoutOutlined />} onClick={logout}>
-              Logout
+              {t('logout')}
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>

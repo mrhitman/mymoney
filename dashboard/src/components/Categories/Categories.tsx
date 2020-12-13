@@ -34,14 +34,14 @@ export const Categories: React.FC = () => {
           </Popover>
         )}
       />
-      <Table.Column title="Name" dataIndex="name" key="name" render={(name) => t(name)} />
+      <Table.Column title={t('name')} dataIndex="name" key="name" render={(name) => t(name)} />
       <Table.Column
-        title="Icon"
+        title={t('icon')}
         dataIndex="icon"
         key="icon"
         render={(icon) => <CategoryIcon icon={icon} />}
       />
-      <Table.Column title="Type" dataIndex="type" key="type" />
+      <Table.Column title={t('type')} dataIndex="type" key="type" />
     </Table>
   );
 };

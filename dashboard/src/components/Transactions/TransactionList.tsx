@@ -84,19 +84,19 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           )}
         />
         <Table.Column
-          title="Wallet"
+          title={t('wallet')}
           render={(transaction) =>
             [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ')
           }
         />
         <Table.Column
-          title="Currency"
+          title={t('currency')}
           dataIndex="currency"
           key="currency"
           render={(currency) => `${currency.description} (${currency.name})`}
         />
         <Table.Column
-          title="Category"
+          title={t('category')}
           dataIndex="category"
           key="category"
           render={(category) => (
@@ -109,14 +109,14 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           )}
         />
         <Table.Column
-          title="Amount"
+          title={t('amount')}
           dataIndex="amount"
           key="amount"
           sorter
           render={(_, record: Transaction) => <TransactionAmount record={record} />}
         />
         <Table.Column
-          title="Description"
+          title={t('description')}
           dataIndex="description"
           key="description"
           width="24%"
@@ -126,7 +126,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           }
         />
         <Table.Column
-          title="Date"
+          title={t('date')}
           dataIndex="date"
           key="date"
           sorter
@@ -134,7 +134,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
         />
 
         <Table.Column
-          title="Action"
+          title={t('action')}
           dataIndex=""
           key="x"
           render={(_, record: Transaction) => (

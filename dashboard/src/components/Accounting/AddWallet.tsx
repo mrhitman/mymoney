@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import { useFormik } from "formik";
 import React, { FC } from "react";
 import { useAddWalletMutation } from "src/generated/graphql";
+import { useTranslation } from 'react-i18next';
 import AddWalletForm from "./AddWalletForm";
 import { AddWalletValues } from "./types";
 
@@ -22,6 +23,7 @@ export interface AddWalletProps {
 
 export const AddWallet: FC<AddWalletProps> = ({ visible, onClose }) => {
   const [addWallet] = useAddWalletMutation();
+  const { t } = useTranslation();
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
@@ -44,7 +46,7 @@ export const AddWallet: FC<AddWalletProps> = ({ visible, onClose }) => {
   return (
     <div>
       <Modal
-        title="Add new wallet"
+        title={t('add_wallet')}
         width={720}
         visible={visible}
         onOk={() => formik.handleSubmit()}

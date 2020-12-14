@@ -1,20 +1,52 @@
-query getActiveBudget {
-  activeBudget {
+fragment icon on IconDto {
+  type
+  name
+  color
+  backgroundColor
+}
+
+fragment budgetCategory on BudgetCategory {
+  category {
     id
-    outcomes {
-      category {
-        id
-        name
-        icon {
-          type
-          name
-          color
-          backgroundColor
-        }
-      }
-      amount
+    name
+    icon {
+      ...icon
     }
-    date
-    deadline
+  }
+  amount
+  progress
+}
+
+fragment budget on Budget {
+  id
+  incomes {
+    ...budgetCategory
+  }
+  outcomes {
+    ...budgetCategory
+  }
+  date
+  deadline
+}
+
+query getActiveBudget {
+  categories {
+    id
+    name
+    type
+    icon {
+      ...icon
+    }
+  }
+  activeBudget {
+    ...budget
+  }
+}
+
+mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+  budgetAddOutcomeCategory(
+    categoryData: { categoryId: $categoryId, amount: $amount, progress: $progress }
+  ) {
+    ...budget
   }
 }

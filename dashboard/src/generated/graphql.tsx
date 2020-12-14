@@ -128,6 +128,7 @@ export type Budget = {
   __typename?: 'Budget';
   id: Scalars['String'];
   outcomes: Array<BudgetCategory>;
+  incomes: Array<BudgetCategory>;
   date: Scalars['DateTime'];
   deadline: Scalars['DateTime'];
 };
@@ -701,26 +702,66 @@ export type GetStatisticByPeriodQuery = (
   )> }
 );
 
+export type IconFragment = (
+  { __typename?: 'IconDto' }
+  & Pick<IconDto, 'type' | 'name' | 'color' | 'backgroundColor'>
+);
+
+export type BudgetCategoryFragment = (
+  { __typename?: 'BudgetCategory' }
+  & Pick<BudgetCategory, 'amount' | 'progress'>
+  & { category: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+    & { icon?: Maybe<(
+      { __typename?: 'IconDto' }
+      & IconFragment
+    )> }
+  ) }
+);
+
+export type BudgetFragment = (
+  { __typename?: 'Budget' }
+  & Pick<Budget, 'id' | 'date' | 'deadline'>
+  & { incomes: Array<(
+    { __typename?: 'BudgetCategory' }
+    & BudgetCategoryFragment
+  )>, outcomes: Array<(
+    { __typename?: 'BudgetCategory' }
+    & BudgetCategoryFragment
+  )> }
+);
+
 export type GetActiveBudgetQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetActiveBudgetQuery = (
   { __typename?: 'Query' }
-  & { activeBudget: (
-    { __typename?: 'Budget' }
-    & Pick<Budget, 'id' | 'date' | 'deadline'>
-    & { outcomes: Array<(
-      { __typename?: 'BudgetCategory' }
-      & Pick<BudgetCategory, 'amount'>
-      & { category: (
-        { __typename?: 'Category' }
-        & Pick<Category, 'id' | 'name'>
-        & { icon?: Maybe<(
-          { __typename?: 'IconDto' }
-          & Pick<IconDto, 'type' | 'name' | 'color' | 'backgroundColor'>
-        )> }
-      ) }
+  & { categories: Array<(
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name' | 'type'>
+    & { icon?: Maybe<(
+      { __typename?: 'IconDto' }
+      & IconFragment
     )> }
+  )>, activeBudget: (
+    { __typename?: 'Budget' }
+    & BudgetFragment
+  ) }
+);
+
+export type AddOutcomeBudgetMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+  amount: Scalars['Float'];
+  progress?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type AddOutcomeBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & { budgetAddOutcomeCategory: (
+    { __typename?: 'Budget' }
+    & BudgetFragment
   ) }
 );
 
@@ -1009,6 +1050,40 @@ export type GetWalletsQuery = (
   )> }
 );
 
+export const IconFragmentDoc = gql`
+    fragment icon on IconDto {
+  type
+  name
+  color
+  backgroundColor
+}
+    `;
+export const BudgetCategoryFragmentDoc = gql`
+    fragment budgetCategory on BudgetCategory {
+  category {
+    id
+    name
+    icon {
+      ...icon
+    }
+  }
+  amount
+  progress
+}
+    ${IconFragmentDoc}`;
+export const BudgetFragmentDoc = gql`
+    fragment budget on Budget {
+  id
+  incomes {
+    ...budgetCategory
+  }
+  outcomes {
+    ...budgetCategory
+  }
+  date
+  deadline
+}
+    ${BudgetCategoryFragmentDoc}`;
 export const WalletFragmentDoc = gql`
     fragment wallet on Wallet {
   id
@@ -1267,26 +1342,20 @@ export type GetStatisticByPeriodLazyQueryHookResult = ReturnType<typeof useGetSt
 export type GetStatisticByPeriodQueryResult = Apollo.QueryResult<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>;
 export const GetActiveBudgetDocument = gql`
     query getActiveBudget {
-  activeBudget {
+  categories {
     id
-    outcomes {
-      category {
-        id
-        name
-        icon {
-          type
-          name
-          color
-          backgroundColor
-        }
-      }
-      amount
+    name
+    type
+    icon {
+      ...icon
     }
-    date
-    deadline
+  }
+  activeBudget {
+    ...budget
   }
 }
-    `;
+    ${IconFragmentDoc}
+${BudgetFragmentDoc}`;
 
 /**
  * __useGetActiveBudgetQuery__
@@ -1312,6 +1381,42 @@ export function useGetActiveBudgetLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetActiveBudgetQueryHookResult = ReturnType<typeof useGetActiveBudgetQuery>;
 export type GetActiveBudgetLazyQueryHookResult = ReturnType<typeof useGetActiveBudgetLazyQuery>;
 export type GetActiveBudgetQueryResult = Apollo.QueryResult<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>;
+export const AddOutcomeBudgetDocument = gql`
+    mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+  budgetAddOutcomeCategory(
+    categoryData: {categoryId: $categoryId, amount: $amount, progress: $progress}
+  ) {
+    ...budget
+  }
+}
+    ${BudgetFragmentDoc}`;
+export type AddOutcomeBudgetMutationFn = Apollo.MutationFunction<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>;
+
+/**
+ * __useAddOutcomeBudgetMutation__
+ *
+ * To run a mutation, you first call `useAddOutcomeBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddOutcomeBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addOutcomeBudgetMutation, { data, loading, error }] = useAddOutcomeBudgetMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *      amount: // value for 'amount'
+ *      progress: // value for 'progress'
+ *   },
+ * });
+ */
+export function useAddOutcomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>) {
+        return Apollo.useMutation<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>(AddOutcomeBudgetDocument, baseOptions);
+      }
+export type AddOutcomeBudgetMutationHookResult = ReturnType<typeof useAddOutcomeBudgetMutation>;
+export type AddOutcomeBudgetMutationResult = Apollo.MutationResult<AddOutcomeBudgetMutation>;
+export type AddOutcomeBudgetMutationOptions = Apollo.BaseMutationOptions<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {

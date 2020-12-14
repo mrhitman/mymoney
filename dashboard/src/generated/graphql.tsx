@@ -701,6 +701,29 @@ export type GetStatisticByPeriodQuery = (
   )> }
 );
 
+export type GetActiveBudgetQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetActiveBudgetQuery = (
+  { __typename?: 'Query' }
+  & { activeBudget: (
+    { __typename?: 'Budget' }
+    & Pick<Budget, 'id' | 'date' | 'deadline'>
+    & { outcomes: Array<(
+      { __typename?: 'BudgetCategory' }
+      & Pick<BudgetCategory, 'amount'>
+      & { category: (
+        { __typename?: 'Category' }
+        & Pick<Category, 'id' | 'name'>
+        & { icon?: Maybe<(
+          { __typename?: 'IconDto' }
+          & Pick<IconDto, 'type' | 'name' | 'color' | 'backgroundColor'>
+        )> }
+      ) }
+    )> }
+  ) }
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1021,7 +1044,9 @@ export const TransactionFragmentDoc = gql`
     `;
 export const AddConnectorDocument = gql`
     mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
-  addConnector(args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled})
+  addConnector(
+    args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled}
+  )
 }
     `;
 export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutation, AddConnectorMutationVariables>;
@@ -1098,7 +1123,13 @@ export type AddWalletMutationResult = Apollo.MutationResult<AddWalletMutation>;
 export type AddWalletMutationOptions = Apollo.BaseMutationOptions<AddWalletMutation, AddWalletMutationVariables>;
 export const AnalysByCategoriesDocument = gql`
     query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
-  statisticByCategory(from: $from, to: $to, currencyName: $currencyName, walletIds: $walletIds, type: $type) {
+  statisticByCategory(
+    from: $from
+    to: $to
+    currencyName: $currencyName
+    walletIds: $walletIds
+    type: $type
+  ) {
     amount
     category {
       id
@@ -1234,6 +1265,53 @@ export function useGetStatisticByPeriodLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetStatisticByPeriodQueryHookResult = ReturnType<typeof useGetStatisticByPeriodQuery>;
 export type GetStatisticByPeriodLazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriodLazyQuery>;
 export type GetStatisticByPeriodQueryResult = Apollo.QueryResult<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>;
+export const GetActiveBudgetDocument = gql`
+    query getActiveBudget {
+  activeBudget {
+    id
+    outcomes {
+      category {
+        id
+        name
+        icon {
+          type
+          name
+          color
+          backgroundColor
+        }
+      }
+      amount
+    }
+    date
+    deadline
+  }
+}
+    `;
+
+/**
+ * __useGetActiveBudgetQuery__
+ *
+ * To run a query within a React component, call `useGetActiveBudgetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetActiveBudgetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetActiveBudgetQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetActiveBudgetQuery(baseOptions?: Apollo.QueryHookOptions<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>) {
+        return Apollo.useQuery<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>(GetActiveBudgetDocument, baseOptions);
+      }
+export function useGetActiveBudgetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>) {
+          return Apollo.useLazyQuery<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>(GetActiveBudgetDocument, baseOptions);
+        }
+export type GetActiveBudgetQueryHookResult = ReturnType<typeof useGetActiveBudgetQuery>;
+export type GetActiveBudgetLazyQueryHookResult = ReturnType<typeof useGetActiveBudgetLazyQuery>;
+export type GetActiveBudgetQueryResult = Apollo.QueryResult<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
@@ -1533,7 +1611,9 @@ export type RefreshMutationResult = Apollo.MutationResult<RefreshMutation>;
 export type RefreshMutationOptions = Apollo.BaseMutationOptions<RefreshMutation, RefreshMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($email: String!, $password: String!, $firstName: String!, $middleName: String, $lastName: String, $imageUrl: String, $additional: JSON) {
-  register(registerData: {email: $email, password: $password, firstName: $firstName, middleName: $middleName, lastName: $lastName, imageUrl: $imageUrl, additional: $additional}) {
+  register(
+    registerData: {email: $email, password: $password, firstName: $firstName, middleName: $middleName, lastName: $lastName, imageUrl: $imageUrl, additional: $additional}
+  ) {
     id
   }
 }
@@ -1601,7 +1681,7 @@ ${WalletFragmentDoc}`;
  *   },
  * });
  */
-export function useGetTransactionQuery(baseOptions?: Apollo.QueryHookOptions<GetTransactionQuery, GetTransactionQueryVariables>) {
+export function useGetTransactionQuery(baseOptions: Apollo.QueryHookOptions<GetTransactionQuery, GetTransactionQueryVariables>) {
         return Apollo.useQuery<GetTransactionQuery, GetTransactionQueryVariables>(GetTransactionDocument, baseOptions);
       }
 export function useGetTransactionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTransactionQuery, GetTransactionQueryVariables>) {
@@ -1612,7 +1692,18 @@ export type GetTransactionLazyQueryHookResult = ReturnType<typeof useGetTransact
 export type GetTransactionQueryResult = Apollo.QueryResult<GetTransactionQuery, GetTransactionQueryVariables>;
 export const ExportDocument = gql`
     query export($type: TransactionType, $from: Float, $to: Float, $walletIds: [String!], $categoryIds: [String!], $search: String, $amountGte: Float, $amountLte: Float, $order: String, $orderBy: String) {
-  export(type: $type, from: $from, to: $to, walletIds: $walletIds, categoryIds: $categoryIds, search: $search, amountGteFilter: $amountGte, amountLteFilter: $amountLte, orderBy: $orderBy, order: $order)
+  export(
+    type: $type
+    from: $from
+    to: $to
+    walletIds: $walletIds
+    categoryIds: $categoryIds
+    search: $search
+    amountGteFilter: $amountGte
+    amountLteFilter: $amountLte
+    orderBy: $orderBy
+    order: $order
+  )
 }
     `;
 
@@ -1652,7 +1743,20 @@ export type ExportLazyQueryHookResult = ReturnType<typeof useExportLazyQuery>;
 export type ExportQueryResult = Apollo.QueryResult<ExportQuery, ExportQueryVariables>;
 export const GetTransactionsDocument = gql`
     query getTransactions($type: TransactionType, $from: Float, $to: Float, $limit: Float, $offset: Float, $walletIds: [String!], $categoryIds: [String!], $search: String, $amountGte: Float, $amountLte: Float, $order: String, $orderBy: String) {
-  transactions(type: $type, from: $from, to: $to, limit: $limit, offset: $offset, walletIds: $walletIds, categoryIds: $categoryIds, search: $search, amountGteFilter: $amountGte, amountLteFilter: $amountLte, orderBy: $orderBy, order: $order) {
+  transactions(
+    type: $type
+    from: $from
+    to: $to
+    limit: $limit
+    offset: $offset
+    walletIds: $walletIds
+    categoryIds: $categoryIds
+    search: $search
+    amountGteFilter: $amountGte
+    amountLteFilter: $amountLte
+    orderBy: $orderBy
+    order: $order
+  ) {
     totalCount
     items {
       ...transaction
@@ -1711,7 +1815,12 @@ export const GetWalletTransactionsDocument = gql`
     name
     description
   }
-  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
+  transactions(
+    type: $type
+    limit: $limit
+    offset: $offset
+    walletIds: [$walletId]
+  ) {
     totalCount
     items {
       ...transaction
@@ -1739,7 +1848,7 @@ export const GetWalletTransactionsDocument = gql`
  *   },
  * });
  */
-export function useGetWalletTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
+export function useGetWalletTransactionsQuery(baseOptions: Apollo.QueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
         return Apollo.useQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
       }
 export function useGetWalletTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {

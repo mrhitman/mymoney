@@ -3,7 +3,6 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Accounting } from 'src/components/Accounting/Accounting';
 import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory/AnalysisByCategory';
 import { AnalysisByCurrency } from 'src/components/Analysis/AnalysisByCurrency/AnalysisByCurrency';
-// import AnalysisByPeriod from 'src/components/Analysis/AnalysisByPeriod';
 import Categories from 'src/components/Categories/Categories';
 import Connectors from 'src/components/Connectors/Connectors';
 import Currencies from 'src/components/Currencies/Currencies';
@@ -14,11 +13,12 @@ import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
 import TransactionList from 'src/components/Transactions/TransactionList';
 import { TransactionType } from 'src/generated/graphql';
+import ActiveBudget from '../Budgets/ActiveBudget';
 import MainPage from '../MainPage/MainPage';
 import Register from '../Register/Register';
+import ViewTransaction from '../Transactions/ViewTransaction';
 import WalletTransactions from '../Transactions/WalletTransactions';
 import PrivateRoute from './PrivateRoute';
-import ViewTransaction from '../Transactions/ViewTransaction';
 
 const Routes: FC = () => (
   <Router>
@@ -110,6 +110,12 @@ const Routes: FC = () => (
       <PrivateRoute path="/settings" exact>
         <Layout activePage="settings">
           <Settings />
+        </Layout>
+      </PrivateRoute>
+
+      <PrivateRoute path="/budgets/active" exact>
+        <Layout activePage="active-budget">
+          <ActiveBudget />
         </Layout>
       </PrivateRoute>
 

@@ -1,0 +1,20 @@
+query getActiveBudget {
+  activeBudget {
+    id
+    outcomes {
+      category {
+        id
+        name
+        icon {
+          type
+          name
+          color
+          backgroundColor
+        }
+      }
+      amount
+    }
+    date
+    deadline
+  }
+}

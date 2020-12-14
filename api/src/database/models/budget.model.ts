@@ -10,7 +10,7 @@ export class Budget extends Model {
   public id: string;
   public userId: number;
   public outcomes: BudgetCategory[];
-  public incomes: any;
+  public incomes: BudgetCategory[];
   public savings: any;
   public active: boolean;
   public currencyId: string;
@@ -35,10 +35,20 @@ export class Budget extends Model {
               categoryId: { type: 'string' },
               amount: { type: 'number', min: 0 },
               progress: { type: 'number', min: 0 },
-            }
-          }
+            },
+          },
         },
-        incomes: { type: 'array' },
+        incomes: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              categoryId: { type: 'string' },
+              amount: { type: 'number', min: 0 },
+              progress: { type: 'number', min: 0 },
+            },
+          },
+        },
         savings: { type: 'array' },
         date: { type: 'date-time' },
         deadline: { type: 'date-time' },

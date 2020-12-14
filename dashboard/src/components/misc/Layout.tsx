@@ -40,6 +40,7 @@ export type ActivePage =
   | 'categories'
   | 'currencies'
   | 'connectors'
+  | 'active-budget'
   | undefined;
 
 export const formLayout = {
@@ -80,7 +81,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
     <AntdLayout>
       <AntdLayout.Header className="header">
         <Link to="/">
-          <div className="logo" />v 0.0.3
+          <div className="logo" />v 0.0.4
         </Link>
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
           <Menu.SubMenu key="1" icon={<Avatar src={data?.profile.imageUrl?.toString()} />}>
@@ -123,7 +124,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             </Menu.SubMenu>
             <Menu.SubMenu key="sub3" icon={<TableOutlined />} title={t('budget')}>
               <Menu.Item key="9" icon={<CarryOutOutlined />}>
-                {t('current')}
+                <Link to="/budgets/active">{t('current')}</Link>
               </Menu.Item>
               <Menu.Item key="10" icon={<ScheduleOutlined />}>
                 {t('planning')}
@@ -133,7 +134,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu key="analys" icon={<AreaChartOutlined />} title={t('statistics')}>
-              <Menu.Item key="analys-by-cateogories" icon={<PieChartOutlined />}>
+              <Menu.Item key="analysis-by-categories" icon={<PieChartOutlined />}>
                 <Link to="/analysis-category">{t('by_categories')}</Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>

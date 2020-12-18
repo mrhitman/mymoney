@@ -8,48 +8,47 @@ import './App.css';
 import { RefreshDocument, RefreshMutation } from './generated/graphql';
 import './i18n';
 import IconStyles from './IconStyles';
-import history from './history'
-
 
 const uri = process.env.REACT_APP_SERVER + 'graphql';
 const client = new ApolloClient({
   uri,
   onError: (error) => {
-
-    if (error.response?.errors?.some(e => e.extensions?.exception?.status === 401)) {
-      return new Observable(observer => {
-        client.mutate<RefreshMutation>({
-          mutation: RefreshDocument, variables: {
-            token: localStorage.getItem('refreshToken')
-          }
-        }).then(response => {
-          const { accessToken, refreshToken } = response.data?.refresh!;
-          localStorage.setItem('accessToken', accessToken!);
-          localStorage.setItem('refreshToken', refreshToken!);
-
-          const oldHeaders = error.operation.getContext().headers;
-          error.operation.setContext({
-            headers: {
-              ...oldHeaders,
-              Authorization: accessToken
+    if (error.response?.errors?.some((e) => e.extensions?.exception?.status === 401)) {
+      return new Observable((observer) => {
+        client
+          .mutate<RefreshMutation>({
+            mutation: RefreshDocument,
+            variables: {
+              token: localStorage.getItem('refreshToken'),
             },
-          });
+          })
+          .then((response) => {
+            const { accessToken, refreshToken } = response.data?.refresh!;
+            localStorage.setItem('accessToken', accessToken!);
+            localStorage.setItem('refreshToken', refreshToken!);
 
-          const subscriber = {
-            next: observer.next.bind(observer),
-            error: observer.error.bind(observer),
-            complete: observer.complete.bind(observer)
-          }
+            const oldHeaders = error.operation.getContext().headers;
+            error.operation.setContext({
+              headers: {
+                ...oldHeaders,
+                Authorization: accessToken,
+              },
+            });
 
-          return error.forward(error.operation).subscribe(subscriber);
-        })
+            const subscriber = {
+              next: observer.next.bind(observer),
+              error: observer.error.bind(observer),
+              complete: observer.complete.bind(observer),
+            };
+
+            return error.forward(error.operation).subscribe(subscriber);
+          })
           .catch(() => {
             localStorage.clear();
-            history.push('/login');
-          })
+          });
       });
     }
-  }
+  },
 });
 
 const App: FC = () => {

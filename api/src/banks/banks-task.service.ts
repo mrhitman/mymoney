@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { MonobankProvider } from './monobank.provider';
-import BankConnector, {
-  BankConnectorType,
-} from 'src/database/models/bank-connector.model';
+import BankConnector, { BankConnectorType } from 'src/database/models/bank-connector.model';
 import { raw } from 'objection';
 import { Privat24Provider } from './privat24.provider';
 
@@ -12,7 +10,7 @@ export class BanksTaskService {
   constructor(
     protected readonly mono: MonobankProvider,
     protected readonly privat24: Privat24Provider,
-  ) { }
+  ) {}
 
   /**
    * Every 10 minutes
@@ -24,13 +22,13 @@ export class BanksTaskService {
       .where({
         enabled: true,
       })
-      .where(subquery =>
+      .where((subquery) =>
         subquery
           .where('syncAt', '<', raw("now() - bank_connectors.interval * interval '1 second'"))
-          .orWhereNull('syncAt')
+          .orWhereNull('syncAt'),
       );
 
-    for (let connector of connectorsMono) {
+    for (const connector of connectorsMono) {
       switch (connector.type) {
         case BankConnectorType.MONOBANK:
           await this.mono.import(connector.user, connector.meta.token);

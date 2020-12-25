@@ -8,6 +8,7 @@ import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
 import { TransactionType } from 'src/transactions/transaction-type';
 import { v4 as uuid } from 'uuid';
+import { BudgetsService } from '../budgets/budgets.service';
 
 export interface CurrencyResponse {
   currencyCodeA: number;
@@ -50,7 +51,7 @@ export interface StatementResponse {
 export class MonobankProvider {
   protected client: AxiosInstance;
 
-  constructor() {
+  constructor(protected budgetService: BudgetsService) {
     this.client = axios.create({
       baseURL: 'https://api.monobank.ua/',
     });
@@ -65,7 +66,7 @@ export class MonobankProvider {
     }
   }
 
-  public async getClientInfo(token: string = ''): Promise<ClientInfoResponse> {
+  public async getClientInfo(token = ''): Promise<ClientInfoResponse> {
     try {
       const response = await this.client.get<ClientInfoResponse>('personal/client-info', {
         headers: { 'X-Token': token },
@@ -79,8 +80,8 @@ export class MonobankProvider {
   public async getStatements(
     from: number,
     to: number,
-    account: string = '0',
-    token: string = '',
+    account = '0',
+    token = '',
   ): Promise<StatementResponse[]> {
     try {
       const response = await this.client.get<StatementResponse[]>(
@@ -95,12 +96,12 @@ export class MonobankProvider {
     }
   }
 
-  public async import(user: User, token: string = '') {
+  public async import(user: User, token = '') {
     const clientInfo = await this.getClientInfo(token);
     const to = ~~(+new Date() / 1000);
     const from = to - 31 * 24 * 60 * 60;
 
-    for (let account of clientInfo.accounts) {
+    for (const account of clientInfo.accounts) {
       const currency = await Currency.query()
         .select(['id'])
         .findOne({ code: account.currencyCode });
@@ -133,7 +134,7 @@ export class MonobankProvider {
 
       const statements = await this.getStatements(from, to, account.id, token);
       const categories = await Category.query();
-      for (let statement of statements) {
+      for (const statement of statements) {
         const type = statement.amount > 0 ? TransactionType.income : TransactionType.outcome;
         let category = categories.find((c) => c.codes.includes(statement.mcc));
 
@@ -143,7 +144,7 @@ export class MonobankProvider {
           );
         }
 
-        const trx = await Transaction.query()
+        let trx = await Transaction.query()
           .where({ isImported: true })
           .andWhereRaw(`meta ->> 'id' = '${statement.id}'`)
           .first();
@@ -173,7 +174,8 @@ export class MonobankProvider {
           trxData.sourceWalletId = walletData.id;
         }
 
-        await Transaction.query().insert(trxData);
+        trx = await Transaction.query().insert(trxData);
+        await this.budgetService[type](user, trx);
       }
     }
   }

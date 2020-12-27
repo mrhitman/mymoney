@@ -37,10 +37,12 @@ RUN npm i -g pnpm
 RUN pnpm i -r
 RUN pnpm run build --filter ./common
 RUN pnpm run build --filter ./api
-RUN cd dashboard && \
-    REACT_APP_SERVER=$REACT_APP_SERVER \
-    REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID \
-    SKIP_PREFLIGHT_CHECK=true pnpm run build -p
+RUN cd dashboard
+RUN touch .env
+RUN echo "REACT_APP_SERVER=$REACT_APP_SERVER"  >> .env 
+RUN echo "REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID"  >> .env 
+RUN echo "SKIP_PREFLIGHT_CHECK=true" >> .env
+RUN pnpm run build -p
 
 FROM node:12-alpine
 RUN mkdir /opt/mymoney

@@ -1,8 +1,4 @@
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  RollbackOutlined
-} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, RollbackOutlined } from '@ant-design/icons';
 import { Button, Col, Input, Layout, Row, Space } from 'antd';
 import React, { FC, useState } from 'react';
 import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
@@ -32,8 +28,8 @@ export const Register: FC = () => {
         additional: {
           google: {
             id: response.getId(),
-            accessToken: response.accessToken
-          }
+            accessToken: response.accessToken,
+          },
         },
         password,
       },
@@ -55,40 +51,39 @@ export const Register: FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 placeholder="input password"
-                suffix={(visible: boolean) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
+                suffix={(visible: boolean) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               />
-              <Button onClick={() => finishRegister(profile)}>
-                Finish registration
-              </Button>
+              <Button onClick={() => finishRegister(profile)}>Finish registration</Button>
             </Space>
           ) : (
-              <Row align="middle">
-                <Col span={24}>
-                  <Link to="/login">
-                    <Button
-                      icon={<RollbackOutlined />}
-                      size="large"
-                      style={{ width: 180.46, height: 46 }}
-                    >
-                      back
+            <Row align="middle">
+              <Col span={24}>
+                <Link to="/login">
+                  <Button
+                    icon={<RollbackOutlined />}
+                    size="large"
+                    style={{ width: 180.46, height: 46 }}
+                  >
+                    back
                   </Button>
-                  </Link>
-                </Col>
-                <Col>
-                  <GoogleLogin
-                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}
-                    onSuccess={(response) => {
-                      if ('getBasicProfile' in response) {
-                        setProfile(response);
-                        setStep(RegistrationStep.setPassword);
-                      }
-                    }}
-                  />
-                </Col>
-              </Row>
-            )}
+                </Link>
+              </Col>
+              <Col>
+                <GoogleLogin
+                  clientId={
+                    process.env.REACT_APP_GOOGLE_CLIENT_ID ||
+                    '172140808548-71g0juh12o6o8jltjkp9pnmq76lkht9v'
+                  }
+                  onSuccess={(response) => {
+                    if ('getBasicProfile' in response) {
+                      setProfile(response);
+                      setStep(RegistrationStep.setPassword);
+                    }
+                  }}
+                />
+              </Col>
+            </Row>
+          )}
         </Row>
       </Layout.Content>
     </Layout>

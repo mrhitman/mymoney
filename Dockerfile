@@ -37,7 +37,6 @@ RUN npm i -g pnpm
 RUN pnpm i -r
 RUN pnpm run build --filter ./common
 RUN pnpm run build --filter ./api
-RUN env
 RUN cd dashboard && SKIP_PREFLIGHT_CHECK=true pnpm run build -p
 
 FROM node:12-alpine

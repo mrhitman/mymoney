@@ -17,9 +17,13 @@ jobs:
           heroku_email: 'kabalx47@gmail.com'
           usedocker: true
           docker_build_args: |
+            NODE_ENV
+            SKIP_PREFLIGHT_CHECK
             REACT_APP_SERVER
             REACT_APP_GOOGLE_CLIENT_ID
         env:
           REACT_APP_SERVER: 'https://mymoney-server-api.herokuapp.com/'
           REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          SKIP_PREFLIGHT_CHECK: 'true'
+          NODE_ENV: 'production'
       - run: heroku run yarn migrate

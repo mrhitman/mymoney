@@ -29,7 +29,6 @@ COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 COPY .npmrc .npmrc
 
-ENV SKIP_PREFLIGHT_CHECK=${SKIP_PREFLIGHT_CHECK}
 ENV REACT_APP_SERVER=${REACT_APP_SERVER}
 ENV REACT_APP_GOOGLE_CLIENT_ID=${REACT_APP_GOOGLE_CLIENT_ID}
 RUN apk add --update python make g++\
@@ -39,6 +38,7 @@ RUN pnpm i -r
 RUN pnpm run build --filter ./common
 RUN pnpm run build --filter ./api
 RUN cd dashboard && \
+    SKIP_PREFLIGHT_CHECK=true \
     pnpm run build -p
 
 FROM node:12-alpine

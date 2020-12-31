@@ -9,9 +9,7 @@ import { RefreshDocument, RefreshMutation } from './generated/graphql';
 import './i18n';
 import IconStyles from './IconStyles';
 
-console.log(process.env);
-const uri =
-  (process.env.REACT_APP_SERVER || 'https://mymoney-server-api.herokuapp.com/') + 'graphql';
+const uri = process.env.REACT_APP_SERVER! + 'graphql';
 const client = new ApolloClient({
   uri,
   onError: (error) => {

@@ -1,15 +1,22 @@
 import {
-  BadRequestException, CACHE_MANAGER,
+  BadRequestException,
+  CACHE_MANAGER,
   Inject,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import axios from 'axios';
-import { GetRateResponse } from 'common/responses';
 import Currency from 'src/database/models/currency.model';
 import { Fixer } from 'src/fixer';
 import xml2js from 'xml2js';
 
+export interface GetRateResponse {
+  success: boolean;
+  timestamp: number;
+  base: string;
+  date: string;
+  rates: Record<string, number>;
+}
 interface InfoResponse {
   ISO_4217: {
     $: {
@@ -29,12 +36,14 @@ interface InfoResponse {
 
 @Injectable()
 export class CurrenciesService {
-  constructor(
-    protected fixer: Fixer,
-    @Inject(CACHE_MANAGER) private readonly cache,
-  ) { }
+  constructor(protected fixer: Fixer, @Inject(CACHE_MANAGER) private readonly cache) {}
 
-  public exchange(rates: GetRateResponse, amount: number, fromCurrency: string, toCurrency: string) {
+  public exchange(
+    rates: GetRateResponse,
+    amount: number,
+    fromCurrency: string,
+    toCurrency: string,
+  ) {
     const toEurRate = rates.rates[fromCurrency];
     return (amount / toEurRate) * rates.rates[toCurrency];
   }

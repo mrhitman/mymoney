@@ -2,20 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type BankConnection {
-  id: String!
-  type: String!
-  description: String!
-  enabled: Boolean
-  createdAt: String!
-  meta: JSON!
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type Currency {
   id: ID!
   name: String!
@@ -23,13 +9,6 @@ type Currency {
   symbol: String!
   code: Float!
   rate: Float!
-}
-
-"""Statistic info about transactions"""
-type StatisticByCurrency {
-  currencyId: String!
-  currency: Currency!
-  amount: Float!
 }
 
 type IconDto {
@@ -53,13 +32,6 @@ enum CategoryType {
   transfer
 }
 
-"""Statistic info about transactions"""
-type StatisticByCategory {
-  categoryId: String!
-  category: Category!
-  amount: Float!
-}
-
 type Pocket {
   currencyId: String!
   amount: Float!
@@ -77,44 +49,6 @@ type Wallet {
   syncAt: Int!
   createdAt: Int!
 }
-
-"""Statistic info about transactions"""
-type StatisticByPeriod {
-  walletId: String!
-  userId: Float!
-  pockets: [Pocket!]!
-  createdAt: Float!
-  wallet: Wallet!
-}
-
-type User {
-  id: ID!
-  firstName: String!
-  middleName: String
-  lastName: String
-  imageUrl: String
-  additional: JSON!
-  email: String!
-}
-
-type BudgetCategory {
-  categoryId: String!
-  category: Category!
-  amount: Float!
-  progress: Float!
-}
-
-type Budget {
-  id: String!
-  outcomes: [BudgetCategory!]!
-  date: DateTime!
-  deadline: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Transaction {
   id: ID!
@@ -143,9 +77,76 @@ enum TransactionType {
   transfer
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type GetTransaction {
   totalCount: Float!
   items: [Transaction!]!
+}
+
+type BudgetCategory {
+  categoryId: String!
+  category: Category!
+  amount: Float!
+  progress: Float!
+}
+
+type Budget {
+  id: String!
+  outcomes: [BudgetCategory!]!
+  incomes: [BudgetCategory!]!
+  date: DateTime!
+  deadline: DateTime!
+}
+
+"""Statistic info about transactions"""
+type StatisticByCurrency {
+  currencyId: String!
+  currency: Currency!
+  amount: Float!
+}
+
+"""Statistic info about transactions"""
+type StatisticByCategory {
+  categoryId: String!
+  category: Category!
+  amount: Float!
+}
+
+"""Statistic info about transactions"""
+type StatisticByPeriod {
+  walletId: String!
+  userId: Float!
+  pockets: [Pocket!]!
+  createdAt: Float!
+  wallet: Wallet!
+}
+
+type BankConnection {
+  id: String!
+  type: String!
+  description: String!
+  enabled: Boolean
+  createdAt: String!
+  meta: JSON!
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  middleName: String
+  lastName: String
+  imageUrl: String
+  additional: JSON!
+  email: String!
 }
 
 type Goal {
@@ -178,7 +179,6 @@ type Refresh {
 }
 
 type Query {
-  connectors: [BankConnection!]!
   currencies: [Currency!]!
   currency(id: String!): Currency!
   exchange(
@@ -189,6 +189,11 @@ type Query {
     from: String!
     amount: Float!
   ): Float!
+  export(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): String!
+  transactions(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
+  transaction(id: String!): Transaction!
+  budgets: [Budget!]!
+  activeBudget: Budget!
   statisticByPeriod(
     """Unix timestamp"""
     to: Float
@@ -217,14 +222,10 @@ type Query {
     walletIds: [String!]
   ): [StatisticByCategory!]!
   statisticByCurrency(walletIds: [String!]): [StatisticByCurrency!]!
+  connectors: [BankConnection!]!
   profile: User!
-  budgets: [Budget!]!
-  activeBudget: Budget!
   categories(type: String): [Category!]!
   category(id: String!): Category!
-  export(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): String!
-  transactions(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
-  transaction(id: String!): Transaction!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
   goals: [Goal!]!
@@ -232,6 +233,13 @@ type Query {
 }
 
 type Mutation {
+  createTransaction(transactionCreateData: TransactionCreate!): Transaction!
+  updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
+  budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
+  budgetRemoveOutcomeCategory(categoryId: String!): Budget!
+  budgetAddIncomeCategory(categoryData: BudgetCategoryCreate!): Budget!
+  budgetRemoveIncomeCategory(categoryId: String!): Budget!
+  generateHistory(clearOldHistory: Boolean!, walletId: String!): String!
   import(id: String!): String!
   addConnector(args: AddConnectorArgs!): String!
   removeConnector(id: Float!): String!
@@ -239,14 +247,7 @@ type Mutation {
   disconnectMonobank(token: String!): String!
   connectPrivat24(password: String!, merchant_id: String!, description: String!): String!
   disconnectPrivat24(merchant_id: String!): String!
-  generateHistory(clearOldHistory: Boolean!, walletId: String!): String!
   updateProfile(profileUpdateData: UserUpdate!): User!
-  budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
-  budgetRemoveOutcomeCategory(categoryId: String!): Budget!
-  budgetAddIncomeCategory(categoryData: BudgetCategoryCreate!): Budget!
-  budgetRemoveIncomeCategory(categoryId: String!): Budget!
-  createTransaction(transactionCreateData: TransactionCreate!): Transaction!
-  updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   createWallet(walletCreateData: WalletCreate!): Wallet!
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
@@ -257,27 +258,6 @@ type Mutation {
   login(loginData: LoginInput!): Login!
   register(registerData: RegisterInput!): User!
   refresh(refreshData: RefreshInput!): Refresh!
-}
-
-input AddConnectorArgs {
-  interval: Float!
-  enabled: Boolean!
-  params: JSON!
-  type: String!
-  description: String!
-}
-
-input UserUpdate {
-  firstName: String
-  lastName: String
-  middleName: String
-  additional: JSON
-}
-
-input BudgetCategoryCreate {
-  categoryId: String!
-  amount: Float!
-  progress: Float!
 }
 
 input TransactionCreate {
@@ -309,6 +289,27 @@ input TransactionUpdate {
   isTemplate: Boolean
   updatedAt: Int
   deletedAt: Int
+}
+
+input BudgetCategoryCreate {
+  categoryId: String!
+  amount: Float!
+  progress: Float!
+}
+
+input AddConnectorArgs {
+  interval: Float!
+  enabled: Boolean!
+  params: JSON!
+  type: String!
+  description: String!
+}
+
+input UserUpdate {
+  firstName: String
+  lastName: String
+  middleName: String
+  additional: JSON
 }
 
 input WalletCreate {

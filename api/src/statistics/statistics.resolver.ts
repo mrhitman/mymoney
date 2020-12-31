@@ -1,6 +1,5 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Interval } from 'common';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import User from 'src/database/models/user.model';
@@ -9,7 +8,7 @@ import { DataLoader } from '../dataloader';
 import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
-import { StatisticsService } from './statistics.service';
+import { StatisticsService, Interval } from './statistics.service';
 
 @Resolver()
 export class StatisticsResolver {

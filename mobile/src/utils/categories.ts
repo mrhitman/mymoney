@@ -1,5 +1,24 @@
-import {CategoryType, CreateCategoryDto} from 'common/src/types/category';
-import * as Colors from 'common/src/utils/colors';
+import * as Colors from './colors';
+
+export enum CategoryType {
+  income = 'income',
+  outcome = 'outcome',
+  transfer = 'transfer',
+}
+
+export interface CreateCategoryDto {
+  id?: string;
+  name: string;
+  icon?: {
+    name: string;
+    type: string;
+    backgroundColor?: string;
+    color?: string;
+  };
+  type?: CategoryType;
+  parentId?: string;
+  codes?: number[];
+}
 
 export const defaultCategories: CreateCategoryDto[] = [
   {

@@ -1,5 +1,4 @@
 import { Checkbox, DatePicker, Form, Input, Select, Tabs } from 'antd';
-import { Category, Currency } from 'common';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
 import moment from 'moment';
 import React, { PureComponent } from 'react';

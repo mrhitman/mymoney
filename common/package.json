@@ -6,15 +6,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "lodash": "^4.17.15",
-    "mobx": "^5.15.4",
-    "mobx-state-tree": "^3.16.0",
-    "moment": "2.29.1",
     "typescript": "3.9.7"
   },
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
@@ -27,8 +22,5 @@
     "clean": "rm -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "pnpm run build"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.157"
   }
 }

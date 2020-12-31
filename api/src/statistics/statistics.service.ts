@@ -1,9 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { GetRateResponse } from 'common/responses';
-import { dataByCategory, Interval } from 'common';
 import { chain, first } from 'lodash';
 import { DateTime } from 'luxon';
-import { CurrenciesService } from 'src/currencies/currencies.service';
+import { CurrenciesService, GetRateResponse } from 'src/currencies/currencies.service';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import WalletHistory from 'src/database/models/wallet-history.model';
@@ -21,6 +19,8 @@ interface GetStatisticByCategoryFilter {
 interface GetStatisticByCurrencyFilter {
   walletIds?: string[];
 }
+
+export type Interval = 'day' | 'week' | 'month' | 'year';
 
 @Injectable()
 export class StatisticsService {
@@ -43,7 +43,7 @@ export class StatisticsService {
     return query;
   }
 
-  public async generateHistory(user: User, walletId: string, clearOldHistory: boolean = false) {
+  public async generateHistory(user: User, walletId: string, clearOldHistory = false) {
     const transactions = await this.getTransactionsByDays(user, walletId);
     const wallet = await Wallet.query()
       .where({
@@ -61,7 +61,7 @@ export class StatisticsService {
     }
 
     const pockets = wallet.pockets;
-    for (let date in transactions) {
+    for (const date in transactions) {
       const summarizedDelta = this.summarizeTransactionsForDay(transactions[date]);
 
       Object.keys(summarizedDelta).forEach((currencyId) => {
@@ -112,7 +112,7 @@ export class StatisticsService {
     }
 
     const items = await query.debug();
-    const data = dataByCategory(items, true);
+    const data = this.dataByCategory(items, true);
     const rates = await this.currencyService.rates();
 
     return data.map((group) => ({
@@ -194,5 +194,18 @@ export class StatisticsService {
             [t.currencyId]: Number(t.amount) * m,
           };
     }, {});
+  }
+
+  private dataByCategory(items: Transaction[], withParents = false) {
+    return chain(items)
+      .groupBy('categoryId')
+      .map((transactions, categoryId) => {
+        return {
+          categoryId,
+          parentCategoryId: first(transactions).category.parent,
+          transactions: transactions,
+        };
+      })
+      .value();
   }
 }

@@ -16,6 +16,14 @@ export class UserUpdate {
   @IsString()
   readonly middleName?: string;
 
+  @Field({ nullable: true })
+  @IsString()
+  password?: string;
+
+  @Field({ nullable: true })
+  @IsString()
+  oldPassword?: string;
+
   @Field(() => graphqlTypeJson, { nullable: true })
   @IsObject()
   readonly additional?: any;

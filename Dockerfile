@@ -29,8 +29,8 @@ COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 COPY .npmrc .npmrc
 
-ENV REACT_APP_SERVER=${REACT_APP_SERVER}
-ENV REACT_APP_GOOGLE_CLIENT_ID=${REACT_APP_GOOGLE_CLIENT_ID}
+ARG REACT_APP_SERVER=${REACT_APP_SERVER}
+ARG REACT_APP_GOOGLE_CLIENT_ID=${REACT_APP_GOOGLE_CLIENT_ID}
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
 RUN npm i -g pnpm

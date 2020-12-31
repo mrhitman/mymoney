@@ -1,7 +1,8 @@
-import { Col, Row, Select } from 'antd';
+import { Col, Row, Select, Button } from 'antd';
 import React, { FC } from 'react';
 import { useGetProfileQuery } from 'src/generated/graphql';
 import { useTranslation } from 'react-i18next';
+import { EditOutlined } from '@ant-design/icons';
 
 const Settings: FC = () => {
   const { data } = useGetProfileQuery();
@@ -34,6 +35,9 @@ const Settings: FC = () => {
           <Col span={4}>Email</Col>
           <Col>{data?.profile.email}</Col>
         </Row>
+        <Button icon={<EditOutlined />}>
+          Update
+        </Button>
         <Row>
           <Col span={4}>{t('language')}</Col>
           <Col>

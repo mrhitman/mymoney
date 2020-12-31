@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  api:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,6 +16,19 @@ jobs:
           heroku_app_name: 'mymoney-server-api'
           heroku_email: 'kabalx47@gmail.com'
           usedocker: true
+          appdir: 'api'
+      - run: heroku run yarn migrate
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.6.8
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: 'mymoney-accounting'
+          heroku_email: 'kabalx47@gmail.com'
+          usedocker: true
+          appdir: 'dashboard'
           docker_build_args: |
             NODE_ENV
             SKIP_PREFLIGHT_CHECK
@@ -26,4 +39,3 @@ jobs:
           REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           SKIP_PREFLIGHT_CHECK: 'true'
           NODE_ENV: 'production'
-      - run: heroku run yarn migrate

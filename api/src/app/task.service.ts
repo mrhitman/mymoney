@@ -20,9 +20,7 @@ export class TaskService {
     });
 
     Logger.log(
-      'Called when the current second every 5 minute ' +
-      ' ' +
-      JSON.stringify(transactions),
+      'Called when the current second every 5 minute ' + ' ' + JSON.stringify(transactions),
       'TaskService',
     );
   }
@@ -32,27 +30,27 @@ export class TaskService {
     Logger.log('Create wallet history every day', 'TaskService');
     const batchSize = 100;
     let offset = 0;
-    let wallets = []
+    let wallets = [];
 
     do {
-      wallets = await Wallet.query()
-        .limit(batchSize)
-        .offset(offset);
+      wallets = await Wallet.query().limit(batchSize).offset(offset);
       offset += batchSize;
 
-      await WalletHistory.query().insert(wallets.map(wallet => ({
-        walletId: wallet.id,
-        userId: wallet.userId,
-        pockets: wallet.pockets
-      })));
+      await WalletHistory.query().insert(
+        wallets.map((wallet) => ({
+          walletId: wallet.id,
+          userId: wallet.userId,
+          pockets: wallet.pockets,
+        })),
+      );
     } while (wallets.length < batchSize);
   }
-
 
   @Cron('0 */15 * * * *')
   public async refreshHeroku() {
     Logger.log('Refresh heroku', 'App');
 
     await axios.get('https://mymoney-server-api.herokuapp.com/');
+    await axios.get('https://mymoney-accounting.herokuapp.com/');
   }
 }

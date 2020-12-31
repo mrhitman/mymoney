@@ -19,8 +19,7 @@
     ],
     "packages": [
       "api",
-      "dashboard",
-      "common"
+      "dashboard"
     ]
   },
   "devDependencies": {

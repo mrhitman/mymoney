@@ -35,7 +35,6 @@ RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
 RUN npm i -g pnpm
 RUN pnpm i -r
-RUN pnpm run build --filter ./common
 RUN pnpm run build --filter ./api
 RUN cd dashboard && \
     SKIP_PREFLIGHT_CHECK=true \

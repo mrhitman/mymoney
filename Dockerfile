@@ -11,7 +11,6 @@ COPY api/package.json api/package.json
 COPY common/src common/src
 COPY common/translations common/translations
 COPY common/package.json common/package.json
-COPY common/responses.d.ts common/responses.d.ts
 COPY common/tsconfig.build.json common/tsconfig.build.json
 COPY common/tsconfig.json common/tsconfig.json
 
@@ -30,17 +29,16 @@ COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 COPY .npmrc .npmrc
 
+ENV SKIP_PREFLIGHT_CHECK=${SKIP_PREFLIGHT_CHECK}
+ENV REACT_APP_SERVER=${REACT_APP_SERVER}
+ENV REACT_APP_GOOGLE_CLIENT_ID=${REACT_APP_GOOGLE_CLIENT_ID}
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
 RUN npm i -g pnpm
-
 RUN pnpm i -r
 RUN pnpm run build --filter ./common
 RUN pnpm run build --filter ./api
 RUN cd dashboard && \
-    SKIP_PREFLIGHT_CHECK=true \
-    REACT_APP_SERVER=$REACT_APP_SERVER \
-    REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID \
     pnpm run build -p
 
 FROM node:12-alpine

@@ -9,22 +9,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: any;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
 };
-
-export type BankConnection = {
-  __typename?: 'BankConnection';
-  id: Scalars['String'];
-  type: Scalars['String'];
-  description: Scalars['String'];
-  enabled?: Maybe<Scalars['Boolean']>;
-  createdAt: Scalars['String'];
-  meta: Scalars['JSON'];
-};
-
 
 export type Currency = {
   __typename?: 'Currency';
@@ -34,14 +23,6 @@ export type Currency = {
   symbol: Scalars['String'];
   code: Scalars['Float'];
   rate: Scalars['Float'];
-};
-
-/** Statistic info about transactions */
-export type StatisticByCurrency = {
-  __typename?: 'StatisticByCurrency';
-  currencyId: Scalars['String'];
-  currency: Currency;
-  amount: Scalars['Float'];
 };
 
 export type IconDto = {
@@ -67,14 +48,6 @@ export enum CategoryType {
   Transfer = 'transfer'
 }
 
-/** Statistic info about transactions */
-export type StatisticByCategory = {
-  __typename?: 'StatisticByCategory';
-  categoryId: Scalars['String'];
-  category: Category;
-  amount: Scalars['Float'];
-};
-
 export type Pocket = {
   __typename?: 'Pocket';
   currencyId: Scalars['String'];
@@ -94,45 +67,6 @@ export type Wallet = {
   syncAt: Scalars['Int'];
   createdAt: Scalars['Int'];
 };
-
-/** Statistic info about transactions */
-export type StatisticByPeriod = {
-  __typename?: 'StatisticByPeriod';
-  walletId: Scalars['String'];
-  userId: Scalars['Float'];
-  pockets: Array<Pocket>;
-  createdAt: Scalars['Float'];
-  wallet: Wallet;
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  firstName: Scalars['String'];
-  middleName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  imageUrl?: Maybe<Scalars['String']>;
-  additional: Scalars['JSON'];
-  email: Scalars['String'];
-};
-
-export type BudgetCategory = {
-  __typename?: 'BudgetCategory';
-  categoryId: Scalars['String'];
-  category: Category;
-  amount: Scalars['Float'];
-  progress: Scalars['Float'];
-};
-
-export type Budget = {
-  __typename?: 'Budget';
-  id: Scalars['String'];
-  outcomes: Array<BudgetCategory>;
-  incomes: Array<BudgetCategory>;
-  date: Scalars['DateTime'];
-  deadline: Scalars['DateTime'];
-};
-
 
 export type Transaction = {
   __typename?: 'Transaction';
@@ -162,10 +96,76 @@ export enum TransactionType {
   Transfer = 'transfer'
 }
 
+
+
 export type GetTransaction = {
   __typename?: 'GetTransaction';
   totalCount: Scalars['Float'];
   items: Array<Transaction>;
+};
+
+export type BudgetCategory = {
+  __typename?: 'BudgetCategory';
+  categoryId: Scalars['String'];
+  category: Category;
+  amount: Scalars['Float'];
+  progress: Scalars['Float'];
+};
+
+export type Budget = {
+  __typename?: 'Budget';
+  id: Scalars['String'];
+  outcomes: Array<BudgetCategory>;
+  incomes: Array<BudgetCategory>;
+  date: Scalars['DateTime'];
+  deadline: Scalars['DateTime'];
+};
+
+/** Statistic info about transactions */
+export type StatisticByCurrency = {
+  __typename?: 'StatisticByCurrency';
+  currencyId: Scalars['String'];
+  currency: Currency;
+  amount: Scalars['Float'];
+};
+
+/** Statistic info about transactions */
+export type StatisticByCategory = {
+  __typename?: 'StatisticByCategory';
+  categoryId: Scalars['String'];
+  category: Category;
+  amount: Scalars['Float'];
+};
+
+/** Statistic info about transactions */
+export type StatisticByPeriod = {
+  __typename?: 'StatisticByPeriod';
+  walletId: Scalars['String'];
+  userId: Scalars['Float'];
+  pockets: Array<Pocket>;
+  createdAt: Scalars['Float'];
+  wallet: Wallet;
+};
+
+export type BankConnection = {
+  __typename?: 'BankConnection';
+  id: Scalars['String'];
+  type: Scalars['String'];
+  description: Scalars['String'];
+  enabled?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['String'];
+  meta: Scalars['JSON'];
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  firstName: Scalars['String'];
+  middleName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  additional: Scalars['JSON'];
+  email: Scalars['String'];
 };
 
 export type Goal = {
@@ -203,26 +203,31 @@ export type Refresh = {
 
 export type Query = {
   __typename?: 'Query';
-  connectors: Array<BankConnection>;
+  profile: User;
+  wallets: Array<Wallet>;
+  wallet: Wallet;
   currencies: Array<Currency>;
   currency: Currency;
   exchange: Scalars['Float'];
+  categories: Array<Category>;
+  category: Category;
+  budgets: Array<Budget>;
+  activeBudget: Budget;
+  goals: Array<Goal>;
+  goal: Array<Goal>;
+  export: Scalars['String'];
+  transactions: GetTransaction;
+  transaction: Transaction;
   statisticByPeriod: Array<StatisticByPeriod>;
   /** Statistic grouped by categories */
   statisticByCategory: Array<StatisticByCategory>;
   statisticByCurrency: Array<StatisticByCurrency>;
-  profile: User;
-  budgets: Array<Budget>;
-  activeBudget: Budget;
-  categories: Array<Category>;
-  category: Category;
-  export: Scalars['String'];
-  transactions: GetTransaction;
-  transaction: Transaction;
-  wallets: Array<Wallet>;
-  wallet: Wallet;
-  goals: Array<Goal>;
-  goal: Array<Goal>;
+  connectors: Array<BankConnection>;
+};
+
+
+export type QueryWalletArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -238,36 +243,17 @@ export type QueryExchangeArgs = {
 };
 
 
-export type QueryStatisticByPeriodArgs = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-  interval?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryStatisticByCategoryArgs = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
-
-export type QueryStatisticByCurrencyArgs = {
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
-
 export type QueryCategoriesArgs = {
   type?: Maybe<Scalars['String']>;
 };
 
 
 export type QueryCategoryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGoalArgs = {
   id: Scalars['String'];
 };
 
@@ -309,17 +295,49 @@ export type QueryTransactionArgs = {
 };
 
 
-export type QueryWalletArgs = {
-  id: Scalars['String'];
+export type QueryStatisticByPeriodArgs = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  interval?: Maybe<Scalars['String']>;
 };
 
 
-export type QueryGoalArgs = {
-  id: Scalars['String'];
+export type QueryStatisticByCategoryArgs = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryStatisticByCurrencyArgs = {
+  walletIds?: Maybe<Array<Scalars['String']>>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  login: Login;
+  register: User;
+  refresh: Refresh;
+  updateProfile: User;
+  createWallet: Wallet;
+  updateWallet: Wallet;
+  deleteWallet: Wallet;
+  budgetAddOutcomeCategory: Budget;
+  budgetRemoveOutcomeCategory: Budget;
+  budgetAddIncomeCategory: Budget;
+  budgetRemoveIncomeCategory: Budget;
+  createGoal: Goal;
+  updateGoal: Goal;
+  deleteGoal: Goal;
+  saveToGoal: GoalSaveResponse;
+  createTransaction: Transaction;
+  updateTransaction: Transaction;
+  generateHistory: Scalars['String'];
   import: Scalars['String'];
   addConnector: Scalars['String'];
   removeConnector: Scalars['String'];
@@ -327,24 +345,97 @@ export type Mutation = {
   disconnectMonobank: Scalars['String'];
   connectPrivat24: Scalars['String'];
   disconnectPrivat24: Scalars['String'];
-  generateHistory: Scalars['String'];
-  updateProfile: User;
-  budgetAddOutcomeCategory: Budget;
-  budgetRemoveOutcomeCategory: Budget;
-  budgetAddIncomeCategory: Budget;
-  budgetRemoveIncomeCategory: Budget;
-  createTransaction: Transaction;
-  updateTransaction: Transaction;
-  createWallet: Wallet;
-  updateWallet: Wallet;
-  deleteWallet: Wallet;
-  createGoal: Goal;
-  updateGoal: Goal;
-  deleteGoal: Goal;
-  saveToGoal: GoalSaveResponse;
-  login: Login;
-  register: User;
-  refresh: Refresh;
+};
+
+
+export type MutationLoginArgs = {
+  loginData: LoginInput;
+};
+
+
+export type MutationRegisterArgs = {
+  registerData: RegisterInput;
+};
+
+
+export type MutationRefreshArgs = {
+  refreshData: RefreshInput;
+};
+
+
+export type MutationUpdateProfileArgs = {
+  profileUpdateData: UserUpdate;
+};
+
+
+export type MutationCreateWalletArgs = {
+  walletCreateData: WalletCreate;
+};
+
+
+export type MutationUpdateWalletArgs = {
+  walletUpdateData: WalletUpdate;
+};
+
+
+export type MutationDeleteWalletArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationBudgetAddOutcomeCategoryArgs = {
+  categoryData: BudgetCategoryCreate;
+};
+
+
+export type MutationBudgetRemoveOutcomeCategoryArgs = {
+  categoryId: Scalars['String'];
+};
+
+
+export type MutationBudgetAddIncomeCategoryArgs = {
+  categoryData: BudgetCategoryCreate;
+};
+
+
+export type MutationBudgetRemoveIncomeCategoryArgs = {
+  categoryId: Scalars['String'];
+};
+
+
+export type MutationCreateGoalArgs = {
+  createGoalData: GoalCreate;
+};
+
+
+export type MutationUpdateGoalArgs = {
+  updateGoalData: GoalUpdate;
+};
+
+
+export type MutationDeleteGoalArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationSaveToGoalArgs = {
+  saveGoalData: GoalSave;
+};
+
+
+export type MutationCreateTransactionArgs = {
+  transactionCreateData: TransactionCreate;
+};
+
+
+export type MutationUpdateTransactionArgs = {
+  transactionUpdateData: TransactionUpdate;
+};
+
+
+export type MutationGenerateHistoryArgs = {
+  clearOldHistory: Scalars['Boolean'];
+  walletId: Scalars['String'];
 };
 
 
@@ -385,116 +476,90 @@ export type MutationDisconnectPrivat24Args = {
   merchant_id: Scalars['String'];
 };
 
-
-export type MutationGenerateHistoryArgs = {
-  clearOldHistory: Scalars['Boolean'];
-  walletId: Scalars['String'];
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
-
-export type MutationUpdateProfileArgs = {
-  profileUpdateData: UserUpdate;
+export type RegisterInput = {
+  firstName: Scalars['String'];
+  middleName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  imageUrl?: Maybe<Scalars['String']>;
+  additional?: Maybe<Scalars['JSON']>;
+  password: Scalars['String'];
 };
 
-
-export type MutationBudgetAddOutcomeCategoryArgs = {
-  categoryData: BudgetCategoryCreate;
-};
-
-
-export type MutationBudgetRemoveOutcomeCategoryArgs = {
-  categoryId: Scalars['String'];
-};
-
-
-export type MutationBudgetAddIncomeCategoryArgs = {
-  categoryData: BudgetCategoryCreate;
-};
-
-
-export type MutationBudgetRemoveIncomeCategoryArgs = {
-  categoryId: Scalars['String'];
-};
-
-
-export type MutationCreateTransactionArgs = {
-  transactionCreateData: TransactionCreate;
-};
-
-
-export type MutationUpdateTransactionArgs = {
-  transactionUpdateData: TransactionUpdate;
-};
-
-
-export type MutationCreateWalletArgs = {
-  walletCreateData: WalletCreate;
-};
-
-
-export type MutationUpdateWalletArgs = {
-  walletUpdateData: WalletUpdate;
-};
-
-
-export type MutationDeleteWalletArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateGoalArgs = {
-  createGoalData: GoalCreate;
-};
-
-
-export type MutationUpdateGoalArgs = {
-  updateGoalData: GoalUpdate;
-};
-
-
-export type MutationDeleteGoalArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationSaveToGoalArgs = {
-  saveGoalData: GoalSave;
-};
-
-
-export type MutationLoginArgs = {
-  loginData: LoginInput;
-};
-
-
-export type MutationRegisterArgs = {
-  registerData: RegisterInput;
-};
-
-
-export type MutationRefreshArgs = {
-  refreshData: RefreshInput;
-};
-
-export type AddConnectorArgs = {
-  interval: Scalars['Float'];
-  enabled: Scalars['Boolean'];
-  params: Scalars['JSON'];
-  type: Scalars['String'];
-  description: Scalars['String'];
+export type RefreshInput = {
+  refreshToken: Scalars['String'];
 };
 
 export type UserUpdate = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   middleName?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  oldPassword?: Maybe<Scalars['String']>;
   additional?: Maybe<Scalars['JSON']>;
+};
+
+export type WalletCreate = {
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  allowNegativeBalance?: Maybe<Scalars['Boolean']>;
+  pockets?: Maybe<Array<PocketInput>>;
+  createdAt?: Maybe<Scalars['Int']>;
+};
+
+export type PocketInput = {
+  currencyId: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
+export type WalletUpdate = {
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  allowNegativeBalance: Scalars['Boolean'];
+  pockets?: Maybe<Array<PocketInput>>;
+  updatedAt?: Maybe<Scalars['Int']>;
 };
 
 export type BudgetCategoryCreate = {
   categoryId: Scalars['String'];
   amount: Scalars['Float'];
   progress: Scalars['Float'];
+};
+
+export type GoalCreate = {
+  goal: Scalars['Float'];
+  progress?: Maybe<Scalars['Float']>;
+  name: Scalars['String'];
+  pockets?: Maybe<Array<PocketInput>>;
+  currencyId: Scalars['String'];
+  createdAt?: Maybe<Scalars['Int']>;
+};
+
+export type GoalUpdate = {
+  id: Scalars['ID'];
+  goal?: Maybe<Scalars['Float']>;
+  currencyId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  pockets?: Maybe<Array<PocketInput>>;
+  updatedAt?: Maybe<Scalars['Int']>;
+};
+
+export type GoalSave = {
+  toGoalId: Scalars['String'];
+  fromWalletId: Scalars['String'];
+  currencyId: Scalars['String'];
+  amount: Scalars['Float'];
 };
 
 export type TransactionCreate = {
@@ -528,75 +593,12 @@ export type TransactionUpdate = {
   deletedAt?: Maybe<Scalars['Int']>;
 };
 
-export type WalletCreate = {
-  id?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  allowNegativeBalance?: Maybe<Scalars['Boolean']>;
-  pockets?: Maybe<Array<PocketInput>>;
-  createdAt?: Maybe<Scalars['Int']>;
-};
-
-export type PocketInput = {
-  currencyId: Scalars['String'];
-  amount: Scalars['Float'];
-};
-
-export type WalletUpdate = {
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  allowNegativeBalance: Scalars['Boolean'];
-  pockets?: Maybe<Array<PocketInput>>;
-  updatedAt?: Maybe<Scalars['Int']>;
-};
-
-export type GoalCreate = {
-  goal: Scalars['Float'];
-  progress?: Maybe<Scalars['Float']>;
-  name: Scalars['String'];
-  pockets?: Maybe<Array<PocketInput>>;
-  currencyId: Scalars['String'];
-  createdAt?: Maybe<Scalars['Int']>;
-};
-
-export type GoalUpdate = {
-  id: Scalars['ID'];
-  goal?: Maybe<Scalars['Float']>;
-  currencyId?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  pockets?: Maybe<Array<PocketInput>>;
-  updatedAt?: Maybe<Scalars['Int']>;
-};
-
-export type GoalSave = {
-  toGoalId: Scalars['String'];
-  fromWalletId: Scalars['String'];
-  currencyId: Scalars['String'];
-  amount: Scalars['Float'];
-};
-
-export type LoginInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-export type RegisterInput = {
-  firstName: Scalars['String'];
-  middleName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  imageUrl?: Maybe<Scalars['String']>;
-  additional?: Maybe<Scalars['JSON']>;
-  password: Scalars['String'];
-};
-
-export type RefreshInput = {
-  refreshToken: Scalars['String'];
+export type AddConnectorArgs = {
+  interval: Scalars['Float'];
+  enabled: Scalars['Boolean'];
+  params: Scalars['JSON'];
+  type: Scalars['String'];
+  description: Scalars['String'];
 };
 
 export type AddConnectorMutationVariables = Exact<{
@@ -638,7 +640,7 @@ export type AnalysByCategoriesQueryVariables = Exact<{
   from?: Maybe<Scalars['Float']>;
   to?: Maybe<Scalars['Float']>;
   currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
   type?: Maybe<TransactionType>;
 }>;
 
@@ -848,6 +850,11 @@ export type LoginMutation = (
   ) }
 );
 
+export type ProfileFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'firstName' | 'lastName' | 'middleName' | 'email' | 'imageUrl' | 'additional'>
+);
+
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -855,7 +862,20 @@ export type GetProfileQuery = (
   { __typename?: 'Query' }
   & { profile: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstName' | 'lastName' | 'middleName' | 'email' | 'imageUrl' | 'additional'>
+    & ProfileFragment
+  ) }
+);
+
+export type UpdateProfileMutationVariables = Exact<{
+  profileUpdateData: UserUpdate;
+}>;
+
+
+export type UpdateProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { updateProfile: (
+    { __typename?: 'User' }
+    & ProfileFragment
   ) }
 );
 
@@ -937,8 +957,8 @@ export type ExportQueryVariables = Exact<{
   type?: Maybe<TransactionType>;
   from?: Maybe<Scalars['Float']>;
   to?: Maybe<Scalars['Float']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-  categoryIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+  categoryIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
   search?: Maybe<Scalars['String']>;
   amountGte?: Maybe<Scalars['Float']>;
   amountLte?: Maybe<Scalars['Float']>;
@@ -958,8 +978,8 @@ export type GetTransactionsQueryVariables = Exact<{
   to?: Maybe<Scalars['Float']>;
   limit?: Maybe<Scalars['Float']>;
   offset?: Maybe<Scalars['Float']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-  categoryIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+  categoryIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
   search?: Maybe<Scalars['String']>;
   amountGte?: Maybe<Scalars['Float']>;
   amountLte?: Maybe<Scalars['Float']>;
@@ -1084,6 +1104,17 @@ export const BudgetFragmentDoc = gql`
   deadline
 }
     ${BudgetCategoryFragmentDoc}`;
+export const ProfileFragmentDoc = gql`
+    fragment profile on User {
+  id
+  firstName
+  lastName
+  middleName
+  email
+  imageUrl
+  additional
+}
+    `;
 export const WalletFragmentDoc = gql`
     fragment wallet on Wallet {
   id
@@ -1646,16 +1677,10 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, Log
 export const GetProfileDocument = gql`
     query GetProfile {
   profile {
-    id
-    firstName
-    lastName
-    middleName
-    email
-    imageUrl
-    additional
+    ...profile
   }
 }
-    `;
+    ${ProfileFragmentDoc}`;
 
 /**
  * __useGetProfileQuery__
@@ -1681,6 +1706,38 @@ export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export const UpdateProfileDocument = gql`
+    mutation UpdateProfile($profileUpdateData: UserUpdate!) {
+  updateProfile(profileUpdateData: $profileUpdateData) {
+    ...profile
+  }
+}
+    ${ProfileFragmentDoc}`;
+export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutation, UpdateProfileMutationVariables>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      profileUpdateData: // value for 'profileUpdateData'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfileMutation, UpdateProfileMutationVariables>) {
+        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, baseOptions);
+      }
+export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const RefreshDocument = gql`
     mutation Refresh($token: String!) {
   refresh(refreshData: {refreshToken: $token}) {

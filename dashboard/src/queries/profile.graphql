@@ -1,11 +1,21 @@
+fragment profile on User {
+  id
+  firstName
+  lastName
+  middleName
+  email
+  imageUrl
+  additional
+}
+
 query GetProfile {
   profile {
-    id
-    firstName
-    lastName
-    middleName
-    email
-    imageUrl
-    additional
+    ...profile
+  }
+}
+
+mutation UpdateProfile($profileUpdateData: UserUpdate!) {
+  updateProfile(profileUpdateData: $profileUpdateData) {
+    ...profile
   }
 }

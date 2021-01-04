@@ -18,7 +18,7 @@ export class UserDto {
   @Field({ nullable: true })
   imageUrl: string;
 
-  @Field(() => graphqlTypeJson)
+  @Field(() => graphqlTypeJson, { nullable: true })
   additional: object;
 
   @Field()

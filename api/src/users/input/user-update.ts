@@ -25,6 +25,5 @@ export class UserUpdate {
   oldPassword?: string;
 
   @Field(() => graphqlTypeJson, { nullable: true })
-  @IsObject()
   readonly additional?: any;
 }

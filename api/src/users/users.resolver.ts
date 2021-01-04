@@ -10,7 +10,7 @@ import { UsersService } from './users.service';
 
 @Resolver((of) => UserDto)
 export class UsersResolver {
-  constructor(private readonly service: UsersService) { }
+  constructor(private readonly service: UsersService) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => UserDto)
@@ -25,7 +25,6 @@ export class UsersResolver {
     @Args('profileUpdateData')
     data: UserUpdate,
   ): Promise<UserDto> {
-
     if (data.password) {
       const password = await bcrypt.hash(data.password, 10);
       const oldPassword = await bcrypt.hash(data.oldPassword, 10);
@@ -37,7 +36,10 @@ export class UsersResolver {
       data.password = password;
     }
 
-    await user.$query().update(data);
+    await user.$query().update({
+      ...data,
+      additional: user.additional || data.additional || {},
+    });
 
     return user;
   }

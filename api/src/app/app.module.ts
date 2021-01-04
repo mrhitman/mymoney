@@ -21,6 +21,8 @@ import { LoggerMiddleware } from './logger.middleware';
 import { TaskService } from './task.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 
 @Module({
   imports: [
@@ -52,6 +54,27 @@ import { join } from 'path';
         origin: true,
       },
       autoSchemaFile: 'schema.gql',
+    }),
+    MailerModule.forRoot({
+      transport: {
+        service: 'gmail',
+        port: 587,
+        auth: {
+          user: process.env.MAILDEV_INCOMING_USER,
+          pass: process.env.MAILDEV_INCOMING_PASS,
+        },
+      },
+      defaults: {
+        from: '"No Reply" <no-reply@localhost>',
+      },
+      // preview: true,
+      template: {
+        dir: process.cwd() + '/templates/',
+        adapter: new PugAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
   ],
   controllers: [AppController],

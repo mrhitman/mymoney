@@ -43,6 +43,14 @@ import { join } from 'path';
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       plugins: [new ApolloComplexityPlugin(+process.env.MAX_QUERY_COMPLEXITY || 32)],
+      context: ({ req }) => {
+        return { req };
+      },
+      cors: {
+        crossDomain: true,
+        credentials: true,
+        origin: true,
+      },
       autoSchemaFile: 'schema.gql',
     }),
   ],

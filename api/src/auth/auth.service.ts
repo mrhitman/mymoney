@@ -24,7 +24,6 @@ export class AuthService {
   }
 
   public async login(user: Omit<User, 'password'>, token?: RefreshToken) {
-    const payload = { id: user.id };
     const refreshToken = token?.token || uuid();
 
     if (!token) {
@@ -36,7 +35,7 @@ export class AuthService {
     }
 
     return {
-      accessToken: 'Bearer ' + this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign({ id: user.id }),
       refreshToken,
     };
   }

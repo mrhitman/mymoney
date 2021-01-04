@@ -1,6 +1,7 @@
 import { UseGuards, BadRequestException } from '@nestjs/common';
-import bcrypt from 'bcryptjs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import bcrypt from 'bcryptjs';
+import omit from 'lodash/omit';
 import { CurrentUser } from '../auth/current-user';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
 import User from '../database/models/user.model';
@@ -25,22 +26,22 @@ export class UsersResolver {
     @Args('profileUpdateData')
     data: UserUpdate,
   ): Promise<UserDto> {
+    const fullUser = await User.query().findById(user.id);
     if (data.password) {
       const password = await bcrypt.hash(data.password, 10);
-      const oldPassword = await bcrypt.hash(data.oldPassword, 10);
 
-      if (!(await bcrypt.compare(oldPassword, user.password))) {
+      if (!(await bcrypt.compare(data.oldPassword, fullUser.password))) {
         throw new BadRequestException();
       }
 
       data.password = password;
     }
 
-    await user.$query().update({
-      ...data,
-      additional: user.additional || data.additional || {},
+    await fullUser.$query().update({
+      ...omit(data, ['oldPassword']),
+      additional: fullUser.additional || data.additional || {},
     });
 
-    return user;
+    return omit(fullUser, ['password']);
   }
 }

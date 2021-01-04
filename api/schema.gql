@@ -145,7 +145,7 @@ type User {
   middleName: String
   lastName: String
   imageUrl: String
-  additional: JSON!
+  additional: JSON
   email: String!
 }
 
@@ -179,6 +179,9 @@ type Refresh {
 }
 
 type Query {
+  profile: User!
+  wallets: [Wallet!]!
+  wallet(id: String!): Wallet!
   currencies: [Currency!]!
   currency(id: String!): Currency!
   exchange(
@@ -189,11 +192,15 @@ type Query {
     from: String!
     amount: Float!
   ): Float!
+  categories(type: String): [Category!]!
+  category(id: String!): Category!
+  budgets: [Budget!]!
+  activeBudget: Budget!
+  goals: [Goal!]!
+  goal(id: String!): [Goal!]!
   export(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): String!
   transactions(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
   transaction(id: String!): Transaction!
-  budgets: [Budget!]!
-  activeBudget: Budget!
   statisticByPeriod(
     """Unix timestamp"""
     to: Float
@@ -223,22 +230,26 @@ type Query {
   ): [StatisticByCategory!]!
   statisticByCurrency(walletIds: [String!]): [StatisticByCurrency!]!
   connectors: [BankConnection!]!
-  profile: User!
-  categories(type: String): [Category!]!
-  category(id: String!): Category!
-  wallets: [Wallet!]!
-  wallet(id: String!): Wallet!
-  goals: [Goal!]!
-  goal(id: String!): [Goal!]!
 }
 
 type Mutation {
-  createTransaction(transactionCreateData: TransactionCreate!): Transaction!
-  updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
+  login(loginData: LoginInput!): Login!
+  register(registerData: RegisterInput!): User!
+  refresh(refreshData: RefreshInput!): Refresh!
+  updateProfile(profileUpdateData: UserUpdate!): User!
+  createWallet(walletCreateData: WalletCreate!): Wallet!
+  updateWallet(walletUpdateData: WalletUpdate!): Wallet!
+  deleteWallet(id: String!): Wallet!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveOutcomeCategory(categoryId: String!): Budget!
   budgetAddIncomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveIncomeCategory(categoryId: String!): Budget!
+  createGoal(createGoalData: GoalCreate!): Goal!
+  updateGoal(updateGoalData: GoalUpdate!): Goal!
+  deleteGoal(id: String!): Goal!
+  saveToGoal(saveGoalData: GoalSave!): GoalSaveResponse!
+  createTransaction(transactionCreateData: TransactionCreate!): Transaction!
+  updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   generateHistory(clearOldHistory: Boolean!, walletId: String!): String!
   import(id: String!): String!
   addConnector(args: AddConnectorArgs!): String!
@@ -247,17 +258,92 @@ type Mutation {
   disconnectMonobank(token: String!): String!
   connectPrivat24(password: String!, merchant_id: String!, description: String!): String!
   disconnectPrivat24(merchant_id: String!): String!
-  updateProfile(profileUpdateData: UserUpdate!): User!
-  createWallet(walletCreateData: WalletCreate!): Wallet!
-  updateWallet(walletUpdateData: WalletUpdate!): Wallet!
-  deleteWallet(id: String!): Wallet!
-  createGoal(createGoalData: GoalCreate!): Goal!
-  updateGoal(updateGoalData: GoalUpdate!): Goal!
-  deleteGoal(id: String!): Goal!
-  saveToGoal(saveGoalData: GoalSave!): GoalSaveResponse!
-  login(loginData: LoginInput!): Login!
-  register(registerData: RegisterInput!): User!
-  refresh(refreshData: RefreshInput!): Refresh!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input RegisterInput {
+  firstName: String!
+  middleName: String
+  lastName: String
+  email: String!
+  imageUrl: String
+  additional: JSON
+  password: String!
+}
+
+input RefreshInput {
+  refreshToken: String!
+}
+
+input UserUpdate {
+  firstName: String
+  lastName: String
+  middleName: String
+  password: String
+  oldPassword: String
+  additional: JSON
+}
+
+input WalletCreate {
+  id: String
+  name: String!
+  description: String
+  image: String
+  type: String = "credit"
+  allowNegativeBalance: Boolean = true
+  pockets: [PocketInput!] = []
+  createdAt: Int
+}
+
+input PocketInput {
+  currencyId: String!
+  amount: Float!
+}
+
+input WalletUpdate {
+  id: String!
+  name: String
+  description: String
+  image: String
+  type: String
+  allowNegativeBalance: Boolean!
+  pockets: [PocketInput!]
+  updatedAt: Int
+}
+
+input BudgetCategoryCreate {
+  categoryId: String!
+  amount: Float!
+  progress: Float!
+}
+
+input GoalCreate {
+  goal: Float!
+  progress: Float
+  name: String!
+  pockets: [PocketInput!]
+  currencyId: String!
+  createdAt: Int
+}
+
+input GoalUpdate {
+  id: ID!
+  goal: Float
+  currencyId: String
+  name: String!
+  pockets: [PocketInput!]
+  updatedAt: Int
+}
+
+input GoalSave {
+  toGoalId: String!
+  fromWalletId: String!
+  currencyId: String!
+  amount: Float!
 }
 
 input TransactionCreate {
@@ -291,94 +377,10 @@ input TransactionUpdate {
   deletedAt: Int
 }
 
-input BudgetCategoryCreate {
-  categoryId: String!
-  amount: Float!
-  progress: Float!
-}
-
 input AddConnectorArgs {
   interval: Float!
   enabled: Boolean!
   params: JSON!
   type: String!
   description: String!
-}
-
-input UserUpdate {
-  firstName: String
-  lastName: String
-  middleName: String
-  additional: JSON
-}
-
-input WalletCreate {
-  id: String
-  name: String!
-  description: String
-  image: String
-  type: String = "credit"
-  allowNegativeBalance: Boolean = true
-  pockets: [PocketInput!] = []
-  createdAt: Int
-}
-
-input PocketInput {
-  currencyId: String!
-  amount: Float!
-}
-
-input WalletUpdate {
-  id: String!
-  name: String
-  description: String
-  image: String
-  type: String
-  allowNegativeBalance: Boolean!
-  pockets: [PocketInput!]
-  updatedAt: Int
-}
-
-input GoalCreate {
-  goal: Float!
-  progress: Float
-  name: String!
-  pockets: [PocketInput!]
-  currencyId: String!
-  createdAt: Int
-}
-
-input GoalUpdate {
-  id: ID!
-  goal: Float
-  currencyId: String
-  name: String!
-  pockets: [PocketInput!]
-  updatedAt: Int
-}
-
-input GoalSave {
-  toGoalId: String!
-  fromWalletId: String!
-  currencyId: String!
-  amount: Float!
-}
-
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-input RegisterInput {
-  firstName: String!
-  middleName: String
-  lastName: String
-  email: String!
-  imageUrl: String
-  additional: JSON
-  password: String!
-}
-
-input RefreshInput {
-  refreshToken: String!
 }

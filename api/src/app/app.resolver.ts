@@ -17,7 +17,10 @@ export class AppResolver {
     const user = await this.localStrategy.validate(data.email, data.password);
     const tokens = await this.authService.login(user);
 
-    context.req.res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, secure: true });
+    context.req.res.cookie('token', tokens.accessToken, { httpOnly: true });
+    context.req.res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+    });
     return {
       ...tokens,
       profile: user,
@@ -32,7 +35,8 @@ export class AppResolver {
   @Mutation(() => RefreshDto)
   public async refresh(@Args('refreshData') data: RefreshInput, @Context() context: any) {
     const tokens = await this.authService.refresh(data.refreshToken);
-    context.req.res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, secure: true });
+    context.req.res.cookie('token', tokens.accessToken, { httpOnly: true, saveSite: false });
+    context.req.res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
     return tokens;
   }
 }

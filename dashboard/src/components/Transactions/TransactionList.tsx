@@ -46,11 +46,6 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
       orderBy: sorter?.field as string,
       order: sorter?.order?.split('end')[0],
     },
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('accessToken'),
-      },
-    },
   });
   const { t } = useTranslation();
 

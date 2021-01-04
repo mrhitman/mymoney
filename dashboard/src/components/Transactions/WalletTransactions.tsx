@@ -21,11 +21,6 @@ const WalletTransactions: React.FC = () => {
       offset: pageSize * (current - 1),
     },
     fetchPolicy: 'no-cache',
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('accessToken'),
-      },
-    },
   });
 
   const { t } = useTranslation();

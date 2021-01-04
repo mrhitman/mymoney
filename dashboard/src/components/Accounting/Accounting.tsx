@@ -18,13 +18,7 @@ export const Accounting: FC = () => {
     wallet?: GetWalletsQuery['wallets'][number];
   } | null>(null);
   const [deleteWallet] = useDeleteWalletMutation();
-  const { loading, data, refetch } = useGetWalletsQuery({
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('accessToken'),
-      },
-    },
-  });
+  const { loading, data, refetch } = useGetWalletsQuery();
   const wallets = data ? data.wallets : [];
   const { t } = useTranslation();
 

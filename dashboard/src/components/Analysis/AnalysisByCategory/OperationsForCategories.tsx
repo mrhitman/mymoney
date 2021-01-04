@@ -22,11 +22,6 @@ const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
       to: props.to,
       walletIds: props.walletIds,
     },
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('accessToken'),
-      },
-    },
   });
   return (
     <Table

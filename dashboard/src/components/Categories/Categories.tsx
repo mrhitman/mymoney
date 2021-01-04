@@ -6,13 +6,7 @@ import CategoryIcon from '../misc/CategoryIcon';
 
 export const Categories: React.FC = () => {
   const { t } = useTranslation();
-  const { loading, data } = useGetCategoriesQuery({
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('accessToken'),
-      },
-    },
-  });
+  const { loading, data } = useGetCategoriesQuery();
   return (
     <Table
       bordered

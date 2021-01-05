@@ -45,9 +45,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       plugins: [new ApolloComplexityPlugin(+process.env.MAX_QUERY_COMPLEXITY || 32)],
-      context: ({ req }) => {
-        return { req };
-      },
+      context: ({ req }) => ({ req }),
       cors: {
         crossDomain: true,
         credentials: true,
@@ -61,14 +59,17 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         service: 'Gmail',
         auth: {
           type: 'OAuth2',
-          user: process.env.MAILDEV_INCOMING_USER,
-          accessToken: process.env.MAILDEV_INCOMING_PASS,
+          user: process.env.MAIL_USER,
+          clientId: process.env.MAIL_CLIENT_ID,
+          clientSecret: process.env.MAIL_SECRET,
+          accessToken: process.env.MAIL_TOKEN,
+          refreshToken: process.env.MAIL_REFRESH_TOKEN,
         },
       },
       defaults: {
-        from: '"No Reply" <no-reply@localhost>',
+        from: '"No Reply" <no-reply@mymoney>',
       },
-      // preview: true,
+      preview: false,
       template: {
         dir: process.cwd() + '/templates/',
         adapter: new PugAdapter(),

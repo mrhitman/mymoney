@@ -235,6 +235,7 @@ type Query {
 type Mutation {
   login(loginData: LoginInput!): Login!
   register(registerData: RegisterInput!): User!
+  recoveryPassword: String!
   refresh(refreshData: RefreshInput!): Refresh!
   updateProfile(profileUpdateData: UserUpdate!): User!
   createWallet(walletCreateData: WalletCreate!): Wallet!

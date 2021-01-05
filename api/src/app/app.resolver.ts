@@ -1,13 +1,17 @@
+import { MailerService } from '@nestjs-modules/mailer';
+import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalStrategy } from 'src/auth/strategies/local.strategy';
 import { UserDto } from 'src/users/dto/user.dto';
+import { CurrentUser } from '../auth/current-user';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
+import User from '../database/models/user.model';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
 import { LoginInput } from './input/login-input';
 import { RefreshInput } from './input/refresh-input';
 import { RegisterInput } from './input/register-input';
-import { MailerService } from '@nestjs-modules/mailer';
 
 @Resolver()
 export class AppResolver {
@@ -26,16 +30,6 @@ export class AppResolver {
     context.req.res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
     });
-    await this.mailer
-      .sendMail({
-        to: 'aaaaaaaasdad@mailinator.com',
-        from: 'kabalx47@gmail.com',
-        subject: 'Testing Nest MailerModule ✔',
-        text: 'welcome',
-        html: '<b>welcome</b>',
-      })
-      .then(console.log)
-      .catch(console.log);
 
     return {
       ...tokens,
@@ -45,11 +39,36 @@ export class AppResolver {
 
   @Mutation(() => UserDto)
   public async register(@Args('registerData') data: RegisterInput) {
-    return this.authService.register(data);
+    const user = await this.authService.register(data);
+
+    await this.mailer.sendMail({
+      to: user.email,
+      from: 'kabalx47@gmail.com',
+      subject: 'MyMoney Registration',
+      template: 'registration',
+      context: {
+        confirmLink: '/confirm-link',
+      },
+    });
+
+    return user;
   }
 
-  // @Mutation(() => null)
-  // public async recoveryPassword() {}
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => String)
+  public async recoveryPassword(@CurrentUser() user: User) {
+    await this.mailer.sendMail({
+      to: user.email,
+      from: 'kabalx47@gmail.com',
+      subject: 'MyMoney Password Recovery',
+      template: 'recovery-password',
+      context: {
+        recoveryLink: '/recovery-password',
+      },
+    });
+
+    return 'OK';
+  }
 
   @Mutation(() => RefreshDto)
   public async refresh(@Args('refreshData') data: RefreshInput, @Context() context: any) {

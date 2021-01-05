@@ -1,19 +1,22 @@
-import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import React, { FC, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import LoginForm from './LoginForm';
 
-export const Login: React.FC = () => {
-  const history = useHistory();
+export const Login: FC = () => {
+  const [redirect, setRedirect] = useState<string | null>(null);
 
   if (localStorage.getItem('accessToken')) {
     return <Redirect to="/" exact />;
   }
 
-  const afterLogin = () => history.replace({ pathname: '/' });
+  if (redirect) {
+    return <Redirect to={redirect} exact />;
+  }
+
   return (
     <div className="App">
       <div className="login">
-        <LoginForm afterLogin={afterLogin} />
+        <LoginForm afterLogin={() => setRedirect('/')} />
       </div>
     </div>
   );

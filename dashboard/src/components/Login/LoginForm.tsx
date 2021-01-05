@@ -58,24 +58,18 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item
-            {...loginTailLayout}
-            name="remember"
-            valuePropName="checked"
-          >
+          <Form.Item {...loginTailLayout} name="remember" valuePropName="checked">
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
           <Form.Item {...loginTailLayout}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              onSubmit={bag.handleSubmit}
-            >
+            <Button type="primary" htmlType="submit" onSubmit={bag.handleSubmit}>
               Submit
             </Button>
             {'    or    '}
             <Link to="/register">Register</Link>
+            {'    or    '}
+            <Button type="link">Recover password</Button>
           </Form.Item>
         </Form>
       )}

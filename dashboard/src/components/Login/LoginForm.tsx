@@ -68,8 +68,8 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             </Button>
             {'    or    '}
             <Link to="/register">Register</Link>
-            {'    or    '}
-            <Button type="link">Recover password</Button>
+            <br /> or
+            <Link to="/recover-password">Recover password</Link>
           </Form.Item>
         </Form>
       )}

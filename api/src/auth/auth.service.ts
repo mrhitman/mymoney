@@ -75,4 +75,14 @@ export class AuthService {
 
     return omit(user, ['password']);
   }
+
+  public async changePassword(user: User, password: string) {
+    await User.query()
+      .update({
+        password: await bcrypt.hash(password, 10),
+      })
+      .where({ id: user.id });
+
+    return user;
+  }
 }

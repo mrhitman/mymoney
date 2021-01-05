@@ -1,6 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { JwtService } from '@nestjs/jwt';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalStrategy } from 'src/auth/strategies/local.strategy';
 import { UserDto } from 'src/users/dto/user.dto';
@@ -12,11 +12,13 @@ import { RefreshDto } from './dto/refresh.dto';
 import { LoginInput } from './input/login-input';
 import { RefreshInput } from './input/refresh-input';
 import { RegisterInput } from './input/register-input';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 
 @Resolver()
 export class AppResolver {
   constructor(
     private authService: AuthService,
+    protected jwtService: JwtService,
     private localStrategy: LocalStrategy,
     private mailer: MailerService,
   ) {}
@@ -47,26 +49,46 @@ export class AppResolver {
       subject: 'MyMoney Registration',
       template: 'registration',
       context: {
-        confirmLink: '/confirm-link',
+        confirmLink: `/confirm-link/${await this.jwtService.sign(
+          { id: user.id },
+          { noTimestamp: true, expiresIn: '50y' },
+        )}`,
       },
     });
 
     return user;
   }
 
-  @UseGuards(GqlAuthGuard)
   @Mutation(() => String)
-  public async recoveryPassword(@CurrentUser() user: User) {
+  public async recoveryPassword(@Args('email') email: String) {
+    const user = await User.query().findOne({
+      email,
+    });
+
+    if (!user) {
+      throw new BadRequestException('No such user found');
+    }
+
     await this.mailer.sendMail({
       to: user.email,
       from: 'kabalx47@gmail.com',
       subject: 'MyMoney Password Recovery',
       template: 'recovery-password',
       context: {
-        recoveryLink: '/recovery-password',
+        recoveryLink: `${process.env.HOST}/change-password/${await this.jwtService.sign(
+          { id: user.id },
+          { expiresIn: '10m' },
+        )}`,
       },
     });
 
+    return 'OK';
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => String)
+  public async changePassword(@Args('newPassword') password: string, @CurrentUser() user: User) {
+    await this.authService.changePassword(user, password);
     return 'OK';
   }
 

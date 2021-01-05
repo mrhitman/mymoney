@@ -19,6 +19,8 @@ import Register from '../Register/Register';
 import ViewTransaction from '../Transactions/ViewTransaction';
 import WalletTransactions from '../Transactions/WalletTransactions';
 import PrivateRoute from './PrivateRoute';
+import RecoverPassword from '../Login/RecoverPassword';
+import ChangePassword from '../Login/ChangePassword';
 
 const Routes: FC = () => (
   <Router>
@@ -121,6 +123,14 @@ const Routes: FC = () => (
 
       <Route path="/login">
         <Login />
+      </Route>
+
+      <Route path="/recover-password">
+        <RecoverPassword />
+      </Route>
+
+      <Route path="/change-password/:token">
+        <ChangePassword />
       </Route>
 
       <Route path="/register">

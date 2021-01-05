@@ -4,6 +4,7 @@ RUN apk add --update python make g++\
 RUN mkdir /app
 WORKDIR /app
 COPY src src
+COPY templates templates
 COPY nest-cli.json nest-cli.json
 COPY tsconfig.build.json tsconfig.build.json
 COPY tsconfig.json tsconfig.json

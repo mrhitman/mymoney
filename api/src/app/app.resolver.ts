@@ -42,6 +42,10 @@ export class AppResolver {
   @Mutation(() => UserDto)
   public async register(@Args('registerData') data: RegisterInput) {
     const user = await this.authService.register(data);
+    const token = await this.jwtService.sign(
+      { id: user.id },
+      { noTimestamp: true, expiresIn: '50y' },
+    );
 
     await this.mailer.sendMail({
       to: user.email,
@@ -49,10 +53,7 @@ export class AppResolver {
       subject: 'MyMoney Registration',
       template: 'registration',
       context: {
-        confirmLink: `/confirm-link/${await this.jwtService.sign(
-          { id: user.id },
-          { noTimestamp: true, expiresIn: '50y' },
-        )}`,
+        confirmLink: `${process.env.HOST}/confirm-link/${Buffer.from(token).toString('base64')}`,
       },
     });
 
@@ -69,15 +70,15 @@ export class AppResolver {
       throw new BadRequestException('No such user found');
     }
 
+    const token = await this.jwtService.sign({ id: user.id }, { expiresIn: '10m' });
     await this.mailer.sendMail({
       to: user.email,
       from: 'kabalx47@gmail.com',
       subject: 'MyMoney Password Recovery',
       template: 'recovery-password',
       context: {
-        recoveryLink: `${process.env.HOST}/change-password/${await this.jwtService.sign(
-          { id: user.id },
-          { expiresIn: '10m' },
+        recoveryLink: `${process.env.HOST}/change-password/${Buffer.from(token).toString(
+          'base64',
         )}`,
       },
     });

@@ -30,7 +30,7 @@ const ChangePassword: FC = () => {
         },
         context: {
           headers: {
-            Authorization: `Bearer ${params.token}`,
+            Authorization: `Bearer ${Buffer.from(params.token, 'base64').toString()}`,
           },
         },
       })

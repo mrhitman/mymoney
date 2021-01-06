@@ -1,13 +1,7 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { raw } from 'objection';
 import Budget from 'src/database/models/budget.model';
-import Transaction, {
-  categoryInId,
-} from 'src/database/models/transaction.model';
+import Transaction, { categoryInId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { BudgetCategoryCreate } from './input/budget-category-create';
 
@@ -91,29 +85,24 @@ export class BudgetsService {
   }
 
   public async outcome(user: User, trx: Transaction) {
-    const budget = await this.getActiveBudget(user);
-    await budget.$query().update({
-      outcomes: budget.outcomes.map((o) =>
-        o.categoryId === trx.categoryId
-          ? { ...o, progress: o.progress + trx.amount }
-          : o,
-      ),
-    });
+    try {
+      const budget = await this.getActiveBudget(user);
+      await budget.$query().update({
+        outcomes: budget.outcomes.map((o) =>
+          o.categoryId === trx.categoryId ? { ...o, progress: o.progress + trx.amount } : o,
+        ),
+      });
+    } catch (e) {}
   }
 
   public async income(user: User, trx: Transaction) {
-    const budget = await Budget.query()
-      .where({ userId: user.id, active: true })
-      .first();
-
-    if (budget) {
-      const budgetCategory = budget.incomes.find(
-        (o) => o.categoryId === trx.categoryId,
-      );
+    try {
+      const budget = await this.getActiveBudget(user);
+      const budgetCategory = budget.incomes.find((o) => o.categoryId === trx.categoryId);
 
       if (budgetCategory) {
         budgetCategory.progress += trx.amount;
       }
-    }
+    } catch (e) {}
   }
 }

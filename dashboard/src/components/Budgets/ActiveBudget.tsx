@@ -1,70 +1,14 @@
-import { Button, Col, Collapse, Form, Input, Modal, Row, Select, Typography } from 'antd';
-import { useFormik } from 'formik';
+import { DeleteOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Collapse, Row, Typography } from 'antd';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CategoryIcon from 'src/components/misc/CategoryIcon';
 import {
   CategoryType,
-  GetActiveBudgetQuery,
   useAddOutcomeBudgetMutation,
   useGetActiveBudgetQuery,
 } from 'src/generated/graphql';
-
-interface AddCategoryModalProps {
-  visible: boolean;
-  type: CategoryType;
-  onOk: (values: { amount: number; categoryId: string }) => void;
-  onCancel: () => void;
-  categories: GetActiveBudgetQuery['categories'];
-}
-
-const AddCategoryModal: FC<AddCategoryModalProps> = ({
-  visible,
-  onOk,
-  onCancel,
-  categories,
-  type,
-}) => {
-  const { t } = useTranslation();
-  const formik = useFormik({
-    onSubmit: onOk,
-    initialValues: {
-      amount: 0,
-      categoryId: '',
-    },
-  });
-
-  return (
-    <Modal
-      title="Add Category"
-      visible={visible}
-      onCancel={onCancel}
-      onOk={() => formik.handleSubmit()}
-    >
-      <Form>
-        <Select
-          style={{ width: 300 }}
-          value={formik.values.categoryId}
-          onChange={(value) => formik.setFieldValue('categoryId', value)}
-        >
-          {categories
-            .filter((category) => category.type === type)
-            .map((category) => (
-              <Select.Option key={category.id} value={category.id}>
-                {t(category.name)}
-              </Select.Option>
-            ))}
-        </Select>
-        <Input
-          type="number"
-          placeholder="Input category limit for budget"
-          value={formik.values.amount}
-          onChange={(e) => formik.setFieldValue('amount', +e.target.value)}
-        />
-      </Form>
-    </Modal>
-  );
-};
+import AddCategoryModal from './AddCategoryModal';
 
 const ActiveBudget: FC = () => {
   const { data } = useGetActiveBudgetQuery();
@@ -80,16 +24,28 @@ const ActiveBudget: FC = () => {
             incomes
           </Collapse.Panel>
           <Collapse.Panel header="outcomes" key="2">
-            {data?.activeBudget.outcomes.map((budgetCategory) => (
-              <Row id={budgetCategory.category.id}>
-                <Col style={{ height: 140, width: 220, border: '1px solid gray', padding: 10 }}>
-                  <Typography>Category: {t(budgetCategory.category.name)}</Typography>
-                  <Typography>Amount: {budgetCategory.amount}</Typography>
-                  <Typography>Progress: {budgetCategory.progress}</Typography>
-                  <CategoryIcon icon={budgetCategory.category.icon} />
+            <Row gutter={[16, 16]}>
+              {data?.activeBudget.outcomes.map((budgetCategory) => (
+                <Col id={budgetCategory.category.id}>
+                  <Card
+                    actions={[
+                      <DeleteOutlined key="delete" />,
+                      <EditOutlined key="edit" />,
+                      <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                  >
+                    <Card.Meta
+                      title={t(budgetCategory.category.name)}
+                      avatar={<CategoryIcon icon={budgetCategory.category.icon} />}
+                    ></Card.Meta>
+                    <Row>
+                      <Typography>Amount: {budgetCategory.amount}</Typography>
+                      <Typography>Progress: {budgetCategory.progress}</Typography>
+                    </Row>
+                  </Card>
                 </Col>
-              </Row>
-            ))}
+              ))}
+            </Row>
           </Collapse.Panel>
           <Collapse.Panel header="savings" key="3">
             savings

@@ -9,6 +9,7 @@ fragment budgetCategory on BudgetCategory {
   category {
     id
     name
+    type
     icon {
       ...icon
     }
@@ -47,6 +48,26 @@ mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Floa
   budgetAddOutcomeCategory(
     categoryData: { categoryId: $categoryId, amount: $amount, progress: $progress }
   ) {
+    ...budget
+  }
+}
+
+mutation addIncomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+  budgetAddIncomeCategory(
+    categoryData: { categoryId: $categoryId, amount: $amount, progress: $progress }
+  ) {
+    ...budget
+  }
+}
+
+mutation removeOutcomeBudget($categoryId: String!) {
+  budgetRemoveOutcomeCategory(categoryId: $categoryId) {
+    ...budget
+  }
+}
+
+mutation removeIncomeBudget($categoryId: String!) {
+  budgetRemoveIncomeCategory(categoryId: $categoryId) {
     ...budget
   }
 }

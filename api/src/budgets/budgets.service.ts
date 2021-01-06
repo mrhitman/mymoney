@@ -68,7 +68,7 @@ export class BudgetsService {
     }
 
     await budget.$query().update({
-      outcomes: [...budget.incomes, data],
+      incomes: [...budget.incomes, data],
     });
 
     return budget;
@@ -78,7 +78,7 @@ export class BudgetsService {
     const budget = await this.getActiveBudget(user);
 
     await budget.$query().update({
-      outcomes: budget.incomes.filter((c) => c.categoryId !== categoryId),
+      incomes: budget.incomes.filter((c) => c.categoryId !== categoryId),
     });
 
     return budget;

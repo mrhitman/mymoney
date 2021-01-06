@@ -627,27 +627,6 @@ export type AddConnectorMutation = (
   & Pick<Mutation, 'addConnector'>
 );
 
-export type AddWalletMutationVariables = Exact<{
-  walletCreateData: WalletCreate;
-}>;
-
-
-export type AddWalletMutation = (
-  { __typename?: 'Mutation' }
-  & { createWallet: (
-    { __typename?: 'Wallet' }
-    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
-    & { pockets: Array<(
-      { __typename?: 'Pocket' }
-      & Pick<Pocket, 'amount'>
-      & { currency: (
-        { __typename?: 'Currency' }
-        & Pick<Currency, 'id' | 'name' | 'symbol'>
-      ) }
-    )> }
-  ) }
-);
-
 export type AnalysByCategoriesQueryVariables = Exact<{
   from?: Maybe<Scalars['Float']>;
   to?: Maybe<Scalars['Float']>;
@@ -726,7 +705,7 @@ export type BudgetCategoryFragment = (
   & Pick<BudgetCategory, 'amount' | 'progress'>
   & { category: (
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name'>
+    & Pick<Category, 'id' | 'name' | 'type'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & IconFragment
@@ -779,6 +758,47 @@ export type AddOutcomeBudgetMutation = (
   ) }
 );
 
+export type AddIncomeBudgetMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+  amount: Scalars['Float'];
+  progress?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type AddIncomeBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & { budgetAddIncomeCategory: (
+    { __typename?: 'Budget' }
+    & BudgetFragment
+  ) }
+);
+
+export type RemoveOutcomeBudgetMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+}>;
+
+
+export type RemoveOutcomeBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & { budgetRemoveOutcomeCategory: (
+    { __typename?: 'Budget' }
+    & BudgetFragment
+  ) }
+);
+
+export type RemoveIncomeBudgetMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+}>;
+
+
+export type RemoveIncomeBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & { budgetRemoveIncomeCategory: (
+    { __typename?: 'Budget' }
+    & BudgetFragment
+  ) }
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -814,19 +834,6 @@ export type GetCurrenciesQuery = (
     { __typename?: 'Currency' }
     & Pick<Currency, 'id' | 'name' | 'description' | 'symbol' | 'code' | 'rate'>
   )> }
-);
-
-export type DeleteWalletMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteWalletMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteWallet: (
-    { __typename?: 'Wallet' }
-    & Pick<Wallet, 'id'>
-  ) }
 );
 
 export type GetFilterGroupQueryVariables = Exact<{
@@ -1062,6 +1069,45 @@ export type GetWalletTransactionsQuery = (
   ) }
 );
 
+export type DeleteWalletMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteWalletMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteWallet: (
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id'>
+  ) }
+);
+
+export type WalletFullFragment = (
+  { __typename?: 'Wallet' }
+  & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
+  & { pockets: Array<(
+    { __typename?: 'Pocket' }
+    & Pick<Pocket, 'amount'>
+    & { currency: (
+      { __typename?: 'Currency' }
+      & Pick<Currency, 'id' | 'name' | 'symbol'>
+    ) }
+  )> }
+);
+
+export type AddWalletMutationVariables = Exact<{
+  walletCreateData: WalletCreate;
+}>;
+
+
+export type AddWalletMutation = (
+  { __typename?: 'Mutation' }
+  & { createWallet: (
+    { __typename?: 'Wallet' }
+    & WalletFullFragment
+  ) }
+);
+
 export type UpdateWalletMutationVariables = Exact<{
   walletUpdateData: WalletUpdate;
 }>;
@@ -1071,15 +1117,7 @@ export type UpdateWalletMutation = (
   { __typename?: 'Mutation' }
   & { updateWallet: (
     { __typename?: 'Wallet' }
-    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
-    & { pockets: Array<(
-      { __typename?: 'Pocket' }
-      & Pick<Pocket, 'amount'>
-      & { currency: (
-        { __typename?: 'Currency' }
-        & Pick<Currency, 'id' | 'name' | 'symbol'>
-      ) }
-    )> }
+    & WalletFullFragment
   ) }
 );
 
@@ -1090,15 +1128,7 @@ export type GetWalletsQuery = (
   { __typename?: 'Query' }
   & { wallets: Array<(
     { __typename?: 'Wallet' }
-    & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
-    & { pockets: Array<(
-      { __typename?: 'Pocket' }
-      & Pick<Pocket, 'amount'>
-      & { currency: (
-        { __typename?: 'Currency' }
-        & Pick<Currency, 'id' | 'name' | 'symbol'>
-      ) }
-    )> }
+    & WalletFullFragment
   )> }
 );
 
@@ -1115,6 +1145,7 @@ export const BudgetCategoryFragmentDoc = gql`
   category {
     id
     name
+    type
     icon {
       ...icon
     }
@@ -1180,6 +1211,22 @@ export const TransactionFragmentDoc = gql`
   amount
 }
     `;
+export const WalletFullFragmentDoc = gql`
+    fragment walletFull on Wallet {
+  id
+  name
+  type
+  description
+  pockets {
+    amount
+    currency {
+      id
+      name
+      symbol
+    }
+  }
+}
+    `;
 export const AddConnectorDocument = gql`
     mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
   addConnector(
@@ -1216,49 +1263,6 @@ export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions
 export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
 export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
 export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
-export const AddWalletDocument = gql`
-    mutation AddWallet($walletCreateData: WalletCreate!) {
-  createWallet(walletCreateData: $walletCreateData) {
-    id
-    name
-    type
-    description
-    pockets {
-      amount
-      currency {
-        id
-        name
-        symbol
-      }
-    }
-  }
-}
-    `;
-export type AddWalletMutationFn = Apollo.MutationFunction<AddWalletMutation, AddWalletMutationVariables>;
-
-/**
- * __useAddWalletMutation__
- *
- * To run a mutation, you first call `useAddWalletMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddWalletMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addWalletMutation, { data, loading, error }] = useAddWalletMutation({
- *   variables: {
- *      walletCreateData: // value for 'walletCreateData'
- *   },
- * });
- */
-export function useAddWalletMutation(baseOptions?: Apollo.MutationHookOptions<AddWalletMutation, AddWalletMutationVariables>) {
-        return Apollo.useMutation<AddWalletMutation, AddWalletMutationVariables>(AddWalletDocument, baseOptions);
-      }
-export type AddWalletMutationHookResult = ReturnType<typeof useAddWalletMutation>;
-export type AddWalletMutationResult = Apollo.MutationResult<AddWalletMutation>;
-export type AddWalletMutationOptions = Apollo.BaseMutationOptions<AddWalletMutation, AddWalletMutationVariables>;
 export const AnalysByCategoriesDocument = gql`
     query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
   statisticByCategory(
@@ -1480,6 +1484,106 @@ export function useAddOutcomeBudgetMutation(baseOptions?: Apollo.MutationHookOpt
 export type AddOutcomeBudgetMutationHookResult = ReturnType<typeof useAddOutcomeBudgetMutation>;
 export type AddOutcomeBudgetMutationResult = Apollo.MutationResult<AddOutcomeBudgetMutation>;
 export type AddOutcomeBudgetMutationOptions = Apollo.BaseMutationOptions<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>;
+export const AddIncomeBudgetDocument = gql`
+    mutation addIncomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+  budgetAddIncomeCategory(
+    categoryData: {categoryId: $categoryId, amount: $amount, progress: $progress}
+  ) {
+    ...budget
+  }
+}
+    ${BudgetFragmentDoc}`;
+export type AddIncomeBudgetMutationFn = Apollo.MutationFunction<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>;
+
+/**
+ * __useAddIncomeBudgetMutation__
+ *
+ * To run a mutation, you first call `useAddIncomeBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddIncomeBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addIncomeBudgetMutation, { data, loading, error }] = useAddIncomeBudgetMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *      amount: // value for 'amount'
+ *      progress: // value for 'progress'
+ *   },
+ * });
+ */
+export function useAddIncomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>) {
+        return Apollo.useMutation<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>(AddIncomeBudgetDocument, baseOptions);
+      }
+export type AddIncomeBudgetMutationHookResult = ReturnType<typeof useAddIncomeBudgetMutation>;
+export type AddIncomeBudgetMutationResult = Apollo.MutationResult<AddIncomeBudgetMutation>;
+export type AddIncomeBudgetMutationOptions = Apollo.BaseMutationOptions<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>;
+export const RemoveOutcomeBudgetDocument = gql`
+    mutation removeOutcomeBudget($categoryId: String!) {
+  budgetRemoveOutcomeCategory(categoryId: $categoryId) {
+    ...budget
+  }
+}
+    ${BudgetFragmentDoc}`;
+export type RemoveOutcomeBudgetMutationFn = Apollo.MutationFunction<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>;
+
+/**
+ * __useRemoveOutcomeBudgetMutation__
+ *
+ * To run a mutation, you first call `useRemoveOutcomeBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveOutcomeBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeOutcomeBudgetMutation, { data, loading, error }] = useRemoveOutcomeBudgetMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useRemoveOutcomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>) {
+        return Apollo.useMutation<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>(RemoveOutcomeBudgetDocument, baseOptions);
+      }
+export type RemoveOutcomeBudgetMutationHookResult = ReturnType<typeof useRemoveOutcomeBudgetMutation>;
+export type RemoveOutcomeBudgetMutationResult = Apollo.MutationResult<RemoveOutcomeBudgetMutation>;
+export type RemoveOutcomeBudgetMutationOptions = Apollo.BaseMutationOptions<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>;
+export const RemoveIncomeBudgetDocument = gql`
+    mutation removeIncomeBudget($categoryId: String!) {
+  budgetRemoveIncomeCategory(categoryId: $categoryId) {
+    ...budget
+  }
+}
+    ${BudgetFragmentDoc}`;
+export type RemoveIncomeBudgetMutationFn = Apollo.MutationFunction<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>;
+
+/**
+ * __useRemoveIncomeBudgetMutation__
+ *
+ * To run a mutation, you first call `useRemoveIncomeBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveIncomeBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeIncomeBudgetMutation, { data, loading, error }] = useRemoveIncomeBudgetMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useRemoveIncomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>) {
+        return Apollo.useMutation<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>(RemoveIncomeBudgetDocument, baseOptions);
+      }
+export type RemoveIncomeBudgetMutationHookResult = ReturnType<typeof useRemoveIncomeBudgetMutation>;
+export type RemoveIncomeBudgetMutationResult = Apollo.MutationResult<RemoveIncomeBudgetMutation>;
+export type RemoveIncomeBudgetMutationOptions = Apollo.BaseMutationOptions<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
@@ -1594,38 +1698,6 @@ export function useGetCurrenciesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCurrenciesQueryHookResult = ReturnType<typeof useGetCurrenciesQuery>;
 export type GetCurrenciesLazyQueryHookResult = ReturnType<typeof useGetCurrenciesLazyQuery>;
 export type GetCurrenciesQueryResult = Apollo.QueryResult<GetCurrenciesQuery, GetCurrenciesQueryVariables>;
-export const DeleteWalletDocument = gql`
-    mutation deleteWallet($id: String!) {
-  deleteWallet(id: $id) {
-    id
-  }
-}
-    `;
-export type DeleteWalletMutationFn = Apollo.MutationFunction<DeleteWalletMutation, DeleteWalletMutationVariables>;
-
-/**
- * __useDeleteWalletMutation__
- *
- * To run a mutation, you first call `useDeleteWalletMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteWalletMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteWalletMutation, { data, loading, error }] = useDeleteWalletMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteWalletMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWalletMutation, DeleteWalletMutationVariables>) {
-        return Apollo.useMutation<DeleteWalletMutation, DeleteWalletMutationVariables>(DeleteWalletDocument, baseOptions);
-      }
-export type DeleteWalletMutationHookResult = ReturnType<typeof useDeleteWalletMutation>;
-export type DeleteWalletMutationResult = Apollo.MutationResult<DeleteWalletMutation>;
-export type DeleteWalletMutationOptions = Apollo.BaseMutationOptions<DeleteWalletMutation, DeleteWalletMutationVariables>;
 export const GetFilterGroupDocument = gql`
     query getFilterGroup($type: String = "income") {
   wallets {
@@ -2111,24 +2183,77 @@ export function useGetWalletTransactionsLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GetWalletTransactionsQueryHookResult = ReturnType<typeof useGetWalletTransactionsQuery>;
 export type GetWalletTransactionsLazyQueryHookResult = ReturnType<typeof useGetWalletTransactionsLazyQuery>;
 export type GetWalletTransactionsQueryResult = Apollo.QueryResult<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>;
-export const UpdateWalletDocument = gql`
-    mutation UpdateWallet($walletUpdateData: WalletUpdate!) {
-  updateWallet(walletUpdateData: $walletUpdateData) {
+export const DeleteWalletDocument = gql`
+    mutation deleteWallet($id: String!) {
+  deleteWallet(id: $id) {
     id
-    name
-    type
-    description
-    pockets {
-      amount
-      currency {
-        id
-        name
-        symbol
-      }
-    }
   }
 }
     `;
+export type DeleteWalletMutationFn = Apollo.MutationFunction<DeleteWalletMutation, DeleteWalletMutationVariables>;
+
+/**
+ * __useDeleteWalletMutation__
+ *
+ * To run a mutation, you first call `useDeleteWalletMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWalletMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWalletMutation, { data, loading, error }] = useDeleteWalletMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteWalletMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWalletMutation, DeleteWalletMutationVariables>) {
+        return Apollo.useMutation<DeleteWalletMutation, DeleteWalletMutationVariables>(DeleteWalletDocument, baseOptions);
+      }
+export type DeleteWalletMutationHookResult = ReturnType<typeof useDeleteWalletMutation>;
+export type DeleteWalletMutationResult = Apollo.MutationResult<DeleteWalletMutation>;
+export type DeleteWalletMutationOptions = Apollo.BaseMutationOptions<DeleteWalletMutation, DeleteWalletMutationVariables>;
+export const AddWalletDocument = gql`
+    mutation AddWallet($walletCreateData: WalletCreate!) {
+  createWallet(walletCreateData: $walletCreateData) {
+    ...walletFull
+  }
+}
+    ${WalletFullFragmentDoc}`;
+export type AddWalletMutationFn = Apollo.MutationFunction<AddWalletMutation, AddWalletMutationVariables>;
+
+/**
+ * __useAddWalletMutation__
+ *
+ * To run a mutation, you first call `useAddWalletMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddWalletMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addWalletMutation, { data, loading, error }] = useAddWalletMutation({
+ *   variables: {
+ *      walletCreateData: // value for 'walletCreateData'
+ *   },
+ * });
+ */
+export function useAddWalletMutation(baseOptions?: Apollo.MutationHookOptions<AddWalletMutation, AddWalletMutationVariables>) {
+        return Apollo.useMutation<AddWalletMutation, AddWalletMutationVariables>(AddWalletDocument, baseOptions);
+      }
+export type AddWalletMutationHookResult = ReturnType<typeof useAddWalletMutation>;
+export type AddWalletMutationResult = Apollo.MutationResult<AddWalletMutation>;
+export type AddWalletMutationOptions = Apollo.BaseMutationOptions<AddWalletMutation, AddWalletMutationVariables>;
+export const UpdateWalletDocument = gql`
+    mutation UpdateWallet($walletUpdateData: WalletUpdate!) {
+  updateWallet(walletUpdateData: $walletUpdateData) {
+    ...walletFull
+  }
+}
+    ${WalletFullFragmentDoc}`;
 export type UpdateWalletMutationFn = Apollo.MutationFunction<UpdateWalletMutation, UpdateWalletMutationVariables>;
 
 /**
@@ -2157,21 +2282,10 @@ export type UpdateWalletMutationOptions = Apollo.BaseMutationOptions<UpdateWalle
 export const GetWalletsDocument = gql`
     query GetWallets {
   wallets {
-    id
-    name
-    type
-    description
-    pockets {
-      amount
-      currency {
-        id
-        name
-        symbol
-      }
-    }
+    ...walletFull
   }
 }
-    `;
+    ${WalletFullFragmentDoc}`;
 
 /**
  * __useGetWalletsQuery__

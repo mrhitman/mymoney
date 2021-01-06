@@ -1,5 +1,0 @@
-mutation deleteWallet($id: String!) {
-  deleteWallet(id: $id) {
-    id
-  }
-}

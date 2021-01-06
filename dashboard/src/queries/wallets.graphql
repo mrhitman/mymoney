@@ -1,16 +1,38 @@
+mutation deleteWallet($id: String!) {
+  deleteWallet(id: $id) {
+    id
+  }
+}
+
+fragment walletFull on Wallet {
+  id
+  name
+  type
+  description
+  pockets {
+    amount
+    currency {
+      id
+      name
+      symbol
+    }
+  }
+}
+
+mutation AddWallet($walletCreateData: WalletCreate!) {
+  createWallet(walletCreateData: $walletCreateData) {
+    ...walletFull
+  }
+}
+
+mutation UpdateWallet($walletUpdateData: WalletUpdate!) {
+  updateWallet(walletUpdateData: $walletUpdateData) {
+    ...walletFull
+  }
+}
+
 query GetWallets {
   wallets {
-    id
-    name
-    type
-    description
-    pockets {
-      amount
-      currency {
-        id
-        name
-        symbol
-      }
-    }
+    ...walletFull
   }
 }

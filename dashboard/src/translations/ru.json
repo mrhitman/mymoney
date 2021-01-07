@@ -153,6 +153,7 @@
   "last_name": "Имя",
   "middle_name": "Отчество",
   "email": "Почта",
+  "logout": "Выход",
   "new_password": "Новый пароль",
   "old_password": "Старый пароль",
   "confirm_password": "Повторите пароль",

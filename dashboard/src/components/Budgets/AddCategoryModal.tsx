@@ -1,4 +1,4 @@
-import { Input, Form, Modal, Select } from 'antd';
+import { Input, Form, Modal, Select, Checkbox } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ export interface AddCategoryValues {
   type: CategoryType;
   amount: number;
   progress: number;
+  recalculateProgress: boolean;
 }
 
 interface AddCategoryModalProps {
@@ -27,6 +28,7 @@ const AddCategoryModal: FC<AddCategoryModalProps> = ({ visible, onOk, onCancel, 
       amount: 0,
       progress: 0,
       categoryId: '',
+      recalculateProgress: false,
     },
   });
 
@@ -79,7 +81,14 @@ const AddCategoryModal: FC<AddCategoryModalProps> = ({ visible, onOk, onCancel, 
           <Input
             type="number"
             value={formik.values.progress}
+            readOnly={formik.values.recalculateProgress}
             onChange={(e) => formik.setFieldValue('progress', +e.target.value)}
+          />
+        </Form.Item>
+        <Form.Item label="Recalculate progress">
+          <Checkbox
+            value={formik.values.recalculateProgress}
+            onChange={(e) => formik.setFieldValue('recalculateProgress', e.target.checked)}
           />
         </Form.Item>
       </Form>

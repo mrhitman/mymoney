@@ -321,6 +321,9 @@ input BudgetCategoryCreate {
   categoryId: String!
   amount: Float!
   progress: Float!
+
+  """Recalculate progress from exists transaction in budget period"""
+  recalculateProgress: Boolean
 }
 
 input GoalCreate {

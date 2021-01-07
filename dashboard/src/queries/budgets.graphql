@@ -44,17 +44,37 @@ query getActiveBudget {
   }
 }
 
-mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+mutation addOutcomeBudget(
+  $categoryId: String!
+  $amount: Float!
+  $progress: Float = 0
+  $recalculateProgress: Boolean = false
+) {
   budgetAddOutcomeCategory(
-    categoryData: { categoryId: $categoryId, amount: $amount, progress: $progress }
+    categoryData: {
+      categoryId: $categoryId
+      amount: $amount
+      progress: $progress
+      recalculateProgress: $recalculateProgress
+    }
   ) {
     ...budget
   }
 }
 
-mutation addIncomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+mutation addIncomeBudget(
+  $categoryId: String!
+  $amount: Float!
+  $progress: Float = 0
+  $recalculateProgress: Boolean = false
+) {
   budgetAddIncomeCategory(
-    categoryData: { categoryId: $categoryId, amount: $amount, progress: $progress }
+    categoryData: {
+      categoryId: $categoryId
+      amount: $amount
+      progress: $progress
+      recalculateProgress: $recalculateProgress
+    }
   ) {
     ...budget
   }

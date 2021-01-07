@@ -4228,6 +4228,16 @@
               }
             },
             "defaultValue": null
+          },
+          {
+            "name": "recalculateProgress",
+            "description": "Recalculate progress from exists transaction in budget period",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,

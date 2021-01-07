@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { raw } from 'objection';
 import Budget from 'src/database/models/budget.model';
 import Transaction, { categoryInId } from 'src/database/models/transaction.model';
@@ -43,18 +43,13 @@ export class BudgetsService {
       return budget;
     }
 
+    if (data.recalculateProgress) {
+      data.progress = await this.getCategoryProgress(user, budget, data.categoryId);
+      Logger.log(data);
+    }
+
     await budget.$query().update({
       outcomes: [...budget.outcomes, data],
-    });
-
-    return budget;
-  }
-
-  public async removeOutcomeCategory(user: User, categoryId: string) {
-    const budget = await this.getActiveBudget(user);
-
-    await budget.$query().update({
-      outcomes: budget.outcomes.filter((c) => c.categoryId !== categoryId),
     });
 
     return budget;
@@ -67,8 +62,33 @@ export class BudgetsService {
       return budget;
     }
 
+    if (data.recalculateProgress) {
+      data.progress = await this.getCategoryProgress(user, budget, data.categoryId);
+    }
+
     await budget.$query().update({
       incomes: [...budget.incomes, data],
+    });
+
+    return budget;
+  }
+
+  protected async getCategoryProgress(user: User, budget: Budget, categoryId: string) {
+    const transactions = await Transaction.query()
+      .where({
+        userId: user.id,
+        categoryId,
+      })
+      .andWhereBetween('date', [budget.date, budget.deadline]);
+
+    return Math.abs(transactions.reduce((acc, trx) => acc + Number(trx.amount), 0));
+  }
+
+  public async removeOutcomeCategory(user: User, categoryId: string) {
+    const budget = await this.getActiveBudget(user);
+
+    await budget.$query().update({
+      outcomes: budget.outcomes.filter((c) => c.categoryId !== categoryId),
     });
 
     return budget;

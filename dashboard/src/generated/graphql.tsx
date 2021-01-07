@@ -547,6 +547,8 @@ export type BudgetCategoryCreate = {
   categoryId: Scalars['String'];
   amount: Scalars['Float'];
   progress: Scalars['Float'];
+  /** Recalculate progress from exists transaction in budget period */
+  recalculateProgress?: Maybe<Scalars['Boolean']>;
 };
 
 export type GoalCreate = {
@@ -747,6 +749,7 @@ export type AddOutcomeBudgetMutationVariables = Exact<{
   categoryId: Scalars['String'];
   amount: Scalars['Float'];
   progress?: Maybe<Scalars['Float']>;
+  recalculateProgress?: Maybe<Scalars['Boolean']>;
 }>;
 
 
@@ -762,6 +765,7 @@ export type AddIncomeBudgetMutationVariables = Exact<{
   categoryId: Scalars['String'];
   amount: Scalars['Float'];
   progress?: Maybe<Scalars['Float']>;
+  recalculateProgress?: Maybe<Scalars['Boolean']>;
 }>;
 
 
@@ -1449,9 +1453,9 @@ export type GetActiveBudgetQueryHookResult = ReturnType<typeof useGetActiveBudge
 export type GetActiveBudgetLazyQueryHookResult = ReturnType<typeof useGetActiveBudgetLazyQuery>;
 export type GetActiveBudgetQueryResult = Apollo.QueryResult<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>;
 export const AddOutcomeBudgetDocument = gql`
-    mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+    mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0, $recalculateProgress: Boolean = false) {
   budgetAddOutcomeCategory(
-    categoryData: {categoryId: $categoryId, amount: $amount, progress: $progress}
+    categoryData: {categoryId: $categoryId, amount: $amount, progress: $progress, recalculateProgress: $recalculateProgress}
   ) {
     ...budget
   }
@@ -1475,6 +1479,7 @@ export type AddOutcomeBudgetMutationFn = Apollo.MutationFunction<AddOutcomeBudge
  *      categoryId: // value for 'categoryId'
  *      amount: // value for 'amount'
  *      progress: // value for 'progress'
+ *      recalculateProgress: // value for 'recalculateProgress'
  *   },
  * });
  */
@@ -1485,9 +1490,9 @@ export type AddOutcomeBudgetMutationHookResult = ReturnType<typeof useAddOutcome
 export type AddOutcomeBudgetMutationResult = Apollo.MutationResult<AddOutcomeBudgetMutation>;
 export type AddOutcomeBudgetMutationOptions = Apollo.BaseMutationOptions<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>;
 export const AddIncomeBudgetDocument = gql`
-    mutation addIncomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0) {
+    mutation addIncomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0, $recalculateProgress: Boolean = false) {
   budgetAddIncomeCategory(
-    categoryData: {categoryId: $categoryId, amount: $amount, progress: $progress}
+    categoryData: {categoryId: $categoryId, amount: $amount, progress: $progress, recalculateProgress: $recalculateProgress}
   ) {
     ...budget
   }
@@ -1511,6 +1516,7 @@ export type AddIncomeBudgetMutationFn = Apollo.MutationFunction<AddIncomeBudgetM
  *      categoryId: // value for 'categoryId'
  *      amount: // value for 'amount'
  *      progress: // value for 'progress'
+ *      recalculateProgress: // value for 'recalculateProgress'
  *   },
  * });
  */

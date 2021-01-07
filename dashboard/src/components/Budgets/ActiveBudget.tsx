@@ -1,5 +1,4 @@
-import { Button, Divider, Col, Collapse, Row, Statistic } from 'antd';
-import { LikeOutlined } from '@ant-design/icons';
+import { Button, Col, Collapse, Divider, Row, Statistic } from 'antd';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -85,12 +84,7 @@ const ActiveBudget: FC = () => {
         visible={visible}
         onCancel={() => setVisible(false)}
         onOk={(values) => {
-          addBudgetCategory({
-            categoryId: values.categoryId,
-            amount: values.amount,
-            progress: values.progress,
-            type: values.type,
-          });
+          addBudgetCategory(values);
           setVisible(false);
         }}
         categories={data?.categories || []}

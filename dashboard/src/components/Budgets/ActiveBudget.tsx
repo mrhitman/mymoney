@@ -1,4 +1,6 @@
-import { Button, Col, Collapse, Row } from 'antd';
+import { Button, Divider, Col, Collapse, Row, Statistic } from 'antd';
+import { LikeOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,9 +28,39 @@ const ActiveBudget: FC = () => {
     }
   }
 
+  const incomes = data?.activeBudget.incomes.reduce((acc, v) => v.progress + acc, 0) || 0;
+  const outcomes = data?.activeBudget.outcomes.reduce((acc, v) => v.progress + acc, 0) || 0;
+  const available = incomes - outcomes;
   return (
     <Row gutter={10}>
       <Col span={20}>
+        <Divider />
+        <Row gutter={[20, 20]}>
+          <Col>
+            <Statistic title="Start date" value={moment(data?.activeBudget.date).format('L')} />
+          </Col>
+          <Col>
+            <Statistic title="End date" value={moment(data?.activeBudget.deadline).format('L')} />
+          </Col>
+          <Col>
+            <Statistic
+              title="Budget available"
+              value={available}
+              valueStyle={{ color: available < 0 ? '#b71c1c' : '#43a047' }}
+              precision={2}
+              prefix={'₴'}
+              suffix={'UAH'}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col offset={20}>
+            <Button size="large" onClick={() => setVisible(true)}>
+              Add category
+            </Button>
+          </Col>
+        </Row>
+        <Divider />
         <Collapse defaultActiveKey={['1', '2']}>
           <Collapse.Panel header="incomes" key="1">
             <Row gutter={[16, 16]}>
@@ -63,11 +95,6 @@ const ActiveBudget: FC = () => {
         }}
         categories={data?.categories || []}
       />
-      <Col span={4}>
-        <Button size="large" onClick={() => setVisible(true)}>
-          Add category
-        </Button>
-      </Col>
     </Row>
   );
 };

@@ -2,6 +2,7 @@ import { Button, Col, Collapse, Divider, Row, Statistic } from 'antd';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PlusCircleOutlined, EditOutlined } from '@ant-design/icons';
 import {
   CategoryType,
   useAddIncomeBudgetMutation,
@@ -10,6 +11,7 @@ import {
 } from 'src/generated/graphql';
 import AddCategoryModal, { AddCategoryValues } from './AddCategoryModal';
 import BudgetCategory from './BudgetCategory';
+import { UpdateBudget } from './UpdateBudget';
 
 const ActiveBudget: FC = () => {
   const { data } = useGetActiveBudgetQuery();
@@ -51,12 +53,16 @@ const ActiveBudget: FC = () => {
               suffix={'UAH'}
             />
           </Col>
-        </Row>
-        <Row>
-          <Col offset={20}>
-            <Button size="large" onClick={() => setVisible(true)}>
+          <Col offset={18}>
+            <Button
+              size="large"
+              style={{ width: 200 }}
+              icon={<PlusCircleOutlined />}
+              onClick={() => setVisible(true)}
+            >
               Add category
             </Button>
+            <UpdateBudget />
           </Col>
         </Row>
         <Divider />

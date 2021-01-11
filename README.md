@@ -12,3 +12,8 @@
 * Multi-currency
 * Cross-currency convertation
 * Autoupdating currency rates
+
+## subprojects
+
+api -> backend on nestjs
+dashboard -> react app for client

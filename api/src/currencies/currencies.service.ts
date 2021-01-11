@@ -44,6 +44,7 @@ export class CurrenciesService {
     fromCurrency: string,
     toCurrency: string,
   ) {
+
     const toEurRate = rates.rates[fromCurrency];
     return (amount / toEurRate) * rates.rates[toCurrency];
   }

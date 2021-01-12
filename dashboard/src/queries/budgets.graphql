@@ -44,6 +44,12 @@ query getActiveBudget {
   }
 }
 
+mutation updateBudget($data: BudgetUpdate!) {
+  updateBudget(updateBudget: $data) {
+    ...budget
+  }
+}
+
 mutation addOutcomeBudget(
   $categoryId: String!
   $amount: Float!

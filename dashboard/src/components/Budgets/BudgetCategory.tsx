@@ -55,7 +55,7 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
         ></Card.Meta>
         <Row>
           <Typography>Amount: {budgetCategory.amount}</Typography>
-          <Typography>Progress: {budgetCategory.progress}</Typography>
+          <Typography>Progress: {budgetCategory.progress.toFixed(2)}</Typography>
         </Row>
       </Card>
     </Col>

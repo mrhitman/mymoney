@@ -62,7 +62,13 @@ const ActiveBudget: FC = () => {
             >
               Add category
             </Button>
-            <UpdateBudget />
+            <UpdateBudget
+              initialValues={{
+                id: data?.activeBudget.id!,
+                date: data?.activeBudget.date,
+                deadline: data?.activeBudget.deadline,
+              }}
+            />
           </Col>
         </Row>
         <Divider />

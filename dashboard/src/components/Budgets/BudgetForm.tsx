@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-import { Form, Input, DatePicker, Select } from 'antd';
+import { DatePicker, Form, Select } from 'antd';
 import moment from 'moment';
+import React, { FC } from 'react';
 
 export interface BudgetFormValues {
   date: moment.Moment;
@@ -9,14 +9,27 @@ export interface BudgetFormValues {
 }
 
 interface BudgetFormProps {
-  onSubmit: (values: BudgetFormValues) => void;
+  formik: any;
 }
 
 export const BudgetForm: FC<BudgetFormProps> = (props) => {
   return (
     <Form>
       <Form.Item label="Budget date range">
-        <DatePicker.RangePicker picker="month" />
+        <DatePicker.RangePicker
+          picker="month"
+          value={[moment(props.formik.values.date), moment(props.formik.values.deadline)]}
+          allowClear={false}
+          allowEmpty={[false, false]}
+          onChange={(range) => {
+            if (!range) {
+              return;
+            }
+
+            props.formik.setFieldValue('date', range[0]?.toDate());
+            props.formik.setFieldValue('deadline', range[1]?.toDate());
+          }}
+        />
       </Form.Item>
       <Form.Item label="Currency">
         <Select>

@@ -4,6 +4,7 @@ import Budget from 'src/database/models/budget.model';
 import Transaction, { categoryInId } from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import { BudgetCategoryCreate } from './input/budget-category-create';
+import { BudgetUpdate } from './input/budget-update';
 
 @Injectable()
 export class BudgetsService {
@@ -18,6 +19,24 @@ export class BudgetsService {
     if (!budget) {
       throw new NotFoundException();
     }
+
+    return budget;
+  }
+
+  public async update(user: User, data: BudgetUpdate) {
+    const budget = await Budget.query().findOne({ id: data.id, userId: user.id });
+
+    if (!budget) {
+      throw new NotFoundException();
+    }
+
+    await budget
+      .$query()
+      .update({
+        date: data.date,
+        deadline: data.deadline,
+      })
+      .skipUndefined();
 
     return budget;
   }

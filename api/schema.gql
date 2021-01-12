@@ -242,6 +242,7 @@ type Mutation {
   createWallet(walletCreateData: WalletCreate!): Wallet!
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
+  updateBudget(updateBudget: BudgetUpdate!): Budget!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveOutcomeCategory(categoryId: String!): Budget!
   budgetAddIncomeCategory(categoryData: BudgetCategoryCreate!): Budget!
@@ -315,6 +316,12 @@ input WalletUpdate {
   allowNegativeBalance: Boolean!
   pockets: [PocketInput!]
   updatedAt: Int
+}
+
+input BudgetUpdate {
+  id: ID!
+  date: DateTime
+  deadline: DateTime
 }
 
 input BudgetCategoryCreate {

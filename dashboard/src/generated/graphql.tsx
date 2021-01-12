@@ -329,6 +329,7 @@ export type Mutation = {
   createWallet: Wallet;
   updateWallet: Wallet;
   deleteWallet: Wallet;
+  updateBudget: Budget;
   budgetAddOutcomeCategory: Budget;
   budgetRemoveOutcomeCategory: Budget;
   budgetAddIncomeCategory: Budget;
@@ -392,6 +393,11 @@ export type MutationUpdateWalletArgs = {
 
 export type MutationDeleteWalletArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationUpdateBudgetArgs = {
+  updateBudget: BudgetUpdate;
 };
 
 
@@ -541,6 +547,12 @@ export type WalletUpdate = {
   allowNegativeBalance: Scalars['Boolean'];
   pockets?: Maybe<Array<PocketInput>>;
   updatedAt?: Maybe<Scalars['Int']>;
+};
+
+export type BudgetUpdate = {
+  id: Scalars['ID'];
+  date?: Maybe<Scalars['DateTime']>;
+  deadline?: Maybe<Scalars['DateTime']>;
 };
 
 export type BudgetCategoryCreate = {
@@ -740,6 +752,19 @@ export type GetActiveBudgetQuery = (
       & IconFragment
     )> }
   )>, activeBudget: (
+    { __typename?: 'Budget' }
+    & BudgetFragment
+  ) }
+);
+
+export type UpdateBudgetMutationVariables = Exact<{
+  data: BudgetUpdate;
+}>;
+
+
+export type UpdateBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & { updateBudget: (
     { __typename?: 'Budget' }
     & BudgetFragment
   ) }
@@ -1452,6 +1477,38 @@ export function useGetActiveBudgetLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetActiveBudgetQueryHookResult = ReturnType<typeof useGetActiveBudgetQuery>;
 export type GetActiveBudgetLazyQueryHookResult = ReturnType<typeof useGetActiveBudgetLazyQuery>;
 export type GetActiveBudgetQueryResult = Apollo.QueryResult<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>;
+export const UpdateBudgetDocument = gql`
+    mutation updateBudget($data: BudgetUpdate!) {
+  updateBudget(updateBudget: $data) {
+    ...budget
+  }
+}
+    ${BudgetFragmentDoc}`;
+export type UpdateBudgetMutationFn = Apollo.MutationFunction<UpdateBudgetMutation, UpdateBudgetMutationVariables>;
+
+/**
+ * __useUpdateBudgetMutation__
+ *
+ * To run a mutation, you first call `useUpdateBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBudgetMutation, { data, loading, error }] = useUpdateBudgetMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateBudgetMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBudgetMutation, UpdateBudgetMutationVariables>) {
+        return Apollo.useMutation<UpdateBudgetMutation, UpdateBudgetMutationVariables>(UpdateBudgetDocument, baseOptions);
+      }
+export type UpdateBudgetMutationHookResult = ReturnType<typeof useUpdateBudgetMutation>;
+export type UpdateBudgetMutationResult = Apollo.MutationResult<UpdateBudgetMutation>;
+export type UpdateBudgetMutationOptions = Apollo.BaseMutationOptions<UpdateBudgetMutation, UpdateBudgetMutationVariables>;
 export const AddOutcomeBudgetDocument = gql`
     mutation addOutcomeBudget($categoryId: String!, $amount: Float!, $progress: Float = 0, $recalculateProgress: Boolean = false) {
   budgetAddOutcomeCategory(

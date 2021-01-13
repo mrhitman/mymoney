@@ -242,6 +242,8 @@ type Mutation {
   createWallet(walletCreateData: WalletCreate!): Wallet!
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
+  createCategory(categoryData: CategoryCreate!): Category!
+  updateCategory(categoryData: CategoryUpdate!): Category!
   updateBudget(updateBudget: BudgetUpdate!): Budget!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveOutcomeCategory(categoryId: String!): Budget!
@@ -316,6 +318,31 @@ input WalletUpdate {
   allowNegativeBalance: Boolean!
   pockets: [PocketInput!]
   updatedAt: Int
+}
+
+input CategoryCreate {
+  id: ID!
+  name: String!
+
+  """Shows is this category ??"""
+  isFixed: Boolean
+
+  """"""
+  type: CategoryType
+  baseCategoryId: String!
+  parent: String
+  createdAt: Int
+}
+
+input CategoryUpdate {
+  id: ID!
+  name: String
+
+  """Shows is this category ??"""
+  isFixed: Boolean
+  parent: String
+  updatedAt: Int
+  deletedAt: Int
 }
 
 input BudgetUpdate {

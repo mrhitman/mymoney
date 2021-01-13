@@ -1,14 +1,6 @@
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNumber,
-  IsObject,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
 import { CategoryType } from '../category-type';
-import { IconDto } from '../dto/icon.dto';
 
 @InputType()
 export class CategoryUpdate {
@@ -16,8 +8,9 @@ export class CategoryUpdate {
   @IsString()
   readonly id: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
+  @IsOptional()
   readonly name: string;
 
   @Field(() => Boolean, {
@@ -25,20 +18,12 @@ export class CategoryUpdate {
     description: 'Shows is this category ??',
   })
   @IsBoolean()
+  @IsOptional()
   readonly isFixed: boolean;
 
-  @Field(() => CategoryType, {
-    nullable: true,
-    description: '',
-  })
-  @IsEnum(['income', 'outcome', 'transfer'])
-  readonly type: CategoryType;
-
-  @Field((type) => IconDto, { nullable: true })
-  @IsObject()
-  readonly icon: IconDto;
-
+  @Field({ nullable: true })
   @IsString()
+  @IsOptional()
   readonly parent: string;
 
   @Field((type) => Int, { nullable: true })

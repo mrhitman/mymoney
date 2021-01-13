@@ -98,7 +98,6 @@ function processUpUser(knex: Knex) {
 
 function processDownUser(knex: Knex) {
   return async (user) => {
-    await createUserCategories(user, knex);
     await updateDownTransactions(user, knex);
   };
 }

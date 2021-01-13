@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import Category from './category.model';
+import UserCategory from './user-category.model';
 import Currency from './currency.model';
 import { TransactionType } from 'src/transactions/transaction-type';
 
@@ -36,7 +36,7 @@ export class Transaction extends Model {
   public updatedAt: Date;
   public deletedAt: Date;
   public currency: Currency;
-  public category: Category;
+  public category: UserCategory;
 
   static get tableName() {
     return 'transactions';
@@ -54,10 +54,10 @@ export class Transaction extends Model {
       },
       category: {
         relation: Model.HasOneRelation,
-        modelClass: Category,
+        modelClass: UserCategory,
         join: {
           from: 'transactions.categoryId',
-          to: 'categories.id',
+          to: 'user_categories.id',
         },
       },
     };

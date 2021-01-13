@@ -51,8 +51,8 @@ export class TaskService {
     Logger.log('Refresh heroku', 'App');
 
     await Promise.all([
-      axios.get('https://mymoney-server-api.herokuapp.com/graphql'),
-      axios.get('https://mymoney-accounting.herokuapp.com/'),
+      axios.get('https://mymoney-server-api.herokuapp.com/graphql').catch(() => {}),
+      axios.get('https://mymoney-accounting.herokuapp.com/').catch(() => {}),
     ]);
   }
 }

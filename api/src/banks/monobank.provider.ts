@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { omit } from 'lodash';
-import Category from 'src/database/models/category.model';
 import Currency from 'src/database/models/currency.model';
 import Transaction from 'src/database/models/transaction.model';
+import UserCategory from 'src/database/models/user-category.model';
 import User from 'src/database/models/user.model';
 import Wallet from 'src/database/models/wallet.model';
 import { TransactionType } from 'src/transactions/transaction-type';
@@ -133,7 +133,7 @@ export class MonobankProvider {
       }
 
       const statements = await this.getStatements(from, to, account.id, token);
-      const categories = await Category.query();
+      const categories = await UserCategory.query().where({ userId: user.id });
       for (const statement of statements) {
         const type = statement.amount > 0 ? TransactionType.income : TransactionType.outcome;
         let category = categories.find((c) => c.codes.includes(statement.mcc));

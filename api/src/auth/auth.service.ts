@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
-import { omit } from 'lodash';
+import { omit, groupBy } from 'lodash';
 import { RegisterInput } from 'src/app/input/register-input';
 import RefreshToken from 'src/database/models/refresh-token.model';
 import User from 'src/database/models/user.model';
+import Category from 'src/database/models/category.model';
+import UserCategory from 'src/database/models/user-category.model';
 import { UsersService } from 'src/users/users.service';
 import { v4 as uuid } from 'uuid';
 
@@ -44,15 +46,61 @@ export class AuthService {
     const existUser = await User.query().findOne({ email: data.email });
 
     if (existUser) {
-      throw new BadRequestException('User with such email is busy');
+      throw new BadRequestException('Such email is busy');
     }
 
     const user = await User.query().insert({
       ...data,
       password: await bcrypt.hash(data.password, 10),
     });
+    await this.createUserCategories(user);
 
     return user;
+  }
+
+  public async createUserCategories(user: User) {
+    const count = ((await UserCategory.query()
+      .where({ userId: user.id })
+      .count({ count: '*' })) as any)[0].count;
+
+    if (!count) {
+      return;
+    }
+
+    const categories = await Category.query();
+    const rootUserCategories = groupBy(
+      await UserCategory.query().insert(
+        categories
+          .filter((c) => !c.parent)
+          .map((c) => ({
+            id: uuid(),
+            userId: user.id,
+            categoryId: c.id,
+            name: c.name,
+            codes: c.codes,
+            type: c.type,
+            isFixed: c.isFixed,
+            icon: c.icon,
+          })),
+      ),
+      'categoryId',
+    );
+
+    await UserCategory.query().insert(
+      categories
+        .filter((c) => !!c.parent)
+        .map((c) => ({
+          id: uuid(),
+          userId: user.id,
+          categoryId: c.id,
+          parent: rootUserCategories[c.parent][0].id,
+          name: c.name,
+          codes: c.codes,
+          type: c.type,
+          isFixed: c.isFixed,
+          icon: c.icon,
+        })),
+    );
   }
 
   public async logout(user: User) {

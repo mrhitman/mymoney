@@ -1,7 +1,6 @@
 import { Model } from 'objection';
 import { CategoryType } from 'src/categories/category-type';
-import { Icon } from './category.model';
-
+import { Category, Icon } from './category.model';
 export class UserCategory extends Model {
   public id: string;
   public name: string;
@@ -16,9 +15,23 @@ export class UserCategory extends Model {
   public deletedAt: Date;
   public syncAt: Date;
   public codes: number[];
+  public baseCategory: Category;
 
   static get tableName() {
     return 'user_categories';
+  }
+
+  static get relationMappings() {
+    return {
+      baseCategory: {
+        relation: Model.HasOneRelation,
+        modelClass: Category,
+        join: {
+          from: 'user_categories.categoryId',
+          to: 'categories.id',
+        },
+      },
+    };
   }
 
   static get jsonSchema() {

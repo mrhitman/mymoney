@@ -18,10 +18,9 @@ type IconDto {
   color: String
 }
 
-type UserCategory {
+type Category {
   id: ID!
   name: String!
-  categoryId: String!
   isFixed: Boolean!
   type: CategoryType
   icon: IconDto
@@ -31,6 +30,17 @@ enum CategoryType {
   income
   outcome
   transfer
+}
+
+type UserCategory {
+  id: ID!
+  name: String!
+  categoryId: String!
+  baseCategory: UserCategory!
+  isFixed: Boolean!
+  type: CategoryType
+  icon: IconDto
+  parent: String!
 }
 
 type Pocket {
@@ -148,14 +158,6 @@ type User {
   imageUrl: String
   additional: JSON
   email: String!
-}
-
-type Category {
-  id: ID!
-  name: String!
-  isFixed: Boolean!
-  type: CategoryType
-  icon: IconDto
 }
 
 type Goal {

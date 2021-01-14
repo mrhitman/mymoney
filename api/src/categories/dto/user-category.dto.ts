@@ -1,34 +1,31 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { IsBoolean, IsObject, IsString } from 'class-validator';
-import { IconDto } from './icon.dto';
 import { CategoryType } from '../category-type';
+import { CategoryDto } from './category.dto';
+import { IconDto } from './icon.dto';
 
 @ObjectType('UserCategory')
 export class UserCategoryDto {
-  @Field((type) => ID)
-  @IsString()
+  @Field(() => ID)
   readonly id: string;
 
   @Field()
-  @IsString()
   readonly name: string;
 
   @Field()
-  @IsString()
   readonly categoryId: string;
 
   @Field()
-  @IsBoolean()
+  readonly baseCategory: CategoryDto;
+
+  @Field()
   readonly isFixed: boolean;
 
   @Field(() => CategoryType, { nullable: true })
-  @IsString()
   readonly type: CategoryType;
 
-  @Field((type) => IconDto, { nullable: true })
-  @IsObject()
+  @Field(() => IconDto, { nullable: true })
   readonly icon: IconDto;
 
-  @IsString()
+  @Field()
   readonly parent: string;
 }

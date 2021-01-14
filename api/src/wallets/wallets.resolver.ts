@@ -8,24 +8,24 @@ import { WalletCreate } from './input/wallet-create';
 import { WalletUpdate } from './input/wallet-update';
 import { WalletsService } from './wallets.service';
 
-@Resolver((of) => WalletDto)
+@Resolver(() => WalletDto)
 export class WalletsResolver {
   constructor(private readonly service: WalletsService) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [WalletDto])
+  @Query(() => [WalletDto])
   async wallets(@CurrentUser() user: User) {
     return this.service.getAll(user);
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => WalletDto)
+  @Query(() => WalletDto)
   async wallet(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.findOne(user, id);
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => WalletDto)
+  @Mutation(() => WalletDto)
   async createWallet(
     @CurrentUser() user: User,
     @Args('walletCreateData')
@@ -35,7 +35,7 @@ export class WalletsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => WalletDto)
+  @Mutation(() => WalletDto)
   async updateWallet(
     @CurrentUser() user: User,
     @Args('walletUpdateData')
@@ -45,7 +45,7 @@ export class WalletsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => WalletDto)
+  @Mutation(() => WalletDto)
   async deleteWallet(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.delete(user, id);
   }

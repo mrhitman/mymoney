@@ -6,9 +6,9 @@ export class PocketDto {
   @Field()
   readonly currencyId: string;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   readonly amount: number;
 
-  @Field((type) => CurrencyDto, { complexity: 2 })
+  @Field(() => CurrencyDto, { complexity: 2 })
   readonly currency: CurrencyDto;
 }

@@ -108,6 +108,7 @@ export class BanksResolver {
     @Args('password') password: string,
   ) {
     const existConnection = await BankConnector.query()
+      /* eslint-disable @typescript-eslint/camelcase */
       .where({ userId: user.id, meta: { merchant_id: merchantId, password } })
       .first();
 

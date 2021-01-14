@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Loader from 'dataloader';
 import UserCategory from 'src/database/models/user-category.model';
+import Category from 'src/database/models/category.model';
 import Currency from 'src/database/models/currency.model';
 import Wallet from 'src/database/models/wallet.model';
 
@@ -10,6 +11,14 @@ export class DataLoader {
     (ids: string[]) => {
       this.category.clearAll();
       return UserCategory.query().whereIn('id', ids);
+    },
+    { batch: false },
+  );
+
+  public baseCategory = new Loader(
+    (ids: string[]) => {
+      this.baseCategory.clearAll();
+      return Category.query().whereIn('id', ids).debug();
     },
     { batch: false },
   );

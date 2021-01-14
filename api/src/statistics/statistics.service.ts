@@ -112,7 +112,7 @@ export class StatisticsService {
     }
 
     const items = await query.debug();
-    const data = this.dataByCategory(items, true);
+    const data = this.dataByCategory(items);
     const rates = await this.currencyService.rates();
 
     return data.map((group) => ({

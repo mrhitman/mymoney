@@ -37,7 +37,7 @@ describe('AuthService', () => {
       const user = await service.register({
         firstName,
         email,
-        password: chance.word()
+        password: chance.word(),
       });
 
       expect(user).toBeDefined();
@@ -45,5 +45,5 @@ describe('AuthService', () => {
       expect(user.email).toBe(email);
       await user.$query().delete();
     });
-  })
+  });
 });

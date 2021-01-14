@@ -109,7 +109,7 @@ export class Privat24Provider {
     const statements = await this.getStatements(id, token, from, to);
 
     if (statements) {
-      for (let statement of statements.info.statements.statement) {
+      for (const statement of statements.info.statements.statement) {
         const trx = await Transaction.query()
           .where({ isImported: true })
           .andWhereRaw(`meta->> 'appcode' = '${statement.appcode}'`)

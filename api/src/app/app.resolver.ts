@@ -61,7 +61,7 @@ export class AppResolver {
   }
 
   @Mutation(() => String)
-  public async recoveryPassword(@Args('email') email: String) {
+  public async recoveryPassword(@Args('email') email: string) {
     const user = await User.query().findOne({
       email,
     });

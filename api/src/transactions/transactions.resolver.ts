@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
-import { CategoryDto } from 'src/categories/dto/category.dto';
+import { UserCategoryDto } from 'src/categories/dto/user-category.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import User from 'src/database/models/user.model';
 import { DataLoader } from 'src/dataloader';
@@ -17,7 +17,7 @@ import { OrderByDirection } from 'objection';
 
 @Resolver((of) => TransactionDto)
 export class TransactionsResolver {
-  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) { }
+  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => String)
@@ -35,20 +35,19 @@ export class TransactionsResolver {
     @Args('orderBy', { nullable: true }) orderBy?: string,
     @Args('order', { nullable: true }) order?: OrderByDirection,
   ) {
-    return this.service.export(user,
-      {
-        walletIds,
-        type,
-        from,
-        to,
-        search,
-        order,
-        orderBy,
-        amountGteFilter,
-        amountLteFilter,
-        currencyId,
-        categoryIds,
-      });
+    return this.service.export(user, {
+      walletIds,
+      type,
+      from,
+      to,
+      search,
+      order,
+      orderBy,
+      amountGteFilter,
+      amountLteFilter,
+      currencyId,
+      categoryIds,
+    });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -129,7 +128,7 @@ export class TransactionsResolver {
     return this.service.update(user, data);
   }
 
-  @ResolveField('category', (returns) => CategoryDto)
+  @ResolveField('category', (returns) => UserCategoryDto)
   async getCategory(@Parent() transaction: TransactionDto) {
     return this.loader.category.load(transaction.categoryId);
   }

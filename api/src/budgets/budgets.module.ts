@@ -6,6 +6,6 @@ import { CategoryResolver } from './category.resolver';
 
 @Module({
   providers: [BudgetsService, BudgetsResolver, CategoryResolver, DataLoader],
-  exports: [BudgetsService]
+  exports: [BudgetsService],
 })
-export class BudgetsModule { }
+export class BudgetsModule {}

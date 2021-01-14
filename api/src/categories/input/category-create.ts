@@ -19,13 +19,6 @@ export class CategoryCreate {
   @IsBoolean()
   readonly isFixed: boolean;
 
-  @Field(() => CategoryType, {
-    nullable: true,
-    description: '',
-  })
-  @IsEnum(['income', 'outcome', 'transfer'])
-  readonly type: CategoryType;
-
   @Field((type) => String)
   @IsString()
   readonly baseCategoryId: string;

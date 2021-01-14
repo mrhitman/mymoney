@@ -1,12 +1,17 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import UserCategory from 'src/database/models/user-category.model';
+import Category from 'src/database/models/category.model';
 import User from 'src/database/models/user.model';
 import { CategoryCreate } from './input/category-create';
 import { CategoryUpdate } from './input/category-update';
 
 @Injectable()
 export class CategoriesService {
+  public async getBaseCategories() {
+    return Category.query();
+  }
+
   public async getAll(user: User, params?: { type?: string }) {
     const query = UserCategory.query().where({ userId: user.id });
 

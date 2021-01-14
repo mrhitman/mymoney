@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { transaction } from 'objection';
 import Goal from 'src/database/models/goal.model';
@@ -22,20 +18,16 @@ export class GoalsService {
   constructor(
     private readonly walletService: WalletsService,
     private readonly transactionService: TransactionsService,
-  ) { }
+  ) {}
 
   public async getAll(user: User) {
-    const goals = await Goal.query()
-      .withGraphFetched('[wallet]')
-      .where({ userId: user.id });
+    const goals = await Goal.query().withGraphFetched('[wallet]').where({ userId: user.id });
 
     return goals;
   }
 
   public async findOne(user: User, id: string) {
-    const goal = await Goal.query()
-      .withGraphFetched('[wallet]')
-      .findOne({ id, userId: user.id });
+    const goal = await Goal.query().withGraphFetched('[wallet]').findOne({ id, userId: user.id });
 
     if (!goal) {
       throw new NotFoundException();

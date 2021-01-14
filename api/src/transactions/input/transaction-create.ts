@@ -19,20 +19,20 @@ export class TransactionCreate {
 
   @Field({ nullable: true })
   @IsString()
-  @ValidateIf((o, v) => o.type !== 'income')
+  @ValidateIf((o) => o.type !== 'income')
   readonly sourceWalletId?: string;
 
   @Field({ nullable: true })
   @IsString()
-  @ValidateIf((o, v) => o.type !== 'outcome')
+  @ValidateIf((o) => o.type !== 'outcome')
   readonly destinationWalletId?: string;
 
-  @Field((type) => Float, { nullable: true })
+  @Field(() => Float, { nullable: true })
   @IsNumber()
   @IsOptional()
   readonly fine?: number;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   @IsNumber()
   readonly amount: number;
 

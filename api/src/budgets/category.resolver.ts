@@ -1,13 +1,13 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { CategoryDto } from 'src/categories/dto/category.dto';
+import { UserCategoryDto } from 'src/categories/dto/user-category.dto';
 import { DataLoader } from 'src/dataloader';
 import { BudgetCategoryDto } from './dto/budget-category.dto';
 
 @Resolver((of) => BudgetCategoryDto)
 export class CategoryResolver {
-  constructor(protected loader: DataLoader) { }
+  constructor(protected loader: DataLoader) {}
 
-  @ResolveField('category', () => CategoryDto)
+  @ResolveField('category', () => UserCategoryDto)
   async getCategory(@Parent() budgetCategory: BudgetCategoryDto) {
     return this.loader.category.load(budgetCategory.categoryId);
   }

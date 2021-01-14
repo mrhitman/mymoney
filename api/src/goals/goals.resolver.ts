@@ -1,13 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Args,
-  Float,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Float, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { round } from 'lodash';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
@@ -24,10 +16,7 @@ import { GoalSave } from './input/goal-save';
 
 @Resolver((of) => GoalDto)
 export class GoalsResolver {
-  constructor(
-    private readonly service: GoalsService,
-    private readonly loader: DataLoader,
-  ) {}
+  constructor(private readonly service: GoalsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
   @Query((returns) => [GoalDto])
@@ -43,19 +32,13 @@ export class GoalsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => GoalDto)
-  async createGoal(
-    @CurrentUser() user: User,
-    @Args('createGoalData') data: GoalCreate,
-  ) {
+  async createGoal(@CurrentUser() user: User, @Args('createGoalData') data: GoalCreate) {
     return this.service.create(user, data);
   }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => GoalDto)
-  async updateGoal(
-    @CurrentUser() user: User,
-    @Args('updateGoalData') data: GoalUpdate,
-  ) {
+  async updateGoal(@CurrentUser() user: User, @Args('updateGoalData') data: GoalUpdate) {
     return this.service.update(user, data);
   }
 
@@ -67,10 +50,7 @@ export class GoalsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => GoalSaveDto)
-  async saveToGoal(
-    @CurrentUser() user: User,
-    @Args('saveGoalData') data: GoalSave,
-  ) {
+  async saveToGoal(@CurrentUser() user: User, @Args('saveGoalData') data: GoalSave) {
     return this.service.save(user, data);
   }
 

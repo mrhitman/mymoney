@@ -5,7 +5,7 @@ import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 
 @Resolver((of) => StatisticByCurrencyDto)
 export class StatisticsByCurrencyResolver {
-  constructor(protected loader: DataLoader) { }
+  constructor(protected loader: DataLoader) {}
 
   @ResolveField('currency', () => CurrencyDto)
   public async getCurrency(@Parent() parent: StatisticByCurrencyDto) {

@@ -31,8 +31,8 @@ export class Category extends Model {
       type: 'object',
       properties: {
         codes: { type: 'array' },
-      }
-    }
+      },
+    };
   }
 }
 

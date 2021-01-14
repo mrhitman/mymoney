@@ -5,4 +5,4 @@ import { CategoriesService } from './categories.service';
 @Module({
   providers: [CategoriesResolver, CategoriesService],
 })
-export class CategoriesModule { }
+export class CategoriesModule {}

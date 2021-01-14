@@ -2,7 +2,6 @@ import { Model } from 'objection';
 import { CategoryType } from 'src/categories/category-type';
 import { Icon } from './category.model';
 
-
 export class UserCategory extends Model {
   public id: string;
   public name: string;
@@ -27,8 +26,8 @@ export class UserCategory extends Model {
       type: 'object',
       properties: {
         codes: { type: 'array' },
-      }
-    }
+      },
+    };
   }
 }
 

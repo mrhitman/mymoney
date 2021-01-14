@@ -2,7 +2,7 @@ import { ObjectType, Field, Float } from '@nestjs/graphql';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 
 @ObjectType('StatisticByCurrency', {
-  description: "Statistic info about transactions"
+  description: 'Statistic info about transactions',
 })
 export class StatisticByCurrencyDto {
   @Field({ complexity: 4 })

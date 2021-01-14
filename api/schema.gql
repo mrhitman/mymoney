@@ -18,9 +18,10 @@ type IconDto {
   color: String
 }
 
-type Category {
+type UserCategory {
   id: ID!
   name: String!
+  categoryId: String!
   isFixed: Boolean!
   type: CategoryType
   icon: IconDto
@@ -54,7 +55,7 @@ type Transaction {
   id: ID!
   type: TransactionType!
   categoryId: String
-  category: Category!
+  category: UserCategory!
   currencyId: String!
   currency: Currency!
   sourceWalletId: String
@@ -94,7 +95,7 @@ type GetTransaction {
 
 type BudgetCategory {
   categoryId: String!
-  category: Category!
+  category: UserCategory!
   amount: Float!
   progress: Float!
 }
@@ -117,7 +118,7 @@ type StatisticByCurrency {
 """Statistic info about transactions"""
 type StatisticByCategory {
   categoryId: String!
-  category: Category!
+  category: UserCategory!
   amount: Float!
 }
 
@@ -147,6 +148,14 @@ type User {
   imageUrl: String
   additional: JSON
   email: String!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  isFixed: Boolean!
+  type: CategoryType
+  icon: IconDto
 }
 
 type Goal {
@@ -192,8 +201,9 @@ type Query {
     from: String!
     amount: Float!
   ): Float!
-  categories(type: String): [Category!]!
-  category(id: String!): Category!
+  categories(type: String): [UserCategory!]!
+  baseCategories: [Category!]!
+  category(id: String!): UserCategory!
   budgets: [Budget!]!
   activeBudget: Budget!
   goals: [Goal!]!
@@ -242,8 +252,8 @@ type Mutation {
   createWallet(walletCreateData: WalletCreate!): Wallet!
   updateWallet(walletUpdateData: WalletUpdate!): Wallet!
   deleteWallet(id: String!): Wallet!
-  createCategory(categoryData: CategoryCreate!): Category!
-  updateCategory(categoryData: CategoryUpdate!): Category!
+  createCategory(categoryData: CategoryCreate!): UserCategory!
+  updateCategory(categoryData: CategoryUpdate!): UserCategory!
   updateBudget(updateBudget: BudgetUpdate!): Budget!
   budgetAddOutcomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveOutcomeCategory(categoryId: String!): Budget!
@@ -326,9 +336,6 @@ input CategoryCreate {
 
   """Shows is this category ??"""
   isFixed: Boolean
-
-  """"""
-  type: CategoryType
   baseCategoryId: String!
   parent: String
   createdAt: Int

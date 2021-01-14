@@ -1,6 +1,6 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
-import { CategoryDto } from 'src/categories/dto/category.dto';
+import { UserCategoryDto } from 'src/categories/dto/user-category.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { TransactionType } from '../transaction-type';
@@ -19,7 +19,7 @@ export class TransactionDto {
   readonly categoryId?: string;
 
   @Field({ nullable: true, complexity: 2 })
-  readonly category?: CategoryDto;
+  readonly category?: UserCategoryDto;
 
   @Field()
   readonly currencyId: string;

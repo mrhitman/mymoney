@@ -12,9 +12,6 @@ import { CurrenciesService } from './currencies.service';
     }),
   ],
   providers: [CurrenciesResolver, CurrenciesService, Fixer],
-  exports: [
-    CurrenciesService,
-    Fixer
-  ]
+  exports: [CurrenciesService, Fixer],
 })
-export class CurrenciesModule { }
+export class CurrenciesModule {}

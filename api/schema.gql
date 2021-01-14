@@ -21,6 +21,7 @@ type IconDto {
 type Category {
   id: ID!
   name: String!
+  description: String!
   isFixed: Boolean!
   type: CategoryType
   icon: IconDto
@@ -35,6 +36,7 @@ enum CategoryType {
 type UserCategory {
   id: ID!
   name: String!
+  description: String!
   categoryId: String!
   baseCategory: UserCategory!
   isFixed: Boolean!

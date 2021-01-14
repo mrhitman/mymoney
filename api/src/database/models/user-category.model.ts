@@ -4,6 +4,7 @@ import { Category, Icon } from './category.model';
 export class UserCategory extends Model {
   public id: string;
   public name: string;
+  public description: string;
   public userId: number;
   public categoryId: string;
   public parent: string;

@@ -13,6 +13,7 @@ export class Category extends Model {
   public name: string;
   public userId: number;
   public parent: string;
+  public description: string;
   public type: CategoryType;
   public icon: Icon;
   public isFixed: boolean;

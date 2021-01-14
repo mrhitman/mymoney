@@ -12,6 +12,9 @@ export class UserCategoryDto {
   readonly name: string;
 
   @Field()
+  readonly description: string;
+
+  @Field()
   readonly categoryId: string;
 
   @Field()

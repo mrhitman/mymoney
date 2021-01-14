@@ -37,6 +37,7 @@ export type Category = {
   __typename?: 'Category';
   id: Scalars['ID'];
   name: Scalars['String'];
+  description: Scalars['String'];
   isFixed: Scalars['Boolean'];
   type?: Maybe<CategoryType>;
   icon?: Maybe<IconDto>;
@@ -47,6 +48,19 @@ export enum CategoryType {
   Outcome = 'outcome',
   Transfer = 'transfer'
 }
+
+export type UserCategory = {
+  __typename?: 'UserCategory';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  categoryId: Scalars['String'];
+  baseCategory: UserCategory;
+  isFixed: Scalars['Boolean'];
+  type?: Maybe<CategoryType>;
+  icon?: Maybe<IconDto>;
+  parent: Scalars['String'];
+};
 
 export type Pocket = {
   __typename?: 'Pocket';
@@ -73,7 +87,7 @@ export type Transaction = {
   id: Scalars['ID'];
   type: TransactionType;
   categoryId?: Maybe<Scalars['String']>;
-  category: Category;
+  category: UserCategory;
   currencyId: Scalars['String'];
   currency: Currency;
   sourceWalletId?: Maybe<Scalars['String']>;
@@ -107,7 +121,7 @@ export type GetTransaction = {
 export type BudgetCategory = {
   __typename?: 'BudgetCategory';
   categoryId: Scalars['String'];
-  category: Category;
+  category: UserCategory;
   amount: Scalars['Float'];
   progress: Scalars['Float'];
 };
@@ -133,7 +147,7 @@ export type StatisticByCurrency = {
 export type StatisticByCategory = {
   __typename?: 'StatisticByCategory';
   categoryId: Scalars['String'];
-  category: Category;
+  category: UserCategory;
   amount: Scalars['Float'];
 };
 
@@ -209,8 +223,9 @@ export type Query = {
   currencies: Array<Currency>;
   currency: Currency;
   exchange: Scalars['Float'];
-  categories: Array<Category>;
-  category: Category;
+  categories: Array<UserCategory>;
+  baseCategories: Array<Category>;
+  category: UserCategory;
   budgets: Array<Budget>;
   activeBudget: Budget;
   goals: Array<Goal>;
@@ -329,6 +344,8 @@ export type Mutation = {
   createWallet: Wallet;
   updateWallet: Wallet;
   deleteWallet: Wallet;
+  createCategory: UserCategory;
+  updateCategory: UserCategory;
   updateBudget: Budget;
   budgetAddOutcomeCategory: Budget;
   budgetRemoveOutcomeCategory: Budget;
@@ -393,6 +410,16 @@ export type MutationUpdateWalletArgs = {
 
 export type MutationDeleteWalletArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationCreateCategoryArgs = {
+  categoryData: CategoryCreate;
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  categoryData: CategoryUpdate;
 };
 
 
@@ -549,6 +576,26 @@ export type WalletUpdate = {
   updatedAt?: Maybe<Scalars['Int']>;
 };
 
+export type CategoryCreate = {
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  /** Shows is this category ?? */
+  isFixed?: Maybe<Scalars['Boolean']>;
+  baseCategoryId: Scalars['String'];
+  parent?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Int']>;
+};
+
+export type CategoryUpdate = {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  /** Shows is this category ?? */
+  isFixed?: Maybe<Scalars['Boolean']>;
+  parent?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Int']>;
+  deletedAt?: Maybe<Scalars['Int']>;
+};
+
 export type BudgetUpdate = {
   id: Scalars['ID'];
   date?: Maybe<Scalars['DateTime']>;
@@ -656,8 +703,8 @@ export type AnalysByCategoriesQuery = (
     { __typename?: 'StatisticByCategory' }
     & Pick<StatisticByCategory, 'amount'>
     & { category: (
-      { __typename?: 'Category' }
-      & Pick<Category, 'id' | 'name' | 'type'>
+      { __typename?: 'UserCategory' }
+      & Pick<UserCategory, 'id' | 'name' | 'type'>
       & { icon?: Maybe<(
         { __typename?: 'IconDto' }
         & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
@@ -718,8 +765,8 @@ export type BudgetCategoryFragment = (
   { __typename?: 'BudgetCategory' }
   & Pick<BudgetCategory, 'amount' | 'progress'>
   & { category: (
-    { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'type'>
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'id' | 'name' | 'type'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & IconFragment
@@ -745,8 +792,8 @@ export type GetActiveBudgetQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetActiveBudgetQuery = (
   { __typename?: 'Query' }
   & { categories: Array<(
-    { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'type'>
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'id' | 'name' | 'type'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & IconFragment
@@ -834,8 +881,26 @@ export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetCategoriesQuery = (
   { __typename?: 'Query' }
   & { categories: Array<(
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'id' | 'name' | 'description' | 'type'>
+    & { baseCategory: (
+      { __typename?: 'UserCategory' }
+      & Pick<UserCategory, 'id' | 'name'>
+    ), icon?: Maybe<(
+      { __typename?: 'IconDto' }
+      & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
+    )> }
+  )> }
+);
+
+export type GetBaseCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBaseCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { baseCategories: Array<(
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'type'>
+    & Pick<Category, 'id' | 'name' | 'description' | 'type'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
@@ -879,8 +944,8 @@ export type GetFilterGroupQuery = (
     { __typename?: 'Currency' }
     & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
   )>, categories: Array<(
-    { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'type'>
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'id' | 'name' | 'type'>
   )> }
 );
 
@@ -991,8 +1056,8 @@ export type TransactionFragment = (
     { __typename?: 'Currency' }
     & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
   ), category: (
-    { __typename?: 'Category' }
-    & Pick<Category, 'name' | 'type'>
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'name' | 'type'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
@@ -1652,6 +1717,11 @@ export const GetCategoriesDocument = gql`
   categories {
     id
     name
+    description
+    baseCategory {
+      id
+      name
+    }
     type
     icon {
       type
@@ -1687,6 +1757,47 @@ export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const GetBaseCategoriesDocument = gql`
+    query GetBaseCategories {
+  baseCategories {
+    id
+    name
+    description
+    type
+    icon {
+      type
+      name
+      backgroundColor
+      color
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBaseCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetBaseCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBaseCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBaseCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetBaseCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>) {
+        return Apollo.useQuery<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>(GetBaseCategoriesDocument, baseOptions);
+      }
+export function useGetBaseCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>) {
+          return Apollo.useLazyQuery<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>(GetBaseCategoriesDocument, baseOptions);
+        }
+export type GetBaseCategoriesQueryHookResult = ReturnType<typeof useGetBaseCategoriesQuery>;
+export type GetBaseCategoriesLazyQueryHookResult = ReturnType<typeof useGetBaseCategoriesLazyQuery>;
+export type GetBaseCategoriesQueryResult = Apollo.QueryResult<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>;
 export const GetConnectorsDocument = gql`
     query GetConnectors {
   connectors {

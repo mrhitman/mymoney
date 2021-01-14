@@ -11282,7 +11282,7 @@ specifiers:
   '@typescript-eslint/parser': ^2.23.0
   apollo-server-express: ^2.14.4
   apollo-server-plugin-base: ^0.10.2
-  axios: '0.21'
+  axios: ^0.21.1
   bcryptjs: ^2.4.3
   cache-manager: ^3.2.1
   cache-manager-redis-store: ^2.0.0

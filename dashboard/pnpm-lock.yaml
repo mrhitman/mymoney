@@ -8,7 +8,7 @@ dependencies:
   antd: 4.9.4_react-dom@16.14.0+react@16.14.0
   apollo-boost: 0.4.9_graphql@15.4.0
   apollo-link: 1.2.14_graphql@15.4.0
-  axios: 0.19.2
+  axios: 0.21.1
   bizcharts: 4.0.17_react@16.14.0
   craco-babel-loader: 0.1.4_react-scripts@3.4.1
   customize-cra: 0.9.1
@@ -23,6 +23,7 @@ dependencies:
   mst-gql: 0.12.5_typescript@3.9.7
   react: 16.14.0
   react-apollo: 3.1.5_60bbd0a1d504209616e560c72279acda
+  react-color: 2.19.3_react@16.14.0
   react-country-flag: 2.3.0_react-dom@16.14.0+react@16.14.0
   react-dom: 16.14.0_react@16.14.0
   react-google-login: 5.2.1_react-dom@16.14.0+react@16.14.0
@@ -49,6 +50,7 @@ devDependencies:
   '@types/lodash': 4.14.166
   '@types/node': 12.19.11
   '@types/react': 16.14.2
+  '@types/react-color': 3.0.4
   '@types/react-dom': 16.9.10
   '@types/react-native-vector-icons': 6.4.6
   '@types/react-router-dom': 5.1.7
@@ -2596,6 +2598,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
+  /@icons/material/0.2.4_react@16.14.0:
+    dependencies:
+      react: 16.14.0
+    dev: false
+    peerDependencies:
+      react: '*'
+    resolution:
+      integrity: sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
   /@jest/console/24.9.0:
     dependencies:
       '@jest/source-map': 24.9.0
@@ -3319,6 +3329,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
+  /@types/react-color/3.0.4:
+    dependencies:
+      '@types/react': 16.14.2
+      '@types/reactcss': 1.2.3
+    dev: true
+    resolution:
+      integrity: sha512-EswbYJDF1kkrx93/YU+BbBtb46CCtDMvTiGmcOa/c5PETnwTiSWoseJ1oSWeRl/4rUXkhME9bVURvvPg0W5YQw==
   /@types/react-dom/16.9.10:
     dependencies:
       '@types/react': 16.14.2
@@ -3357,6 +3374,12 @@ packages:
       csstype: 3.0.5
     resolution:
       integrity: sha512-BzzcAlyDxXl2nANlabtT4thtvbbnhee8hMmH/CcJrISDBVcJS1iOsP1f0OAgSdGE0MsY9tqcrb9YoZcOFv9dbQ==
+  /@types/reactcss/1.2.3:
+    dependencies:
+      '@types/react': 16.14.2
+    dev: true
+    resolution:
+      integrity: sha512-d2gQQ0IL6hXLnoRfVYZukQNWHuVsE75DzFTLPUuyyEhJS8G2VvlE+qfQQ91SJjaMqlURRCNIsX7Jcsw6cEuJlA==
   /@types/stack-utils/1.0.1:
     dev: false
     resolution:
@@ -4516,13 +4539,12 @@ packages:
   /aws4/1.11.0:
     resolution:
       integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
-  /axios/0.19.2:
+  /axios/0.21.1:
     dependencies:
-      follow-redirects: 1.5.10
-    deprecated: 'Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410'
+      follow-redirects: 1.13.1_debug@4.3.1
     dev: false
     resolution:
-      integrity: sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
+      integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   /axobject-query/2.2.0:
     dev: false
     resolution:
@@ -6257,12 +6279,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
-  /debug/3.1.0:
-    dependencies:
-      ms: 2.0.0
-    dev: false
-    resolution:
-      integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
   /debug/3.2.7:
     dependencies:
       ms: 2.1.3
@@ -7638,14 +7654,6 @@ packages:
         optional: true
     resolution:
       integrity: sha512-SSG5xmZh1mkPGyKzjZP8zLjltIfpW32Y5QpdNJyjcfGxK3qo3NDDkZOZSFiGn1A6SclQxY9GzEwAHQ3dmYRWpg==
-  /follow-redirects/1.5.10:
-    dependencies:
-      debug: 3.1.0
-    dev: false
-    engines:
-      node: '>=4.0'
-    resolution:
-      integrity: sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
   /for-in/0.1.8:
     dev: false
     engines:
@@ -10475,6 +10483,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng==
+  /material-colors/1.2.6:
+    dev: false
+    resolution:
+      integrity: sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
   /md5.js/1.3.5:
     dependencies:
       hash-base: 3.1.0
@@ -13275,6 +13287,21 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-OfBnObtnGgLGfweORmdZbyEz+3dgVePQBb3zipiaDsMHV1NpWm0rDFYIVXFV/AK+x4VIIfWHhrdMIeoTLyRr2g==
+  /react-color/2.19.3_react@16.14.0:
+    dependencies:
+      '@icons/material': 0.2.4_react@16.14.0
+      lodash: 4.17.20
+      lodash-es: 4.17.20
+      material-colors: 1.2.6
+      prop-types: 15.7.2
+      react: 16.14.0
+      reactcss: 1.2.3
+      tinycolor2: 1.4.2
+    dev: false
+    peerDependencies:
+      react: '*'
+    resolution:
+      integrity: sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
   /react-country-flag/2.3.0_react-dom@16.14.0+react@16.14.0:
     dependencies:
       react: 16.14.0
@@ -13572,6 +13599,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
+  /reactcss/1.2.3:
+    dependencies:
+      lodash: 4.17.20
+    dev: false
+    resolution:
+      integrity: sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
   /read-pkg-up/2.0.0:
     dependencies:
       find-up: 2.1.0
@@ -15180,6 +15213,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
+  /tinycolor2/1.4.2:
+    dev: false
+    resolution:
+      integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
   /tmp/0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
@@ -16412,6 +16449,7 @@ specifiers:
   '@types/lodash': ^4.14.152
   '@types/node': ^12.0.0
   '@types/react': ^16.9.0
+  '@types/react-color': ^3.0.4
   '@types/react-dom': ^16.9.0
   '@types/react-native-vector-icons': ^6.4.5
   '@types/react-router-dom': ^5.1.5
@@ -16420,7 +16458,7 @@ specifiers:
   antd: ^4.6.2
   apollo-boost: ^0.4.9
   apollo-link: ^1.2.14
-  axios: ^0.19.2
+  axios: ^0.21.1
   bizcharts: ^4.0.14
   craco-babel-loader: ^0.1.4
   customize-cra: ^0.9.1
@@ -16436,6 +16474,7 @@ specifiers:
   mst-gql: ^0.12.0
   react: ^16.13.1
   react-apollo: ^3.1.5
+  react-color: ^2.19.3
   react-country-flag: ^2.2.0
   react-dom: ^16.13.1
   react-google-login: ^5.1.21

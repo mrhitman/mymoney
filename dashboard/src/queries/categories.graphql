@@ -2,6 +2,26 @@ query GetCategories {
   categories {
     id
     name
+    description
+    baseCategory {
+      id
+      name
+    }
+    type
+    icon {
+      type
+      name
+      backgroundColor
+      color
+    }
+  }
+}
+
+query GetBaseCategories {
+  baseCategories {
+    id
+    name
+    description
     type
     icon {
       type

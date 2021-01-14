@@ -33,11 +33,11 @@ export class WalletCreate {
   @IsBoolean()
   readonly allowNegativeBalance: boolean;
 
-  @Field((type) => [PocketInput], { nullable: true, defaultValue: [] })
+  @Field(() => [PocketInput], { nullable: true, defaultValue: [] })
   @IsOptional()
   readonly pockets: PocketInput[];
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
   readonly createdAt: number;

@@ -1,4 +1,4 @@
-import { UseGuards, BadRequestException } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import bcrypt from 'bcryptjs';
 import omit from 'lodash/omit';
@@ -9,18 +9,18 @@ import { UserDto } from './dto/user.dto';
 import { UserUpdate } from './input/user-update';
 import { UsersService } from './users.service';
 
-@Resolver((of) => UserDto)
+@Resolver(() => UserDto)
 export class UsersResolver {
   constructor(private readonly service: UsersService) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => UserDto)
+  @Query(() => UserDto)
   public async profile(@CurrentUser() user: User): Promise<UserDto> {
     return user;
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => UserDto)
+  @Mutation(() => UserDto)
   public async updateProfile(
     @CurrentUser() user: User,
     @Args('profileUpdateData')

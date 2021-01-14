@@ -20,21 +20,21 @@ export class TransactionUpdate {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  @ValidateIf((o, v) => o.type !== 'income')
+  @ValidateIf((o) => o.type !== 'income')
   readonly sourceWalletId: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  @ValidateIf((o, v) => o.type !== 'outcome')
+  @ValidateIf((o) => o.type !== 'outcome')
   readonly destinationWalletId: string;
 
-  @Field((type) => Float, { nullable: true })
+  @Field(() => Float, { nullable: true })
   @IsOptional()
   @IsNumber()
   readonly fine: number;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   @IsNumber()
   readonly date: number;
 
@@ -43,22 +43,22 @@ export class TransactionUpdate {
   @IsString()
   readonly description: string;
 
-  @Field((type) => Boolean, { nullable: true })
+  @Field(() => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
   readonly isNecessary: boolean;
 
-  @Field((type) => Boolean, { nullable: true })
+  @Field(() => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
   readonly isTemplate: boolean;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber({ allowNaN: true })
   @IsOptional()
   readonly updatedAt: number;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber({ allowNaN: true })
   @IsOptional()
   readonly deletedAt: number;

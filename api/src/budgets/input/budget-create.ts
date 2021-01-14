@@ -3,16 +3,16 @@ import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class BudgetCreate {
-  @Field((type) => ID)
+  @Field(() => ID)
   @IsString()
   readonly id: string;
 
-  @Field((type) => Date, { nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsDate()
   @IsOptional()
   readonly date: Date;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsOptional()
   readonly createdAt: number;

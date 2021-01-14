@@ -3,7 +3,7 @@ import { DataLoader } from '../dataloader';
 import { WalletDto } from '../wallets/dto/wallet.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
 
-@Resolver((of) => StatisticByPeriodDto)
+@Resolver(() => StatisticByPeriodDto)
 export class WalletHistoryResolver {
   constructor(private readonly loader: DataLoader) {}
 

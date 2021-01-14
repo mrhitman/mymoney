@@ -15,7 +15,7 @@ export class GoalSave {
   @IsString()
   readonly currencyId: string;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   @IsNumber()
   readonly amount: number;
 }

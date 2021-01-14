@@ -15,7 +15,7 @@ export class StatisticsResolver {
   constructor(protected readonly service: StatisticsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [StatisticByPeriodDto])
+  @Query(() => [StatisticByPeriodDto])
   public async statisticByPeriod(
     @CurrentUser() user: User,
     @Args('interval', { nullable: true, defaultValue: 'month' }) interval: Interval = 'month',
@@ -30,7 +30,7 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [StatisticByCategoryDto], { description: 'Statistic grouped by categories' })
+  @Query(() => [StatisticByCategoryDto], { description: 'Statistic grouped by categories' })
   public async statisticByCategory(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
@@ -44,7 +44,7 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [StatisticByCurrencyDto])
+  @Query(() => [StatisticByCurrencyDto])
   public async statisticByCurrency(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
@@ -53,7 +53,7 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async generateHistory(
     @CurrentUser() user: User,
     @Args('walletId') walletId: string,

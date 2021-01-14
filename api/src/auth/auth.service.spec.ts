@@ -38,6 +38,8 @@ describe('AuthService', () => {
         firstName,
         email,
         password: chance.word(),
+        imageUrl: '',
+        additional: {},
       });
 
       expect(user).toBeDefined();

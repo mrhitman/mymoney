@@ -196,7 +196,7 @@ export class StatisticsService {
     }, {});
   }
 
-  private dataByCategory(items: Transaction[], withParents = false) {
+  private dataByCategory(items: Transaction[]) {
     return chain(items)
       .groupBy('categoryId')
       .map((transactions, categoryId) => {

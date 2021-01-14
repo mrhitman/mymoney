@@ -3,7 +3,7 @@ import { PocketDto } from './pocket.dto';
 
 @ObjectType('Wallet')
 export class WalletDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   readonly id: string;
 
   @Field()
@@ -21,15 +21,12 @@ export class WalletDto {
   @Field(() => Boolean)
   readonly allowNegativeBalance: boolean;
 
-  @Field((type) => [PocketDto])
+  @Field(() => [PocketDto])
   readonly pockets: PocketDto[];
 
-  @Field((type) => Int)
+  @Field(() => Int)
   readonly syncAt: Date;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   readonly createdAt: Date;
-
-  // @Field((type) => [TransactionDto])
-  // readonly transactions: Transaction[];
 }

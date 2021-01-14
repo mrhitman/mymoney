@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import Transaction from 'src/database/models/transaction.model';
-import Wallet from 'src/database/models/wallet.model';
-import WalletHistory from 'src/database/models/wallet-history.model';
 import axios from 'axios';
+import Transaction from '../database/models/transaction.model';
+import WalletHistory from '../database/models/wallet-history.model';
+import Wallet from '../database/models/wallet.model';
 
 @Injectable()
 export class TaskService {

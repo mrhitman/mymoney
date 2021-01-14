@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-
 import bcrypt from 'bcryptjs';
 import chance from 'chance';
 import { defaultCategories } from '../../utils/categories';
@@ -20,7 +18,7 @@ export async function seed(knex: Knex): Promise<any> {
     email: 'admin@admin.com',
     password,
   });
-  const { id } = await knex
+  await knex
     .select(['id'])
     .from('users')
     .where({ email: 'admin@admin.com' })

@@ -4,11 +4,11 @@ import { PocketInput } from 'src/wallets/input/pocket-input';
 
 @InputType()
 export class GoalCreate {
-  @Field((type) => Float)
+  @Field(() => Float)
   @IsNumber()
   readonly goal: number;
 
-  @Field((type) => Float, { nullable: true })
+  @Field(() => Float, { nullable: true })
   @IsOptional()
   @IsNumber({ allowNaN: true })
   readonly progress: number;
@@ -17,7 +17,7 @@ export class GoalCreate {
   @IsString()
   readonly name: string;
 
-  @Field((type) => [PocketInput], { nullable: true })
+  @Field(() => [PocketInput], { nullable: true })
   @IsOptional({ each: true })
   readonly pockets?: PocketInput[];
 
@@ -25,7 +25,7 @@ export class GoalCreate {
   @IsString()
   readonly currencyId: string;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
   readonly createdAt?: number;

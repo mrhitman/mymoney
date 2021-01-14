@@ -19,5 +19,5 @@ export class BankConnectionDto {
   readonly createdAt: string;
 
   @Field(() => graphqlTypeJson)
-  readonly meta: object;
+  readonly meta: any;
 }

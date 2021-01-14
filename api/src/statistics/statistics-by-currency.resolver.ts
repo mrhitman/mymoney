@@ -3,7 +3,7 @@ import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { DataLoader } from 'src/dataloader';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 
-@Resolver((of) => StatisticByCurrencyDto)
+@Resolver(() => StatisticByCurrencyDto)
 export class StatisticsByCurrencyResolver {
   constructor(protected loader: DataLoader) {}
 

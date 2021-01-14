@@ -2,7 +2,7 @@ import { Field, ID, ObjectType, Float } from '@nestjs/graphql';
 
 @ObjectType('Currency')
 export class CurrencyDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   readonly id: string;
 
   @Field()
@@ -17,7 +17,7 @@ export class CurrencyDto {
   @Field()
   readonly code: number;
 
-  @Field((type) => Float, {
+  @Field(() => Float, {
     nullable: true,
     description: 'Rate to EUR (from fixer.io)',
     complexity: 6,

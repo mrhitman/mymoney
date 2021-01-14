@@ -1,8 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { MonobankProvider } from './monobank.provider';
-import BankConnector, { BankConnectorType } from 'src/database/models/bank-connector.model';
 import { raw } from 'objection';
+import BankConnector, { BankConnectorType } from 'src/database/models/bank-connector.model';
+import { MonobankProvider } from './monobank.provider';
 import { Privat24Provider } from './privat24.provider';
 
 @Injectable()

@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import axios from 'axios';
-import Currency from 'src/database/models/currency.model';
-import { Fixer } from 'src/fixer';
+import Currency from '../database/models/currency.model';
+import { Fixer } from '../fixer';
 import xml2js from 'xml2js';
 
 export interface GetRateResponse {

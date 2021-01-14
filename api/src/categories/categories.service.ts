@@ -1,8 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import UserCategory from 'src/database/models/user-category.model';
-import Category from 'src/database/models/category.model';
-import User from 'src/database/models/user.model';
+import UserCategory from '../database/models/user-category.model';
+import Category from '../database/models/category.model';
+import User from '../database/models/user.model';
 import { CategoryCreate } from './input/category-create';
 import { CategoryUpdate } from './input/category-update';
 

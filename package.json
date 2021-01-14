@@ -13,15 +13,6 @@
     "start": "concurrently \"pnpm run start:api\" \"pnpm run start:dashboard\"",
     "deploy": "bash heroku.sh deploy"
   },
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ],
-    "packages": [
-      "api",
-      "dashboard"
-    ]
-  },
   "devDependencies": {
     "concurrently": "^5.2.0"
   }

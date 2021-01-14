@@ -22,7 +22,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async import(@CurrentUser() user: User, @Args('id') id: string) {
     const connector = await BankConnector.query().where({ userId: user.id }).findById(id);
 
@@ -38,7 +38,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async addConnector(@CurrentUser() user: User, @Args('args') args: AddConnectorDto) {
     const type = args.type.toLowerCase();
     switch (type) {
@@ -57,7 +57,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async removeConnector(@CurrentUser() user: User, @Args('id') id: number) {
     const connector = await BankConnector.query().where({ userId: user.id }).deleteById(id);
 
@@ -65,7 +65,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async connectMonobank(
     @CurrentUser() user: User,
     @Args('description') description: string,
@@ -89,7 +89,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async disconnectMonobank(@CurrentUser() user: User, @Args('token') token: string) {
     await BankConnector.query().delete().where({
       userId: user.id,
@@ -100,7 +100,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async connectPrivat24(
     @CurrentUser() user: User,
     @Args('description') description: string,
@@ -108,7 +108,6 @@ export class BanksResolver {
     @Args('password') password: string,
   ) {
     const existConnection = await BankConnector.query()
-      /* eslint-disable @typescript-eslint/camelcase */
       .where({ userId: user.id, meta: { merchant_id: merchantId, password } })
       .first();
 
@@ -126,7 +125,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => String)
+  @Mutation(() => String)
   public async disconnectPrivat24(
     @CurrentUser() user: User,
     @Args('merchant_id') merchantId: string,

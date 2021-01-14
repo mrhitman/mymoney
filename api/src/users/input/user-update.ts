@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsObject, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import graphqlTypeJson from 'graphql-type-json';
 
 @InputType()

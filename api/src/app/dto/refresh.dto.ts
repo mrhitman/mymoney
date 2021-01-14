@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('Refresh')
 export class RefreshDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   readonly accessToken: string;
 
   @Field()

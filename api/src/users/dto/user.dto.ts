@@ -3,7 +3,7 @@ import graphqlTypeJson from 'graphql-type-json';
 
 @ObjectType('User')
 export class UserDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   id: number;
 
   @Field()
@@ -19,7 +19,7 @@ export class UserDto {
   imageUrl: string;
 
   @Field(() => graphqlTypeJson, { nullable: true })
-  additional: object;
+  additional: any;
 
   @Field()
   email: string;

@@ -1,10 +1,9 @@
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
-import { IsBoolean, IsEnum, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
-import { CategoryType } from '../category-type';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class CategoryCreate {
-  @Field((type) => ID)
+  @Field(() => ID)
   @IsString()
   readonly id: string;
 
@@ -19,16 +18,16 @@ export class CategoryCreate {
   @IsBoolean()
   readonly isFixed: boolean;
 
-  @Field((type) => String)
+  @Field(() => String)
   @IsString()
   readonly baseCategoryId: string;
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   readonly parent: string;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsOptional()
   readonly createdAt: number;

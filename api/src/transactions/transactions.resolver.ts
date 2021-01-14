@@ -1,5 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { OrderByDirection } from 'objection';
 import { CurrentUser } from 'src/auth/current-user';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.quard';
 import { UserCategoryDto } from 'src/categories/dto/user-category.dto';
@@ -8,19 +9,18 @@ import User from 'src/database/models/user.model';
 import { DataLoader } from 'src/dataloader';
 import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { TransactionDto } from './dto/transaction.dto';
+import { Transactions } from './dto/transactions';
 import { TransactionCreate } from './input/transaction-create';
 import { TransactionUpdate } from './input/transaction-update';
-import { TransactionsService } from './transactions.service';
 import { TransactionType } from './transaction-type';
-import { Transactions } from './dto/transactions';
-import { OrderByDirection } from 'objection';
+import { TransactionsService } from './transactions.service';
 
-@Resolver((of) => TransactionDto)
+@Resolver(() => TransactionDto)
 export class TransactionsResolver {
   constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => String)
+  @Query(() => String)
   public async export(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
@@ -51,7 +51,7 @@ export class TransactionsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => Transactions)
+  @Query(() => Transactions)
   public async transactions(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
@@ -103,13 +103,13 @@ export class TransactionsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => TransactionDto)
+  @Query(() => TransactionDto)
   public async transaction(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.getOne(user, id);
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => TransactionDto)
+  @Mutation(() => TransactionDto)
   async createTransaction(
     @CurrentUser() user: User,
     @Args('transactionCreateData')
@@ -119,7 +119,7 @@ export class TransactionsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation((returns) => TransactionDto)
+  @Mutation(() => TransactionDto)
   async updateTransaction(
     @CurrentUser() user: User,
     @Args('transactionUpdateData')
@@ -128,17 +128,17 @@ export class TransactionsResolver {
     return this.service.update(user, data);
   }
 
-  @ResolveField('category', (returns) => UserCategoryDto)
+  @ResolveField('category', () => UserCategoryDto)
   async getCategory(@Parent() transaction: TransactionDto) {
     return this.loader.category.load(transaction.categoryId);
   }
 
-  @ResolveField('currency', (returns) => CurrencyDto)
+  @ResolveField('currency', () => CurrencyDto)
   async getCurrency(@Parent() transaction: TransactionDto): Promise<CurrencyDto> {
     return this.loader.currency.load(transaction.currencyId);
   }
 
-  @ResolveField('sourceWallet', (returns) => WalletDto, { nullable: true })
+  @ResolveField('sourceWallet', () => WalletDto, { nullable: true })
   async getSourceWallet(@Parent() transaction: TransactionDto) {
     if (!transaction.sourceWalletId) {
       return;
@@ -147,7 +147,7 @@ export class TransactionsResolver {
     return this.loader.wallet.load(transaction.sourceWalletId);
   }
 
-  @ResolveField('destinationWallet', (returns) => WalletDto, { nullable: true })
+  @ResolveField('destinationWallet', () => WalletDto, { nullable: true })
   async getDestinationWallet(@Parent() transaction: TransactionDto) {
     if (!transaction.destinationWalletId) {
       return;

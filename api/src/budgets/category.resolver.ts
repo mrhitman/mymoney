@@ -3,7 +3,7 @@ import { UserCategoryDto } from 'src/categories/dto/user-category.dto';
 import { DataLoader } from 'src/dataloader';
 import { BudgetCategoryDto } from './dto/budget-category.dto';
 
-@Resolver((of) => BudgetCategoryDto)
+@Resolver(() => BudgetCategoryDto)
 export class CategoryResolver {
   constructor(protected loader: DataLoader) {}
 

@@ -2,7 +2,7 @@ import { Float, Parent, Resolver, ResolveField } from '@nestjs/graphql';
 import { CurrenciesService } from 'src/currencies/currencies.service';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 
-@Resolver((of) => CurrencyDto)
+@Resolver(() => CurrencyDto)
 export class CurrencyRateResolver {
   constructor(protected service: CurrenciesService) {}
 

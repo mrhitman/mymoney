@@ -12,7 +12,7 @@ export class StatisticByPeriodDto {
   @Field(() => Float)
   readonly userId: number;
 
-  @Field((type) => [PocketDto])
+  @Field(() => [PocketDto])
   readonly pockets: PocketDto[];
 
   @Field(() => Float)

@@ -5,6 +5,6 @@ export class PocketInput {
   @Field()
   currencyId: string;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   amount: number;
 }

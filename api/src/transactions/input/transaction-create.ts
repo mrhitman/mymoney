@@ -36,7 +36,7 @@ export class TransactionCreate {
   @IsNumber()
   readonly amount: number;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   @IsNumber()
   readonly date: number;
 
@@ -49,17 +49,17 @@ export class TransactionCreate {
   @IsString()
   readonly description?: string;
 
-  @Field((type) => Boolean, { nullable: true })
+  @Field(() => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
   readonly isNecessary?: boolean;
 
-  @Field((type) => Boolean, { nullable: true })
+  @Field(() => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
   readonly isTemplate?: boolean;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber({ allowNaN: true })
   @IsOptional()
   readonly createdAt?: number;

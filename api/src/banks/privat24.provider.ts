@@ -17,13 +17,13 @@ interface GetClientInfoResponse {
       card: {
         account: string;
         card_number: string;
-        acc_name: {};
-        acc_type: {};
+        acc_name: any;
+        acc_type: any;
         currency: string;
-        card_type: {};
+        card_type: any;
         main_card_number: string;
-        card_stat: {};
-        src: {};
+        card_stat: any;
+        src: any;
       };
       av_balance: string;
       bal_date: string;

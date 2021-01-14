@@ -1,14 +1,14 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
+import graphqlTypeJson from 'graphql-type-json';
 import { UserCategoryDto } from 'src/categories/dto/user-category.dto';
 import { CurrencyDto } from 'src/currencies/dto/currency.dto';
 import { WalletDto } from 'src/wallets/dto/wallet.dto';
 import { TransactionType } from '../transaction-type';
-import graphqlTypeJson from 'graphql-type-json';
 
 @ObjectType('Transaction')
 export class TransactionDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   @IsString()
   readonly id: string;
 
@@ -39,13 +39,13 @@ export class TransactionDto {
   @Field({ nullable: true, complexity: 2 })
   readonly destinationWallet: WalletDto;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   readonly amount: number;
 
-  @Field((type) => Float, { nullable: true })
+  @Field(() => Float, { nullable: true })
   readonly fine?: number;
 
-  @Field((type) => Date)
+  @Field(() => Date)
   readonly date: Date;
 
   @Field({ nullable: true })
@@ -54,12 +54,12 @@ export class TransactionDto {
   @Field(() => graphqlTypeJson, { nullable: true })
   readonly meta?: any;
 
-  @Field((type) => Boolean)
+  @Field(() => Boolean)
   readonly isImported: boolean;
 
-  @Field((type) => Boolean)
+  @Field(() => Boolean)
   readonly isNecessary: boolean;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   readonly createdAt: number;
 }

@@ -5,34 +5,34 @@ import { PocketDto } from 'src/wallets/dto/pocket.dto';
 
 @ObjectType('Goal')
 export class GoalDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   readonly id: string;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   readonly goal: number;
 
-  @Field((type) => Float)
+  @Field(() => Float)
   readonly progress: number;
 
-  @Field((type) => Float, { complexity: 2 })
+  @Field(() => Float, { complexity: 2 })
   readonly progressPercent: number;
 
   @Field()
   readonly name: string;
 
-  @Field((type) => [PocketDto])
+  @Field(() => [PocketDto])
   readonly pockets: PocketDto[];
 
   @Field(() => String)
   readonly currencyId: string;
 
-  @Field((type) => CurrencyDto, { complexity: 2 })
+  @Field(() => CurrencyDto, { complexity: 2 })
   readonly currency: CurrencyDto;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   readonly syncAt: Date;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   readonly createdAt: Date;
 
   readonly walletId: string;

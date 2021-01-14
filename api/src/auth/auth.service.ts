@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
-import { omit, groupBy } from 'lodash';
-import { RegisterInput } from 'src/app/input/register-input';
-import RefreshToken from 'src/database/models/refresh-token.model';
-import User from 'src/database/models/user.model';
-import Category from 'src/database/models/category.model';
-import UserCategory from 'src/database/models/user-category.model';
-import { UsersService } from 'src/users/users.service';
+import { groupBy, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
+import { RegisterInput } from '../app/input/register-input';
+import Category from '../database/models/category.model';
+import RefreshToken from '../database/models/refresh-token.model';
+import UserCategory from '../database/models/user-category.model';
+import User from '../database/models/user.model';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {

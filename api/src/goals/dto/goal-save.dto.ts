@@ -4,9 +4,9 @@ import { GoalDto } from './goal.dto';
 
 @ObjectType('GoalSaveResponse')
 export class GoalSaveDto {
-  @Field((type) => GoalDto)
+  @Field(() => GoalDto)
   readonly goal: GoalDto;
 
-  @Field((type) => WalletDto)
+  @Field(() => WalletDto)
   readonly wallet: WalletDto;
 }

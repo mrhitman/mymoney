@@ -3,7 +3,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 
 @ObjectType('Login')
 export class LoginDto {
-  @Field((type) => ID)
+  @Field(() => ID)
   readonly accessToken: string;
 
   @Field()

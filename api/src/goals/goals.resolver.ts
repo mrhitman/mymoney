@@ -14,18 +14,18 @@ import { PocketDto } from '../wallets/dto/pocket.dto';
 import { GoalSaveDto } from './dto/goal-save.dto';
 import { GoalSave } from './input/goal-save';
 
-@Resolver((of) => GoalDto)
+@Resolver(() => GoalDto)
 export class GoalsResolver {
   constructor(private readonly service: GoalsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [GoalDto])
+  @Query(() => [GoalDto])
   async goals(@CurrentUser() user: User) {
     return this.service.getAll(user);
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query((returns) => [GoalDto])
+  @Query(() => [GoalDto])
   async goal(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.findOne(user, id);
   }

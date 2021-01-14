@@ -33,11 +33,11 @@ export class WalletUpdate {
   @IsBoolean()
   readonly allowNegativeBalance: boolean;
 
-  @Field((type) => [PocketInput], { nullable: true })
+  @Field(() => [PocketInput], { nullable: true })
   @IsOptional({ each: true })
   readonly pockets: PocketInput[];
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsNumber()
   readonly updatedAt: number;

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Popconfirm, Row, Typography } from 'antd';
+import { Button, Card, Col, Popconfirm, Progress, Row, Typography } from 'antd';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import CategoryIcon from 'src/components/misc/CategoryIcon';
@@ -56,6 +56,7 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
         <Row>
           <Typography>Amount: {budgetCategory.amount}</Typography>
           <Typography>Progress: {budgetCategory.progress.toFixed(2)}</Typography>
+          <Progress type="circle" percent={75} />
         </Row>
       </Card>
     </Col>

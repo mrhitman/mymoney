@@ -41,6 +41,7 @@ export type Category = {
   isFixed: Scalars['Boolean'];
   type?: Maybe<CategoryType>;
   icon?: Maybe<IconDto>;
+  codes: Array<Scalars['Float']>;
 };
 
 export enum CategoryType {
@@ -59,6 +60,7 @@ export type UserCategory = {
   isFixed: Scalars['Boolean'];
   type?: Maybe<CategoryType>;
   icon?: Maybe<IconDto>;
+  codes: Array<Scalars['Float']>;
   parent: Scalars['String'];
 };
 
@@ -577,7 +579,6 @@ export type WalletUpdate = {
 };
 
 export type CategoryCreate = {
-  id: Scalars['ID'];
   name: Scalars['String'];
   /** Shows is this category ?? */
   isFixed?: Maybe<Scalars['Boolean']>;
@@ -875,6 +876,18 @@ export type RemoveIncomeBudgetMutation = (
   ) }
 );
 
+export type CategoryFragment = (
+  { __typename?: 'UserCategory' }
+  & Pick<UserCategory, 'id' | 'name' | 'description' | 'codes' | 'type'>
+  & { baseCategory: (
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'id' | 'name' | 'codes'>
+  ), icon?: Maybe<(
+    { __typename?: 'IconDto' }
+    & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
+  )> }
+);
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -882,15 +895,34 @@ export type GetCategoriesQuery = (
   { __typename?: 'Query' }
   & { categories: Array<(
     { __typename?: 'UserCategory' }
-    & Pick<UserCategory, 'id' | 'name' | 'description' | 'type'>
-    & { baseCategory: (
-      { __typename?: 'UserCategory' }
-      & Pick<UserCategory, 'id' | 'name'>
-    ), icon?: Maybe<(
-      { __typename?: 'IconDto' }
-      & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
-    )> }
+    & CategoryFragment
   )> }
+);
+
+export type AddCategoryMutationVariables = Exact<{
+  data: CategoryCreate;
+}>;
+
+
+export type AddCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { createCategory: (
+    { __typename?: 'UserCategory' }
+    & CategoryFragment
+  ) }
+);
+
+export type UpdateCategoryMutationVariables = Exact<{
+  data: CategoryUpdate;
+}>;
+
+
+export type UpdateCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCategory: (
+    { __typename?: 'UserCategory' }
+    & CategoryFragment
+  ) }
 );
 
 export type GetBaseCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -900,7 +932,7 @@ export type GetBaseCategoriesQuery = (
   { __typename?: 'Query' }
   & { baseCategories: Array<(
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'description' | 'type'>
+    & Pick<Category, 'id' | 'name' | 'description' | 'type' | 'codes'>
     & { icon?: Maybe<(
       { __typename?: 'IconDto' }
       & Pick<IconDto, 'type' | 'name' | 'backgroundColor' | 'color'>
@@ -1261,6 +1293,26 @@ export const BudgetFragmentDoc = gql`
   deadline
 }
     ${BudgetCategoryFragmentDoc}`;
+export const CategoryFragmentDoc = gql`
+    fragment category on UserCategory {
+  id
+  name
+  description
+  codes
+  baseCategory {
+    id
+    name
+    codes
+  }
+  type
+  icon {
+    type
+    name
+    backgroundColor
+    color
+  }
+}
+    `;
 export const ProfileFragmentDoc = gql`
     fragment profile on User {
   id
@@ -1715,23 +1767,10 @@ export type RemoveIncomeBudgetMutationOptions = Apollo.BaseMutationOptions<Remov
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
-    id
-    name
-    description
-    baseCategory {
-      id
-      name
-    }
-    type
-    icon {
-      type
-      name
-      backgroundColor
-      color
-    }
+    ...category
   }
 }
-    `;
+    ${CategoryFragmentDoc}`;
 
 /**
  * __useGetCategoriesQuery__
@@ -1757,6 +1796,70 @@ export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const AddCategoryDocument = gql`
+    mutation AddCategory($data: CategoryCreate!) {
+  createCategory(categoryData: $data) {
+    ...category
+  }
+}
+    ${CategoryFragmentDoc}`;
+export type AddCategoryMutationFn = Apollo.MutationFunction<AddCategoryMutation, AddCategoryMutationVariables>;
+
+/**
+ * __useAddCategoryMutation__
+ *
+ * To run a mutation, you first call `useAddCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCategoryMutation, { data, loading, error }] = useAddCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddCategoryMutation(baseOptions?: Apollo.MutationHookOptions<AddCategoryMutation, AddCategoryMutationVariables>) {
+        return Apollo.useMutation<AddCategoryMutation, AddCategoryMutationVariables>(AddCategoryDocument, baseOptions);
+      }
+export type AddCategoryMutationHookResult = ReturnType<typeof useAddCategoryMutation>;
+export type AddCategoryMutationResult = Apollo.MutationResult<AddCategoryMutation>;
+export type AddCategoryMutationOptions = Apollo.BaseMutationOptions<AddCategoryMutation, AddCategoryMutationVariables>;
+export const UpdateCategoryDocument = gql`
+    mutation UpdateCategory($data: CategoryUpdate!) {
+  updateCategory(categoryData: $data) {
+    ...category
+  }
+}
+    ${CategoryFragmentDoc}`;
+export type UpdateCategoryMutationFn = Apollo.MutationFunction<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+
+/**
+ * __useUpdateCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCategoryMutation, { data, loading, error }] = useUpdateCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>) {
+        return Apollo.useMutation<UpdateCategoryMutation, UpdateCategoryMutationVariables>(UpdateCategoryDocument, baseOptions);
+      }
+export type UpdateCategoryMutationHookResult = ReturnType<typeof useUpdateCategoryMutation>;
+export type UpdateCategoryMutationResult = Apollo.MutationResult<UpdateCategoryMutation>;
+export type UpdateCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
 export const GetBaseCategoriesDocument = gql`
     query GetBaseCategories {
   baseCategories {
@@ -1764,6 +1867,7 @@ export const GetBaseCategoriesDocument = gql`
     name
     description
     type
+    codes
     icon {
       type
       name

@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { Chance } from 'chance';
 import { DatabaseModule } from 'src/database/database.module';
 
-process.env.DATABASE_URL = 'postgres://hitman:password@localhost:6432/mymoney';
+process.env.DATABASE_URL = 'postgres://hitman:password@localhost:5432/mymoney';
 
 describe('AuthService', () => {
   let service: AuthService;

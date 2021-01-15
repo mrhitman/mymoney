@@ -3,10 +3,6 @@ import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class CategoryCreate {
-  @Field(() => ID)
-  @IsString()
-  readonly id: string;
-
   @Field()
   @IsString()
   readonly name: string;

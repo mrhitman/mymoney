@@ -13,7 +13,7 @@ export const CategoryIcon: FC<{ icon?: IconDto | null }> = ({ icon }) => {
       <Icon
         name={icon?.name || 'warning'}
         type={icon?.type || 'AntDesign'}
-        color={'white'}
+        color={icon?.color || 'white'}
         size={16}
       />
     </div>

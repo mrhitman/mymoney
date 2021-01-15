@@ -29,6 +29,9 @@ export class UserCategoryDto {
   @Field(() => IconDto, { nullable: true })
   readonly icon: IconDto;
 
+  @Field(() => [Number])
+  readonly codes: number[];
+
   @Field()
   readonly parent: string;
 }

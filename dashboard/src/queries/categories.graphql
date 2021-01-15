@@ -1,19 +1,37 @@
-query GetCategories {
-  categories {
+fragment category on UserCategory {
+  id
+  name
+  description
+  codes
+  baseCategory {
     id
     name
-    description
-    baseCategory {
-      id
-      name
-    }
+    codes
+  }
+  type
+  icon {
     type
-    icon {
-      type
-      name
-      backgroundColor
-      color
-    }
+    name
+    backgroundColor
+    color
+  }
+}
+
+query GetCategories {
+  categories {
+    ...category
+  }
+}
+
+mutation AddCategory($data: CategoryCreate!) {
+  createCategory(categoryData: $data) {
+    ...category
+  }
+}
+
+mutation UpdateCategory($data: CategoryUpdate!) {
+  updateCategory(categoryData: $data) {
+    ...category
   }
 }
 
@@ -23,6 +41,7 @@ query GetBaseCategories {
     name
     description
     type
+    codes
     icon {
       type
       name

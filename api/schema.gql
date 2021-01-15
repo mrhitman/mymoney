@@ -25,6 +25,7 @@ type Category {
   isFixed: Boolean!
   type: CategoryType
   icon: IconDto
+  codes: [Float!]!
 }
 
 enum CategoryType {
@@ -42,6 +43,7 @@ type UserCategory {
   isFixed: Boolean!
   type: CategoryType
   icon: IconDto
+  codes: [Float!]!
   parent: String!
 }
 
@@ -335,7 +337,6 @@ input WalletUpdate {
 }
 
 input CategoryCreate {
-  id: ID!
   name: String!
 
   """Shows is this category ??"""

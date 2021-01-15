@@ -22,5 +22,8 @@ export class CategoryDto {
   @Field(() => IconDto, { nullable: true })
   readonly icon: IconDto;
 
+  @Field(() => [Number])
+  readonly codes: number[];
+
   readonly parent: string;
 }

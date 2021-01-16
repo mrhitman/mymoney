@@ -11,6 +11,7 @@ import { omit } from 'lodash';
 const initialValues: CategoryValues = {
   name: '',
   categoryId: '',
+  codes: [],
 };
 
 export const AddCategory: FC = () => {
@@ -24,7 +25,7 @@ export const AddCategory: FC = () => {
       addCategory({
         variables: {
           data: {
-            ...omit(values, 'categoryId'),
+            ...omit(values, ['categoryId']),
             baseCategoryId: values.categoryId,
           },
         },

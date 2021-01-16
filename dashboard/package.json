@@ -40,7 +40,8 @@
     "react-scripts": "3.4.1",
     "react-world-flags": "^1.4.0",
     "typescript": "3.9.7",
-    "uuid": "^8.1.0"
+    "uuid": "^8.1.0",
+    "yup": "^0.32.8"
   },
   "scripts": {
     "start": "craco start",

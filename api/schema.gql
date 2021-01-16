@@ -337,13 +337,24 @@ input WalletUpdate {
 }
 
 input CategoryCreate {
+  id: ID
   name: String!
+  description: String
 
   """Shows is this category ??"""
   isFixed: Boolean
   baseCategoryId: String!
+  codes: [Int!]
+  icon: Icon
   parent: String
   createdAt: Int
+}
+
+input Icon {
+  type: String
+  name: String
+  backgroundColor: String
+  color: String
 }
 
 input CategoryUpdate {

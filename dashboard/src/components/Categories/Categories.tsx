@@ -1,9 +1,11 @@
-import { Button, Col, Popover, Row, Table } from 'antd';
+import { DeleteFilled } from '@ant-design/icons';
+import { Col, Popover, Row, Space, Table } from 'antd';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetCategoriesQuery } from 'src/generated/graphql';
+import { UserCategory, useGetCategoriesQuery } from 'src/generated/graphql';
 import CategoryIcon from '../misc/CategoryIcon';
 import AddCategory from './AddCategory';
+import EditCategory from './EditCategory';
 
 export const Categories: FC = () => {
   const { t } = useTranslation();
@@ -43,6 +45,17 @@ export const Categories: FC = () => {
             render={(icon) => <CategoryIcon icon={icon} />}
           />
           <Table.Column title={t('type')} dataIndex="type" key="type" />
+          <Table.Column
+            title={t('action')}
+            dataIndex=""
+            key="x"
+            render={(_, record: UserCategory) => (
+              <Space size={8}>
+                <EditCategory category={record} />
+                <DeleteFilled />
+              </Space>
+            )}
+          />
         </Table>
       </Col>
     </Row>

@@ -1,7 +1,9 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { omit } from 'lodash';
 import { DateTime } from 'luxon';
-import UserCategory from '../database/models/user-category.model';
+import { v4 as uuid } from 'uuid';
 import Category from '../database/models/category.model';
+import UserCategory from '../database/models/user-category.model';
 import User from '../database/models/user.model';
 import { CategoryCreate } from './input/category-create';
 import { CategoryUpdate } from './input/category-update';
@@ -37,10 +39,12 @@ export class CategoriesService {
   }
 
   public async create(data: CategoryCreate, user: User) {
-    await UserCategory.query().insert({
-      ...data,
+    return UserCategory.query().insert({
+      categoryId: data.baseCategoryId,
+      ...omit(data, ['baseCategoryId']),
+      id: data.id || uuid(),
       userId: user.id,
-      createdAt: DateTime.fromSeconds(data.createdAt).toJSDate(),
+      createdAt: data.createdAt ? DateTime.fromSeconds(data.createdAt).toJSDate() : new Date(),
       syncAt: DateTime.local().toJSDate(),
     });
   }

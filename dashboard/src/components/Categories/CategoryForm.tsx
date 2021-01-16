@@ -1,6 +1,6 @@
 import { Cascader, Col, Form, Input, Popover, Row, Select, Tag } from 'antd';
-import { last } from 'lodash';
-import React, { FC } from 'react';
+import { last, omit } from 'lodash';
+import React, { FC, useState } from 'react';
 import { SketchPicker } from 'react-color';
 import { useTranslation } from 'react-i18next';
 import { useGetBaseCategoriesQuery } from 'src/generated/graphql';
@@ -27,8 +27,14 @@ interface CategoryFormProps {
 
 export const CategoryForm: FC<CategoryFormProps> = ({ formik }) => {
   const { data, loading } = useGetBaseCategoriesQuery();
+  const [addCode, setAddCode] = useState(false);
+  const [code, setCode] = useState<number>();
   const { t } = useTranslation();
-
+  const handleAddCode = () => {
+    formik.setFieldValue('codes', [...formik.values.codes, code]);
+    setCode(undefined);
+    setAddCode(false);
+  };
   return (
     <Form labelCol={{ span: 8 }}>
       <Form.Item label="Base category">
@@ -41,7 +47,7 @@ export const CategoryForm: FC<CategoryFormProps> = ({ formik }) => {
             if (category) {
               formik.setFieldValue('name', category.name);
               formik.setFieldValue('description', category.description);
-              formik.setFieldValue('icon', category.icon);
+              formik.setFieldValue('icon', omit(category.icon, ['__typename']));
               formik.setFieldValue('codes', category.codes);
             }
           }}
@@ -49,6 +55,7 @@ export const CategoryForm: FC<CategoryFormProps> = ({ formik }) => {
             {
               value: 'outcome',
               label: 'Outcome',
+              loading,
               children: data?.baseCategories
                 .filter((c) => c.type === 'outcome')
                 .map((c) => ({
@@ -59,6 +66,7 @@ export const CategoryForm: FC<CategoryFormProps> = ({ formik }) => {
             {
               value: 'income',
               label: 'Income',
+              loading,
               children: data?.baseCategories
                 .filter((c) => c.type === 'income')
                 .map((c) => ({
@@ -83,8 +91,34 @@ export const CategoryForm: FC<CategoryFormProps> = ({ formik }) => {
       </Form.Item>
       <Form.Item label="MCC Codes">
         {formik.values.codes?.map((code: number) => (
-          <Tag key={code}>{code}</Tag>
+          <Tag
+            key={code}
+            closable
+            color="volcano"
+            onClose={() =>
+              formik.setFieldValue(
+                'codes',
+                formik.values.codes.filter((c: number) => c !== code),
+              )
+            }
+          >
+            {code}
+          </Tag>
         ))}
+        {addCode ? (
+          <Input
+            type="text"
+            size="small"
+            className="tag-input"
+            onChange={(e) => setCode(+e.target.value)}
+            onBlur={handleAddCode}
+            onPressEnter={handleAddCode}
+          />
+        ) : (
+          <Tag color="volcano" onClick={() => setAddCode(!addCode)}>
+            Add code
+          </Tag>
+        )}
       </Form.Item>
       <Form.Item label="Icon type">
         <Select

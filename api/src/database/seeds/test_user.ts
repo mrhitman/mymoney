@@ -1,7 +1,8 @@
 import bcrypt from 'bcryptjs';
 import chance from 'chance';
-import { defaultCategories } from '../../utils/categories';
 import * as Knex from 'knex';
+import { v4 as uuid } from 'uuid';
+import { defaultCategories } from '../../utils/categories';
 
 export async function seed(knex: Knex): Promise<any> {
   await knex('transactions').del();
@@ -18,7 +19,7 @@ export async function seed(knex: Knex): Promise<any> {
     email: 'admin@admin.com',
     password,
   });
-  await knex
+  const userId = await knex
     .select(['id'])
     .from('users')
     .where({ email: 'admin@admin.com' })
@@ -36,6 +37,23 @@ export async function seed(knex: Knex): Promise<any> {
           codes: JSON.stringify(category.codes || []),
         })
         .into('categories'),
+    ),
+  );
+  await Promise.all(
+    defaultCategories.map((category) =>
+      knex
+        .insert({
+          id: uuid(),
+          category_id: category.id,
+          user_id: userId.id,
+          name: category.name,
+          parent: category.parentId,
+          icon: category.icon,
+          type: category.type,
+          is_fixed: true,
+          codes: JSON.stringify(category.codes || []),
+        })
+        .into('user_categories'),
     ),
   );
 }

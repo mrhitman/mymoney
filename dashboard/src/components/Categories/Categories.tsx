@@ -1,8 +1,9 @@
 import { DeleteFilled } from '@ant-design/icons';
 import { Col, Popover, Row, Space, Table } from 'antd';
-import React, { FC } from 'react';
+import { SorterResult } from 'antd/lib/table/interface';
+import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UserCategory, useGetCategoriesQuery } from 'src/generated/graphql';
+import { CategoryFragment, useGetCategoriesQuery } from 'src/generated/graphql';
 import CategoryIcon from '../misc/CategoryIcon';
 import AddCategory from './AddCategory';
 import EditCategory from './EditCategory';
@@ -10,6 +11,14 @@ import EditCategory from './EditCategory';
 export const Categories: FC = () => {
   const { t } = useTranslation();
   const { loading, data } = useGetCategoriesQuery();
+  const [sorter, setSorter] = useState<SorterResult<CategoryFragment>>({
+    order: 'descend',
+    field: 'name',
+  });
+  console.log({
+    f: sorter.columnKey,
+    d: sorter.order,
+  });
   return (
     <Row>
       <Col offset={22} span={2} style={{ marginBottom: 10 }}>
@@ -20,15 +29,28 @@ export const Categories: FC = () => {
           bordered
           showSorterTooltip
           loading={loading}
+          onChange={(pagination, filters, sorter) => {
+            setSorter(sorter as SorterResult<CategoryFragment>);
+          }}
           dataSource={
-            data?.categories?.filter(
-              (c) =>
-                !['TRANSFER_IN', 'TRANSFER_OUT', 'TRANSFER_SYS', 'SYSTEM_EMPTY'].includes(c.name),
-            ) || []
+            data?.categories
+              ?.filter(
+                (c) =>
+                  !['TRANSFER_IN', 'TRANSFER_OUT', 'TRANSFER_SYS', 'SYSTEM_EMPTY'].includes(c.name),
+              )
+              .sort((a: any, b: any) => {
+                return (
+                  (sorter.order === 'descend' ? -1 : 1) *
+                  String(a[sorter.columnKey || 'id']).localeCompare(
+                    String(b[sorter.columnKey || 'id']),
+                  )
+                );
+              }) || []
           }
         >
           <Table.Column
             title="id"
+            sorter
             dataIndex="id"
             key="id"
             render={(id) => (
@@ -37,19 +59,31 @@ export const Categories: FC = () => {
               </Popover>
             )}
           />
-          <Table.Column title={t('name')} dataIndex="name" key="name" render={(name) => t(name)} />
+          <Table.Column
+            sorter
+            title={t('name')}
+            dataIndex="name"
+            key="name"
+            render={(name) => t(name)}
+          />
           <Table.Column
             title={t('icon')}
             dataIndex="icon"
             key="icon"
             render={(icon) => <CategoryIcon icon={icon} />}
           />
-          <Table.Column title={t('type')} dataIndex="type" key="type" />
+          <Table.Column
+            sorter
+            title={t('type')}
+            dataIndex="type"
+            key="type"
+            render={(type) => t(type)}
+          />
           <Table.Column
             title={t('action')}
             dataIndex=""
             key="x"
-            render={(_, record: UserCategory) => (
+            render={(_, record: CategoryFragment) => (
               <Space size={8}>
                 <EditCategory category={record} />
                 <DeleteFilled />

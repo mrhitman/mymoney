@@ -3,10 +3,10 @@ import { Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UserCategory, useUpdateCategoryMutation } from 'src/generated/graphql';
+import { CategoryFragment, useUpdateCategoryMutation } from 'src/generated/graphql';
 import CategoryForm, { CategoryValues } from './CategoryForm';
 
-export const EditCategory: FC<{ category: UserCategory }> = ({ category }) => {
+export const EditCategory: FC<{ category: CategoryFragment }> = ({ category }) => {
   const [visible, setVisible] = useState(false);
   const [updateCategory] = useUpdateCategoryMutation();
   const { t } = useTranslation();

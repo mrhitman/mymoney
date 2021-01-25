@@ -7,6 +7,7 @@ import { useGetBaseCategoriesQuery } from 'src/generated/graphql';
 import { CategoryIcon } from '../misc/CategoryIcon';
 
 export interface CategoryValues {
+  id?: string;
   name: string;
   description?: string;
   categoryId: string;
@@ -37,46 +38,48 @@ export const CategoryForm: FC<CategoryFormProps> = ({ formik }) => {
   };
   return (
     <Form labelCol={{ span: 8 }}>
-      <Form.Item label="Base category">
-        <Cascader
-          onChange={(values) => {
-            const value = last(values);
-            formik.setFieldValue('categoryId', value);
-            const category = data?.baseCategories.find((c) => c.id === value);
+      {!formik.values.id && (
+        <Form.Item label="Base category">
+          <Cascader
+            onChange={(values) => {
+              const value = last(values);
+              formik.setFieldValue('categoryId', value);
+              const category = data?.baseCategories.find((c) => c.id === value);
 
-            if (category) {
-              formik.setFieldValue('name', category.name);
-              formik.setFieldValue('description', category.description);
-              formik.setFieldValue('icon', omit(category.icon, ['__typename']));
-              formik.setFieldValue('codes', category.codes);
-            }
-          }}
-          options={[
-            {
-              value: 'outcome',
-              label: 'Outcome',
-              loading,
-              children: data?.baseCategories
-                .filter((c) => c.type === 'outcome')
-                .map((c) => ({
-                  value: c.id,
-                  label: t(c.name),
-                })),
-            },
-            {
-              value: 'income',
-              label: 'Income',
-              loading,
-              children: data?.baseCategories
-                .filter((c) => c.type === 'income')
-                .map((c) => ({
-                  value: c.id,
-                  label: t(c.name),
-                })),
-            },
-          ]}
-        />
-      </Form.Item>
+              if (category) {
+                formik.setFieldValue('name', category.name);
+                formik.setFieldValue('description', category.description);
+                formik.setFieldValue('icon', omit(category.icon, ['__typename']));
+                formik.setFieldValue('codes', category.codes);
+              }
+            }}
+            options={[
+              {
+                value: 'outcome',
+                label: 'Outcome',
+                loading,
+                children: data?.baseCategories
+                  .filter((c) => c.type === 'outcome')
+                  .map((c) => ({
+                    value: c.id,
+                    label: t(c.name),
+                  })),
+              },
+              {
+                value: 'income',
+                label: 'Income',
+                loading,
+                children: data?.baseCategories
+                  .filter((c) => c.type === 'income')
+                  .map((c) => ({
+                    value: c.id,
+                    label: t(c.name),
+                  })),
+              },
+            ]}
+          />
+        </Form.Item>
+      )}
       <Form.Item label="Name">
         <Input
           value={formik.values.name}

@@ -360,8 +360,8 @@ export type Mutation = {
   createTransaction: Transaction;
   updateTransaction: Transaction;
   generateHistory: Scalars['String'];
-  import: Scalars['String'];
-  addConnector: Scalars['String'];
+  import: BankConnection;
+  addConnector: BankConnection;
   removeConnector: Scalars['String'];
   connectMonobank: Scalars['String'];
   disconnectMonobank: Scalars['String'];
@@ -579,12 +579,23 @@ export type WalletUpdate = {
 };
 
 export type CategoryCreate = {
+  id?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   /** Shows is this category ?? */
   isFixed?: Maybe<Scalars['Boolean']>;
   baseCategoryId: Scalars['String'];
+  codes?: Maybe<Array<Scalars['Int']>>;
+  icon?: Maybe<Icon>;
   parent?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Int']>;
+};
+
+export type Icon = {
+  type?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  backgroundColor?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']>;
 };
 
 export type CategoryUpdate = {
@@ -674,20 +685,6 @@ export type AddConnectorArgs = {
   type: Scalars['String'];
   description: Scalars['String'];
 };
-
-export type AddConnectorMutationVariables = Exact<{
-  type: Scalars['String'];
-  description: Scalars['String'];
-  interval: Scalars['Float'];
-  params: Scalars['JSON'];
-  enabled: Scalars['Boolean'];
-}>;
-
-
-export type AddConnectorMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'addConnector'>
-);
 
 export type AnalysByCategoriesQueryVariables = Exact<{
   from?: Maybe<Scalars['Float']>;
@@ -940,6 +937,11 @@ export type GetBaseCategoriesQuery = (
   )> }
 );
 
+export type ConnectorFragment = (
+  { __typename?: 'BankConnection' }
+  & Pick<BankConnection, 'id' | 'description' | 'type' | 'meta' | 'enabled' | 'createdAt'>
+);
+
 export type GetConnectorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -947,8 +949,25 @@ export type GetConnectorsQuery = (
   { __typename?: 'Query' }
   & { connectors: Array<(
     { __typename?: 'BankConnection' }
-    & Pick<BankConnection, 'id' | 'description' | 'type' | 'meta' | 'enabled' | 'createdAt'>
+    & ConnectorFragment
   )> }
+);
+
+export type AddConnectorMutationVariables = Exact<{
+  type: Scalars['String'];
+  description: Scalars['String'];
+  interval: Scalars['Float'];
+  params: Scalars['JSON'];
+  enabled: Scalars['Boolean'];
+}>;
+
+
+export type AddConnectorMutation = (
+  { __typename?: 'Mutation' }
+  & { addConnector: (
+    { __typename?: 'BankConnection' }
+    & ConnectorFragment
+  ) }
 );
 
 export type GetCurrenciesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1313,6 +1332,16 @@ export const CategoryFragmentDoc = gql`
   }
 }
     `;
+export const ConnectorFragmentDoc = gql`
+    fragment connector on BankConnection {
+  id
+  description
+  type
+  meta
+  enabled
+  createdAt
+}
+    `;
 export const ProfileFragmentDoc = gql`
     fragment profile on User {
   id
@@ -1373,42 +1402,6 @@ export const WalletFullFragmentDoc = gql`
   }
 }
     `;
-export const AddConnectorDocument = gql`
-    mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
-  addConnector(
-    args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled}
-  )
-}
-    `;
-export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutation, AddConnectorMutationVariables>;
-
-/**
- * __useAddConnectorMutation__
- *
- * To run a mutation, you first call `useAddConnectorMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddConnectorMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addConnectorMutation, { data, loading, error }] = useAddConnectorMutation({
- *   variables: {
- *      type: // value for 'type'
- *      description: // value for 'description'
- *      interval: // value for 'interval'
- *      params: // value for 'params'
- *      enabled: // value for 'enabled'
- *   },
- * });
- */
-export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions<AddConnectorMutation, AddConnectorMutationVariables>) {
-        return Apollo.useMutation<AddConnectorMutation, AddConnectorMutationVariables>(AddConnectorDocument, baseOptions);
-      }
-export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
-export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
-export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
 export const AnalysByCategoriesDocument = gql`
     query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
   statisticByCategory(
@@ -1905,15 +1898,10 @@ export type GetBaseCategoriesQueryResult = Apollo.QueryResult<GetBaseCategoriesQ
 export const GetConnectorsDocument = gql`
     query GetConnectors {
   connectors {
-    id
-    description
-    type
-    meta
-    enabled
-    createdAt
+    ...connector
   }
 }
-    `;
+    ${ConnectorFragmentDoc}`;
 
 /**
  * __useGetConnectorsQuery__
@@ -1939,6 +1927,44 @@ export function useGetConnectorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetConnectorsQueryHookResult = ReturnType<typeof useGetConnectorsQuery>;
 export type GetConnectorsLazyQueryHookResult = ReturnType<typeof useGetConnectorsLazyQuery>;
 export type GetConnectorsQueryResult = Apollo.QueryResult<GetConnectorsQuery, GetConnectorsQueryVariables>;
+export const AddConnectorDocument = gql`
+    mutation addConnector($type: String!, $description: String!, $interval: Float!, $params: JSON!, $enabled: Boolean!) {
+  addConnector(
+    args: {type: $type, description: $description, interval: $interval, params: $params, enabled: $enabled}
+  ) {
+    ...connector
+  }
+}
+    ${ConnectorFragmentDoc}`;
+export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutation, AddConnectorMutationVariables>;
+
+/**
+ * __useAddConnectorMutation__
+ *
+ * To run a mutation, you first call `useAddConnectorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddConnectorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addConnectorMutation, { data, loading, error }] = useAddConnectorMutation({
+ *   variables: {
+ *      type: // value for 'type'
+ *      description: // value for 'description'
+ *      interval: // value for 'interval'
+ *      params: // value for 'params'
+ *      enabled: // value for 'enabled'
+ *   },
+ * });
+ */
+export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions<AddConnectorMutation, AddConnectorMutationVariables>) {
+        return Apollo.useMutation<AddConnectorMutation, AddConnectorMutationVariables>(AddConnectorDocument, baseOptions);
+      }
+export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
+export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
+export type AddConnectorMutationOptions = Apollo.BaseMutationOptions<AddConnectorMutation, AddConnectorMutationVariables>;
 export const GetCurrenciesDocument = gql`
     query GetCurrencies {
   currencies {

@@ -272,8 +272,8 @@ type Mutation {
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
   generateHistory(clearOldHistory: Boolean!, walletId: String!): String!
-  import(id: String!): String!
-  addConnector(args: AddConnectorArgs!): String!
+  import(id: String!): BankConnection!
+  addConnector(args: AddConnectorArgs!): BankConnection!
   removeConnector(id: Float!): String!
   connectMonobank(token: String!, description: String!): String!
   disconnectMonobank(token: String!): String!

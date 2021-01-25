@@ -22,7 +22,7 @@ export class BanksResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => String)
+  @Mutation(() => BankConnectionDto)
   public async import(@CurrentUser() user: User, @Args('id') id: string) {
     const connector = await BankConnector.query().where({ userId: user.id }).findById(id);
 
@@ -34,11 +34,12 @@ export class BanksResolver {
         await this.privat24.import(user, connector.meta.merchant_id, connector.meta.password);
         break;
     }
-    return 'ok';
+
+    return connector;
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => String)
+  @Mutation(() => BankConnectionDto)
   public async addConnector(@CurrentUser() user: User, @Args('args') args: AddConnectorDto) {
     const type = args.type.toLowerCase();
     switch (type) {
@@ -71,12 +72,12 @@ export class BanksResolver {
     @Args('description') description: string,
     @Args('token') token: string,
   ) {
-    const existConnection = await BankConnector.query()
+    let existConnection = await BankConnector.query()
       .where({ userId: user.id, meta: { token } })
       .first();
 
     if (!existConnection) {
-      await BankConnector.query().insert({
+      existConnection = await BankConnector.query().insert({
         userId: user.id,
         description,
         type: BankConnectorType.MONOBANK,
@@ -85,7 +86,7 @@ export class BanksResolver {
       await this.mono.import(user, token);
     }
 
-    return 'OK';
+    return existConnection;
   }
 
   @UseGuards(GqlAuthGuard)
@@ -107,12 +108,12 @@ export class BanksResolver {
     @Args('merchant_id') merchantId: string,
     @Args('password') password: string,
   ) {
-    const existConnection = await BankConnector.query()
+    let existConnection = await BankConnector.query()
       .where({ userId: user.id, meta: { merchant_id: merchantId, password } })
       .first();
 
     if (!existConnection) {
-      await BankConnector.query().insert({
+      existConnection = await BankConnector.query().insert({
         userId: user.id,
         description,
         type: BankConnectorType.PRIVAT24,
@@ -121,7 +122,7 @@ export class BanksResolver {
       await this.privat24.import(user, merchantId, password);
     }
 
-    return 'OK';
+    return existConnection;
   }
 
   @UseGuards(GqlAuthGuard)

@@ -1,14 +1,15 @@
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Divider, Row, Statistic } from 'antd';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PlusCircleOutlined, EditOutlined } from '@ant-design/icons';
 import {
   CategoryType,
   useAddIncomeBudgetMutation,
   useAddOutcomeBudgetMutation,
   useGetActiveBudgetQuery,
 } from 'src/generated/graphql';
+import AddBudget from './AddBudget';
 import AddCategoryModal, { AddCategoryValues } from './AddCategoryModal';
 import BudgetCategory from './BudgetCategory';
 import { UpdateBudget } from './UpdateBudget';
@@ -27,6 +28,19 @@ const ActiveBudget: FC = () => {
       case CategoryType.Income:
         return addIncomeBudget({ variables: values });
     }
+  }
+
+  if (!data?.activeBudget) {
+    return (
+      <Row>
+        <Col span={20}>
+          <div>No active budget </div>
+        </Col>
+        <Col>
+          <AddBudget />
+        </Col>
+      </Row>
+    );
   }
 
   const incomes = data?.activeBudget.incomes.reduce((acc, v) => v.progress + acc, 0) || 0;

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Popconfirm, Progress, Row, Typography } from 'antd';
+import { Button, Card, Space, Col, Popconfirm, Progress, Row, Typography } from 'antd';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import CategoryIcon from 'src/components/misc/CategoryIcon';
@@ -29,6 +29,8 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
         return removeIncomeBudget({ variables: { categoryId } });
     }
   }
+  const progress = +((100 * budgetCategory.progress) / budgetCategory.amount).toFixed(2);
+  const readyStatus = budgetCategory.category.type === 'income' ? 'success' : 'exception';
 
   return (
     <Col id={budgetCategory.category.id}>
@@ -52,12 +54,27 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
         <Card.Meta
           title={t(budgetCategory.category.name)}
           avatar={<CategoryIcon icon={budgetCategory.category.icon} />}
-        ></Card.Meta>
-        <Row>
-          <Typography>Amount: {budgetCategory.amount}</Typography>
+        />
+        <div
+          style={{
+            width: 200,
+            marginTop: 20,
+          }}
+        >
+          <Typography>Amount: {budgetCategory.amount.toFixed(2)}</Typography>
           <Typography>Progress: {budgetCategory.progress.toFixed(2)}</Typography>
-          <Progress type="circle" percent={75} />
-        </Row>
+          <br />
+          <div style={{ marginLeft: 31 }}>
+            <Progress
+              type="dashboard"
+              showInfo
+              width={140}
+              strokeWidth={8}
+              status={progress >= 100 ? readyStatus : 'active'}
+              percent={progress}
+            />
+          </div>
+        </div>
       </Card>
     </Col>
   );

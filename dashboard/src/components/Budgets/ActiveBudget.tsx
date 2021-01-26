@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Divider, Row, Statistic } from 'antd';
+import { Button, Col, Collapse, Divider, Row, Statistic, Typography } from 'antd';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import AddBudget from './AddBudget';
 import AddCategoryModal, { AddCategoryValues } from './AddCategoryModal';
 import BudgetCategory from './BudgetCategory';
 import { UpdateBudget } from './UpdateBudget';
+import AddBudgetCategoryCard from './AddBudgetCategoryCard';
 
 const ActiveBudget: FC = () => {
   const { data } = useGetActiveBudgetQuery();
@@ -48,7 +49,8 @@ const ActiveBudget: FC = () => {
   const available = incomes - outcomes;
   return (
     <Row gutter={10}>
-      <Col span={20}>
+      <Col>
+        <Typography.Title level={2}>Active budget</Typography.Title>
         <Divider />
         <Row gutter={[20, 20]}>
           <Col>
@@ -67,7 +69,7 @@ const ActiveBudget: FC = () => {
               suffix={'UAH'}
             />
           </Col>
-          <Col offset={18}>
+          {/* <Col offset={18}>
             <Button
               size="large"
               style={{ width: 200 }}
@@ -83,28 +85,23 @@ const ActiveBudget: FC = () => {
                 deadline: data?.activeBudget.deadline,
               }}
             />
-          </Col>
+          </Col> */}
         </Row>
         <Divider />
-        <Collapse defaultActiveKey={['1', '2']}>
-          <Collapse.Panel header="incomes" key="1">
-            <Row gutter={[16, 16]}>
-              {data?.activeBudget.incomes.map((budgetCategory) => (
-                <BudgetCategory budgetCategory={budgetCategory} />
-              ))}
-            </Row>
-          </Collapse.Panel>
-          <Collapse.Panel header="outcomes" key="2">
-            <Row gutter={[16, 16]}>
-              {data?.activeBudget.outcomes.map((budgetCategory) => (
-                <BudgetCategory budgetCategory={budgetCategory} />
-              ))}
-            </Row>
-          </Collapse.Panel>
-          <Collapse.Panel header="savings" key="3">
-            savings
-          </Collapse.Panel>
-        </Collapse>
+        <Typography.Title level={3}>Income categories</Typography.Title>
+        <Row gutter={[16, 16]}>
+          {data?.activeBudget.incomes.map((budgetCategory) => (
+            <BudgetCategory budgetCategory={budgetCategory} />
+          ))}
+          <AddBudgetCategoryCard onClick={() => setVisible(true)} />
+        </Row>
+        <Typography.Title level={3}>Outcome categories</Typography.Title>
+        <Row gutter={[16, 16]}>
+          {data?.activeBudget.outcomes.map((budgetCategory) => (
+            <BudgetCategory budgetCategory={budgetCategory} />
+          ))}
+          <AddBudgetCategoryCard onClick={() => setVisible(true)} />
+        </Row>
       </Col>
       <AddCategoryModal
         visible={visible}

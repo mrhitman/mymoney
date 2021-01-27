@@ -1,5 +1,4 @@
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Divider, Row, Statistic, Typography } from 'antd';
+import { Col, Divider, Row, Statistic, Typography } from 'antd';
 import moment from 'moment';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,10 +9,9 @@ import {
   useGetActiveBudgetQuery,
 } from 'src/generated/graphql';
 import AddBudget from './AddBudget';
+import AddBudgetCategoryCard from './AddBudgetCategoryCard';
 import AddCategoryModal, { AddCategoryValues } from './AddCategoryModal';
 import BudgetCategory from './BudgetCategory';
-import { UpdateBudget } from './UpdateBudget';
-import AddBudgetCategoryCard from './AddBudgetCategoryCard';
 
 const ActiveBudget: FC = () => {
   const { data } = useGetActiveBudgetQuery();

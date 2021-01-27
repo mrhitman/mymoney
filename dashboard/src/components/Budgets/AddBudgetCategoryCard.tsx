@@ -16,7 +16,7 @@ const AddBudgetCategoryCard: FC<AddBudgetCategoryCardProps> = ({ onClick }) => {
         <Card.Meta title="Add category" />
         <Row align="middle">
           <Col>
-            <div style={{ margin: '60px 22px' }}>
+            <div style={{ margin: '60px 22px', color: 'green' }}>
               <PlusCircleOutlined style={{ fontSize: 150 }} />
             </div>
           </Col>

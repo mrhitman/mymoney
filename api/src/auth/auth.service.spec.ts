@@ -2,6 +2,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import bcrypt from 'bcryptjs';
 import { Chance } from 'chance';
+import { response } from 'express';
 import { config } from 'src/config';
 import { DatabaseModule } from 'src/database/database.module';
 import Category from 'src/database/models/category.model';
@@ -46,6 +47,11 @@ describe('AuthService', () => {
     beforeEach(async () => {
       const password = await bcrypt.hash(userData.password, 10);
 
+      (<jest.Mock>RefreshToken.query).mockImplementation(() => ({
+        delete: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        insert: jest.fn().mockReturnThis(),
+      }));
       (<jest.Mock>User.query).mockImplementation(() => ({
         where: jest.fn().mockReturnThis(),
         first: jest.fn().mockReturnValue({
@@ -93,6 +99,28 @@ describe('AuthService', () => {
     it(' get user, not exists', async () => {
       const user = await service.getUser(2);
       expect(user).not.toBeDefined();
+    });
+
+    it(' login, success', async () => {
+      const user = await service.getUser(1);
+      const response = await service.login(user, <RefreshToken>{
+        userId: 1,
+        token: chance.guid(),
+      });
+      expect(response.accessToken).toBeDefined();
+      expect(response.refreshToken).toBeDefined();
+    });
+
+    it(' login, success, clear old session', async () => {
+      const stub = jest.fn();
+      (<jest.Mock>RefreshToken.query).mockImplementation(() => ({
+        delete: stub.mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        insert: jest.fn().mockReturnThis(),
+      }));
+      const user = await service.getUser(1);
+      await service.login(user);
+      expect(stub).toHaveBeenCalled();
     });
   });
 
@@ -196,5 +224,16 @@ describe('AuthService', () => {
         service.register(userData),
       ).rejects.toThrowErrorMatchingSnapshot();
     });
+  });
+
+  it(' change password', async () => {
+    const stab = jest.fn();
+    (<jest.Mock>User.query).mockImplementation(() => ({
+      update: jest.fn().mockReturnThis(),
+      where: stab.mockReturnThis(),
+    }));
+    const password = chance.word({ length: 10 });
+    await service.changePassword({ id: 1 } as User, password);
+    expect(stab).toBeCalled();
   });
 });

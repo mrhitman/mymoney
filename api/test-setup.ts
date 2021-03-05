@@ -1,6 +1,3 @@
-import UserCategory from 'src/database/models/user-category.model';
-import User from 'src/database/models/user.model';
-
 const queryMock = {
   findOne: jest.fn(),
   insert: jest.fn(),
@@ -9,15 +6,32 @@ const queryMock = {
   count: jest.fn(),
 };
 
-jest.mock('src/database/models/user.model', () => ({
-  query: jest.fn(() => queryMock),
-}));
+const models = [
+  'bank-connector',
+  'budget',
+  'category',
+  'currency',
+  'goal',
+  'refresh-token',
+  'transaction',
+  'user-category',
+  'user',
+  'wallet-history',
+  'wallet',
+];
 
-jest.mock('src/database/models/user-category.model', () => ({
-  query: jest.fn(() => queryMock),
-}));
+for (const model of models) {
+  jest.mock(`src/database/models/${model}.model`, () => ({
+    query: jest.fn(() => queryMock),
+  }));
+}
 
-export default {
-  User,
-  UserCategory,
-};
+jest.mock('uuid', () => {
+  const stub = jest.fn();
+
+  return {
+    v4: stub.mockImplementation(
+      () => `RANDOM_GENERETED_UUID_V4:${stub.mock.calls.length}`,
+    ),
+  };
+});

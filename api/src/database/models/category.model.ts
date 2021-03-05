@@ -11,7 +11,6 @@ export interface Icon {
 export class Category extends Model {
   public id: string;
   public name: string;
-  public userId: number;
   public parent: string;
   public description: string;
   public type: CategoryType;

@@ -63,7 +63,7 @@ export class AuthService {
       .where({ userId: user.id })
       .count({ count: '*' })) as any)[0].count;
 
-    if (!count) {
+    if (count) {
       return;
     }
 

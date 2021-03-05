@@ -20,6 +20,8 @@ Object {
 }
 `;
 
+exports[`AuthService  refresh token fail, no such token 1`] = `"Invalid refresh token"`;
+
 exports[`AuthService  register User  failed, user already exists 1`] = `"Such email is busy"`;
 
 exports[`AuthService  register User  user created 1`] = `

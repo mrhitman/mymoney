@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AuthService  login  validate user, exists 1`] = `
+Object {
+  "additional": Object {},
+  "email": "zin@fa.am",
+  "firstName": "Seth Tran",
+  "id": 1,
+  "imageUrl": "",
+}
+`;
+
 exports[`AuthService  register User  failed, user already exists 1`] = `"Such email is busy"`;
 
 exports[`AuthService  register User  user created 1`] = `

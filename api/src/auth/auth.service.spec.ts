@@ -53,9 +53,15 @@ describe('AuthService', () => {
           ...userData,
           password,
         }),
-      }));
-      (<jest.Mock>RefreshToken.query).mockImplementation(() => ({
-        findOne: jest.fn().mockReturnValue({ id: 1 }),
+        findById: jest.fn().mockImplementation((id) => {
+          return {
+            '1': {
+              id: 1,
+              ...userData,
+              password,
+            },
+          }[id.toString()];
+        }),
       }));
     });
 
@@ -75,6 +81,32 @@ describe('AuthService', () => {
         chance.word({ length: 10 }),
       );
       expect(user).not.toBeDefined();
+    });
+
+    it(' get user, exists', async () => {
+      const user = await service.getUser(1);
+      expect(user).toBeDefined();
+      expect(user).not.toHaveProperty('password');
+      expect(user).toMatchSnapshot();
+    });
+
+    it(' get user, not exists', async () => {
+      const user = await service.getUser(2);
+      expect(user).not.toBeDefined();
+    });
+  });
+
+  describe(' logout', () => {
+    it(' clear refresh token for user', async () => {
+      const stub = jest.fn();
+      (<jest.Mock>RefreshToken.query).mockImplementation(() => ({
+        delete: stub.mockReturnThis(),
+        where: stub.mockReturnThis(),
+      }));
+
+      const user = await service.getUser(1);
+      await service.logout(user as User);
+      expect(stub).toBeCalledWith({ userId: 1 });
     });
   });
 
@@ -139,6 +171,21 @@ describe('AuthService', () => {
           userId: 1,
         },
       ]);
+    });
+
+    it(' user-categories not created (test user with exists, predefined categories)', async () => {
+      const stab = jest.fn();
+      (<jest.Mock>UserCategory.query).mockImplementation(() => ({
+        where: jest.fn().mockReturnThis(),
+        insert: stab,
+        count: jest.fn().mockReturnValue([{ count: 1 }]),
+      }));
+      const user = await service.register(userData);
+      expect(user).toBeDefined();
+      expect(user.firstName).toBe(userData.firstName);
+      expect(user.email).toBe(userData.email);
+      expect(user).toMatchSnapshot();
+      expect(stab).not.toBeCalled();
     });
 
     it(' failed, user already exists', async () => {

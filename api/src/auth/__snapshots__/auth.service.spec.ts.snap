@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AuthService  login  get user, exists 1`] = `
+Object {
+  "additional": Object {},
+  "email": "zin@fa.am",
+  "firstName": "Seth Tran",
+  "id": 1,
+  "imageUrl": "",
+}
+`;
+
 exports[`AuthService  login  validate user, exists 1`] = `
 Object {
   "additional": Object {},
@@ -24,6 +34,17 @@ Object {
 `;
 
 exports[`AuthService  register User  user-categories created 1`] = `
+Object {
+  "additional": Object {},
+  "email": "zin@fa.am",
+  "firstName": "Seth Tran",
+  "id": 1,
+  "imageUrl": "",
+  "password": "kodtacwuwb",
+}
+`;
+
+exports[`AuthService  register User  user-categories not created (test user with exists, predefined categories) 1`] = `
 Object {
   "additional": Object {},
   "email": "zin@fa.am",

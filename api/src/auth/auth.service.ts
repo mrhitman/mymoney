@@ -121,7 +121,7 @@ export class AuthService {
   public async getUser(id: number) {
     const user = await this.usersService.findById(id);
 
-    return omit(user, ['password']);
+    return user && omit(user, ['password']);
   }
 
   public async changePassword(user: User, password: string) {

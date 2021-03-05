@@ -2,6 +2,7 @@ const queryMock = {
   findOne: jest.fn(),
   insert: jest.fn(),
   update: jest.fn(),
+  delete: jest.fn(),
   where: jest.fn(),
   count: jest.fn(),
 };

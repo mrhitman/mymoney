@@ -1,8 +1,10 @@
 import { MailerService } from '@nestjs-modules/mailer';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalStrategy } from 'src/auth/strategies/local.strategy';
+import { config } from 'src/config';
 import { UserDto } from 'src/users/dto/user.dto';
 import { CurrentUser } from '../auth/current-user';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.quard';
@@ -12,7 +14,6 @@ import { RefreshDto } from './dto/refresh.dto';
 import { LoginInput } from './input/login-input';
 import { RefreshInput } from './input/refresh-input';
 import { RegisterInput } from './input/register-input';
-import { BadRequestException, UseGuards } from '@nestjs/common';
 
 @Resolver()
 export class AppResolver {
@@ -53,7 +54,7 @@ export class AppResolver {
       subject: 'MyMoney Registration',
       template: 'registration',
       context: {
-        confirmLink: `${process.env.HOST}/confirm-link/${Buffer.from(token).toString('base64')}`,
+        confirmLink: `${config.app.host}/confirm-link/${Buffer.from(token).toString('base64')}`,
       },
     });
 
@@ -77,9 +78,7 @@ export class AppResolver {
       subject: 'MyMoney Password Recovery',
       template: 'recovery-password',
       context: {
-        recoveryLink: `${process.env.HOST}/change-password/${Buffer.from(token).toString(
-          'base64',
-        )}`,
+        recoveryLink: `${config.app.host}/change-password/${Buffer.from(token).toString('base64')}`,
       },
     });
 
@@ -96,8 +95,13 @@ export class AppResolver {
   @Mutation(() => RefreshDto)
   public async refresh(@Args('refreshData') data: RefreshInput, @Context() context: any) {
     const tokens = await this.authService.refresh(data.refreshToken);
-    context.req.res.cookie('token', tokens.accessToken, { httpOnly: true, saveSite: false });
-    context.req.res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
+    context.req.res.cookie('token', tokens.accessToken, {
+      httpOnly: true,
+      saveSite: false,
+    });
+    context.req.res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+    });
     return tokens;
   }
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import fixer from 'fixer-api';
+import { config } from 'src/config';
 
 @Injectable()
 export class Fixer {
   constructor() {
-    fixer.set({ accessKey: process.env.FIXER_API_KEY });
+    fixer.set({ accessKey: config.fixer.apiKey });
   }
 
   public latest(base?: string) {

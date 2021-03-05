@@ -112,20 +112,40 @@
     "typescript": "^4.0.5"
   },
   "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "roots": [
+      "src"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "testPathIgnorePatterns": [
+      "src/database/migrations/*.ts",
+      "src/database/seeds/*.ts"
+    ],
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*.module.ts",
+      "!src/database/migrations/*.ts",
+      "!src/database/seeds/*.ts",
+      "!src/database/models/*.ts",
+      "!knexfile.ts",
+      "!config.ts",
+      "!main.ts"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "src/(.*)": "<rootDir>/src/$1"
+    }
   }
 }

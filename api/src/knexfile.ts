@@ -1,13 +1,10 @@
-import { config } from 'dotenv';
+import { config } from './config';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
 
-config({ path: '../.env' });
-
 const database = {
   test: {
-    client: 'postgres',
-    connection: process.env.DATABASE_URL,
+    ...config.db,
     charset: 'utf8',
     migrations: {
       extension: 'ts',
@@ -21,8 +18,7 @@ const database = {
     },
   },
   development: {
-    client: 'postgres',
-    connection: process.env.DATABASE_URL,
+    ...config.db,
     migrations: {
       extension: 'ts',
       directory: 'database/migrations',
@@ -34,11 +30,6 @@ const database = {
       tableName: 'seeds',
     },
   },
-  pool: {
-    min: 2,
-    max: 16,
-  },
-  timezone: 'UTC',
   ...knexSnakeCaseMappers(),
 } as Knex.Config;
 

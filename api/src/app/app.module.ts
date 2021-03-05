@@ -1,7 +1,12 @@
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { BanksModule } from 'src/banks/banks.module';
+import { config } from 'src/config';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { LocalStrategy } from '../auth/strategies/local.strategy';
@@ -19,10 +24,6 @@ import { AppController } from './app.controller';
 import { AppResolver } from './app.resolver';
 import { LoggerMiddleware } from './logger.middleware';
 import { TaskService } from './task.service';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
-      plugins: [new ApolloComplexityPlugin(+process.env.MAX_QUERY_COMPLEXITY || 32)],
+      plugins: [new ApolloComplexityPlugin(config.app.maxQueryComplexity)],
       context: ({ req }) => ({ req }),
       cors: {
         crossDomain: true,
@@ -57,14 +58,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
       transport: {
         pool: true,
         service: 'Gmail',
-        auth: {
-          type: 'OAuth2',
-          user: process.env.MAIL_USER,
-          clientId: process.env.MAIL_CLIENT_ID,
-          clientSecret: process.env.MAIL_SECRET,
-          accessToken: process.env.MAIL_TOKEN,
-          refreshToken: process.env.MAIL_REFRESH_TOKEN,
-        },
+        auth: config.mail,
       },
       defaults: {
         from: '"No Reply" <no-reply@mymoney>',

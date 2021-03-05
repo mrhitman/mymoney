@@ -1,5 +1,6 @@
 import { CacheModule, Module } from '@nestjs/common';
 import redisStore from 'cache-manager-redis-store';
+import { config } from 'src/config';
 import { CurrenciesModule } from 'src/currencies/currencies.module';
 import { DataLoader } from 'src/dataloader';
 import { CurrencyRateResolver } from './currency-rate.resolver';
@@ -12,7 +13,7 @@ import { WalletsService } from './wallets.service';
     CurrenciesModule,
     CacheModule.register({
       store: redisStore,
-      url: process.env.REDIS_URL,
+      url: config.redis.url,
     }),
   ],
   providers: [WalletsResolver, PocketResolver, CurrencyRateResolver, WalletsService, DataLoader],

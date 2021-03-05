@@ -4,8 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Chance } from 'chance';
 import { DatabaseModule } from 'src/database/database.module';
-
-process.env.DATABASE_URL = 'postgres://hitman:password@localhost:5432/mymoney';
+import { config } from 'src/config';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -16,10 +15,19 @@ describe('AuthService', () => {
         DatabaseModule,
         JwtModule.register({
           secret: 'test_secret',
-          signOptions: { expiresIn: 3600 },
+          signOptions: { expiresIn: config.app.jwt.expiresIn },
         }),
       ],
-      providers: [AuthService, UsersService],
+      providers: [
+        {
+          provide: 'KnexConnection',
+          useFactory: async () => {
+            return jest.fn().mockImplementation();
+          },
+        },
+        AuthService,
+        UsersService,
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -45,7 +53,6 @@ describe('AuthService', () => {
       expect(user).toBeDefined();
       expect(user.firstName).toBe(firstName);
       expect(user.email).toBe(email);
-      await user.$query().delete();
     });
   });
 });

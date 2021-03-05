@@ -2,7 +2,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import bcrypt from 'bcryptjs';
 import { Chance } from 'chance';
-import { response } from 'express';
 import { config } from 'src/config';
 import { DatabaseModule } from 'src/database/database.module';
 import Category from 'src/database/models/category.model';

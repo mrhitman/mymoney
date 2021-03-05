@@ -112,6 +112,9 @@
     "typescript": "^4.0.5"
   },
   "jest": {
+    "setupFilesAfterEnv": [
+      "./test-setup.ts"
+    ],
     "moduleDirectories": [
       "node_modules",
       "src"

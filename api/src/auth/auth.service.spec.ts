@@ -8,22 +8,6 @@ import User from 'src/database/models/user.model';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 
-const queryMock = {
-  findOne: jest.fn(),
-  insert: jest.fn(),
-  update: jest.fn(),
-  where: jest.fn(),
-  count: jest.fn(),
-};
-
-jest.mock('src/database/models/user.model', () => ({
-  query: jest.fn(() => queryMock),
-}));
-
-jest.mock('src/database/models/user-category.model', () => ({
-  query: jest.fn(() => queryMock),
-}));
-
 describe('AuthService', () => {
   let service: AuthService;
 

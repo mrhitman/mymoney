@@ -67,7 +67,15 @@ describe('AuthService', () => {
       ]);
     });
 
-    it(' successfully', async () => {
+    it(' user created', async () => {
+      const user = await service.register(userData);
+      expect(user).toBeDefined();
+      expect(user.firstName).toBe(userData.firstName);
+      expect(user.email).toBe(userData.email);
+      expect(user).toMatchSnapshot();
+    });
+
+    it(' user-categories created', async () => {
       const stab = jest.fn();
       (<jest.Mock>UserCategory.query).mockImplementation(() => ({
         where: jest.fn().mockReturnThis(),

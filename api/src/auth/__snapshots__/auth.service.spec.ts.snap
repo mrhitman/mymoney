@@ -2,7 +2,18 @@
 
 exports[`AuthService  register User  failed, user already exists 1`] = `"Such email is busy"`;
 
-exports[`AuthService  register User  successfully 1`] = `
+exports[`AuthService  register User  user created 1`] = `
+Object {
+  "additional": Object {},
+  "email": "zin@fa.am",
+  "firstName": "Seth Tran",
+  "id": 1,
+  "imageUrl": "",
+  "password": "kodtacwuwb",
+}
+`;
+
+exports[`AuthService  register User  user-categories created 1`] = `
 Object {
   "additional": Object {},
   "email": "zin@fa.am",

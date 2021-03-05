@@ -71,20 +71,14 @@ describe('AuthService', () => {
     });
 
     it(' validate user, exists', async () => {
-      const user = await service.validateUser(
-        userData.email,
-        userData.password,
-      );
+      const user = await service.validateUser(userData.email, userData.password);
       expect(user).toBeDefined();
       expect(user).not.toHaveProperty('password');
       expect(user).toMatchSnapshot();
     });
 
     it(' validate user, not exists', async () => {
-      const user = await service.validateUser(
-        userData.email,
-        chance.word({ length: 10 }),
-      );
+      const user = await service.validateUser(userData.email, chance.word({ length: 10 }));
       expect(user).not.toBeDefined();
     });
 
@@ -147,9 +141,7 @@ describe('AuthService', () => {
         where: jest.fn().mockReturnThis(),
         insert: jest
           .fn()
-          .mockReturnValue([
-            { id: 1, name: 'test_category', type: 'income', userId: 1 },
-          ]),
+          .mockReturnValue([{ id: 1, name: 'test_category', type: 'income', userId: 1 }]),
         count: jest.fn().mockReturnValue([{ count: 0 }]),
       }));
       (<jest.Mock>Category.query).mockImplementation(() => [
@@ -176,9 +168,7 @@ describe('AuthService', () => {
       const stab = jest.fn();
       (<jest.Mock>UserCategory.query).mockImplementation(() => ({
         where: jest.fn().mockReturnThis(),
-        insert: stab.mockReturnValue([
-          { id: 1, name: 'test_category', type: 'income', userId: 1 },
-        ]),
+        insert: stab.mockReturnValue([{ id: 1, name: 'test_category', type: 'income', userId: 1 }]),
         count: jest.fn().mockReturnValue([{ count: 0 }]),
       }));
       const user = await service.register(userData);
@@ -219,9 +209,7 @@ describe('AuthService', () => {
       (<jest.Mock>User.query).mockImplementation(() => ({
         findOne: jest.fn().mockReturnValue({ id: 1, ...userData }),
       }));
-      await expect(
-        service.register(userData),
-      ).rejects.toThrowErrorMatchingSnapshot();
+      await expect(service.register(userData)).rejects.toThrowErrorMatchingSnapshot();
     });
   });
 

@@ -44,7 +44,7 @@ export class AuthService {
 
   public async register(data: RegisterInput) {
     const existUser = await User.query().findOne({ email: data.email });
-    console.log({ existUser });
+
     if (existUser) {
       throw new BadRequestException('Such email is busy');
     }

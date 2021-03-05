@@ -2,10 +2,9 @@ import { config } from './config';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
 
-const database = {
+export = {
   test: {
     ...config.db,
-    charset: 'utf8',
     migrations: {
       extension: 'ts',
       directory: 'database/migrations',
@@ -32,5 +31,3 @@ const database = {
   },
   ...knexSnakeCaseMappers(),
 } as Knex.Config;
-
-export = database;

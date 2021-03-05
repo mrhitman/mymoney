@@ -37,6 +37,7 @@ export const config = {
     client: 'postgres',
     connection: getEnvVariable('DATABASE_URL'),
     timezone: 'UTC',
+    charset: 'utf8',
     debug: Boolean(+getEnvVariable('KNEX_DEBUG', '0')),
     pool: {
       min: 2,

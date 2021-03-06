@@ -4,13 +4,13 @@ import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
-import { jwtConstants } from './constants';
+import { config } from 'src/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
 const Jwt = JwtModule.register({
-  secret: jwtConstants.secret,
-  signOptions: { expiresIn: jwtConstants.expiresIn },
+  secret: config.app.jwt.secret,
+  signOptions: { expiresIn: config.app.jwt.expiresIn },
 });
 @Module({
   imports: [UsersModule, PassportModule, Jwt],

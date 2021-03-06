@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletsService get all  success 1`] = `
+Array [
+  Object {
+    "description": "test_wallet_desc",
+    "id": 1,
+    "name": "test_wallet",
+    "pockets": Array [],
+    "userId": 1,
+  },
+]
+`;

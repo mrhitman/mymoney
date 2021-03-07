@@ -1,8 +1,7 @@
 import * as dotenv from 'dotenv';
 import { get, isNull, isUndefined } from 'lodash';
-import { resolve } from 'path';
 
-dotenv.config({ path: resolve(__dirname, '..', '.env') });
+dotenv.config({ path: process.env.PWD + '/.env' });
 
 function getEnvVariable(name: string, defaultValue?: string) {
   const value = get(process.env, name, defaultValue);

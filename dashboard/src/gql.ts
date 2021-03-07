@@ -1,47 +1,65 @@
-import ApolloClient from 'apollo-boost';
-import { Observable } from 'apollo-link';
-import { RefreshDocument, RefreshMutation } from './generated/graphql';
+import {
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from '@apollo/client';
+import decode from 'jwt-decode';
+import moment from 'moment';
+import axios from 'axios';
+import { RefreshDocument } from 'src/generated/graphql';
+import { print } from 'graphql';
 
 export function getClient(uri: string) {
-  const client = new ApolloClient({
+  let client: ApolloClient<NormalizedCacheObject>;
+  const httpLink = new HttpLink({
     uri,
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
     },
-    onError: (error) => {
-      // if (error.response?.errors?.some((e) => e.extensions?.exception?.status === 401)) {
-      //   return new Observable((observer) => {
-      //     client
-      //       .mutate<RefreshMutation>({
-      //         mutation: RefreshDocument,
-      //         variables: {
-      //           token: localStorage.getItem('refreshToken'),
-      //         },
-      //       })
-      //       .then((response) => {
-      //         const { accessToken, refreshToken } = response.data?.refresh!;
-      //         localStorage.setItem('accessToken', accessToken!);
-      //         localStorage.setItem('refreshToken', refreshToken!);
-      //         const oldHeaders = error.operation.getContext().headers;
-      //         error.operation.setContext({
-      //           headers: {
-      //             ...oldHeaders,
-      //             Authorization: accessToken,
-      //           },
-      //         });
-      //         const subscriber = {
-      //           next: observer.next.bind(observer),
-      //           error: observer.error.bind(observer),
-      //           complete: observer.complete.bind(observer),
-      //         };
-      //         return error.forward(error.operation).subscribe(subscriber);
-      //       })
-      //       .catch(() => {
-      //         localStorage.clear();
-      //       });
-      //   });
-      // }
-    },
+  });
+
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    operation.setContext(async ({ headers = {} }) => {
+      let token = localStorage.getItem('accessToken');
+      let refreshToken = localStorage.getItem('refreshToken');
+
+      if (!token || !refreshToken) {
+        return headers;
+      }
+
+      const data = decode(token) as { exp: number };
+
+      if (data.exp < moment().unix()) {
+        const newTokensResponse = await axios.post(uri, {
+          query: print(RefreshDocument),
+          variables: { token: refreshToken },
+        });
+        const newTokens = newTokensResponse.data.data.refresh as {
+          accessToken: string;
+          refreshToken: string;
+        };
+        token = newTokens.accessToken;
+        refreshToken = newTokens.refreshToken;
+        localStorage.setItem('accessToken', token);
+        localStorage.setItem('refreshToken', refreshToken);
+      }
+
+      return {
+        headers: {
+          ...headers,
+          Authorization: 'Bearer ' + token,
+        },
+      };
+    });
+
+    return forward(operation);
+  });
+
+  client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: ApolloLink.from([authMiddleware, httpLink]),
   });
 
   return client;

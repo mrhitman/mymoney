@@ -12,8 +12,13 @@ export class BudgetsTaskService {
    * Every month
    */
   @Cron('0 0 1 * *')
-  public async pushRepeatableTransactions() {
+  public async processBudgets() {
     const users = await User.query();
-    await Promise.all(users.map(this.service.createBudgetFromActiveTemplate));
+    await Promise.all(users.map(
+      user => Promise.all([
+        this.service.disableBudget(user),
+        this.service.createBudgetFromActiveTemplate(user)
+      ])
+    ));
   }
 }

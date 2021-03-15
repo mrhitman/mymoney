@@ -164,4 +164,13 @@ export class BudgetsService {
       userId: user.id,
     });
   }
+
+  public async disableBudget(user: User) {
+    await Budget.query().update({
+      active: false,
+    }).where({
+      userId: user.id,
+      active: true
+    });
+  }
 }

@@ -12,7 +12,7 @@ const tables = {
   users: 'user',
   wallets: 'wallet',
   wallets_history: 'wallet_history',
-  user_budget_templates: 'user_budget_template'
+  budget_templates: 'budget_template'
 }
 
 export async function up(knex: Knex): Promise<any> {

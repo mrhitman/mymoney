@@ -2,7 +2,7 @@ import * as Knex from "knex";
 
 
 export async function up(knex: Knex): Promise<any> {
-  await knex.schema.createTable('user_budget_templates', (t) => {
+  await knex.schema.createTable('budget_templates', (t) => {
     t.string('id').primary();
     t.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
     t.string('description').notNullable();

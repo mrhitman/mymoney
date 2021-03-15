@@ -2,7 +2,7 @@ import { Model } from 'objection';
 import { BudgetCategory } from './types';
 import { budgetCategoriesJsonSchema } from './misc';
 
-export class UserBudgetTemplate extends Model {
+export class BudgetTemplate extends Model {
   public id: string;
   public userId: number;
   public outcomes: BudgetCategory[];
@@ -10,13 +10,11 @@ export class UserBudgetTemplate extends Model {
   public savings: any;
   public active: boolean;
   public currencyId: string;
-  public date: Date;
-  public deadline: Date;
   public lastSync: Date;
   public createdAt: Date;
 
   static get tableName() {
-    return 'user_budget_template';
+    return 'budget_template';
   }
 
   static get jsonSchema() {
@@ -31,4 +29,4 @@ export class UserBudgetTemplate extends Model {
   }
 }
 
-export default UserBudgetTemplate;
+export default BudgetTemplate;

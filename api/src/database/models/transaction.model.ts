@@ -39,7 +39,7 @@ export class Transaction extends Model {
   public category: UserCategory;
 
   static get tableName() {
-    return 'transactions';
+    return 'transaction';
   }
 
   static get relationMappings() {
@@ -48,16 +48,16 @@ export class Transaction extends Model {
         relation: Model.HasOneRelation,
         modelClass: Currency,
         join: {
-          from: 'transactions.currencyId',
-          to: 'currencies.id',
+          from: `${this.tableName}.currencyId`,
+          to: `${Currency.tableName}.id`,
         },
       },
       category: {
         relation: Model.HasOneRelation,
         modelClass: UserCategory,
         join: {
-          from: 'transactions.categoryId',
-          to: 'user_categories.id',
+          from: `${this.tableName}.categoryId`,
+          to: `${UserCategory.tableName}.id`,
         },
       },
     };

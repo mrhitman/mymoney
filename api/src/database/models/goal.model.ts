@@ -15,7 +15,7 @@ export class Goal extends Model {
   public wallet: Wallet;
 
   static get tableName() {
-    return 'goals';
+    return 'goal';
   }
 
   static get relationMappings() {
@@ -24,8 +24,8 @@ export class Goal extends Model {
         relation: Model.HasOneRelation,
         modelClass: Wallet,
         join: {
-          from: 'goals.walletId',
-          to: 'wallets.id',
+          from: `${this.tableName}.walletId`,
+          to: `${Wallet.tableName}.id`,
         },
       },
     };

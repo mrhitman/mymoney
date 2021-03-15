@@ -11,7 +11,7 @@ export class WalletHistory extends Model {
   public wallet: Wallet;
 
   static get tableName() {
-    return 'wallets_history';
+    return 'wallet_history';
   }
 
   static get relationMappings() {

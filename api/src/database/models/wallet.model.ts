@@ -23,7 +23,7 @@ export class Wallet extends Model {
   public deletedAt: Date;
 
   static get tableName() {
-    return 'wallets';
+    return 'wallet';
   }
 
   static get jsonSchema() {

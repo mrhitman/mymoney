@@ -20,7 +20,7 @@ export class BankConnector extends Model {
   public user: User;
 
   static get tableName() {
-    return 'bank_connectors';
+    return 'bank_connector';
   }
 
   static get relationMappings() {
@@ -29,8 +29,8 @@ export class BankConnector extends Model {
         relation: Model.HasOneRelation,
         modelClass: User,
         join: {
-          from: 'bank_connectors.userId',
-          to: 'users.id',
+          from: `${this.tableName}.userId`,
+          to: `${User.tableName}.id`,
         },
       },
     };

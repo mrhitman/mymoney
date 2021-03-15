@@ -9,7 +9,7 @@ export class Currency extends Model {
   public flagCode: string;
 
   static get tableName() {
-    return 'currencies';
+    return 'currency';
   }
 }
 

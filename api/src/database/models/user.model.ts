@@ -16,7 +16,7 @@ export class User extends Model {
   public deletedAt: Date;
 
   static get tableName() {
-    return 'users';
+    return 'user';
   }
 
   static get jsonSchema() {

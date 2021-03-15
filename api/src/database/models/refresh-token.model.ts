@@ -10,7 +10,7 @@ export class RefreshToken extends Model {
     return ['token'];
   }
   static get tableName() {
-    return 'refresh_tokens';
+    return 'refresh_token';
   }
 }
 

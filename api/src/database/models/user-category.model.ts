@@ -19,7 +19,7 @@ export class UserCategory extends Model {
   public baseCategory: Category;
 
   static get tableName() {
-    return 'user_categories';
+    return 'user_category';
   }
 
   static get relationMappings() {
@@ -28,8 +28,8 @@ export class UserCategory extends Model {
         relation: Model.HasOneRelation,
         modelClass: Category,
         join: {
-          from: 'user_categories.categoryId',
-          to: 'categories.id',
+          from: `${this.tableName}.categoryId`,
+          to: `${Category.tableName}.id`,
         },
       },
     };

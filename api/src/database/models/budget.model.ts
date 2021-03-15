@@ -20,7 +20,7 @@ export class Budget extends Model {
   public createdAt: Date;
 
   static get tableName() {
-    return 'budgets';
+    return 'budget';
   }
 
   static get jsonSchema() {

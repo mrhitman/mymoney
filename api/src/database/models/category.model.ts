@@ -23,7 +23,7 @@ export class Category extends Model {
   public codes: number[];
 
   static get tableName() {
-    return 'categories';
+    return 'category';
   }
 
   static get jsonSchema() {

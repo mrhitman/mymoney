@@ -7,6 +7,10 @@ import { CategoryFragment, useGetCategoriesQuery } from 'src/generated/graphql';
 import CategoryIcon from '../misc/CategoryIcon';
 import AddCategory from './AddCategory';
 import EditCategory from './EditCategory';
+import {
+  GetCategoriesDocument,
+  GetCategoriesQuery,
+} from '../../generated/graphql';
 
 export const Categories: FC = () => {
   const { t } = useTranslation();
@@ -15,10 +19,10 @@ export const Categories: FC = () => {
     order: 'descend',
     field: 'name',
   });
-  console.log({
-    f: sorter.columnKey,
-    d: sorter.order,
-  });
+  const [filter, setFilter] = useState<{
+    field: string;
+    value: string;
+  } | null>(null);
   return (
     <Row>
       <Col offset={22} span={2} style={{ marginBottom: 10 }}>
@@ -36,7 +40,12 @@ export const Categories: FC = () => {
             data?.categories
               ?.filter(
                 (c) =>
-                  !['TRANSFER_IN', 'TRANSFER_OUT', 'TRANSFER_SYS', 'SYSTEM_EMPTY'].includes(c.name),
+                  ![
+                    'TRANSFER_IN',
+                    'TRANSFER_OUT',
+                    'TRANSFER_SYS',
+                    'SYSTEM_EMPTY',
+                  ].includes(c.name),
               )
               .sort((a: any, b: any) => {
                 return (
@@ -77,6 +86,20 @@ export const Categories: FC = () => {
             title={t('type')}
             dataIndex="type"
             key="type"
+            filters={[
+              {
+                text: t('income'),
+                value: 'income',
+              },
+              {
+                text: t('outcome'),
+                value: 'outcome',
+              },
+            ]}
+            onFilter={(
+              value,
+              record: GetCategoriesQuery['categories'][number],
+            ) => record.type === value}
             render={(type) => t(type)}
           />
           <Table.Column

@@ -24,7 +24,7 @@ export class BanksTaskService {
       })
       .where((subquery) =>
         subquery
-          .where('syncAt', '<', raw("now() - bank_connectors.interval * interval '1 second'"))
+          .where('syncAt', '<', raw("now() - bank_connector.interval * interval '1 second'"))
           .orWhereNull('syncAt'),
       );
 

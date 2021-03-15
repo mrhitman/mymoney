@@ -46,13 +46,13 @@ export class TaskService {
     } while (wallets.length < batchSize);
   }
 
-  @Cron('0 */15 * * * *')
+  @Cron('0 */29 * * * *')
   public async refreshHeroku() {
     Logger.log('Refresh heroku', 'App');
 
-    // await Promise.all([
-    // axios.get('https://mymoney-server-api.herokuapp.com/graphql').catch(console.log),
-    // axios.get('https://mymoney-accounting.herokuapp.com/').catch(console.log),
-    // ]);
+    await Promise.all([
+      axios.get('https://mymoney-server-api.herokuapp.com/graphql').catch(console.log),
+      axios.get('https://mymoney-accounting.herokuapp.com/').catch(console.log),
+    ]);
   }
 }

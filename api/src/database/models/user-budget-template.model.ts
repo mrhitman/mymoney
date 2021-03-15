@@ -1,9 +1,8 @@
 import { Model } from 'objection';
-import { budgetCategoriesJsonSchema } from './misc';
 import { BudgetCategory } from './types';
+import { budgetCategoriesJsonSchema } from './misc';
 
-
-export class Budget extends Model {
+export class UserBudgetTemplate extends Model {
   public id: string;
   public userId: number;
   public outcomes: BudgetCategory[];
@@ -17,7 +16,7 @@ export class Budget extends Model {
   public createdAt: Date;
 
   static get tableName() {
-    return 'budget';
+    return 'user_budget_template';
   }
 
   static get jsonSchema() {
@@ -27,11 +26,9 @@ export class Budget extends Model {
         outcomes: budgetCategoriesJsonSchema,
         incomes: budgetCategoriesJsonSchema,
         savings: { type: 'array' },
-        date: { type: 'date-time' },
-        deadline: { type: 'date-time' },
       },
     };
   }
 }
 
-export default Budget;
+export default UserBudgetTemplate;

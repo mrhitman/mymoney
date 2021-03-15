@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import moment from 'moment';
 import { raw } from 'objection';
+import BudgetTemplate from 'src/database/models/budget-template.model';
 import Budget from '../database/models/budget.model';
 import Transaction from '../database/models/transaction.model';
 import User from '../database/models/user.model';
@@ -131,7 +133,7 @@ export class BudgetsService {
           o.categoryId === trx.categoryId ? { ...o, progress: o.progress + trx.amount } : o,
         ),
       });
-    } catch (e) {}
+    } catch (e) { }
   }
 
   public async income(user: User, trx: Transaction) {
@@ -142,6 +144,24 @@ export class BudgetsService {
       if (budgetCategory) {
         budgetCategory.progress += trx.amount;
       }
-    } catch (e) {}
+    } catch (e) { }
+  }
+
+  public async createBudgetFromActiveTemplate(user: User) {
+    const template = await BudgetTemplate
+      .query()
+      .where({ userId: user.id, active: true })
+      .orderBy('date')
+      .first();
+
+    await Budget.query().insert({
+      incomes: template?.incomes || [],
+      outcomes: template?.outcomes || [],
+      savings: template?.savings || [],
+      date: moment().startOf('month').toDate(),
+      deadline: moment().endOf('month').toDate(),
+      active: !!template,
+      userId: user.id,
+    });
   }
 }

@@ -2,7 +2,7 @@ import { EyeFilled } from '@ant-design/icons';
 import { Col, Popover, Row, Table } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -31,6 +31,9 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
     amountFrom: undefined,
     amountTo: undefined,
   });
+  const [transactions, setTransactions] = useState<
+    GetTransactionsQuery['transactions']['items']
+  >([]);
   const { loading, data } = useGetTransactionsQuery({
     variables: {
       type,
@@ -48,10 +51,19 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
     },
   });
   const { t } = useTranslation();
+  useEffect(() => {
+    if (data?.transactions.items) {
+      setTransactions(data.transactions.items);
+    }
+  }, [data?.transactions.items]);
 
   return (
     <>
-      <FilterGroup onFilter={setFilters} onReset={() => setCurrent(1)} type={type} />
+      <FilterGroup
+        onFilter={setFilters}
+        onReset={() => setCurrent(1)}
+        type={type}
+      />
       <Table
         bordered
         showSorterTooltip
@@ -68,7 +80,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           setPageSize(pagination.pageSize || 1);
           setSorter(sorter as SorterResult<Transaction>);
         }}
-        dataSource={data?.transactions?.items || []}
+        dataSource={transactions}
       >
         <Table.Column
           title="id"
@@ -84,7 +96,10 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
         <Table.Column
           title={t('wallet')}
           render={(transaction) =>
-            [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ')
+            [
+              transaction.sourceWallet?.name,
+              transaction.destinationWallet?.name,
+            ].join(' ')
           }
         />
         <Table.Column
@@ -111,7 +126,9 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           dataIndex="amount"
           key="amount"
           sorter
-          render={(_, record: Transaction) => <TransactionAmount record={record} />}
+          render={(_, record: Transaction) => (
+            <TransactionAmount record={record} />
+          )}
         />
         <Table.Column
           title={t('description')}
@@ -120,7 +137,11 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           width="24%"
           sorter
           render={(desc) =>
-            desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            desc ? (
+              desc
+            ) : (
+              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            )
           }
         />
         <Table.Column

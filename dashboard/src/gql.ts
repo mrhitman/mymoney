@@ -36,7 +36,13 @@ export function getClient(uri: string) {
           query: print(RefreshDocument),
           variables: { token: refreshToken },
         });
-        const newTokens = newTokensResponse.data.data.refresh as {
+
+        if (!newTokensResponse.data.data) {
+          localStorage.clear();
+          return { headers };
+        }
+
+        const newTokens = newTokensResponse.data.data?.refresh as {
           accessToken: string;
           refreshToken: string;
         };

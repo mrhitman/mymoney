@@ -46,7 +46,7 @@ export class TaskService {
     } while (wallets.length < batchSize);
   }
 
-  @Cron('0 */29 * * * *')
+  @Cron('0 */15 * * * *')
   public async refreshHeroku() {
     Logger.log('Refresh heroku', 'App');
 

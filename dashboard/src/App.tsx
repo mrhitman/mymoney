@@ -7,12 +7,14 @@ import './i18n';
 import IconStyles from './IconStyles';
 import { getClient } from './gql';
 
-const uri = process.env.REACT_APP_SERVER! + 'graphql';
+const uri =
+  // eslint-disable-next-line no-undef
+  (process.env.REACT_APP_SERVER || 'http://localhost:4000/') + 'graphql';
 const client = getClient(uri);
 
 const App: FC = () => {
   return (
-    <ApolloProvider client={client as any}>
+    <ApolloProvider client={client}>
       <IconStyles />
       <Routes />
     </ApolloProvider>

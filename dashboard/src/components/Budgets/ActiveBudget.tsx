@@ -42,20 +42,28 @@ const ActiveBudget: FC = () => {
     );
   }
 
-  const incomes = data?.activeBudget.incomes.reduce((acc, v) => v.progress + acc, 0) || 0;
-  const outcomes = data?.activeBudget.outcomes.reduce((acc, v) => v.progress + acc, 0) || 0;
+  const incomes =
+    data?.activeBudget.incomes.reduce((acc, v) => v.progress + acc, 0) || 0;
+  const outcomes =
+    data?.activeBudget.outcomes.reduce((acc, v) => v.progress + acc, 0) || 0;
   const available = incomes - outcomes;
   return (
     <Row gutter={10}>
       <Col>
-        <Typography.Title level={2}>Active budget</Typography.Title>
+        <Typography.Title level={2}>{t('Active budget')}</Typography.Title>
         <Divider />
         <Row gutter={[20, 20]}>
           <Col>
-            <Statistic title="Start date" value={moment(data?.activeBudget.date).format('L')} />
+            <Statistic
+              title="Start date"
+              value={moment(data?.activeBudget.date).format('L')}
+            />
           </Col>
           <Col>
-            <Statistic title="End date" value={moment(data?.activeBudget.deadline).format('L')} />
+            <Statistic
+              title="End date"
+              value={moment(data?.activeBudget.deadline).format('L')}
+            />
           </Col>
           <Col>
             <Statistic

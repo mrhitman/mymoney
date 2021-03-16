@@ -4,13 +4,10 @@ import { SorterResult } from 'antd/lib/table/interface';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CategoryFragment, useGetCategoriesQuery } from 'src/generated/graphql';
+import { GetCategoriesQuery } from '../../generated/graphql';
 import CategoryIcon from '../misc/CategoryIcon';
 import AddCategory from './AddCategory';
 import EditCategory from './EditCategory';
-import {
-  GetCategoriesDocument,
-  GetCategoriesQuery,
-} from '../../generated/graphql';
 
 export const Categories: FC = () => {
   const { t } = useTranslation();
@@ -19,10 +16,6 @@ export const Categories: FC = () => {
     order: 'descend',
     field: 'name',
   });
-  const [filter, setFilter] = useState<{
-    field: string;
-    value: string;
-  } | null>(null);
   return (
     <Row>
       <Col offset={22} span={2} style={{ marginBottom: 10 }}>

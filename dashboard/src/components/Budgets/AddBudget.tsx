@@ -3,7 +3,6 @@ import { Button, Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC, useState } from 'react';
 import BudgetForm from './BudgetForm';
-import moment from 'moment';
 
 interface BudgetCategory {
   categoryId: string;
@@ -18,13 +17,13 @@ interface BudgetFormValues {
   outcomes: BudgetCategory[];
 }
 
-const initialValues: BudgetFormValues = {
-  date: moment().startOf('month').toDate(),
-  deadline: moment().startOf('month').toDate(),
-  currencyId: '',
-  incomes: [],
-  outcomes: [],
-};
+// const initialValues: BudgetFormValues = {
+//   date: moment().startOf('month').toDate(),
+//   deadline: moment().startOf('month').toDate(),
+//   currencyId: '',
+//   incomes: [],
+//   outcomes: [],
+// };
 
 export const AddBudget: FC<{}> = (props) => {
   const [visible, setVisible] = useState(false);

@@ -1,5 +1,9 @@
-import { DeleteOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Card, Space, Col, Popconfirm, Progress, Row, Typography } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Col, Popconfirm, Progress, Typography } from 'antd';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import CategoryIcon from 'src/components/misc/CategoryIcon';
@@ -21,7 +25,10 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
   const [removeOutcomeBudget] = useRemoveOutcomeBudgetMutation();
   const [removeIncomeBudget] = useRemoveIncomeBudgetMutation();
 
-  function removeBudgetCategory(categoryId: string, type: CategoryType | null | undefined) {
+  function removeBudgetCategory(
+    categoryId: string,
+    type: CategoryType | null | undefined,
+  ) {
     switch (type) {
       case CategoryType.Outcome:
         return removeOutcomeBudget({ variables: { categoryId } });
@@ -29,8 +36,12 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
         return removeIncomeBudget({ variables: { categoryId } });
     }
   }
-  const progress = +((100 * budgetCategory.progress) / budgetCategory.amount).toFixed(2);
-  const readyStatus = budgetCategory.category.type === 'income' ? 'success' : 'exception';
+  const progress = +(
+    (100 * budgetCategory.progress) /
+    budgetCategory.amount
+  ).toFixed(2);
+  const readyStatus =
+    budgetCategory.category.type === 'income' ? 'success' : 'exception';
 
   return (
     <Col id={budgetCategory.category.id}>
@@ -39,7 +50,10 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
           <Popconfirm
             title={`Are you sure to delete this budget category?`}
             onConfirm={(e) => {
-              removeBudgetCategory(budgetCategory.category.id, budgetCategory.category.type);
+              removeBudgetCategory(
+                budgetCategory.category.id,
+                budgetCategory.category.type,
+              );
               e?.preventDefault();
             }}
             okText="Yes, I want"
@@ -62,7 +76,9 @@ const BudgetCategory: FC<BudgetCategoryProps> = ({ budgetCategory }) => {
           }}
         >
           <Typography>Amount: {budgetCategory.amount.toFixed(2)}</Typography>
-          <Typography>Progress: {budgetCategory.progress.toFixed(2)}</Typography>
+          <Typography>
+            Progress: {budgetCategory.progress.toFixed(2)}
+          </Typography>
           <br />
           <div style={{ marginLeft: 31 }}>
             <Progress

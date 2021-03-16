@@ -55,7 +55,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
     if (data?.transactions.items) {
       setTransactions(data.transactions.items);
     }
-  }, [data?.transactions.items]);
+  }, [data, data?.transactions.items]);
 
   return (
     <>

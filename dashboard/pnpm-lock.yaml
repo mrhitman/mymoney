@@ -37,6 +37,7 @@ dependencies:
   react-router: 5.2.0_react@16.14.0
   react-router-dom: 5.2.0_react@16.14.0
   react-scripts: 3.4.1_typescript@3.9.7
+  react-token-auth: 1.1.8
   react-world-flags: 1.4.0_react@16.14.0
   typescript: 3.9.7
   uuid: 8.3.2
@@ -13766,6 +13767,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
+  /react-token-auth/1.1.8:
+    dev: false
+    resolution:
+      integrity: sha512-stS7VbLu57qTC4H2R0Cd7nxuhXeQ2oR3oanXf+sX46BTq6N3ecKfmgTDnfJ0ce+QNX4tWUSbgqMzEPDbkmp7KA==
   /react-world-flags/1.4.0_react@16.14.0:
     dependencies:
       react: 16.14.0
@@ -16726,6 +16731,7 @@ specifiers:
   react-router: ^5.2.0
   react-router-dom: ^5.2.0
   react-scripts: 3.4.1
+  react-token-auth: ^1.1.8
   react-world-flags: ^1.4.0
   typescript: 3.9.7
   uuid: ^8.1.0

@@ -1,5 +1,10 @@
 import React, { FC } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { Accounting } from 'src/components/Accounting/Accounting';
 import { AnalysisByCategory } from 'src/components/Analysis/AnalysisByCategory/AnalysisByCategory';
 import { AnalysisByCurrency } from 'src/components/Analysis/AnalysisByCurrency/AnalysisByCurrency';
@@ -18,126 +23,119 @@ import MainPage from '../MainPage/MainPage';
 import Register from '../Register/Register';
 import ViewTransaction from '../Transactions/ViewTransaction';
 import WalletTransactions from '../Transactions/WalletTransactions';
-import PrivateRoute from './PrivateRoute';
 import RecoverPassword from '../Login/RecoverPassword';
 import ChangePassword from '../Login/ChangePassword';
+import { useAuth } from 'src/auth';
 
-const Routes: FC = () => (
-  <Router>
-    <Switch>
-      <PrivateRoute path="/" exact>
-        <Layout>
-          <MainPage />
-        </Layout>
-      </PrivateRoute>
+const Routes: FC = () => {
+  const [logged] = useAuth();
 
-      <PrivateRoute path="/info" exact>
-        <Layout activePage="info">
-          <Info />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/accounting" exact>
-        <Layout activePage="accounting">
-          <Accounting />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/incomes">
-        <Layout activePage="incomes">
-          <TransactionList type={TransactionType.Income} />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/outcomes">
-        <Layout activePage="outcomes">
-          <TransactionList type={TransactionType.Outcome} />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/operations/:walletId" exact>
-        <Layout activePage="operations">
-          <WalletTransactions />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/operation/:trxId" exact>
-        <Layout activePage="operations">
-          <ViewTransaction />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/categories" exact>
-        <Layout activePage="categories">
-          <Categories />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/scheduler" exact>
-        <Layout activePage="scheduler">
-          <CalendarView />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/analysis" exact>
-        <Layout activePage="analysis">
-          <div />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/connectors" exact>
-        <Layout activePage="connectors">
-          <Connectors />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/currencies" exact>
-        <Layout activePage="currencies">
-          <Currencies />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/analysis-category" exact>
-        <Layout activePage="analysis-category">
-          <AnalysisByCategory />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/analysis-currency" exact>
-        <Layout activePage="analysis-currency">
-          <AnalysisByCurrency />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/settings" exact>
-        <Layout activePage="settings">
-          <Settings />
-        </Layout>
-      </PrivateRoute>
-
-      <PrivateRoute path="/budgets/active" exact>
-        <Layout activePage="active-budget">
-          <ActiveBudget />
-        </Layout>
-      </PrivateRoute>
-
-      <Route path="/login">
-        <Login />
-      </Route>
-
-      <Route path="/recover-password">
-        <RecoverPassword />
-      </Route>
-
-      <Route path="/change-password/:token">
-        <ChangePassword />
-      </Route>
-
-      <Route path="/register">
-        <Register />
-      </Route>
-    </Switch>
-  </Router>
-);
-
+  return (
+    <Router>
+      <Switch>
+        {logged ? (
+          <>
+            <Route path="/" exact>
+              <Layout>
+                <MainPage />
+              </Layout>
+            </Route>
+            <Route path="/info" exact>
+              <Layout activePage="info">
+                <Info />
+              </Layout>
+            </Route>
+            <Route path="/accounting" exact>
+              <Layout activePage="accounting">
+                <Accounting />
+              </Layout>
+            </Route>
+            <Route path="/incomes">
+              <Layout activePage="incomes">
+                <TransactionList type={TransactionType.Income} />
+              </Layout>
+            </Route>
+            <Route path="/outcomes">
+              <Layout activePage="outcomes">
+                <TransactionList type={TransactionType.Outcome} />
+              </Layout>
+            </Route>
+            <Route path="/operations/:walletId" exact>
+              <Layout activePage="operations">
+                <WalletTransactions />
+              </Layout>
+            </Route>
+            <Route path="/operation/:trxId" exact>
+              <Layout activePage="operations">
+                <ViewTransaction />
+              </Layout>
+            </Route>
+            <Route path="/categories" exact>
+              <Layout activePage="categories">
+                <Categories />
+              </Layout>
+            </Route>
+            <Route path="/scheduler" exact>
+              <Layout activePage="scheduler">
+                <CalendarView />
+              </Layout>
+            </Route>
+            <Route path="/analysis" exact>
+              <Layout activePage="analysis">
+                <div />
+              </Layout>
+            </Route>
+            <Route path="/connectors" exact>
+              <Layout activePage="connectors">
+                <Connectors />
+              </Layout>
+            </Route>
+            <Route path="/currencies" exact>
+              <Layout activePage="currencies">
+                <Currencies />
+              </Layout>
+            </Route>
+            <Route path="/analysis-category" exact>
+              <Layout activePage="analysis-category">
+                <AnalysisByCategory />
+              </Layout>
+            </Route>
+            <Route path="/analysis-currency" exact>
+              <Layout activePage="analysis-currency">
+                <AnalysisByCurrency />
+              </Layout>
+            </Route>
+            <Route path="/settings" exact>
+              <Layout activePage="settings">
+                <Settings />
+              </Layout>
+            </Route>
+            <Route path="/budgets/active" exact>
+              <Layout activePage="active-budget">
+                <ActiveBudget />
+              </Layout>
+            </Route>
+            <Redirect to="/" />
+          </>
+        ) : (
+          <>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/recover-password">
+              <RecoverPassword />
+            </Route>
+            <Route path="/change-password/:token">
+              <ChangePassword />
+            </Route>
+            <Route path="/register">
+              <Register />
+            </Route>
+            <Redirect to="/login" />
+          </>
+        )}
+      </Switch>
+    </Router>
+  );
+};
 export default Routes;

@@ -2,71 +2,27 @@ import {
   ApolloClient,
   ApolloLink,
   HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject,
+  InMemoryCache
 } from '@apollo/client';
-import decode from 'jwt-decode';
-import moment from 'moment';
-import axios from 'axios';
-import { RefreshDocument } from 'src/generated/graphql';
-import { print } from 'graphql';
+import { setContext } from '@apollo/client/link/context';
 
 export function getClient(uri: string) {
-  let client: ApolloClient<NormalizedCacheObject>;
   const httpLink = new HttpLink({
     uri,
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-    },
   });
 
-  const authMiddleware = new ApolloLink((operation, forward) => {
-    operation.setContext(async ({ headers = {} }) => {
-      let token = localStorage.getItem('accessToken');
-      let refreshToken = localStorage.getItem('refreshToken');
-
-      if (!token || !refreshToken) {
-        return headers;
+  const authLink = setContext((_, { headers }) => {
+    const tokens = localStorage.getItem('tokens');
+    return {
+      headers: {
+        ...headers,
+        authorization: tokens ? `Bearer ${JSON.parse(tokens).accessToken}` : "",
       }
-
-      const data = decode(token) as { exp: number };
-
-      if (data.exp < moment().unix()) {
-        const newTokensResponse = await axios.post(uri, {
-          query: print(RefreshDocument),
-          variables: { token: refreshToken },
-        });
-
-        if (!newTokensResponse.data.data) {
-          localStorage.clear();
-          return { headers };
-        }
-
-        const newTokens = newTokensResponse.data.data?.refresh as {
-          accessToken: string;
-          refreshToken: string;
-        };
-        token = newTokens.accessToken;
-        refreshToken = newTokens.refreshToken;
-        localStorage.setItem('accessToken', token);
-        localStorage.setItem('refreshToken', refreshToken);
-      }
-
-      return {
-        headers: {
-          ...headers,
-          Authorization: 'Bearer ' + token,
-        },
-      };
-    });
-
-    return forward(operation);
+    }
   });
 
-  client = new ApolloClient({
+  return new ApolloClient({
     cache: new InMemoryCache(),
-    link: ApolloLink.from([authMiddleware, httpLink]),
+    link: authLink.concat(httpLink)
   });
-
-  return client;
 }

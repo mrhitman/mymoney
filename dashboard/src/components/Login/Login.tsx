@@ -5,10 +5,6 @@ import LoginForm from './LoginForm';
 export const Login: FC = () => {
   const [redirect, setRedirect] = useState<string | null>(null);
 
-  if (localStorage.getItem('accessToken')) {
-    return <Redirect to="/" exact />;
-  }
-
   if (redirect) {
     return <Redirect to={redirect} exact />;
   }

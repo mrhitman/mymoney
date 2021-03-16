@@ -24,6 +24,7 @@ import React, { FC, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useGetProfileQuery } from 'src/generated/graphql';
 import { useTranslation } from 'react-i18next';
+import { logout } from 'src/auth';
 
 export type ActivePage =
   | 'info'
@@ -60,22 +61,8 @@ const MenuMap: Record<string, string> = {
 };
 
 const Layout: FC<LayoutProps> = ({ activePage, children }) => {
-  const [redirect, setRedirect] = useState<string | undefined>(undefined);
   const { data } = useGetProfileQuery();
   const { t } = useTranslation();
-
-  if (redirect) {
-    return <Redirect to={redirect} exact />;
-  }
-
-  if (!localStorage.getItem('accessToken')) {
-    return <Redirect to="/login" exact />;
-  }
-
-  const logout = () => {
-    localStorage.clear();
-    setRedirect('/login');
-  };
 
   return (
     <AntdLayout>
@@ -84,7 +71,10 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
           <div className="logo" />v 0.0.4
         </Link>
         <Menu theme="dark" mode="horizontal" style={{ float: 'right' }}>
-          <Menu.SubMenu key="1" icon={<Avatar src={data?.profile.imageUrl?.toString()} />}>
+          <Menu.SubMenu
+            key="1"
+            icon={<Avatar src={data?.profile.imageUrl?.toString()} />}
+          >
             <Menu.Item key="2" icon={<SettingOutlined />}>
               <Link to="/settings">{t('settings')}</Link>
             </Menu.Item>
@@ -103,7 +93,11 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             selectedKeys={activePage ? [activePage] : activePage}
             style={{ height: '100vh', borderRight: 0 }}
           >
-            <Menu.SubMenu key="ledgers" icon={<DollarOutlined />} title={t('ledgers')}>
+            <Menu.SubMenu
+              key="ledgers"
+              icon={<DollarOutlined />}
+              title={t('ledgers')}
+            >
               <Menu.Item key="accounting" icon={<WalletOutlined />}>
                 <Link to="/accounting">{t('wallets')}</Link>
               </Menu.Item>
@@ -111,7 +105,11 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 {t('goals')}
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="transactions" icon={<LaptopOutlined />} title={t('transactions')}>
+            <Menu.SubMenu
+              key="transactions"
+              icon={<LaptopOutlined />}
+              title={t('transactions')}
+            >
               <Menu.Item key="outcomes" icon={<FallOutlined />}>
                 <Link to="/outcomes">{t('outcomes')}</Link>
               </Menu.Item>
@@ -122,7 +120,11 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 {t('transfers')}
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="sub3" icon={<TableOutlined />} title={t('budget')}>
+            <Menu.SubMenu
+              key="sub3"
+              icon={<TableOutlined />}
+              title={t('budget')}
+            >
               <Menu.Item key="9" icon={<CarryOutOutlined />}>
                 <Link to="/budgets/active">{t('current')}</Link>
               </Menu.Item>
@@ -133,8 +135,15 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 {t('archive')}
               </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="analys" icon={<AreaChartOutlined />} title={t('statistics')}>
-              <Menu.Item key="analysis-by-categories" icon={<PieChartOutlined />}>
+            <Menu.SubMenu
+              key="analys"
+              icon={<AreaChartOutlined />}
+              title={t('statistics')}
+            >
+              <Menu.Item
+                key="analysis-by-categories"
+                icon={<PieChartOutlined />}
+              >
                 <Link to="/analysis-category">{t('by_categories')}</Link>
               </Menu.Item>
               <Menu.Item key="16" icon={<PieChartOutlined />}>

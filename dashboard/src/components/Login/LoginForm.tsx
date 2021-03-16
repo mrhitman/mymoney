@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useLoginMutation } from 'src/generated/graphql';
 import { loginLayout, loginTailLayout } from '../misc/layouts';
+import { login as authLogin } from 'src/auth';
 
 export interface LoginFormValues {
   email: string;
@@ -21,8 +22,10 @@ const LoginForm: FC<LoginFormProps> = (props) => {
     const { data } = await login({ variables: values });
 
     if (data) {
-      localStorage.setItem('accessToken', data.login.accessToken);
-      localStorage.setItem('refreshToken', data.login.refreshToken);
+      authLogin({
+        accessToken: data.login.accessToken,
+        refreshToken: data.login.refreshToken,
+      });
       props.afterLogin();
     }
   };
@@ -58,12 +61,20 @@ const LoginForm: FC<LoginFormProps> = (props) => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item {...loginTailLayout} name="remember" valuePropName="checked">
+          <Form.Item
+            {...loginTailLayout}
+            name="remember"
+            valuePropName="checked"
+          >
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
           <Form.Item {...loginTailLayout}>
-            <Button type="primary" htmlType="submit" onSubmit={bag.handleSubmit}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onSubmit={bag.handleSubmit}
+            >
               Submit
             </Button>
             {'    or    '}

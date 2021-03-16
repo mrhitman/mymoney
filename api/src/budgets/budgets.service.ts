@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import moment from 'moment';
 import { raw } from 'objection';
 import BudgetTemplate from 'src/database/models/budget-template.model';
+import { v4 as uuid } from 'uuid';
 import Budget from '../database/models/budget.model';
 import Transaction from '../database/models/transaction.model';
 import User from '../database/models/user.model';
@@ -151,10 +152,10 @@ export class BudgetsService {
     const template = await BudgetTemplate
       .query()
       .where({ userId: user.id, active: true })
-      .orderBy('date')
       .first();
 
-    await Budget.query().insert({
+    return Budget.query().insert({
+      id: uuid(),
       incomes: template?.incomes || [],
       outcomes: template?.outcomes || [],
       savings: template?.savings || [],

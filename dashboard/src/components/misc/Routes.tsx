@@ -50,6 +50,11 @@ const Routes: FC = () => {
                 <Accounting />
               </Layout>
             </Route>
+            <Route path="/goals" exact>
+              <Layout activePage="goals">
+                <Accounting />
+              </Layout>
+            </Route>
             <Route path="/incomes">
               <Layout activePage="incomes">
                 <TransactionList type={TransactionType.Income} />

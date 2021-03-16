@@ -10,7 +10,7 @@ import { BudgetUpdate } from './input/budget-update';
 
 @Resolver()
 export class BudgetsResolver {
-  constructor(private readonly service: BudgetsService) {}
+  constructor(private readonly service: BudgetsService) { }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [BudgetDto])
@@ -64,5 +64,13 @@ export class BudgetsResolver {
     @Args('categoryId') categoryId: string,
   ) {
     return this.service.removeIncomeCategory(user, categoryId);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => BudgetDto)
+  public async budgetCreateFromActiveTemplate(
+    @CurrentUser() user: User,
+  ) {
+    return this.service.createBudgetFromActiveTemplate(user);
   }
 }

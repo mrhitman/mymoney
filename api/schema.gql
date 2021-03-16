@@ -265,6 +265,7 @@ type Mutation {
   budgetRemoveOutcomeCategory(categoryId: String!): Budget!
   budgetAddIncomeCategory(categoryData: BudgetCategoryCreate!): Budget!
   budgetRemoveIncomeCategory(categoryId: String!): Budget!
+  budgetCreateFromActiveTemplate: Budget!
   createGoal(createGoalData: GoalCreate!): Goal!
   updateGoal(updateGoalData: GoalUpdate!): Goal!
   deleteGoal(id: String!): Goal!

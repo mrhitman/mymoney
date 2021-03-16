@@ -29,6 +29,7 @@ import { useGetProfileQuery } from 'src/generated/graphql';
 export type ActivePage =
   | 'info'
   | 'accounting'
+  | 'goals'
   | 'planning'
   | 'scheduler'
   | 'operations'
@@ -55,6 +56,7 @@ interface LayoutProps {
 
 const MenuMap: Record<string, string> = {
   accounting: 'ledgers',
+  goals: 'ledgers',
   incomes: 'transactions',
   outcomes: 'transactions',
   'analys-by-category': 'analys',
@@ -102,7 +104,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
                 <Link to="/accounting">{t('wallets')}</Link>
               </Menu.Item>
               <Menu.Item key="2" icon={<TrophyOutlined />}>
-                {t('goals')}
+                <Link to="/goals">{t('goals')}</Link>
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu

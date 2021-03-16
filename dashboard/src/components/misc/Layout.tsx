@@ -20,11 +20,11 @@ import {
   WalletOutlined,
 } from '@ant-design/icons';
 import { Avatar, Layout as AntdLayout, Menu } from 'antd';
-import React, { FC, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { useGetProfileQuery } from 'src/generated/graphql';
+import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { logout } from 'src/auth';
+import { useGetProfileQuery } from 'src/generated/graphql';
 
 export type ActivePage =
   | 'info'

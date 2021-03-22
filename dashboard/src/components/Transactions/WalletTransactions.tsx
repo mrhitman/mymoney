@@ -26,7 +26,7 @@ const WalletTransactions: React.FC = () => {
   const { t } = useTranslation();
   return (
     <>
-      <Breadcrumb style={{ margin: '16px 0' }}>
+      <Breadcrumb className="breadcrumb">
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
@@ -39,7 +39,10 @@ const WalletTransactions: React.FC = () => {
         <Col offset={20} />
         <Col span={4}>
           <Card>
-            <Card.Meta title={data?.wallet.name} description={data?.wallet.description} />
+            <Card.Meta
+              title={data?.wallet.name}
+              description={data?.wallet.description}
+            />
           </Card>
         </Col>
       </Row>
@@ -96,9 +99,10 @@ const WalletTransactions: React.FC = () => {
           title="Amount"
           dataIndex="amount"
           key="amount"
-          render={(_, record: GetTransactionsQuery['transactions']['items'][number]) => (
-            <TransactionAmount record={record} />
-          )}
+          render={(
+            _,
+            record: GetTransactionsQuery['transactions']['items'][number],
+          ) => <TransactionAmount record={record} />}
         />
         <Table.Column
           title="Description"
@@ -106,7 +110,11 @@ const WalletTransactions: React.FC = () => {
           key="description"
           width="24%"
           render={(desc) =>
-            desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            desc ? (
+              desc
+            ) : (
+              <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+            )
           }
         />
         <Table.Column

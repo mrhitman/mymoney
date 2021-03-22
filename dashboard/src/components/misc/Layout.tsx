@@ -103,7 +103,7 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               <Menu.Item key="accounting" icon={<WalletOutlined />}>
                 <Link to="/accounting">{t('wallets')}</Link>
               </Menu.Item>
-              <Menu.Item key="2" icon={<TrophyOutlined />}>
+              <Menu.Item key="goals" icon={<TrophyOutlined />}>
                 <Link to="/goals">{t('goals')}</Link>
               </Menu.Item>
             </Menu.SubMenu>

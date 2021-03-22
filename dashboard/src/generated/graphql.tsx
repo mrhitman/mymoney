@@ -249,6 +249,11 @@ export type QueryWalletArgs = {
 };
 
 
+export type QueryCurrenciesArgs = {
+  name?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryCurrencyArgs = {
   id: Scalars['String'];
 };
@@ -1004,6 +1009,30 @@ export type GetFilterGroupQuery = (
   )> }
 );
 
+export type GoalFullFragment = (
+  { __typename?: 'Goal' }
+  & Pick<Goal, 'id' | 'goal' | 'progress' | 'name'>
+  & { pockets: Array<(
+    { __typename?: 'Pocket' }
+    & Pick<Pocket, 'amount'>
+    & { currency: (
+      { __typename?: 'Currency' }
+      & Pick<Currency, 'id' | 'name' | 'symbol'>
+    ) }
+  )> }
+);
+
+export type GetGoalsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGoalsQuery = (
+  { __typename?: 'Query' }
+  & { goals: Array<(
+    { __typename?: 'Goal' }
+    & GoalFullFragment
+  )> }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1344,6 +1373,22 @@ export const ConnectorFragmentDoc = gql`
   meta
   enabled
   createdAt
+}
+    `;
+export const GoalFullFragmentDoc = gql`
+    fragment goalFull on Goal {
+  id
+  goal
+  progress
+  name
+  pockets {
+    amount
+    currency {
+      id
+      name
+      symbol
+    }
+  }
 }
     `;
 export const ProfileFragmentDoc = gql`
@@ -2053,6 +2098,38 @@ export function useGetFilterGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetFilterGroupQueryHookResult = ReturnType<typeof useGetFilterGroupQuery>;
 export type GetFilterGroupLazyQueryHookResult = ReturnType<typeof useGetFilterGroupLazyQuery>;
 export type GetFilterGroupQueryResult = Apollo.QueryResult<GetFilterGroupQuery, GetFilterGroupQueryVariables>;
+export const GetGoalsDocument = gql`
+    query getGoals {
+  goals {
+    ...goalFull
+  }
+}
+    ${GoalFullFragmentDoc}`;
+
+/**
+ * __useGetGoalsQuery__
+ *
+ * To run a query within a React component, call `useGetGoalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGoalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGoalsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetGoalsQuery(baseOptions?: Apollo.QueryHookOptions<GetGoalsQuery, GetGoalsQueryVariables>) {
+        return Apollo.useQuery<GetGoalsQuery, GetGoalsQueryVariables>(GetGoalsDocument, baseOptions);
+      }
+export function useGetGoalsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGoalsQuery, GetGoalsQueryVariables>) {
+          return Apollo.useLazyQuery<GetGoalsQuery, GetGoalsQueryVariables>(GetGoalsDocument, baseOptions);
+        }
+export type GetGoalsQueryHookResult = ReturnType<typeof useGetGoalsQuery>;
+export type GetGoalsLazyQueryHookResult = ReturnType<typeof useGetGoalsLazyQuery>;
+export type GetGoalsQueryResult = Apollo.QueryResult<GetGoalsQuery, GetGoalsQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(loginData: {email: $email, password: $password}) {

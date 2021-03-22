@@ -36,7 +36,7 @@ interface InfoResponse {
 
 @Injectable()
 export class CurrenciesService {
-  constructor(protected fixer: Fixer, @Inject(CACHE_MANAGER) private readonly cache) {}
+  constructor(protected fixer: Fixer, @Inject(CACHE_MANAGER) private readonly cache) { }
 
   public exchange(
     rates: GetRateResponse,
@@ -60,8 +60,12 @@ export class CurrenciesService {
     return this.exchange(rates, amount, fromCurrency.name, toCurrency.name);
   }
 
-  public async findAll() {
-    const currencies = await Currency.query();
+  public async findAll(name?: string) {
+    const currencies = Currency.query();
+
+    if (name) {
+      currencies.where({ name })
+    }
 
     return currencies;
   }

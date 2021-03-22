@@ -1,0 +1,20 @@
+fragment goalFull on Goal {
+  id
+  goal
+  progress
+  name
+  pockets {
+    amount
+    currency {
+      id
+      name
+      symbol
+    }
+  }
+}
+
+query getGoals {
+  goals {
+    ...goalFull
+  }
+}

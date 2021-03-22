@@ -5,11 +5,11 @@ import { CurrencyDto } from './dto/currency.dto';
 
 @Resolver(() => CurrencyDto)
 export class CurrenciesResolver {
-  constructor(private readonly service: CurrenciesService) {}
+  constructor(private readonly service: CurrenciesService) { }
 
   @Query(() => [CurrencyDto])
-  async currencies(): Promise<CurrencyDto[]> {
-    const currencies = await this.service.findAll();
+  async currencies(@Args('name', { nullable: true }) name: string): Promise<CurrencyDto[]> {
+    const currencies = await this.service.findAll(name);
     const rates = await this.service.rates();
 
     return currencies

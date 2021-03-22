@@ -6,6 +6,7 @@ import { AnalysisByCurrency } from 'src/components/Analysis/AnalysisByCurrency/A
 import Categories from 'src/components/Categories/Categories';
 import Connectors from 'src/components/Connectors/Connectors';
 import Currencies from 'src/components/Currencies/Currencies';
+import { Goals } from 'src/components/Goals/Goals';
 import Info from 'src/components/Info/Info';
 import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
@@ -37,7 +38,7 @@ export const PrivateRoutes: FC = () => {
       </Route>
       <Route path="/goals" exact>
         <Layout activePage="goals">
-          <Accounting />
+          <Goals />
         </Layout>
       </Route>
       <Route path="/incomes">

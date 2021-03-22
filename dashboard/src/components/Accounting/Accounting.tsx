@@ -24,7 +24,7 @@ export const Accounting: FC = () => {
 
   return (
     <>
-      <Breadcrumb style={{ margin: '16px 0' }}>
+      <Breadcrumb className="breadcrumb">
         <Breadcrumb.Item>
           <Link to="/">{t('home')}</Link>
         </Breadcrumb.Item>

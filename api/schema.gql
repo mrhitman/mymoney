@@ -198,7 +198,7 @@ type Query {
   profile: User!
   wallets: [Wallet!]!
   wallet(id: String!): Wallet!
-  currencies: [Currency!]!
+  currencies(name: String): [Currency!]!
   currency(id: String!): Currency!
   exchange(
     """Currency name (eg. USD)"""

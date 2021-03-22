@@ -1012,7 +1012,10 @@ export type GetFilterGroupQuery = (
 export type GoalFullFragment = (
   { __typename?: 'Goal' }
   & Pick<Goal, 'id' | 'goal' | 'progress' | 'name'>
-  & { pockets: Array<(
+  & { currency: (
+    { __typename?: 'Currency' }
+    & Pick<Currency, 'id' | 'name' | 'symbol'>
+  ), pockets: Array<(
     { __typename?: 'Pocket' }
     & Pick<Pocket, 'amount'>
     & { currency: (
@@ -1394,6 +1397,11 @@ export const GoalFullFragmentDoc = gql`
   goal
   progress
   name
+  currency {
+    id
+    name
+    symbol
+  }
   pockets {
     amount
     currency {

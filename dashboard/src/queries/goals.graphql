@@ -3,6 +3,11 @@ fragment goalFull on Goal {
   goal
   progress
   name
+  currency {
+    id
+    name
+    symbol
+  }
   pockets {
     amount
     currency {

@@ -1,8 +1,9 @@
-import { Breadcrumb, Skeleton, Row, Col } from 'antd';
+import { Breadcrumb, Col, Row, Skeleton } from 'antd';
 import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useGetGoalsQuery } from 'src/generated/graphql';
+import { AddGoal } from './AddGoal';
 
 export const Goals: FC = () => {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ export const Goals: FC = () => {
       <Skeleton loading={loading}>
         <Row gutter={16}>
           <Col>
+            <AddGoal />
             <pre>{JSON.stringify(data)}</pre>
           </Col>
         </Row>

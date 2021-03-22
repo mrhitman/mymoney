@@ -18,3 +18,9 @@ query getGoals {
     ...goalFull
   }
 }
+
+mutation AddGoal($goalCreateData: GoalCreate!) {
+  createGoal(createGoalData: $goalCreateData) {
+    ...goalFull
+  }
+}

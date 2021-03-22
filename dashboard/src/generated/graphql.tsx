@@ -1033,6 +1033,19 @@ export type GetGoalsQuery = (
   )> }
 );
 
+export type AddGoalMutationVariables = Exact<{
+  goalCreateData: GoalCreate;
+}>;
+
+
+export type AddGoalMutation = (
+  { __typename?: 'Mutation' }
+  & { createGoal: (
+    { __typename?: 'Goal' }
+    & GoalFullFragment
+  ) }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -2130,6 +2143,38 @@ export function useGetGoalsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetGoalsQueryHookResult = ReturnType<typeof useGetGoalsQuery>;
 export type GetGoalsLazyQueryHookResult = ReturnType<typeof useGetGoalsLazyQuery>;
 export type GetGoalsQueryResult = Apollo.QueryResult<GetGoalsQuery, GetGoalsQueryVariables>;
+export const AddGoalDocument = gql`
+    mutation AddGoal($goalCreateData: GoalCreate!) {
+  createGoal(createGoalData: $goalCreateData) {
+    ...goalFull
+  }
+}
+    ${GoalFullFragmentDoc}`;
+export type AddGoalMutationFn = Apollo.MutationFunction<AddGoalMutation, AddGoalMutationVariables>;
+
+/**
+ * __useAddGoalMutation__
+ *
+ * To run a mutation, you first call `useAddGoalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddGoalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addGoalMutation, { data, loading, error }] = useAddGoalMutation({
+ *   variables: {
+ *      goalCreateData: // value for 'goalCreateData'
+ *   },
+ * });
+ */
+export function useAddGoalMutation(baseOptions?: Apollo.MutationHookOptions<AddGoalMutation, AddGoalMutationVariables>) {
+        return Apollo.useMutation<AddGoalMutation, AddGoalMutationVariables>(AddGoalDocument, baseOptions);
+      }
+export type AddGoalMutationHookResult = ReturnType<typeof useAddGoalMutation>;
+export type AddGoalMutationResult = Apollo.MutationResult<AddGoalMutation>;
+export type AddGoalMutationOptions = Apollo.BaseMutationOptions<AddGoalMutation, AddGoalMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(loginData: {email: $email, password: $password}) {

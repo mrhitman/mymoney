@@ -1,14 +1,14 @@
-import { Modal } from "antd";
-import { useFormik } from "formik";
-import React, { FC } from "react";
-import { useAddWalletMutation } from "src/generated/graphql";
+import { Modal } from 'antd';
+import { useFormik } from 'formik';
+import React, { FC } from 'react';
+import { useAddWalletMutation } from 'src/generated/graphql';
 import { useTranslation } from 'react-i18next';
-import AddWalletForm from "./AddWalletForm";
-import { AddWalletValues } from "./types";
+import AddWalletForm from './AddWalletForm';
+import { AddWalletValues } from './types';
 
 export const initialValues: AddWalletValues = {
-  name: "",
-  description: "",
+  name: '',
+  description: '',
   allowNegativeBalance: true,
   useInBalance: true,
   useInAnalytics: true,
@@ -27,13 +27,13 @@ export const AddWallet: FC<AddWalletProps> = ({ visible, onClose }) => {
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
-      console.log(values);
       await addWallet({
         variables: {
           walletCreateData: {
             name: values.name,
             description: values.description,
             pockets: values.pockets,
+            tags: values.tags,
           },
         },
       });

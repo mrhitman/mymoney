@@ -1,12 +1,24 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Divider, List, Popconfirm, Row, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Divider,
+  List,
+  Popconfirm,
+  Row,
+  Typography,
+} from 'antd';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { GetWalletsQuery } from 'src/generated/graphql';
 
 export const icons: Record<string, string> = {
-  'monobank-black': 'https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png',
-  'Privat24 Card': 'https://xpc.com.ua/image/catalog/general/page/a_icon/privat24.svg',
+  'monobank-black':
+    'https://www.monobank.com.ua/resources/static-1/img/logo-medium-192x192.png',
+  'Privat24 Card':
+    'https://xpc.com.ua/image/catalog/general/page/a_icon/privat24.svg',
   'default-card':
     'https://www.nicepng.com/png/full/104-1044427_png-library-download-drawing-at-getdrawings-com-free.png',
 };
@@ -20,7 +32,12 @@ interface WalletCardProps {
   onDelete: (id: string) => Promise<any>;
 }
 
-const WalletCard: FC<WalletCardProps> = ({ wallet, loading, onDelete, onEdit }) => {
+const WalletCard: FC<WalletCardProps> = ({
+  wallet,
+  loading,
+  onDelete,
+  onEdit,
+}) => {
   return (
     <Col key={wallet.id} id={wallet.id} {...layout}>
       <Card hoverable style={{ width: 300, marginTop: 16 }} loading={loading}>
@@ -30,15 +47,13 @@ const WalletCard: FC<WalletCardProps> = ({ wallet, loading, onDelete, onEdit }) 
             description={wallet.description}
             avatar={<Avatar src={icons[wallet.type || 'default-card']} />}
           />
-          <Row
-            style={{
-              float: 'right',
-              marginTop: 14,
-              marginBottom: 8,
-              marginRight: 8,
-            }}
-          >
-            <Col>
+          <Row style={{ paddingTop: 22 }}>
+            <Col span={12}>
+              <Typography.Paragraph>
+                {wallet.tags.join(', ')}
+              </Typography.Paragraph>
+            </Col>
+            <Col offset={4}>
               <Button
                 icon={<EditOutlined />}
                 onClick={(e) => {
@@ -66,7 +81,8 @@ const WalletCard: FC<WalletCardProps> = ({ wallet, loading, onDelete, onEdit }) 
               <Row>
                 <Col offset={1}>
                   <Typography>
-                    {pocket.currency.symbol} {pocket.amount} {pocket.currency.name}
+                    {pocket.currency.symbol} {pocket.amount}{' '}
+                    {pocket.currency.name}
                   </Typography>
                 </Col>
               </Row>

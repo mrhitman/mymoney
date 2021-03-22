@@ -61,6 +61,7 @@ type Wallet {
   type: String!
   allowNegativeBalance: Boolean!
   pockets: [Pocket!]!
+  tags: [String!]!
   syncAt: Int!
   createdAt: Int!
 }
@@ -318,6 +319,7 @@ input WalletCreate {
   type: String = "credit"
   allowNegativeBalance: Boolean = true
   pockets: [PocketInput!] = []
+  tags: [String!] = []
   createdAt: Int
 }
 
@@ -334,6 +336,7 @@ input WalletUpdate {
   type: String
   allowNegativeBalance: Boolean!
   pockets: [PocketInput!]
+  tags: [String!]
   updatedAt: Int
 }
 

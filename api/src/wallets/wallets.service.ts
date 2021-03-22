@@ -29,6 +29,7 @@ export class WalletsService {
     const wallet = await Wallet.query().insert({
       type: 'credit',
       pockets: [],
+      tags: [],
       id: uuid(),
       allowNegativeBalance: true,
       ...data,

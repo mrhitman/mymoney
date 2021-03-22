@@ -14,6 +14,7 @@ export class Wallet extends Model {
   public image: string;
   public type: string;
   public pockets: Pocket[];
+  public tags: string[];
   public allowNegativeBalance: boolean;
   public isImported: boolean;
   public meta: any;
@@ -30,6 +31,12 @@ export class Wallet extends Model {
     return {
       type: 'object',
       properties: {
+        tags: {
+          type: 'array',
+          items: {
+            type: 'string'
+          }
+        },
         pockets: {
           type: 'array',
           items: {

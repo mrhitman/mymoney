@@ -37,6 +37,10 @@ export class WalletUpdate {
   @IsOptional({ each: true })
   readonly pockets: PocketInput[];
 
+  @Field(() => [String], { nullable: true })
+  @IsOptional({ each: true })
+  readonly tags: string[];
+
   @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsNumber()

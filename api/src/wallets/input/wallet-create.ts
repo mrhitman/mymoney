@@ -37,6 +37,10 @@ export class WalletCreate {
   @IsOptional()
   readonly pockets: PocketInput[];
 
+  @Field(() => [String], { nullable: true, defaultValue: [] })
+  @IsOptional()
+  readonly tags: string[];
+
   @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsNumber()

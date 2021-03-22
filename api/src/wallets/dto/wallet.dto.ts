@@ -24,6 +24,9 @@ export class WalletDto {
   @Field(() => [PocketDto])
   readonly pockets: PocketDto[];
 
+  @Field(() => [String])
+  readonly tags: string[];
+
   @Field(() => Int)
   readonly syncAt: Date;
 

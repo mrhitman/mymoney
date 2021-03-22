@@ -1,7 +1,10 @@
 import { Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC } from 'react';
-import { useUpdateWalletMutation, GetWalletsQuery } from 'src/generated/graphql';
+import {
+  useUpdateWalletMutation,
+  GetWalletsQuery,
+} from 'src/generated/graphql';
 import { UpdateWalletValues } from './types';
 import UpdateWalletForm from './UpdateWalletForm';
 
@@ -11,7 +14,11 @@ export interface UpdateWalletProps {
   onClose: () => void;
 }
 
-export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose, wallet }) => {
+export const UpdateWallet: FC<UpdateWalletProps> = ({
+  visible,
+  onClose,
+  wallet,
+}) => {
   const [updateWallet] = useUpdateWalletMutation();
   const initialValues: UpdateWalletValues = {
     id: wallet.id,
@@ -20,8 +27,11 @@ export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose, wallet }
     allowNegativeBalance: false,
     useInBalance: true,
     useInAnalytics: true,
-    pockets: wallet.pockets.map((p) => ({ currencyId: p.currency.id, amount: p.amount })),
-    tags: [],
+    pockets: wallet.pockets.map((p) => ({
+      currencyId: p.currency.id,
+      amount: p.amount,
+    })),
+    tags: wallet.tags,
   };
 
   const formik = useFormik({
@@ -36,6 +46,7 @@ export const UpdateWallet: FC<UpdateWalletProps> = ({ visible, onClose, wallet }
             description: values.description,
             allowNegativeBalance: values.allowNegativeBalance,
             pockets: values.pockets,
+            tags: values.tags,
           },
         },
       });

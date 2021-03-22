@@ -80,6 +80,7 @@ export type Wallet = {
   type: Scalars['String'];
   allowNegativeBalance: Scalars['Boolean'];
   pockets: Array<Pocket>;
+  tags: Array<Scalars['String']>;
   syncAt: Scalars['Int'];
   createdAt: Scalars['Int'];
 };
@@ -353,6 +354,7 @@ export type Mutation = {
   budgetRemoveOutcomeCategory: Budget;
   budgetAddIncomeCategory: Budget;
   budgetRemoveIncomeCategory: Budget;
+  budgetCreateFromActiveTemplate: Budget;
   createGoal: Goal;
   updateGoal: Goal;
   deleteGoal: Goal;
@@ -559,6 +561,7 @@ export type WalletCreate = {
   type?: Maybe<Scalars['String']>;
   allowNegativeBalance?: Maybe<Scalars['Boolean']>;
   pockets?: Maybe<Array<PocketInput>>;
+  tags?: Maybe<Array<Scalars['String']>>;
   createdAt?: Maybe<Scalars['Int']>;
 };
 
@@ -575,6 +578,7 @@ export type WalletUpdate = {
   type?: Maybe<Scalars['String']>;
   allowNegativeBalance: Scalars['Boolean'];
   pockets?: Maybe<Array<PocketInput>>;
+  tags?: Maybe<Array<Scalars['String']>>;
   updatedAt?: Maybe<Scalars['Int']>;
 };
 
@@ -1229,7 +1233,7 @@ export type DeleteWalletMutation = (
 
 export type WalletFullFragment = (
   { __typename?: 'Wallet' }
-  & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
+  & Pick<Wallet, 'id' | 'name' | 'type' | 'tags' | 'description'>
   & { pockets: Array<(
     { __typename?: 'Pocket' }
     & Pick<Pocket, 'amount'>
@@ -1391,6 +1395,7 @@ export const WalletFullFragmentDoc = gql`
   id
   name
   type
+  tags
   description
   pockets {
     amount

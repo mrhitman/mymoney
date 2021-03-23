@@ -15,13 +15,11 @@ export const UpdateGoal: FC<UpdateGoalProps> = ({ initialValues }) => {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const [updateGoal] = useUpdateGoalMutation();
-  console.log(initialValues);
 
   const formik = useFormik<UpdateGoalValues>({
     enableReinitialize: true,
     initialValues,
     onSubmit: async (values: any) => {
-      console.log(values);
       await updateGoal({
         variables: {
           goalUpdateData: {

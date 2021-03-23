@@ -3,6 +3,7 @@ fragment goalFull on Goal {
   goal
   progress
   name
+  currencyId
   currency {
     id
     name
@@ -26,6 +27,12 @@ query getGoals {
 
 mutation AddGoal($goalCreateData: GoalCreate!) {
   createGoal(createGoalData: $goalCreateData) {
+    ...goalFull
+  }
+}
+
+mutation UpdateGoal($goalUpdateData: GoalUpdate!) {
+  updateGoal(updateGoalData: $goalUpdateData) {
     ...goalFull
   }
 }

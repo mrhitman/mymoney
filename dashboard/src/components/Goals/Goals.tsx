@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useDeleteGoalMutation, useGetGoalsQuery } from 'src/generated/graphql';
 import { AddGoal } from './AddGoal';
+import { UpdateGoal } from './UpdateGoal';
 
 export const Goals: FC = () => {
   const { t } = useTranslation();
@@ -46,6 +47,7 @@ export const Goals: FC = () => {
                         Remove
                       </Button>
                     </Popconfirm>,
+                    <UpdateGoal key="update" initialValues={goal} />,
                   ]}
                 >
                   <List.Item.Meta

@@ -40,7 +40,7 @@ export const GoalForm: FC<GoalFormProps> = ({ formik }) => {
           showSearch
           placeholder="Currencies"
           style={{ width: 200 }}
-          value={formik.values.currencies}
+          value={formik.values.currencyId}
           filterOption={(inputValue, option) =>
             option?.children.toLowerCase().includes(inputValue.toLowerCase())
           }

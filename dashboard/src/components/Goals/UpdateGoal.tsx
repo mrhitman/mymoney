@@ -20,11 +20,15 @@ export const UpdateGoal: FC<UpdateGoalProps> = ({ initialValues }) => {
   const formik = useFormik<UpdateGoalValues>({
     enableReinitialize: true,
     initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       console.log(values);
       await updateGoal({
         variables: {
-          goalUpdateData: { ...(values as any) },
+          goalUpdateData: {
+            id: values.id,
+            name: values.name,
+            goal: values.goal,
+          },
         },
       });
       formik.resetForm();

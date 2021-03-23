@@ -29,6 +29,12 @@ fragment transaction on Transaction {
   amount
 }
 
+mutation createTransaction($transactionCreateData: TransactionCreate!) {
+  createTransaction(transactionCreateData: $transactionCreateData) {
+    ...transaction
+  }
+}
+
 query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
@@ -120,7 +126,12 @@ query getWalletTransactions(
     name
     description
   }
-  transactions(type: $type, limit: $limit, offset: $offset, walletIds: [$walletId]) {
+  transactions(
+    type: $type
+    limit: $limit
+    offset: $offset
+    walletIds: [$walletId]
+  ) {
     totalCount
     items {
       ...transaction

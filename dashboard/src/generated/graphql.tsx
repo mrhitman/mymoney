@@ -1192,6 +1192,19 @@ export type TransactionFragment = (
   ) }
 );
 
+export type CreateTransactionMutationVariables = Exact<{
+  transactionCreateData: TransactionCreate;
+}>;
+
+
+export type CreateTransactionMutation = (
+  { __typename?: 'Mutation' }
+  & { createTransaction: (
+    { __typename?: 'Transaction' }
+    & TransactionFragment
+  ) }
+);
+
 export type GetTransactionQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -2506,6 +2519,38 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const CreateTransactionDocument = gql`
+    mutation createTransaction($transactionCreateData: TransactionCreate!) {
+  createTransaction(transactionCreateData: $transactionCreateData) {
+    ...transaction
+  }
+}
+    ${TransactionFragmentDoc}`;
+export type CreateTransactionMutationFn = Apollo.MutationFunction<CreateTransactionMutation, CreateTransactionMutationVariables>;
+
+/**
+ * __useCreateTransactionMutation__
+ *
+ * To run a mutation, you first call `useCreateTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTransactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTransactionMutation, { data, loading, error }] = useCreateTransactionMutation({
+ *   variables: {
+ *      transactionCreateData: // value for 'transactionCreateData'
+ *   },
+ * });
+ */
+export function useCreateTransactionMutation(baseOptions?: Apollo.MutationHookOptions<CreateTransactionMutation, CreateTransactionMutationVariables>) {
+        return Apollo.useMutation<CreateTransactionMutation, CreateTransactionMutationVariables>(CreateTransactionDocument, baseOptions);
+      }
+export type CreateTransactionMutationHookResult = ReturnType<typeof useCreateTransactionMutation>;
+export type CreateTransactionMutationResult = Apollo.MutationResult<CreateTransactionMutation>;
+export type CreateTransactionMutationOptions = Apollo.BaseMutationOptions<CreateTransactionMutation, CreateTransactionMutationVariables>;
 export const GetTransactionDocument = gql`
     query getTransaction($id: String!) {
   transaction(id: $id) {

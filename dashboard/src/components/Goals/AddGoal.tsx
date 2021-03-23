@@ -14,7 +14,11 @@ const initialValues: AddGoalValues = {
   currencyId: '',
 };
 
-export const AddGoal: FC = () => {
+interface AddGoalProps {
+  onAdd: () => void;
+}
+
+export const AddGoal: FC<AddGoalProps> = ({ onAdd }) => {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const [createGoal] = useAddGoalMutation();
@@ -28,6 +32,7 @@ export const AddGoal: FC = () => {
           goalCreateData: { ...values },
         },
       });
+      onAdd();
       formik.resetForm();
     },
   });

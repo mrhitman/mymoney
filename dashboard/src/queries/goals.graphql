@@ -29,3 +29,9 @@ mutation AddGoal($goalCreateData: GoalCreate!) {
     ...goalFull
   }
 }
+
+mutation deleteGoal($id: String!) {
+  deleteGoal(id: $id) {
+    id
+  }
+}

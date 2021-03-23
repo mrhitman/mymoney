@@ -1,14 +1,15 @@
 import { DeleteOutlined, SaveOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Col, List, Row, Skeleton } from 'antd';
+import { Breadcrumb, Button, Col, List, Popconfirm, Row, Skeleton } from 'antd';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useGetGoalsQuery } from 'src/generated/graphql';
+import { useDeleteGoalMutation, useGetGoalsQuery } from 'src/generated/graphql';
 import { AddGoal } from './AddGoal';
 
 export const Goals: FC = () => {
   const { t } = useTranslation();
-  const { data: goals, loading } = useGetGoalsQuery();
+  const { data: goals, loading, refetch } = useGetGoalsQuery();
+  const [deleteGoal] = useDeleteGoalMutation();
 
   return (
     <>
@@ -30,9 +31,21 @@ export const Goals: FC = () => {
                     <Button icon={<SaveOutlined />} key="save">
                       Save to goal
                     </Button>,
-                    <Button icon={<DeleteOutlined />} key="save">
-                      Remove
-                    </Button>,
+                    <Popconfirm
+                      key="delete"
+                      title="Are you sure to delete this goal?"
+                      onConfirm={async (e) => {
+                        await deleteGoal({ variables: { id: goal.id } });
+                        refetch();
+                        e?.preventDefault();
+                      }}
+                      okText="Yes, I want"
+                      cancelText="No"
+                    >
+                      <Button icon={<DeleteOutlined />} key="delete">
+                        Remove
+                      </Button>
+                    </Popconfirm>,
                   ]}
                 >
                   <List.Item.Meta
@@ -42,7 +55,7 @@ export const Goals: FC = () => {
                 </List.Item>
               )}
             />
-            <AddGoal />
+            <AddGoal onAdd={() => refetch()} />
           </Col>
         </Row>
       </Skeleton>

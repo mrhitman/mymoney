@@ -9,26 +9,31 @@ export class GoalUpdate {
   readonly id: string;
 
   @Field(() => Float, { nullable: true })
-  @IsOptional()
   @IsNumber({ allowNaN: true })
-  readonly goal: number;
+  @IsOptional()
+  readonly goal?: number;
+
+  @Field(() => Float, { nullable: true })
+  @IsNumber({ allowNaN: true })
+  @IsOptional()
+  readonly progress?: number;
 
   @Field({ nullable: true })
-  @IsOptional()
   @IsString()
-  readonly currencyId: string;
+  @IsOptional()
+  readonly currencyId?: string;
 
-  @Field()
-  @IsOptional()
+  @Field({ nullable: true })
   @IsString()
-  readonly name: string;
+  @IsOptional()
+  readonly name?: string;
 
   @Field(() => [PocketInput], { nullable: true })
   @IsOptional({ each: true })
-  readonly pockets: PocketInput[];
+  readonly pockets?: PocketInput[];
 
   @Field(() => Int, { nullable: true })
-  @IsOptional()
   @IsNumber()
-  readonly updatedAt: number;
+  @IsOptional()
+  readonly updatedAt?: number;
 }

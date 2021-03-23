@@ -3,9 +3,9 @@ import { Button, Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useUpdateGoalMutation } from 'src/generated/graphql';
 import { GoalForm } from './GoalForm';
 import { UpdateGoalValues } from './types';
-import { useUpdateGoalMutation } from '../../generated/graphql';
 
 interface UpdateGoalProps {
   initialValues: UpdateGoalValues;
@@ -19,14 +19,10 @@ export const UpdateGoal: FC<UpdateGoalProps> = ({ initialValues }) => {
   const formik = useFormik<UpdateGoalValues>({
     enableReinitialize: true,
     initialValues,
-    onSubmit: async (values: any) => {
+    onSubmit: async (values) => {
       await updateGoal({
         variables: {
-          goalUpdateData: {
-            id: values.id,
-            name: values.name,
-            goal: values.goal,
-          },
+          goalUpdateData: values,
         },
       });
       formik.resetForm();

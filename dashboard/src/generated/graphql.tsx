@@ -643,8 +643,9 @@ export type GoalCreate = {
 export type GoalUpdate = {
   id: Scalars['ID'];
   goal?: Maybe<Scalars['Float']>;
+  progress?: Maybe<Scalars['Float']>;
   currencyId?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   pockets?: Maybe<Array<PocketInput>>;
   updatedAt?: Maybe<Scalars['Int']>;
 };

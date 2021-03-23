@@ -1,5 +1,6 @@
 import { DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button, Col, List, Popconfirm, Row, Skeleton } from 'antd';
+import { pick } from 'lodash';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -47,7 +48,16 @@ export const Goals: FC = () => {
                         Remove
                       </Button>
                     </Popconfirm>,
-                    <UpdateGoal key="update" initialValues={goal} />,
+                    <UpdateGoal
+                      key="update"
+                      initialValues={pick(goal, [
+                        'id',
+                        'name',
+                        'goal',
+                        'progress',
+                        'currencyId',
+                      ])}
+                    />,
                   ]}
                 >
                   <List.Item.Meta

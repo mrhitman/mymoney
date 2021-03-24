@@ -11,10 +11,10 @@ import Info from 'src/components/Info/Info';
 import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
-import TransactionList from 'src/components/Transactions/TransactionList';
-import { TransactionType } from 'src/generated/graphql';
 import ActiveBudget from '../Budgets/ActiveBudget';
 import MainPage from '../MainPage/MainPage';
+import { IncomesList } from '../Transactions/IncomesList';
+import { OutcomesList } from '../Transactions/OutcomesList';
 import ViewTransaction from '../Transactions/ViewTransaction';
 import WalletTransactions from '../Transactions/WalletTransactions';
 
@@ -43,12 +43,12 @@ export const PrivateRoutes: FC = () => {
       </Route>
       <Route path="/incomes">
         <Layout activePage="incomes">
-          <TransactionList type={TransactionType.Income} />
+          <IncomesList />
         </Layout>
       </Route>
       <Route path="/outcomes">
         <Layout activePage="outcomes">
-          <TransactionList type={TransactionType.Outcome} />
+          <OutcomesList />
         </Layout>
       </Route>
       <Route path="/operations/:walletId" exact>

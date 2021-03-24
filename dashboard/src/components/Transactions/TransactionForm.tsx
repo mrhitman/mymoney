@@ -28,6 +28,7 @@ interface Props {
 
 export const TransactionForm: FC<Props> = ({ formik }) => {
   const { t } = useTranslation();
+  // @TODO use single query
   const { data: wallets } = useGetWalletsQuery();
   const { data: categories } = useGetCategoriesQuery();
   return (

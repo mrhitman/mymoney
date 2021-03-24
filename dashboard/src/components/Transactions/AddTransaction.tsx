@@ -11,13 +11,13 @@ interface Props {
   type: TransactionType;
 }
 
-export const AddTransaction: FC<Props> = () => {
+export const AddTransaction: FC<Props> = ({ type }) => {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const formik = useFormik({
     initialValues: {
       amount: 0,
-      type: TransactionType.Income,
+      type,
       date: moment(),
       description: '',
     } as TransactionFormTypes,

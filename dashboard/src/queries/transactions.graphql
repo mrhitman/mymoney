@@ -8,6 +8,12 @@ fragment wallet on Wallet {
 fragment transaction on Transaction {
   id
   type
+  sourceWallet {
+    ...wallet
+  }
+  destinationWallet {
+    ...wallet
+  }
   currency {
     id
     name
@@ -27,6 +33,7 @@ fragment transaction on Transaction {
   date
   description
   amount
+  meta
 }
 
 mutation createTransaction($transactionCreateData: TransactionCreate!) {
@@ -38,12 +45,6 @@ mutation createTransaction($transactionCreateData: TransactionCreate!) {
 query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
-    sourceWallet {
-      ...wallet
-    }
-    destinationWallet {
-      ...wallet
-    }
     meta
   }
 }
@@ -105,12 +106,6 @@ query getTransactions(
     totalCount
     items {
       ...transaction
-      sourceWallet {
-        ...wallet
-      }
-      destinationWallet {
-        ...wallet
-      }
     }
   }
 }

@@ -1178,8 +1178,14 @@ export type WalletFragment = (
 
 export type TransactionFragment = (
   { __typename?: 'Transaction' }
-  & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount'>
-  & { currency: (
+  & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount' | 'meta'>
+  & { sourceWallet?: Maybe<(
+    { __typename?: 'Wallet' }
+    & WalletFragment
+  )>, destinationWallet?: Maybe<(
+    { __typename?: 'Wallet' }
+    & WalletFragment
+  )>, currency: (
     { __typename?: 'Currency' }
     & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
   ), category: (
@@ -1215,13 +1221,6 @@ export type GetTransactionQuery = (
   & { transaction: (
     { __typename?: 'Transaction' }
     & Pick<Transaction, 'meta'>
-    & { sourceWallet?: Maybe<(
-      { __typename?: 'Wallet' }
-      & WalletFragment
-    )>, destinationWallet?: Maybe<(
-      { __typename?: 'Wallet' }
-      & WalletFragment
-    )> }
     & TransactionFragment
   ) }
 );
@@ -1268,13 +1267,6 @@ export type GetTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
-      & { sourceWallet?: Maybe<(
-        { __typename?: 'Wallet' }
-        & WalletFragment
-      )>, destinationWallet?: Maybe<(
-        { __typename?: 'Wallet' }
-        & WalletFragment
-      )> }
       & TransactionFragment
     )> }
   ) }
@@ -1476,6 +1468,12 @@ export const TransactionFragmentDoc = gql`
     fragment transaction on Transaction {
   id
   type
+  sourceWallet {
+    ...wallet
+  }
+  destinationWallet {
+    ...wallet
+  }
   currency {
     id
     name
@@ -1495,8 +1493,9 @@ export const TransactionFragmentDoc = gql`
   date
   description
   amount
+  meta
 }
-    `;
+    ${WalletFragmentDoc}`;
 export const WalletFullFragmentDoc = gql`
     fragment walletFull on Wallet {
   id
@@ -2555,17 +2554,10 @@ export const GetTransactionDocument = gql`
     query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
-    sourceWallet {
-      ...wallet
-    }
-    destinationWallet {
-      ...wallet
-    }
     meta
   }
 }
-    ${TransactionFragmentDoc}
-${WalletFragmentDoc}`;
+    ${TransactionFragmentDoc}`;
 
 /**
  * __useGetTransactionQuery__
@@ -2662,17 +2654,10 @@ export const GetTransactionsDocument = gql`
     totalCount
     items {
       ...transaction
-      sourceWallet {
-        ...wallet
-      }
-      destinationWallet {
-        ...wallet
-      }
     }
   }
 }
-    ${TransactionFragmentDoc}
-${WalletFragmentDoc}`;
+    ${TransactionFragmentDoc}`;
 
 /**
  * __useGetTransactionsQuery__

@@ -4,6 +4,8 @@ import { Button, Modal } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { TransactionForm, TransactionFormTypes } from './TransactionForm';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 interface Props {
   type: TransactionType;
@@ -11,11 +13,12 @@ interface Props {
 
 export const AddTransaction: FC<Props> = () => {
   const [visible, setVisible] = useState(false);
+  const { t } = useTranslation();
   const formik = useFormik({
     initialValues: {
       amount: 0,
       type: TransactionType.Income,
-      date: new Date(),
+      date: moment(),
       description: '',
     } as TransactionFormTypes,
     onSubmit: (data) => {
@@ -33,9 +36,11 @@ export const AddTransaction: FC<Props> = () => {
           setVisible(true);
         }}
       >
-        Create transaction
+        {t(`add_${formik.values.type.toLowerCase()}`)}
       </Button>
       <Modal
+        width={720}
+        title={t(`add_${formik.values.type.toLocaleLowerCase()}`)}
         visible={visible}
         onOk={() => {
           setVisible(false);

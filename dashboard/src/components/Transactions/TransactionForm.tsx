@@ -1,10 +1,11 @@
 import { DatePicker, Form, Input } from 'antd';
 import { FormikProps } from 'formik';
 import React, { FC } from 'react';
-import { Transaction } from 'src/generated/graphql';
+import { TransactionFragment } from 'src/generated/graphql';
+import { formLayout } from '../misc/Layout';
 
 export type TransactionFormTypes = Pick<
-  Transaction,
+  TransactionFragment,
   'type' | 'amount' | 'date' | 'description'
 >;
 
@@ -14,7 +15,7 @@ interface Props {
 
 export const TransactionForm: FC<Props> = ({ formik }) => {
   return (
-    <Form labelCol={{ span: 8 }}>
+    <Form {...formLayout}>
       <Form.Item
         label="Amount"
         name="amount"

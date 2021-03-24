@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Transaction, TransactionType } from 'src/generated/graphql';
+import { TransactionFragment, TransactionType } from 'src/generated/graphql';
 
 export interface Props {
-  record: Pick<Transaction, 'currency' | 'type' | 'amount'>;
+  record: Pick<TransactionFragment, 'currency' | 'type' | 'amount'>;
 }
 
 export const TransactionAmount: FC<Props> = ({ record }) => {

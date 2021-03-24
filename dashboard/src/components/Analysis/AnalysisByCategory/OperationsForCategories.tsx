@@ -2,9 +2,12 @@ import { Col, Popover, Row, Table } from 'antd';
 import moment from 'moment';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import CategoryIcon from 'src/components/misc/CategoryIcon';
 import { TransactionAmount } from 'src/components/Transactions/TransactionAmount';
-import { GetTransactionsQuery, useGetTransactionsQuery } from 'src/generated/graphql';
-import CategoryIcon from '../../misc/CategoryIcon';
+import {
+  TransactionFragment,
+  useGetTransactionsQuery,
+} from 'src/generated/graphql';
 
 interface OperationsForCategoriesProps {
   from?: number;
@@ -45,7 +48,10 @@ const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
       <Table.Column
         title="Wallet"
         render={(transaction) => {
-          return [transaction.sourceWallet?.name, transaction.destinationWallet?.name].join(' ');
+          return [
+            transaction.sourceWallet?.name,
+            transaction.destinationWallet?.name,
+          ].join(' ');
         }}
       />
       <Table.Column
@@ -73,9 +79,10 @@ const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
         title="Amount"
         dataIndex="amount"
         key="amount"
-        render={(_, record: GetTransactionsQuery['transactions']['items'][number]) => (
-          <TransactionAmount record={record} />
-        )}
+        render={(
+          _,
+          record: Pick<TransactionFragment, 'currency' | 'amount' | 'type'>,
+        ) => <TransactionAmount record={record} />}
       />
       <Table.Column
         title="Description"
@@ -83,7 +90,11 @@ const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
         key="description"
         width="24%"
         render={(desc) =>
-          desc ? desc : <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+          desc ? (
+            desc
+          ) : (
+            <p style={{ color: 'grey', fontSize: '0.8em' }}>{'<NO INFO>'}</p>
+          )
         }
       />
       <Table.Column

@@ -2,20 +2,19 @@ import { EyeFilled } from '@ant-design/icons';
 import { Col, Popover, Row, Table } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
-  GetTransactionsQuery,
+  TransactionFragment,
   TransactionType,
   useGetTransactionsQuery,
 } from 'src/generated/graphql';
 import CategoryIcon from '../misc/CategoryIcon';
+import { AddTransaction } from './AddTransaction';
 import { FilterCriteries, FilterGroup } from './FilterGroup';
 import { TransactionAmount } from './TransactionAmount';
-import { AddTransaction } from './AddTransaction';
 
-type Transaction = GetTransactionsQuery['transactions']['items'][number];
 interface Props {
   type: TransactionType;
 }
@@ -23,7 +22,7 @@ interface Props {
 const TransactionList: React.FC<Props> = ({ type }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sorter, setSorter] = useState<SorterResult<Transaction>>({
+  const [sorter, setSorter] = useState<SorterResult<TransactionFragment>>({
     order: 'descend',
     field: 'date',
   });
@@ -36,9 +35,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
     amountFrom: undefined,
     amountTo: undefined,
   });
-  const [transactions, setTransactions] = useState<
-    GetTransactionsQuery['transactions']['items']
-  >([]);
+  const [transactions, setTransactions] = useState<TransactionFragment[]>([]);
   const { loading, data } = useGetTransactionsQuery({
     variables: {
       type,
@@ -88,7 +85,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
         onChange={(pagination, filters, sorter) => {
           setCurrent(pagination.current || 1);
           setPageSize(pagination.pageSize || 1);
-          setSorter(sorter as SorterResult<Transaction>);
+          setSorter(sorter as SorterResult<TransactionFragment>);
         }}
         dataSource={transactions}
       >
@@ -136,7 +133,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
           dataIndex="amount"
           key="amount"
           sorter
-          render={(_, record: Transaction) => (
+          render={(_, record: TransactionFragment) => (
             <TransactionAmount record={record} />
           )}
         />
@@ -166,7 +163,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
           title={t('action')}
           dataIndex=""
           key="x"
-          render={(_, record: Transaction) => (
+          render={(_, record: TransactionFragment) => (
             <Link key={record.id} to={`/operation/${record.id}`}>
               <EyeFilled />
             </Link>

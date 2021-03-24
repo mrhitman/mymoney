@@ -13,9 +13,14 @@ import {
 import CategoryIcon from '../misc/CategoryIcon';
 import { FilterCriteries, FilterGroup } from './FilterGroup';
 import { TransactionAmount } from './TransactionAmount';
+import { AddTransaction } from './AddTransaction';
 
 type Transaction = GetTransactionsQuery['transactions']['items'][number];
-const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
+interface Props {
+  type: TransactionType;
+}
+
+const TransactionList: React.FC<Props> = ({ type }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sorter, setSorter] = useState<SorterResult<Transaction>>({
@@ -64,6 +69,11 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
         onReset={() => setCurrent(1)}
         type={type}
       />
+      <Row justify="end" gutter={[4, 12]}>
+        <Col>
+          <AddTransaction type={type} />
+        </Col>
+      </Row>
       <Table
         bordered
         showSorterTooltip
@@ -113,7 +123,7 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           dataIndex="category"
           key="category"
           render={(category) => (
-            <Row gutter={8}>
+            <Row gutter={8} key={category.id}>
               <Col span={8}>
                 <CategoryIcon icon={category.icon} />
               </Col>
@@ -157,11 +167,9 @@ const TransactionList: React.FC<{ type?: TransactionType }> = ({ type }) => {
           dataIndex=""
           key="x"
           render={(_, record: Transaction) => (
-            <>
-              <Link to={`/operation/${record.id}`}>
-                <EyeFilled />
-              </Link>
-            </>
+            <Link key={record.id} to={`/operation/${record.id}`}>
+              <EyeFilled />
+            </Link>
           )}
         />
       </Table>

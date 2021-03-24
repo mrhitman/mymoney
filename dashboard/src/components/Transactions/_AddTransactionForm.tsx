@@ -49,7 +49,8 @@ export class AddTransactionForm extends PureComponent<
         initialValues={
           {
             currencyId: store.currencies.find(
-              (c: any) => c.name === store.account?.settings.primaryCurrencyName,
+              (c: any) =>
+                c.name === store.account?.settings.primaryCurrencyName,
             ),
             categoryId: undefined,
             date: moment(),
@@ -112,7 +113,9 @@ export class AddTransactionForm extends PureComponent<
                 filterOption={false}
                 value={bag.values.currencyId?.id}
                 onSearch={(filter) => this.setState({ filterCurrency: filter })}
-                onDropdownVisibleChange={() => this.setState({ filterCurrency: undefined })}
+                onDropdownVisibleChange={() =>
+                  this.setState({ filterCurrency: undefined })
+                }
                 onChange={(id) =>
                   bag.setFieldValue(
                     'currencyId',
@@ -177,7 +180,10 @@ export class AddTransactionForm extends PureComponent<
               label="Operation Type"
               validateStatus={bag.errors.type ? 'error' : 'success'}
             >
-              <Select value={bag.values.type} onChange={bag.handleChange('type')}>
+              <Select
+                value={bag.values.type}
+                onChange={bag.handleChange('type')}
+              >
                 <Select.Option value="income">Income</Select.Option>
                 <Select.Option value="outcome">Outcome</Select.Option>
                 <Select.Option value="transfer">Transfer</Select.Option>
@@ -197,11 +203,17 @@ export class AddTransactionForm extends PureComponent<
                       store.categories.find((c: any) => c.id === id),
                     )
                   }
-                  onSearch={(filter) => this.setState({ filterCategory: filter })}
-                  onDropdownVisibleChange={() => this.setState({ filterCategory: undefined })}
+                  onSearch={(filter) =>
+                    this.setState({ filterCategory: filter })
+                  }
+                  onDropdownVisibleChange={() =>
+                    this.setState({ filterCategory: undefined })
+                  }
                 >
                   {this.categories
-                    .filter((category: any) => category.type === bag.values.type)
+                    .filter(
+                      (category: any) => category.type === bag.values.type,
+                    )
                     .map((category: any) => (
                       <Select.Option key={category.id} value={category.id}>
                         {this.props.t(category.name)}
@@ -213,13 +225,17 @@ export class AddTransactionForm extends PureComponent<
             <Form.Item labelCol={{ span: 22 }} label="Is Necessary">
               <Checkbox
                 checked={bag.values.isNecessary}
-                onChange={(e) => bag.setFieldValue('isNecessary', e.target.checked)}
+                onChange={(e) =>
+                  bag.setFieldValue('isNecessary', e.target.checked)
+                }
               />
             </Form.Item>
             <Form.Item labelCol={{ span: 22 }} label="Repeatable operation">
               <Checkbox
                 checked={bag.values.isTemplate}
-                onChange={(e) => bag.setFieldValue('isTemplate', e.target.checked)}
+                onChange={(e) =>
+                  bag.setFieldValue('isTemplate', e.target.checked)
+                }
               />
             </Form.Item>
             {bag.values.isTemplate && (
@@ -264,7 +280,9 @@ export class AddTransactionForm extends PureComponent<
         return true;
       }
 
-      return `${currency.description} (${currency.name})`.toLowerCase().includes(filter);
+      return `${currency.description} (${currency.name})`
+        .toLowerCase()
+        .includes(filter);
     });
   }
 
@@ -272,7 +290,12 @@ export class AddTransactionForm extends PureComponent<
     return this.store.categories
       .filter(
         (category: any) =>
-          !['TRANSFER_IN', 'TRANSFER_OUT', 'TRANSFER_SYS', 'SYSTEM_EMPTY'].includes(category.name),
+          ![
+            'TRANSFER_IN',
+            'TRANSFER_OUT',
+            'TRANSFER_SYS',
+            'SYSTEM_EMPTY',
+          ].includes(category.name),
       )
       .filter((category: any) => {
         const filter = this.state.filterCategory?.toLowerCase();

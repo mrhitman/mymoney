@@ -1,4 +1,5 @@
-import React, {PureComponent} from 'react';
+import { QuestionCircleFilled } from '@ant-design/icons';
+import React, { FC } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -12,8 +13,43 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 
-export class Icon extends PureComponent<any> {
-  protected types = {
+type IconGeneric =
+  | typeof MaterialIcons
+  | typeof AntDesign
+  | typeof Feather
+  | typeof Fontisto
+  | typeof FontAwesome5
+  | typeof Foundation
+  | typeof Ionicons
+  | typeof EvilIcons
+  | typeof FontAwesome
+  | typeof Entypo
+  | typeof Octicons
+  | typeof MaterialCommunityIcons;
+
+interface Props {
+  name: string;
+  type:
+    | 'MaterialIcons'
+    | 'AntDesign'
+    | 'Feather'
+    | 'Fontisto'
+    | 'FontAwesome5'
+    | 'Foundation'
+    | 'Ionicons'
+    | 'EvilIcons'
+    | 'FontAwesome'
+    | 'Entypo'
+    | 'Octicons'
+    | 'MaterialCommunityIcons'
+    | string;
+  key?: string;
+  color?: string;
+  size?: number;
+}
+
+export const Icon: FC<Props> = (props) => {
+  const types: Record<string, IconGeneric> = {
     MaterialIcons,
     AntDesign,
     Feather,
@@ -28,10 +64,12 @@ export class Icon extends PureComponent<any> {
     MaterialCommunityIcons,
   };
 
-  public render() {
-    const Component = (this.types as any)[this.props.type];
-    return <Component {...this.props} />;
-  }
-}
+  const Component = types[props.type];
+  return Component ? (
+    <Component {...props} />
+  ) : (
+    <QuestionCircleFilled key={props.key} />
+  );
+};
 
 export default Icon;

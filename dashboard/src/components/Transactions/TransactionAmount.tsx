@@ -1,25 +1,25 @@
-import React from 'react';
-import { GetTransactionsQuery } from 'src/generated/graphql';
+import React, { FC } from 'react';
+import { Transaction, TransactionType } from 'src/generated/graphql';
 
-export interface TransactionAmountProps {
-  record: GetTransactionsQuery['transactions']['items'][number];
+export interface Props {
+  record: Pick<Transaction, 'currency' | 'type' | 'amount'>;
 }
 
-export const TransactionAmount: React.FC<TransactionAmountProps> = ({ record }) => {
+export const TransactionAmount: FC<Props> = ({ record }) => {
   switch (record.type) {
-    case 'income':
+    case TransactionType.Income:
       return (
         <div className={`tbl-${record.type}`}>
           +{record.amount} {record.currency.symbol}
         </div>
       );
-    case 'outcome':
+    case TransactionType.Outcome:
       return (
         <div className={`tbl-${record.type}`}>
           -{record.amount} {record.currency.symbol}
         </div>
       );
-    case 'transfer':
+    case TransactionType.Transfer:
       return (
         <div className={`tbl-${record.type}`}>
           {record.amount} {record.currency.symbol}

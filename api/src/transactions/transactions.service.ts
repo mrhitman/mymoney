@@ -205,11 +205,8 @@ export class TransactionsService {
   }
 
   private async addIncomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
-    console.log(trx.destinationWalletId)
     const wallet = await this.walletService.findOne(user, trx.destinationWalletId);
-    console.log(wallet)
     const pocket = this.getOrCreatePocket(wallet, trx);
-    console.log(pocket)
     pocket.amount += trx.amount;
 
     await wallet

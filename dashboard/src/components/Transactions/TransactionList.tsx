@@ -37,7 +37,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
     amountTo: undefined,
   });
   const [transactions, setTransactions] = useState<TransactionFragment[]>([]);
-  const { loading, data } = useGetTransactionsQuery({
+  const { loading, data, refetch } = useGetTransactionsQuery({
     variables: {
       type,
       walletIds: filters.wallets.length ? filters.wallets : undefined,
@@ -70,7 +70,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
       />
       <Row justify="end" gutter={[4, 12]}>
         <Col>
-          <AddTransaction type={type} />
+          <AddTransaction type={type} onAdd={refetch} />
         </Col>
       </Row>
       <Table
@@ -181,6 +181,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
                       id: record.id,
                     },
                   });
+                  await refetch();
                   e?.preventDefault();
                 }}
                 okText="Yes, I want"

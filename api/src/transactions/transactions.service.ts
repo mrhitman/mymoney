@@ -200,8 +200,8 @@ export class TransactionsService {
 
   public async delete(user: User, id: string) {
     const trx = await this.getTransaction(id, user.id);
-
-    return trx.$query().delete();
+    await trx.$query().delete();
+    return trx;
   }
 
   private async addIncomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {

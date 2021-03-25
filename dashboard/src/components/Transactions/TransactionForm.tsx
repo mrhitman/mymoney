@@ -2,7 +2,7 @@ import { DatePicker, Form, Input, Select } from 'antd';
 import { FormikProps } from 'formik';
 import { isArray } from 'lodash';
 import { OptionData, OptionGroupData } from 'rc-select/lib/interface';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TransactionFragment,
@@ -27,12 +27,7 @@ interface Props {
   formik: FormikProps<TransactionFormTypes>;
 }
 
-const systemCategories = [
-  'TRANSFER_IN',
-  'TRANSFER_OUT',
-  'TRANSFER_SYS',
-  'SYSTEM_EMPTY',
-];
+const systemCategories = ['TRANSFER_IN', 'TRANSFER_OUT', 'TRANSFER_SYS'];
 
 function filterOptionFn(
   input: string,
@@ -48,7 +43,18 @@ function filterOptionFn(
 
 export const TransactionForm: FC<Props> = ({ formik }) => {
   const { t } = useTranslation();
-  const { data } = useGetCategoriesAndCurrenciesForCreateTrxQuery();
+  const { data, loading } = useGetCategoriesAndCurrenciesForCreateTrxQuery();
+  let defaultCategoryId;
+
+  useEffect(() => {
+    defaultCategoryId = data?.categories.find(
+      (c) =>
+        c.type &&
+        c.type.toString() === formik.values.type.toString() &&
+        c.name === 'SYSTEM_EMPTY',
+    )?.id;
+  }, [formik.values.categoryId]);
+
   return (
     <Form {...formLayout}>
       <Form.Item
@@ -82,6 +88,7 @@ export const TransactionForm: FC<Props> = ({ formik }) => {
       {formik.values.type === TransactionType.Income && (
         <Form.Item label="To Wallet" name="destinationWalletId">
           <Select
+            loading={loading}
             onChange={(value) =>
               formik.setFieldValue('destinationWalletId', value)
             }
@@ -97,6 +104,7 @@ export const TransactionForm: FC<Props> = ({ formik }) => {
       {formik.values.type === TransactionType.Outcome && (
         <Form.Item label="From Wallet" name="sourceWalletId">
           <Select
+            loading={loading}
             onChange={(value) => formik.setFieldValue('sourceWalletId', value)}
           >
             {data?.wallets.map((wallet) => (
@@ -115,6 +123,7 @@ export const TransactionForm: FC<Props> = ({ formik }) => {
       >
         <Select
           showSearch
+          loading={loading}
           onChange={(value) => formik.setFieldValue('currencyId', value)}
           filterOption={filterOptionFn}
         >
@@ -128,7 +137,9 @@ export const TransactionForm: FC<Props> = ({ formik }) => {
       <Form.Item label="Category">
         <Select
           showSearch
+          loading={loading}
           onChange={(value) => formik.setFieldValue('categoryId', value)}
+          defaultValue={defaultCategoryId}
           filterOption={filterOptionFn}
         >
           {data?.categories

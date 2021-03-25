@@ -12,9 +12,10 @@ import { TransactionForm, TransactionFormTypes } from './TransactionForm';
 
 interface Props {
   type: TransactionType;
+  onAdd: () => void;
 }
 
-export const AddTransaction: FC<Props> = ({ type }) => {
+export const AddTransaction: FC<Props> = ({ type, onAdd }) => {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const [createTransaction] = useCreateTransactionMutation();
@@ -40,6 +41,7 @@ export const AddTransaction: FC<Props> = ({ type }) => {
           },
         },
       });
+      onAdd();
       formik.resetForm();
     },
   });

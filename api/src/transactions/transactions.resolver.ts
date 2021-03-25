@@ -17,7 +17,7 @@ import { TransactionsService } from './transactions.service';
 
 @Resolver(() => TransactionDto)
 export class TransactionsResolver {
-  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) {}
+  constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) { }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => String)

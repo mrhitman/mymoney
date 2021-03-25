@@ -19,11 +19,13 @@ export class TransactionCreate {
 
   @Field({ nullable: true })
   @IsString()
+  @IsOptional()
   @ValidateIf((o) => o.type !== 'income')
   readonly sourceWalletId?: string;
 
   @Field({ nullable: true })
   @IsString()
+  @IsOptional()
   @ValidateIf((o) => o.type !== 'outcome')
   readonly destinationWalletId?: string;
 

@@ -1,11 +1,14 @@
-import React, { FC, useState } from 'react';
-import { TransactionType } from 'src/generated/graphql';
-import { Button, Modal } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { TransactionForm, TransactionFormTypes } from './TransactionForm';
+import { Button, Modal } from 'antd';
 import { useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  TransactionType,
+  useCreateTransactionMutation,
+} from 'src/generated/graphql';
+import { TransactionForm, TransactionFormTypes } from './TransactionForm';
 
 interface Props {
   type: TransactionType;
@@ -14,6 +17,7 @@ interface Props {
 export const AddTransaction: FC<Props> = ({ type }) => {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
+  const [createTransaction] = useCreateTransactionMutation();
   const formik = useFormik({
     initialValues: {
       amount: 0,
@@ -21,8 +25,21 @@ export const AddTransaction: FC<Props> = ({ type }) => {
       date: moment(),
       description: '',
     } as TransactionFormTypes,
-    onSubmit: (data) => {
-      console.log(data);
+    onSubmit: async (data) => {
+      await createTransaction({
+        variables: {
+          transactionCreateData: {
+            type,
+            amount: data.amount,
+            description: data.description,
+            categoryId: data.categoryId!,
+            currencyId: data.currencyId!,
+            sourceWalletId: data.sourceWalletId,
+            destinationWalletId: data.destinationWalletId,
+            date: moment(data.date).unix(),
+          },
+        },
+      });
       formik.resetForm();
     },
   });

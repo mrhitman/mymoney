@@ -33,7 +33,7 @@ interface TransactionFilters {
 
 @Injectable()
 export class TransactionsService {
-  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) {}
+  constructor(protected walletService: WalletsService, protected budgetService: BudgetsService) { }
 
   public async export(user: User, filter: TransactionFilters = {}) {
     function write(path: string, data: any) {
@@ -161,7 +161,20 @@ export class TransactionsService {
         }),
       });
 
-      await this[`add${trx.type}Trx`](user, trx, dbTrx);
+      switch (trx.type) {
+        case TransactionType.income:
+          await this.addIncomeTrx(user, trx, dbTrx);
+          break;
+        case TransactionType.outcome:
+          await this.addOutcomeTrx(user, trx, dbTrx);
+          break;
+        case TransactionType.transfer:
+          await this.addTransferTrx(user, trx, dbTrx);
+          break;
+        default:
+          throw new BadRequestException(`Invalid trx type:${trx.type}`)
+      }
+
       await dbTrx.commit();
 
       return trx;
@@ -191,9 +204,12 @@ export class TransactionsService {
     return trx.$query().delete();
   }
 
-  private async addincomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
+  private async addIncomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
+    console.log(trx.destinationWalletId)
     const wallet = await this.walletService.findOne(user, trx.destinationWalletId);
+    console.log(wallet)
     const pocket = this.getOrCreatePocket(wallet, trx);
+    console.log(pocket)
     pocket.amount += trx.amount;
 
     await wallet
@@ -207,7 +223,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  private async addoutcomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
+  private async addOutcomeTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
     const wallet = await this.walletService.findOne(user, trx.sourceWalletId);
     const pocket = this.getOrCreatePocket(wallet, trx);
     pocket.amount -= trx.amount;
@@ -223,7 +239,7 @@ export class TransactionsService {
     return wallet;
   }
 
-  private async addtransferTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
+  private async addTransferTrx(user: User, trx: Transaction, dbTrx?: TransactionOrKnex) {
     await trx.$query().update({ categoryId: categoryTransferId });
     const trxIn = await Transaction.query(dbTrx).insert({
       id: uuid(),
@@ -249,8 +265,8 @@ export class TransactionsService {
       syncAt: trx.syncAt,
       createdAt: trx.createdAt,
     });
-    await this.addincomeTrx(user, trxIn, dbTrx);
-    await this.addoutcomeTrx(user, trxOut, dbTrx);
+    await this.addIncomeTrx(user, trxIn, dbTrx);
+    await this.addOutcomeTrx(user, trxOut, dbTrx);
     return;
   }
 

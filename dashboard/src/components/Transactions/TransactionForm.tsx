@@ -80,9 +80,11 @@ export const TransactionForm: FC<Props> = ({ formik }) => {
         <DatePicker showTime defaultValue={formik.values.date} />
       </Form.Item>
       {formik.values.type === TransactionType.Income && (
-        <Form.Item label="To Wallet" name="sourceWalletId">
+        <Form.Item label="To Wallet" name="destinationWalletId">
           <Select
-            onChange={(value) => formik.setFieldValue('sourceWalletId', value)}
+            onChange={(value) =>
+              formik.setFieldValue('destinationWalletId', value)
+            }
           >
             {data?.wallets.map((wallet) => (
               <Select.Option key={wallet.id} value={wallet.id}>
@@ -93,11 +95,9 @@ export const TransactionForm: FC<Props> = ({ formik }) => {
         </Form.Item>
       )}
       {formik.values.type === TransactionType.Outcome && (
-        <Form.Item label="From Wallet">
+        <Form.Item label="From Wallet" name="sourceWalletId">
           <Select
-            onChange={(value) =>
-              formik.setFieldValue('destinationWalletId', value)
-            }
+            onChange={(value) => formik.setFieldValue('sourceWalletId', value)}
           >
             {data?.wallets.map((wallet) => (
               <Select.Option key={wallet.id} value={wallet.id}>

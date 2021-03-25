@@ -8,12 +8,10 @@ fragment wallet on Wallet {
 fragment transaction on Transaction {
   id
   type
-  sourceWallet {
-    ...wallet
-  }
-  destinationWallet {
-    ...wallet
-  }
+  sourceWalletId
+  destinationWalletId
+  categoryId
+  currencyId
   currency {
     id
     name
@@ -42,9 +40,33 @@ mutation createTransaction($transactionCreateData: TransactionCreate!) {
   }
 }
 
+query getCategoriesAndCurrenciesForCreateTrx {
+  categories {
+    id
+    type
+    name
+  }
+  currencies {
+    id
+    name
+    description
+  }
+  wallets {
+    id
+    name
+    description
+  }
+}
+
 query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
+    sourceWallet {
+      ...wallet
+    }
+    destinationWallet {
+      ...wallet
+    }
     meta
   }
 }
@@ -106,6 +128,12 @@ query getTransactions(
     totalCount
     items {
       ...transaction
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
     }
   }
 }
@@ -130,6 +158,12 @@ query getWalletTransactions(
     totalCount
     items {
       ...transaction
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
     }
   }
 }

@@ -1178,14 +1178,8 @@ export type WalletFragment = (
 
 export type TransactionFragment = (
   { __typename?: 'Transaction' }
-  & Pick<Transaction, 'id' | 'type' | 'date' | 'description' | 'amount' | 'meta'>
-  & { sourceWallet?: Maybe<(
-    { __typename?: 'Wallet' }
-    & WalletFragment
-  )>, destinationWallet?: Maybe<(
-    { __typename?: 'Wallet' }
-    & WalletFragment
-  )>, currency: (
+  & Pick<Transaction, 'id' | 'type' | 'sourceWalletId' | 'destinationWalletId' | 'categoryId' | 'currencyId' | 'date' | 'description' | 'amount' | 'meta'>
+  & { currency: (
     { __typename?: 'Currency' }
     & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
   ), category: (
@@ -1211,6 +1205,23 @@ export type CreateTransactionMutation = (
   ) }
 );
 
+export type GetCategoriesAndCurrenciesForCreateTrxQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCategoriesAndCurrenciesForCreateTrxQuery = (
+  { __typename?: 'Query' }
+  & { categories: Array<(
+    { __typename?: 'UserCategory' }
+    & Pick<UserCategory, 'id' | 'type' | 'name'>
+  )>, currencies: Array<(
+    { __typename?: 'Currency' }
+    & Pick<Currency, 'id' | 'name' | 'description'>
+  )>, wallets: Array<(
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'description'>
+  )> }
+);
+
 export type GetTransactionQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1221,6 +1232,13 @@ export type GetTransactionQuery = (
   & { transaction: (
     { __typename?: 'Transaction' }
     & Pick<Transaction, 'meta'>
+    & { sourceWallet?: Maybe<(
+      { __typename?: 'Wallet' }
+      & WalletFragment
+    )>, destinationWallet?: Maybe<(
+      { __typename?: 'Wallet' }
+      & WalletFragment
+    )> }
     & TransactionFragment
   ) }
 );
@@ -1267,6 +1285,13 @@ export type GetTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
+      & { sourceWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )>, destinationWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )> }
       & TransactionFragment
     )> }
   ) }
@@ -1290,6 +1315,13 @@ export type GetWalletTransactionsQuery = (
     & Pick<GetTransaction, 'totalCount'>
     & { items: Array<(
       { __typename?: 'Transaction' }
+      & { sourceWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )>, destinationWallet?: Maybe<(
+        { __typename?: 'Wallet' }
+        & WalletFragment
+      )> }
       & TransactionFragment
     )> }
   ) }
@@ -1468,12 +1500,10 @@ export const TransactionFragmentDoc = gql`
     fragment transaction on Transaction {
   id
   type
-  sourceWallet {
-    ...wallet
-  }
-  destinationWallet {
-    ...wallet
-  }
+  sourceWalletId
+  destinationWalletId
+  categoryId
+  currencyId
   currency {
     id
     name
@@ -1495,7 +1525,7 @@ export const TransactionFragmentDoc = gql`
   amount
   meta
 }
-    ${WalletFragmentDoc}`;
+    `;
 export const WalletFullFragmentDoc = gql`
     fragment walletFull on Wallet {
   id
@@ -2550,14 +2580,65 @@ export function useCreateTransactionMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateTransactionMutationHookResult = ReturnType<typeof useCreateTransactionMutation>;
 export type CreateTransactionMutationResult = Apollo.MutationResult<CreateTransactionMutation>;
 export type CreateTransactionMutationOptions = Apollo.BaseMutationOptions<CreateTransactionMutation, CreateTransactionMutationVariables>;
+export const GetCategoriesAndCurrenciesForCreateTrxDocument = gql`
+    query getCategoriesAndCurrenciesForCreateTrx {
+  categories {
+    id
+    type
+    name
+  }
+  currencies {
+    id
+    name
+    description
+  }
+  wallets {
+    id
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useGetCategoriesAndCurrenciesForCreateTrxQuery__
+ *
+ * To run a query within a React component, call `useGetCategoriesAndCurrenciesForCreateTrxQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoriesAndCurrenciesForCreateTrxQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoriesAndCurrenciesForCreateTrxQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCategoriesAndCurrenciesForCreateTrxQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>) {
+        return Apollo.useQuery<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>(GetCategoriesAndCurrenciesForCreateTrxDocument, baseOptions);
+      }
+export function useGetCategoriesAndCurrenciesForCreateTrxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>) {
+          return Apollo.useLazyQuery<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>(GetCategoriesAndCurrenciesForCreateTrxDocument, baseOptions);
+        }
+export type GetCategoriesAndCurrenciesForCreateTrxQueryHookResult = ReturnType<typeof useGetCategoriesAndCurrenciesForCreateTrxQuery>;
+export type GetCategoriesAndCurrenciesForCreateTrxLazyQueryHookResult = ReturnType<typeof useGetCategoriesAndCurrenciesForCreateTrxLazyQuery>;
+export type GetCategoriesAndCurrenciesForCreateTrxQueryResult = Apollo.QueryResult<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>;
 export const GetTransactionDocument = gql`
     query getTransaction($id: String!) {
   transaction(id: $id) {
     ...transaction
+    sourceWallet {
+      ...wallet
+    }
+    destinationWallet {
+      ...wallet
+    }
     meta
   }
 }
-    ${TransactionFragmentDoc}`;
+    ${TransactionFragmentDoc}
+${WalletFragmentDoc}`;
 
 /**
  * __useGetTransactionQuery__
@@ -2654,10 +2735,17 @@ export const GetTransactionsDocument = gql`
     totalCount
     items {
       ...transaction
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
     }
   }
 }
-    ${TransactionFragmentDoc}`;
+    ${TransactionFragmentDoc}
+${WalletFragmentDoc}`;
 
 /**
  * __useGetTransactionsQuery__
@@ -2711,10 +2799,17 @@ export const GetWalletTransactionsDocument = gql`
     totalCount
     items {
       ...transaction
+      sourceWallet {
+        ...wallet
+      }
+      destinationWallet {
+        ...wallet
+      }
     }
   }
 }
-    ${TransactionFragmentDoc}`;
+    ${TransactionFragmentDoc}
+${WalletFragmentDoc}`;
 
 /**
  * __useGetWalletTransactionsQuery__

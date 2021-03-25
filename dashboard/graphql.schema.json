@@ -2486,7 +2486,7 @@
           },
           {
             "name": "export",
-            "description": null,
+            "description": "Not fully implemented yet",
             "args": [
               {
                 "name": "order",
@@ -3755,6 +3755,37 @@
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "TransactionUpdate",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Transaction",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "deleteTransaction",
+            "description": null,
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   }
                 },

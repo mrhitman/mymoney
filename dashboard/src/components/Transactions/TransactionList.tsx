@@ -1,5 +1,5 @@
-import { EyeFilled } from '@ant-design/icons';
-import { Col, Popover, Row, Table } from 'antd';
+import { EyeFilled, DeleteOutlined } from '@ant-design/icons';
+import { Col, Popover, Row, Table, Popconfirm, Button } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import CategoryIcon from '../misc/CategoryIcon';
 import { AddTransaction } from './AddTransaction';
 import { FilterCriteries, FilterGroup } from './FilterGroup';
 import { TransactionAmount } from './TransactionAmount';
+import { useDeleteTransactionMutation } from '../../generated/graphql';
 
 interface Props {
   type: TransactionType;
@@ -52,6 +53,7 @@ const TransactionList: React.FC<Props> = ({ type }) => {
       order: sorter?.order?.split('end')[0],
     },
   });
+  const [deleteTrx] = useDeleteTransactionMutation();
   const { t } = useTranslation();
   useEffect(() => {
     if (data?.transactions.items) {
@@ -164,9 +166,36 @@ const TransactionList: React.FC<Props> = ({ type }) => {
           dataIndex=""
           key="x"
           render={(_, record: TransactionFragment) => (
-            <Link key={record.id} to={`/operation/${record.id}`}>
-              <EyeFilled />
-            </Link>
+            <>
+              <Link key={record.id} to={`/operation/${record.id}`}>
+                <Button style={{ width: 100 }} icon={<EyeFilled />} key="view">
+                  View
+                </Button>
+              </Link>
+              <Popconfirm
+                key="delete"
+                title="Are you sure to delete this transaction?"
+                onConfirm={async (e) => {
+                  await deleteTrx({
+                    variables: {
+                      id: record.id,
+                    },
+                  });
+                  e?.preventDefault();
+                }}
+                okText="Yes, I want"
+                cancelText="No"
+              >
+                <Button
+                  danger
+                  style={{ width: 100 }}
+                  icon={<DeleteOutlined />}
+                  key="delete"
+                >
+                  Remove
+                </Button>
+              </Popconfirm>
+            </>
           )}
         />
       </Table>

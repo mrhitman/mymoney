@@ -40,6 +40,12 @@ mutation createTransaction($transactionCreateData: TransactionCreate!) {
   }
 }
 
+mutation deleteTransaction($id: String!) {
+  deleteTransaction(id: $id) {
+    ...transaction
+  }
+}
+
 query getCategoriesAndCurrenciesForCreateTrx {
   categories {
     id

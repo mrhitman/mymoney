@@ -20,8 +20,8 @@ export class TransactionsResolver {
   constructor(private readonly service: TransactionsService, private readonly loader: DataLoader) { }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => String)
-  public async export(
+  @Query(() => String, { description: 'Not fully implemented yet' })
+  async export(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
     @Args('categoryIds', { nullable: true, type: () => [String] }) categoryIds?: string[],
@@ -52,7 +52,7 @@ export class TransactionsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => Transactions)
-  public async transactions(
+  async transactions(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds?: string[],
     @Args('categoryIds', { nullable: true, type: () => [String] }) categoryIds?: string[],
@@ -104,7 +104,7 @@ export class TransactionsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => TransactionDto)
-  public async transaction(@CurrentUser() user: User, @Args('id') id: string) {
+  async transaction(@CurrentUser() user: User, @Args('id') id: string) {
     return this.service.getOne(user, id);
   }
 
@@ -126,6 +126,12 @@ export class TransactionsResolver {
     data: TransactionUpdate,
   ) {
     return this.service.update(user, data);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => TransactionDto)
+  async deleteTransaction(@CurrentUser() user: User, @Args('id') id: string) {
+    return this.service.delete(user, id);
   }
 
   @ResolveField('category', () => UserCategoryDto)

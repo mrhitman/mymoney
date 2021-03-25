@@ -198,7 +198,7 @@ export class TransactionsService {
     return trx;
   }
 
-  public async delete(id: string, user: User) {
+  public async delete(user: User, id: string) {
     const trx = await this.getTransaction(id, user.id);
 
     return trx.$query().delete();

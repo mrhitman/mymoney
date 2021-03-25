@@ -215,6 +215,8 @@ type Query {
   activeBudget: Budget!
   goals: [Goal!]!
   goal(id: String!): [Goal!]!
+
+  """Not fully implemented yet"""
   export(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): String!
   transactions(order: String, orderBy: String, amountLteFilter: Float, amountGteFilter: Float, search: String, offset: Float, limit: Float, type: TransactionType, to: Float, from: Float, currencyId: String, categoryIds: [String!], walletIds: [String!]): GetTransaction!
   transaction(id: String!): Transaction!
@@ -273,6 +275,7 @@ type Mutation {
   saveToGoal(saveGoalData: GoalSave!): GoalSaveResponse!
   createTransaction(transactionCreateData: TransactionCreate!): Transaction!
   updateTransaction(transactionUpdateData: TransactionUpdate!): Transaction!
+  deleteTransaction(id: String!): Transaction!
   generateHistory(clearOldHistory: Boolean!, walletId: String!): String!
   import(id: String!): BankConnection!
   addConnector(args: AddConnectorArgs!): BankConnection!

@@ -1,11 +1,10 @@
 import {
-  ApolloLink,
-  ApolloClient,
+  ApolloClient, ApolloLink,
+
   HttpLink,
   InMemoryCache
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { RefreshDocument } from './generated/graphql';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 

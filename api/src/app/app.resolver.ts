@@ -28,30 +28,54 @@ export class AppResolver {
 
   @Mutation(() => LoginDto)
   public async login(@Args('loginData') data: LoginInput, @Context() context: any) {
-    const user = await this.localStrategy.validate(data.email, data.password);
-    await Audit.query().insert({
-      userId: user.id,
-      operation: AuditOperation.login,
-      ip: context.req.ip,
-      peer: {
-        ip: context.req.id,
-        ips: context.req.ids,
-        httpVersion: context.req.httpVersion,
-        host: context.req.host,
-        headers: context.req.headers,
-      }
-    });
-    const tokens = await this.authService.login(user);
 
-    context.req.res.cookie('token', tokens.accessToken, { httpOnly: true });
-    context.req.res.cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-    });
+    try {
+      const user = await this.localStrategy.validate(data.email, data.password);
+      await Audit.query().insert({
+        userId: user.id,
+        operation: AuditOperation.login,
+        ip: context.req.ip,
+        peer: {
+          ip: context.req.id,
+          ips: context.req.ids,
+          httpVersion: context.req.httpVersion,
+          host: context.req.host,
+          headers: context.req.headers,
+        }
+      });
+      const tokens = await this.authService.login(user);
 
-    return {
-      ...tokens,
-      profile: user,
-    };
+      context.req.res.cookie('token', tokens.accessToken, { httpOnly: true });
+      context.req.res.cookie('refreshToken', tokens.refreshToken, {
+        httpOnly: true,
+      });
+
+      return {
+        ...tokens,
+        profile: user,
+      };
+    } catch (e) {
+      const userWithEmail = await User
+        .query()
+        .findOne({ email: data.email });
+
+      if (userWithEmail) {
+        await Audit.query().insert({
+          userId: userWithEmail.id,
+          operation: AuditOperation.invalidPasswordTry,
+          ip: context.req.ip,
+          peer: {
+            ip: context.req.id,
+            ips: context.req.ids,
+            httpVersion: context.req.httpVersion,
+            host: context.req.host,
+            headers: context.req.headers,
+          }
+        });
+
+      };
+      throw e;
+    }
   }
 
   @Mutation(() => UserDto)

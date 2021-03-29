@@ -11,6 +11,7 @@ import Info from 'src/components/Info/Info';
 import Layout from 'src/components/misc/Layout';
 import Settings from 'src/components/Settings/Settings';
 import CalendarView from 'src/components/Transactions/CalendarView';
+import { AnalysisByPeriod } from '../Analysis/AnalysisByPeriod/AnalysisByPeriod';
 import ActiveBudget from '../Budgets/ActiveBudget';
 import MainPage from '../MainPage/MainPage';
 import { IncomesList } from '../Transactions/IncomesList';
@@ -71,11 +72,6 @@ export const PrivateRoutes: FC = () => {
           <CalendarView />
         </Layout>
       </Route>
-      <Route path="/analysis" exact>
-        <Layout activePage="analysis">
-          <div />
-        </Layout>
-      </Route>
       <Route path="/connectors" exact>
         <Layout activePage="connectors">
           <Connectors />
@@ -94,6 +90,11 @@ export const PrivateRoutes: FC = () => {
       <Route path="/analysis-currency" exact>
         <Layout activePage="analysis-currency">
           <AnalysisByCurrency />
+        </Layout>
+      </Route>
+      <Route path="/analysis-periods" exact>
+        <Layout activePage="analysis-periods">
+          <AnalysisByPeriod />
         </Layout>
       </Route>
       <Route path="/settings" exact>

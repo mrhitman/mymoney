@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import axios from 'axios';
 import Transaction from '../database/models/transaction.model';
 import WalletHistory from '../database/models/wallet-history.model';
 import Wallet from '../database/models/wallet.model';
@@ -44,15 +43,5 @@ export class TaskService {
         })),
       );
     } while (wallets.length < batchSize);
-  }
-
-  @Cron('0 */15 * * * *')
-  public async refreshHeroku() {
-    Logger.log('Refresh heroku', 'App');
-
-    await Promise.all([
-      axios.get('https://mymoney-server-api.herokuapp.com/graphql').catch(console.log),
-      axios.get('https://mymoney-accounting.herokuapp.com/').catch(console.log),
-    ]);
   }
 }

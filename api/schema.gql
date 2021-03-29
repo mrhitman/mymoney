@@ -146,6 +146,13 @@ type StatisticByPeriod {
   wallet: Wallet!
 }
 
+"""Statistic info about transactions"""
+type StatisticByPeriod2 {
+  name: String!
+  amount: Float!
+  date: String!
+}
+
 type BankConnection {
   id: String!
   type: String!
@@ -233,6 +240,13 @@ type Query {
     walletIds: [String!]
     interval: String = "month"
   ): [StatisticByPeriod!]!
+  statisticByPeriod2(
+    """Unix timestamp"""
+    to: Float
+
+    """Unix timestamp"""
+    from: Float
+  ): [StatisticByPeriod2!]!
 
   """Statistic grouped by categories"""
   statisticByCategory(
@@ -249,7 +263,7 @@ type Query {
   ): [StatisticByCategory!]!
 
   """Generate statistic by currency"""
-  statisticByPeriods(walletIds: [String!]): [StatisticByCurrency!]!
+  statisticByCurrency(walletIds: [String!]): [StatisticByCurrency!]!
   connectors: [BankConnection!]!
 }
 

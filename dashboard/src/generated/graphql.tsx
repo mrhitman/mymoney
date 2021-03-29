@@ -164,6 +164,14 @@ export type StatisticByPeriod = {
   wallet: Wallet;
 };
 
+/** Statistic info about transactions */
+export type StatisticByPeriod2 = {
+  __typename?: 'StatisticByPeriod2';
+  name: Scalars['String'];
+  amount: Scalars['Float'];
+  date: Scalars['String'];
+};
+
 export type BankConnection = {
   __typename?: 'BankConnection';
   id: Scalars['String'];
@@ -238,8 +246,10 @@ export type Query = {
   transactions: GetTransaction;
   transaction: Transaction;
   statisticByPeriod: Array<StatisticByPeriod>;
+  statisticByPeriod2: Array<StatisticByPeriod2>;
   /** Statistic grouped by categories */
   statisticByCategory: Array<StatisticByCategory>;
+  /** Generate statistic by currency */
   statisticByCurrency: Array<StatisticByCurrency>;
   connectors: Array<BankConnection>;
 };
@@ -329,6 +339,12 @@ export type QueryStatisticByPeriodArgs = {
 };
 
 
+export type QueryStatisticByPeriod2Args = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+};
+
+
 export type QueryStatisticByCategoryArgs = {
   to?: Maybe<Scalars['Float']>;
   from?: Maybe<Scalars['Float']>;
@@ -368,6 +384,10 @@ export type Mutation = {
   createTransaction: Transaction;
   updateTransaction: Transaction;
   deleteTransaction: Transaction;
+  /**
+   * Generate history from transactions
+   * @deprecated For dev usage
+   */
   generateHistory: Scalars['String'];
   import: BankConnection;
   addConnector: BankConnection;
@@ -702,74 +722,6 @@ export type AddConnectorArgs = {
   type: Scalars['String'];
   description: Scalars['String'];
 };
-
-export type AnalysByCategoriesQueryVariables = Exact<{
-  from?: Maybe<Scalars['Float']>;
-  to?: Maybe<Scalars['Float']>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
-  type?: Maybe<TransactionType>;
-}>;
-
-
-export type AnalysByCategoriesQuery = (
-  { __typename?: 'Query' }
-  & { statisticByCategory: Array<(
-    { __typename?: 'StatisticByCategory' }
-    & Pick<StatisticByCategory, 'amount'>
-    & { category: (
-      { __typename?: 'UserCategory' }
-      & Pick<UserCategory, 'id' | 'name' | 'type'>
-      & { icon?: Maybe<(
-        { __typename?: 'IconDto' }
-        & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
-      )> }
-    ) }
-  )>, wallets: Array<(
-    { __typename?: 'Wallet' }
-    & Pick<Wallet, 'id' | 'name' | 'description'>
-  )> }
-);
-
-export type GetStatisticByCurrencyQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetStatisticByCurrencyQuery = (
-  { __typename?: 'Query' }
-  & { statisticByCurrency: Array<(
-    { __typename?: 'StatisticByCurrency' }
-    & Pick<StatisticByCurrency, 'amount'>
-    & { currency: (
-      { __typename?: 'Currency' }
-      & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
-    ) }
-  )> }
-);
-
-export type GetStatisticByPeriodQueryVariables = Exact<{
-  from?: Maybe<Scalars['Float']>;
-  to?: Maybe<Scalars['Float']>;
-}>;
-
-
-export type GetStatisticByPeriodQuery = (
-  { __typename?: 'Query' }
-  & { statisticByPeriod: Array<(
-    { __typename?: 'StatisticByPeriod' }
-    & Pick<StatisticByPeriod, 'walletId' | 'createdAt'>
-    & { wallet: (
-      { __typename?: 'Wallet' }
-      & Pick<Wallet, 'id' | 'name' | 'description'>
-    ), pockets: Array<(
-      { __typename?: 'Pocket' }
-      & Pick<Pocket, 'amount'>
-      & { currency: (
-        { __typename?: 'Currency' }
-        & Pick<Currency, 'id' | 'name'>
-      ) }
-    )> }
-  )> }
-);
 
 export type IconFragment = (
   { __typename?: 'IconDto' }
@@ -1178,6 +1130,88 @@ export type RegisterMutation = (
   ) }
 );
 
+export type AnalysByCategoriesQueryVariables = Exact<{
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+  type?: Maybe<TransactionType>;
+}>;
+
+
+export type AnalysByCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { statisticByCategory: Array<(
+    { __typename?: 'StatisticByCategory' }
+    & Pick<StatisticByCategory, 'amount'>
+    & { category: (
+      { __typename?: 'UserCategory' }
+      & Pick<UserCategory, 'id' | 'name' | 'type'>
+      & { icon?: Maybe<(
+        { __typename?: 'IconDto' }
+        & Pick<IconDto, 'name' | 'type' | 'backgroundColor' | 'color'>
+      )> }
+    ) }
+  )>, wallets: Array<(
+    { __typename?: 'Wallet' }
+    & Pick<Wallet, 'id' | 'name' | 'description'>
+  )> }
+);
+
+export type GetStatisticByCurrencyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStatisticByCurrencyQuery = (
+  { __typename?: 'Query' }
+  & { statisticByCurrency: Array<(
+    { __typename?: 'StatisticByCurrency' }
+    & Pick<StatisticByCurrency, 'amount'>
+    & { currency: (
+      { __typename?: 'Currency' }
+      & Pick<Currency, 'id' | 'name' | 'description' | 'symbol'>
+    ) }
+  )> }
+);
+
+export type GetStatisticByPeriodQueryVariables = Exact<{
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type GetStatisticByPeriodQuery = (
+  { __typename?: 'Query' }
+  & { statisticByPeriod: Array<(
+    { __typename?: 'StatisticByPeriod' }
+    & Pick<StatisticByPeriod, 'walletId' | 'createdAt'>
+    & { wallet: (
+      { __typename?: 'Wallet' }
+      & Pick<Wallet, 'id' | 'name' | 'description'>
+    ), pockets: Array<(
+      { __typename?: 'Pocket' }
+      & Pick<Pocket, 'amount'>
+      & { currency: (
+        { __typename?: 'Currency' }
+        & Pick<Currency, 'id' | 'name'>
+      ) }
+    )> }
+  )> }
+);
+
+export type GetStatisticByPeriod2QueryVariables = Exact<{
+  from?: Maybe<Scalars['Float']>;
+  to?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type GetStatisticByPeriod2Query = (
+  { __typename?: 'Query' }
+  & { statisticByPeriod2: Array<(
+    { __typename?: 'StatisticByPeriod2' }
+    & Pick<StatisticByPeriod2, 'name' | 'amount' | 'date'>
+  )> }
+);
+
 export type WalletFragment = (
   { __typename?: 'Wallet' }
   & Pick<Wallet, 'id' | 'name' | 'type' | 'description'>
@@ -1563,150 +1597,6 @@ export const WalletFullFragmentDoc = gql`
   }
 }
     `;
-export const AnalysByCategoriesDocument = gql`
-    query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
-  statisticByCategory(
-    from: $from
-    to: $to
-    currencyName: $currencyName
-    walletIds: $walletIds
-    type: $type
-  ) {
-    amount
-    category {
-      id
-      name
-      type
-      icon {
-        name
-        type
-        backgroundColor
-        color
-      }
-    }
-  }
-  wallets {
-    id
-    name
-    description
-  }
-}
-    `;
-
-/**
- * __useAnalysByCategoriesQuery__
- *
- * To run a query within a React component, call `useAnalysByCategoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useAnalysByCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAnalysByCategoriesQuery({
- *   variables: {
- *      from: // value for 'from'
- *      to: // value for 'to'
- *      currencyName: // value for 'currencyName'
- *      walletIds: // value for 'walletIds'
- *      type: // value for 'type'
- *   },
- * });
- */
-export function useAnalysByCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
-        return Apollo.useQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
-      }
-export function useAnalysByCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
-          return Apollo.useLazyQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
-        }
-export type AnalysByCategoriesQueryHookResult = ReturnType<typeof useAnalysByCategoriesQuery>;
-export type AnalysByCategoriesLazyQueryHookResult = ReturnType<typeof useAnalysByCategoriesLazyQuery>;
-export type AnalysByCategoriesQueryResult = Apollo.QueryResult<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>;
-export const GetStatisticByCurrencyDocument = gql`
-    query GetStatisticByCurrency {
-  statisticByCurrency {
-    amount
-    currency {
-      id
-      name
-      description
-      symbol
-    }
-  }
-}
-    `;
-
-/**
- * __useGetStatisticByCurrencyQuery__
- *
- * To run a query within a React component, call `useGetStatisticByCurrencyQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetStatisticByCurrencyQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetStatisticByCurrencyQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetStatisticByCurrencyQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
-        return Apollo.useQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
-      }
-export function useGetStatisticByCurrencyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
-          return Apollo.useLazyQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
-        }
-export type GetStatisticByCurrencyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyQuery>;
-export type GetStatisticByCurrencyLazyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyLazyQuery>;
-export type GetStatisticByCurrencyQueryResult = Apollo.QueryResult<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>;
-export const GetStatisticByPeriodDocument = gql`
-    query GetStatisticByPeriod($from: Float, $to: Float) {
-  statisticByPeriod(from: $from, to: $to) {
-    walletId
-    wallet {
-      id
-      name
-      description
-    }
-    pockets {
-      amount
-      currency {
-        id
-        name
-      }
-    }
-    createdAt
-  }
-}
-    `;
-
-/**
- * __useGetStatisticByPeriodQuery__
- *
- * To run a query within a React component, call `useGetStatisticByPeriodQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetStatisticByPeriodQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetStatisticByPeriodQuery({
- *   variables: {
- *      from: // value for 'from'
- *      to: // value for 'to'
- *   },
- * });
- */
-export function useGetStatisticByPeriodQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
-        return Apollo.useQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
-      }
-export function useGetStatisticByPeriodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
-          return Apollo.useLazyQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
-        }
-export type GetStatisticByPeriodQueryHookResult = ReturnType<typeof useGetStatisticByPeriodQuery>;
-export type GetStatisticByPeriodLazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriodLazyQuery>;
-export type GetStatisticByPeriodQueryResult = Apollo.QueryResult<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>;
 export const GetActiveBudgetDocument = gql`
     query getActiveBudget {
   categories {
@@ -2568,6 +2458,186 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const AnalysByCategoriesDocument = gql`
+    query AnalysByCategories($from: Float, $to: Float, $currencyName: String, $walletIds: [String!], $type: TransactionType) {
+  statisticByCategory(
+    from: $from
+    to: $to
+    currencyName: $currencyName
+    walletIds: $walletIds
+    type: $type
+  ) {
+    amount
+    category {
+      id
+      name
+      type
+      icon {
+        name
+        type
+        backgroundColor
+        color
+      }
+    }
+  }
+  wallets {
+    id
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useAnalysByCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAnalysByCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAnalysByCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAnalysByCategoriesQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *      currencyName: // value for 'currencyName'
+ *      walletIds: // value for 'walletIds'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useAnalysByCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
+        return Apollo.useQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+      }
+export function useAnalysByCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
+          return Apollo.useLazyQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+        }
+export type AnalysByCategoriesQueryHookResult = ReturnType<typeof useAnalysByCategoriesQuery>;
+export type AnalysByCategoriesLazyQueryHookResult = ReturnType<typeof useAnalysByCategoriesLazyQuery>;
+export type AnalysByCategoriesQueryResult = Apollo.QueryResult<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>;
+export const GetStatisticByCurrencyDocument = gql`
+    query GetStatisticByCurrency {
+  statisticByCurrency {
+    amount
+    currency {
+      id
+      name
+      description
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetStatisticByCurrencyQuery__
+ *
+ * To run a query within a React component, call `useGetStatisticByCurrencyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatisticByCurrencyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatisticByCurrencyQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetStatisticByCurrencyQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
+        return Apollo.useQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
+      }
+export function useGetStatisticByCurrencyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
+          return Apollo.useLazyQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
+        }
+export type GetStatisticByCurrencyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyQuery>;
+export type GetStatisticByCurrencyLazyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyLazyQuery>;
+export type GetStatisticByCurrencyQueryResult = Apollo.QueryResult<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>;
+export const GetStatisticByPeriodDocument = gql`
+    query GetStatisticByPeriod($from: Float, $to: Float) {
+  statisticByPeriod(from: $from, to: $to) {
+    walletId
+    wallet {
+      id
+      name
+      description
+    }
+    pockets {
+      amount
+      currency {
+        id
+        name
+      }
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetStatisticByPeriodQuery__
+ *
+ * To run a query within a React component, call `useGetStatisticByPeriodQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatisticByPeriodQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatisticByPeriodQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useGetStatisticByPeriodQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
+        return Apollo.useQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
+      }
+export function useGetStatisticByPeriodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
+          return Apollo.useLazyQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
+        }
+export type GetStatisticByPeriodQueryHookResult = ReturnType<typeof useGetStatisticByPeriodQuery>;
+export type GetStatisticByPeriodLazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriodLazyQuery>;
+export type GetStatisticByPeriodQueryResult = Apollo.QueryResult<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>;
+export const GetStatisticByPeriod2Document = gql`
+    query GetStatisticByPeriod2($from: Float, $to: Float) {
+  statisticByPeriod2(from: $from, to: $to) {
+    name
+    amount
+    date
+  }
+}
+    `;
+
+/**
+ * __useGetStatisticByPeriod2Query__
+ *
+ * To run a query within a React component, call `useGetStatisticByPeriod2Query` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatisticByPeriod2Query` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatisticByPeriod2Query({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useGetStatisticByPeriod2Query(baseOptions?: Apollo.QueryHookOptions<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>) {
+        return Apollo.useQuery<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>(GetStatisticByPeriod2Document, baseOptions);
+      }
+export function useGetStatisticByPeriod2LazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>) {
+          return Apollo.useLazyQuery<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>(GetStatisticByPeriod2Document, baseOptions);
+        }
+export type GetStatisticByPeriod2QueryHookResult = ReturnType<typeof useGetStatisticByPeriod2Query>;
+export type GetStatisticByPeriod2LazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriod2LazyQuery>;
+export type GetStatisticByPeriod2QueryResult = Apollo.QueryResult<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>;
 export const CreateTransactionDocument = gql`
     mutation createTransaction($transactionCreateData: TransactionCreate!) {
   createTransaction(transactionCreateData: $transactionCreateData) {

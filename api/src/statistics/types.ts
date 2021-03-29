@@ -9,7 +9,7 @@ export interface GetStatisticByCategoryFilter {
 }
 
 export interface GetStatisticByPeriodFilter {
-  interval: Interval;
+  interval?: Interval;
   from?: number;
   to?: number;
 }

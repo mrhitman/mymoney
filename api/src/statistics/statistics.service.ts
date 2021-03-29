@@ -45,6 +45,45 @@ export class StatisticsService {
     return query;
   }
 
+  public async getStatisticByPeriod2(
+    user: User,
+    params: GetStatisticByPeriodFilter = { interval: 'month' },
+  ) {
+    function trxDateToDayFormat(trx: Transaction) {
+      return DateTime.fromMillis(+trx.date)
+        .setZone('utc')
+        .toFormat('D');
+    }
+
+    let transactions = await Transaction.query().where({
+      userId: user.id,
+      type: 'outcome',
+    });
+    const outcome = chain(transactions)
+      .groupBy(trxDateToDayFormat)
+      .map((group) =>
+        group.reduce(
+          (acc, trx) => ({ ...acc, amount: acc.amount - Number(trx.amount) }),
+          { amount: 0, name: 'outcome', date: trxDateToDayFormat(group[0]) },
+        ),
+      )
+      .value();
+    transactions = await Transaction.query().where({
+      userId: user.id,
+      type: 'income',
+    });
+    const income = chain(transactions)
+      .groupBy(trxDateToDayFormat)
+      .map((group) =>
+        group.reduce(
+          (acc, trx) => ({ ...acc, amount: acc.amount + Number(trx.amount) }),
+          { amount: 0, name: 'income', date: trxDateToDayFormat(group[0]) },
+        ),
+      )
+      .value();
+    return [...outcome, ...income];
+  }
+
   public async generateHistory(
     user: User,
     walletId: string,

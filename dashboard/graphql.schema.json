@@ -1558,6 +1558,65 @@
       },
       {
         "kind": "OBJECT",
+        "name": "StatisticByPeriod2",
+        "description": "Statistic info about transactions",
+        "fields": [
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "amount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "date",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "BankConnection",
         "description": null,
         "fields": [
@@ -2915,6 +2974,51 @@
             "deprecationReason": null
           },
           {
+            "name": "statisticByPeriod2",
+            "description": null,
+            "args": [
+              {
+                "name": "to",
+                "description": "Unix timestamp",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "from",
+                "description": "Unix timestamp",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "StatisticByPeriod2",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "statisticByCategory",
             "description": "Statistic grouped by categories",
             "args": [
@@ -2999,7 +3103,7 @@
           },
           {
             "name": "statisticByCurrency",
-            "description": null,
+            "description": "Generate statistic by currency",
             "args": [
               {
                 "name": "walletIds",
@@ -3806,7 +3910,7 @@
           },
           {
             "name": "generateHistory",
-            "description": null,
+            "description": "Generate history from transactions",
             "args": [
               {
                 "name": "clearOldHistory",
@@ -3846,8 +3950,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "For dev usage"
           },
           {
             "name": "import",

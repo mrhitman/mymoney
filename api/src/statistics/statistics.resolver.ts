@@ -10,6 +10,7 @@ import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
 import { StatisticsService } from './statistics.service';
 import { Interval } from './types';
+import { StatisticByPeriod2Dto } from './dto/statistic-by-period2.dto';
 
 @Resolver()
 export class StatisticsResolver {
@@ -31,6 +32,16 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
+  @Query(() => [StatisticByPeriod2Dto])
+  public async statisticByPeriod2(
+    @CurrentUser() user: User,
+    @Args('from', { nullable: true, description: 'Unix timestamp' }) from: number,
+    @Args('to', { nullable: true, description: 'Unix timestamp' }) to: number,
+  ) {
+    return this.service.getStatisticByPeriod2(user, { from, to });
+  }
+
+  @UseGuards(GqlAuthGuard)
   @Query(() => [StatisticByCategoryDto], { description: 'Statistic grouped by categories', complexity: 10 })
   public async statisticByCategory(
     @CurrentUser() user: User,
@@ -46,7 +57,7 @@ export class StatisticsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [StatisticByCurrencyDto], { description: 'Generate statistic by currency' })
-  public async statisticByPeriods(
+  public async statisticByCurrency(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
   ) {

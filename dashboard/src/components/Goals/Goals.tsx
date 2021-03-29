@@ -1,5 +1,14 @@
 import { DeleteOutlined, SaveOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Col, List, Popconfirm, Row, Skeleton } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  Col,
+  List,
+  Popconfirm,
+  Row,
+  Skeleton,
+  Progress,
+} from 'antd';
 import { pick } from 'lodash';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +72,11 @@ export const Goals: FC = () => {
                   <List.Item.Meta
                     title={goal.name}
                     description={`To collect ${goal.goal} ${goal.currency.symbol}`}
+                  />
+                  <Progress
+                    size="small"
+                    type="circle"
+                    percent={(goal.progress / goal.goal) * 100}
                   />
                 </List.Item>
               )}

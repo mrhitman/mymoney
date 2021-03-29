@@ -8,11 +8,12 @@ import { DataLoader } from '../dataloader';
 import { StatisticByCategoryDto } from './dto/statistic-by-category.dto';
 import { StatisticByCurrencyDto } from './dto/statistic-by-currency.dto';
 import { StatisticByPeriodDto } from './dto/statistic-by-period.dto';
-import { StatisticsService, Interval } from './statistics.service';
+import { StatisticsService } from './statistics.service';
+import { Interval } from './types';
 
 @Resolver()
 export class StatisticsResolver {
-  constructor(protected readonly service: StatisticsService, private readonly loader: DataLoader) {}
+  constructor(protected readonly service: StatisticsService, private readonly loader: DataLoader) { }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [StatisticByPeriodDto])
@@ -30,7 +31,7 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => [StatisticByCategoryDto], { description: 'Statistic grouped by categories' })
+  @Query(() => [StatisticByCategoryDto], { description: 'Statistic grouped by categories', complexity: 10 })
   public async statisticByCategory(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
@@ -44,8 +45,8 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => [StatisticByCurrencyDto])
-  public async statisticByCurrency(
+  @Query(() => [StatisticByCurrencyDto], { description: 'Generate statistic by currency' })
+  public async statisticByPeriods(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
   ) {
@@ -53,7 +54,7 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => String)
+  @Mutation(() => String, { description: 'Generate history from transactions', deprecationReason: 'For dev usage' })
   public async generateHistory(
     @CurrentUser() user: User,
     @Args('walletId') walletId: string,

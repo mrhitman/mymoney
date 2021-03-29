@@ -1,49 +1,55 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { chain, first } from 'lodash';
 import { DateTime } from 'luxon';
-import { CurrenciesService, GetRateResponse } from 'src/currencies/currencies.service';
+import {
+  CurrenciesService,
+  GetRateResponse,
+} from 'src/currencies/currencies.service';
 import Transaction from 'src/database/models/transaction.model';
 import User from 'src/database/models/user.model';
 import WalletHistory from 'src/database/models/wallet-history.model';
 import Wallet from 'src/database/models/wallet.model';
 import { TransactionType } from 'src/transactions/transaction-type';
-
-interface GetStatisticByCategoryFilter {
-  walletIds?: string[];
-  currencyName?: string;
-  type?: TransactionType;
-  from?: number;
-  to?: number;
-}
-
-interface GetStatisticByCurrencyFilter {
-  walletIds?: string[];
-}
-
-export type Interval = 'day' | 'week' | 'month' | 'year';
+import {
+  GetStatisticByCategoryFilter,
+  GetStatisticByCurrencyFilter,
+  GetStatisticByPeriodFilter,
+} from './types';
 
 @Injectable()
 export class StatisticsService {
-  constructor(protected readonly currencyService: CurrenciesService) {}
+  constructor(protected readonly currencyService: CurrenciesService) { }
 
   public async getStatisticByPeriod(
     user: User,
-    params: { interval: Interval; from?: number; to?: number } = { interval: 'month' },
+    params: GetStatisticByPeriodFilter = { interval: 'month' },
   ) {
     const query = WalletHistory.query().where({ userId: user.id });
 
     if (params.from) {
-      query.where('createdAt', '>=', DateTime.fromSeconds(params.from).toRFC2822());
+      query.where(
+        'createdAt',
+        '>=',
+        DateTime.fromSeconds(params.from).setZone('utc').toRFC2822(),
+      );
     }
 
     if (params.to) {
-      query.where('createdAt', '<=', DateTime.fromSeconds(params.to).toRFC2822());
+      query.where(
+        'createdAt',
+        '<=',
+        DateTime.fromSeconds(params.to).setZone('utc').toRFC2822(),
+      );
     }
 
     return query;
   }
 
-  public async generateHistory(user: User, walletId: string, clearOldHistory = false) {
+  public async generateHistory(
+    user: User,
+    walletId: string,
+    clearOldHistory = false,
+  ) {
     const transactions = await this.getTransactionsByDays(user, walletId);
     const wallet = await Wallet.query()
       .where({
@@ -62,7 +68,9 @@ export class StatisticsService {
 
     const pockets = wallet.pockets;
     for (const date in transactions) {
-      const summarizedDelta = this.summarizeTransactionsForDay(transactions[date]);
+      const summarizedDelta = this.summarizeTransactionsForDay(
+        transactions[date],
+      );
 
       Object.keys(summarizedDelta).forEach((currencyId) => {
         const pocket = pockets.find((p) => p.currencyId === currencyId);
@@ -86,7 +94,10 @@ export class StatisticsService {
     }
   }
 
-  public async getStatisticByCategory(user: User, filter: GetStatisticByCategoryFilter = {}) {
+  public async getStatisticByCategory(
+    user: User,
+    filter: GetStatisticByCategoryFilter = {},
+  ) {
     const query = Transaction.query()
       .withGraphFetched('[category, currency]')
       .where({ userId: user.id });
@@ -104,11 +115,21 @@ export class StatisticsService {
     }
 
     if (filter.from) {
-      query.where('date', '>=', DateTime.fromSeconds(filter.from).toRFC2822());
+      // @TODO check
+      query.where(
+        'date',
+        '>=',
+        DateTime.fromSeconds(filter.from).setZone('utc').toRFC2822(),
+      );
     }
 
     if (filter.to) {
-      query.where('date', '<=', DateTime.fromSeconds(filter.to).toRFC2822());
+      // @TODO check
+      query.where(
+        'date',
+        '<=',
+        DateTime.fromSeconds(filter.to).setZone('utc').toRFC2822(),
+      );
     }
 
     const items = await query.debug();
@@ -136,7 +157,9 @@ export class StatisticsService {
         acc +
         this.currencyService.exchange(
           rates,
-          trx.type === TransactionType.income ? +trx.amount : -Number(trx.amount),
+          trx.type === TransactionType.income
+            ? +trx.amount
+            : -Number(trx.amount),
           trx.currency.name,
           currencyName,
         ),
@@ -144,8 +167,13 @@ export class StatisticsService {
     );
   }
 
-  public async getStatisticByCurrency(user: User, filter: GetStatisticByCurrencyFilter = {}) {
-    const query = Wallet.query().where({ userId: user.id }).whereNot({ type: 'goal' });
+  public async getStatisticByCurrency(
+    user: User,
+    filter: GetStatisticByCurrencyFilter = {},
+  ) {
+    const query = Wallet.query()
+      .where({ userId: user.id })
+      .whereNot({ type: 'goal' });
 
     if (filter.walletIds) {
       query.whereIn('id', filter.walletIds);
@@ -170,13 +198,17 @@ export class StatisticsService {
       .withGraphFetched('[currency]')
       .where({ userId: user.id })
       .where((q) =>
-        q.where({ sourceWalletId: walletId }).orWhere({ destinationWalletId: walletId }),
+        q
+          .where({ sourceWalletId: walletId })
+          .orWhere({ destinationWalletId: walletId }),
       )
       .whereIn('type', ['income', 'outcome'])
       .orderBy('date', 'desc');
 
     return chain(await query)
-      .groupBy((transaction) => DateTime.fromMillis(+transaction.date).toFormat('DD'))
+      .groupBy((transaction) =>
+        DateTime.fromMillis(+transaction.date).toFormat('DD'),
+      )
       .value();
   }
 
@@ -186,13 +218,13 @@ export class StatisticsService {
 
       return t.currencyId in acc
         ? {
-            ...acc,
-            [t.currencyId]: acc[t.currencyId] + Number(t.amount) * m,
-          }
+          ...acc,
+          [t.currencyId]: acc[t.currencyId] + Number(t.amount) * m,
+        }
         : {
-            ...acc,
-            [t.currencyId]: Number(t.amount) * m,
-          };
+          ...acc,
+          [t.currencyId]: Number(t.amount) * m,
+        };
     }, {});
   }
 

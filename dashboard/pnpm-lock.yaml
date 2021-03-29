@@ -102,7 +102,7 @@ packages:
       integrity: sha512-Uk+GNexHOmiK3BMk/xvliNsNt+LYnN49u5o4lqeuMKXJlNqE9kGpEF03KpxDqu/zybO0/0yAJALha8oPtR5iHA==
   /@antv/adjust/0.2.3:
     dependencies:
-      '@antv/util': 2.0.10
+      '@antv/util': 2.0.13
       tslib: 1.14.1
     dev: false
     resolution:
@@ -110,14 +110,14 @@ packages:
   /@antv/attr/0.3.2:
     dependencies:
       '@antv/color-util': 2.0.6
-      '@antv/util': 2.0.10
+      '@antv/util': 2.0.13
       tslib: 1.14.1
     dev: false
     resolution:
       integrity: sha512-31PfcVKeQdPBmr/QD+IC0NB/FbdtVKOXBCNMepFc5/dEs7jphmgG1V4tfAJmcXIHubCTHOjpscTrDIvoKSGvMQ==
   /@antv/color-util/2.0.6:
     dependencies:
-      '@antv/util': 2.0.10
+      '@antv/util': 2.0.13
       tslib: 2.1.0
     dev: false
     resolution:
@@ -190,7 +190,7 @@ packages:
       integrity: sha512-RljojCkmkTyxBOd6qLCOtF3Yk8JAYpa8J+CuHkjH4/SFFeJhakAkQnYAkLccaGrjYWAwC9IOPzEgK1cTd7v/gw==
   /@antv/g-math/0.1.7:
     dependencies:
-      '@antv/util': 2.0.10
+      '@antv/util': 2.0.13
       gl-matrix: 3.3.0
     dev: false
     resolution:
@@ -246,7 +246,7 @@ packages:
       integrity: sha512-A/+yuuUM6KPOXk95Hqo8RJqu/dGXFvBB/YlAg8i80AQ56MNLb9TEwGByADpVicta5VeH6h3k36m4xdePIWADIg==
   /@antv/matrix-util/3.1.0-beta.2:
     dependencies:
-      '@antv/util': 2.0.10
+      '@antv/util': 2.0.13
       gl-matrix: 3.3.0
       tslib: 1.14.1
     dev: false
@@ -254,7 +254,7 @@ packages:
       integrity: sha512-Efwp0ZHxVDK/8RUa/RRWN7HKFHJmjn7Oq5HaNBbCmsxd7JTla3Zsoq1AZrjWMDlq0lplo77urclwI+XIW8NEHw==
   /@antv/path-util/2.0.9:
     dependencies:
-      '@antv/util': 2.0.10
+      '@antv/util': 2.0.13
       tslib: 2.1.0
     dev: false
     resolution:
@@ -273,6 +273,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-cO6F5qyGVdwG21lunhoDhupR+I+eLYAePgDzM2bjU3LwE3akfyymhOlHE8wcONsPEVRLQ3sTOtd+FojO6g01gw==
+  /@antv/util/2.0.13:
+    dependencies:
+      tslib: 2.1.0
+    dev: false
+    resolution:
+      integrity: sha512-mfYL7K8XJIeDmal33K+6abr8Yb526YXKg5XQlddNo+X1Doll+gun6HxnbdySoLv21vW4bLkcbVPjqxWl7ZJAFA==
   /@apollo/client/3.3.6_graphql@15.4.0+react@16.14.0:
     dependencies:
       '@graphql-typed-document-node/core': 3.1.0_graphql@15.4.0

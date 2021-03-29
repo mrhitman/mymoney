@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { chain, first } from 'lodash';
+import { chain, first, pick } from 'lodash';
 import { DateTime } from 'luxon';
 import {
   CurrenciesService,
@@ -54,6 +54,12 @@ export class StatisticsService {
         .setZone('utc')
         .toFormat('D');
     }
+    function trxDateToUnix(trx: Transaction) {
+      return DateTime.fromMillis(+trx.date)
+        .setZone('utc')
+        .toSeconds();
+    }
+
     function trxGroupReducer(x: number) {
       return <T extends { amount: number }>(acc: T, trx: Transaction) => ({
         ...acc,
@@ -70,7 +76,8 @@ export class StatisticsService {
       userId: user.id,
       type: 'income',
     });
-    return [
+
+    const statistic = [
       ...chain(incomeTrx)
         .groupBy(trxDateToDayFormat)
         .map((group) =>
@@ -78,6 +85,7 @@ export class StatisticsService {
             amount: 0,
             name: 'outcome',
             date: trxDateToDayFormat(group[0]),
+            unix: trxDateToUnix(group[0]),
           }),
         )
         .value(),
@@ -88,10 +96,13 @@ export class StatisticsService {
             amount: 0,
             name: 'income',
             date: trxDateToDayFormat(group[0]),
+            unix: trxDateToUnix(group[0]),
           }),
         )
         .value(),
     ];
+
+    return statistic.map((item) => pick(item, ['amount', 'name', 'date']));
   }
 
   public async generateHistory(

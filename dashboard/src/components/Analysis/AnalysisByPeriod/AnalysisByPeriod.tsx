@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useGetStatisticByPeriod2Query } from 'src/generated/graphql';
+import { range } from 'lodash';
 import {
   Chart,
   Interval,
@@ -7,6 +8,7 @@ import {
   registerInteraction,
   Tooltip,
 } from 'bizcharts';
+import moment from 'moment';
 
 registerInteraction('element-link', {
   start: [
@@ -24,7 +26,22 @@ export const AnalysisByPeriod: FC = () => {
       padding={[10, 20, 50, 40]}
       autoFit
       height={500}
-      data={data?.statisticByPeriod2}
+      data={range(70)
+        .map((day) => {
+          const date = moment().subtract(day, 'd');
+          return {
+            date: moment(date || undefined).format('M/D/yyyy'),
+            amount: 0,
+            name: 'income',
+          };
+        })
+        .concat(data?.statisticByPeriod2 || [])
+        .sort((a, b) => {
+          return (
+            moment(a.date, 'M/D/yyyy').unix() -
+            moment(b.date, 'M/D/yyyy').unix()
+          );
+        })}
       loading={loading}
       scale={{
         amount: {

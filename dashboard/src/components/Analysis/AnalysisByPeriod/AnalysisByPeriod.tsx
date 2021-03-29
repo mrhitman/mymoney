@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { useGetStatisticByPeriod2Query } from 'src/generated/graphql';
-import moment from 'moment';
 import {
   Chart,
   Interval,
@@ -18,13 +17,6 @@ registerInteraction('element-link', {
   ],
 });
 
-const scale = {
-  sales: {
-    tickInterval: 600,
-    nice: true,
-  },
-};
-
 export const AnalysisByPeriod: FC = () => {
   const { data, loading } = useGetStatisticByPeriod2Query();
   return (
@@ -32,16 +24,17 @@ export const AnalysisByPeriod: FC = () => {
       padding={[10, 20, 50, 40]}
       autoFit
       height={500}
-      data={data?.statisticByPeriod2.map((value) => ({
-        year: value.date,
-        type: value.name,
-        sales: value.amount,
-      }))}
+      data={data?.statisticByPeriod2}
       loading={loading}
-      scale={scale}
+      scale={{
+        amount: {
+          tickInterval: 600,
+          nice: true,
+        },
+      }}
     >
       <Tooltip showMarkers={false} />
-      <Interval position="year*sales" color="type" adjust="stack" />
+      <Interval position="date*amount" color="name" adjust="stack" />
       <Interaction type="element-highlight" />
       <Interaction type="element-link" />
     </Chart>

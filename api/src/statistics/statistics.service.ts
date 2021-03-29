@@ -18,7 +18,7 @@ import {
 
 @Injectable()
 export class StatisticsService {
-  constructor(protected readonly currencyService: CurrenciesService) { }
+  constructor(protected readonly currencyService: CurrenciesService) {}
 
   public async getStatisticByPeriod(
     user: User,
@@ -54,34 +54,44 @@ export class StatisticsService {
         .setZone('utc')
         .toFormat('D');
     }
+    function trxGroupReducer(x: number) {
+      return <T extends { amount: number }>(acc: T, trx: Transaction) => ({
+        ...acc,
+        amount: acc.amount + x * Number(trx.amount),
+      });
+    }
 
-    let transactions = await Transaction.query().where({
+    const incomeTrx = await Transaction.query().where({
       userId: user.id,
       type: 'outcome',
     });
-    const outcome = chain(transactions)
-      .groupBy(trxDateToDayFormat)
-      .map((group) =>
-        group.reduce(
-          (acc, trx) => ({ ...acc, amount: acc.amount - Number(trx.amount) }),
-          { amount: 0, name: 'outcome', date: trxDateToDayFormat(group[0]) },
-        ),
-      )
-      .value();
-    transactions = await Transaction.query().where({
+
+    const outcomeTrx = await Transaction.query().where({
       userId: user.id,
       type: 'income',
     });
-    const income = chain(transactions)
-      .groupBy(trxDateToDayFormat)
-      .map((group) =>
-        group.reduce(
-          (acc, trx) => ({ ...acc, amount: acc.amount + Number(trx.amount) }),
-          { amount: 0, name: 'income', date: trxDateToDayFormat(group[0]) },
-        ),
-      )
-      .value();
-    return [...outcome, ...income];
+    return [
+      ...chain(incomeTrx)
+        .groupBy(trxDateToDayFormat)
+        .map((group) =>
+          group.reduce(trxGroupReducer(-1), {
+            amount: 0,
+            name: 'outcome',
+            date: trxDateToDayFormat(group[0]),
+          }),
+        )
+        .value(),
+      ...chain(outcomeTrx)
+        .groupBy(trxDateToDayFormat)
+        .map((group) =>
+          group.reduce(trxGroupReducer(1), {
+            amount: 0,
+            name: 'income',
+            date: trxDateToDayFormat(group[0]),
+          }),
+        )
+        .value(),
+    ];
   }
 
   public async generateHistory(
@@ -257,13 +267,13 @@ export class StatisticsService {
 
       return t.currencyId in acc
         ? {
-          ...acc,
-          [t.currencyId]: acc[t.currencyId] + Number(t.amount) * m,
-        }
+            ...acc,
+            [t.currencyId]: acc[t.currencyId] + Number(t.amount) * m,
+          }
         : {
-          ...acc,
-          [t.currencyId]: Number(t.amount) * m,
-        };
+            ...acc,
+            [t.currencyId]: Number(t.amount) * m,
+          };
     }, {});
   }
 

@@ -5,11 +5,11 @@ import {
   Col,
   List,
   Popconfirm,
+  Progress,
   Row,
   Skeleton,
-  Progress,
 } from 'antd';
-import { pick } from 'lodash';
+import { pick, round } from 'lodash';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -54,7 +54,7 @@ export const Goals: FC = () => {
                       cancelText="No"
                     >
                       <Button icon={<DeleteOutlined />} key="delete">
-                        Remove
+                        {t('goal_remove')}
                       </Button>
                     </Popconfirm>,
                     <UpdateGoal
@@ -76,7 +76,7 @@ export const Goals: FC = () => {
                   <Progress
                     size="small"
                     type="circle"
-                    percent={(goal.progress / goal.goal) * 100}
+                    percent={round((goal.progress / goal.goal) * 100, 1)}
                   />
                 </List.Item>
               )}

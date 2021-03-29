@@ -17,22 +17,23 @@ export const GoalForm: FC<GoalFormProps> = ({ formik }) => {
           onChange={(e) => formik.setFieldValue('name', e.target.value)}
         />
       </Form.Item>
-      <Form.Item label="Goal">
+      <Form.Item name="goal" label="Goal" initialValue={formik.values.goal}>
         <Input
           type="number"
           value={formik.values.goal}
-          onChange={(e) =>
-            formik.setFieldValue('goal', parseFloat(e.target.value))
-          }
+          onChange={formik.handleChange('goal')}
         />
       </Form.Item>
-      <Form.Item label={formik.values.id ? 'Progress' : 'Initial progress'}>
+      <Form.Item
+        name="progress"
+        label={formik.values.id ? 'Progress' : 'Initial progress'}
+        initialValue={formik.values.progress}
+      >
         <Input
+          name="progress"
           type="number"
           value={formik.values.progress}
-          onChange={(e) =>
-            formik.setFieldValue('goal', parseFloat(e.target.value))
-          }
+          onChange={formik.handleChange('progress')}
         />
       </Form.Item>
       <Form.Item label="Currency">

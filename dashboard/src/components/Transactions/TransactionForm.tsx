@@ -2,7 +2,7 @@ import { DatePicker, Form, Input, Select } from 'antd';
 import { FormikProps } from 'formik';
 import { isArray } from 'lodash';
 import { OptionData, OptionGroupData } from 'rc-select/lib/interface';
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TransactionFragment,
@@ -44,16 +44,12 @@ function filterOptionFn(
 export const TransactionForm: FC<Props> = ({ formik }) => {
   const { t } = useTranslation();
   const { data, loading } = useGetCategoriesAndCurrenciesForCreateTrxQuery();
-  let defaultCategoryId;
-
-  useEffect(() => {
-    defaultCategoryId = data?.categories.find(
-      (c) =>
-        c.type &&
-        c.type.toString() === formik.values.type.toString() &&
-        c.name === 'SYSTEM_EMPTY',
-    )?.id;
-  }, [formik.values.categoryId]);
+  const defaultCategoryId = data?.categories.find(
+    (c) =>
+      c.type &&
+      c.type.toString() === formik.values.type.toString() &&
+      c.name === 'SYSTEM_EMPTY',
+  )?.id;
 
   return (
     <Form {...formLayout}>

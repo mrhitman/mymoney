@@ -36,10 +36,10 @@ export const UpdateGoal: FC<UpdateGoalProps> = ({ initialValues }) => {
         icon={<EditFilled />}
         onClick={() => setVisible(true)}
       >
-        {t('goal_update')}
+        {t('goal_edit')}
       </Button>
       <Modal
-        title={t('goal_update')}
+        title={t('goal_edit')}
         visible={visible}
         onOk={() => {
           setVisible(false);

@@ -2,11 +2,11 @@ import {
   ApolloClient,
   ApolloLink,
   HttpLink,
-  InMemoryCache,
+  InMemoryCache
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { getTokens, isExpired } from 'src/auth';
-import { refreshTokens, login, logout } from './auth';
+import { refreshTokens } from './auth';
 
 export function getClient(uri: string) {
   const httpLink = new HttpLink({

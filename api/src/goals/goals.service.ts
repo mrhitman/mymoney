@@ -18,7 +18,7 @@ export class GoalsService {
   constructor(
     private readonly walletService: WalletsService,
     private readonly transactionService: TransactionsService,
-  ) {}
+  ) { }
 
   public async getAll(user: User) {
     const goals = await Goal.query().withGraphFetched('[wallet]').where({ userId: user.id });
@@ -96,6 +96,7 @@ export class GoalsService {
     try {
       await goal.$query().update({
         goal: data.goal || goal.goal,
+        progress: data.progress || goal.progress,
         ...(data.updatedAt && {
           updatedAt: DateTime.fromSeconds(data.updatedAt).toJSDate(),
         }),

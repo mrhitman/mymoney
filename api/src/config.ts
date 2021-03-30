@@ -34,7 +34,10 @@ export const config = {
   },
   db: {
     client: 'postgres',
-    connection: getEnvVariable('DATABASE_URL'),
+    connection: {
+      connectionString: getEnvVariable('DATABASE_URL'),
+      ssl: Boolean(getEnvVariable('DATABASE_SSL', '1')),
+    },
     timezone: 'UTC',
     charset: 'utf8',
     debug: Boolean(+getEnvVariable('KNEX_DEBUG', '0')),

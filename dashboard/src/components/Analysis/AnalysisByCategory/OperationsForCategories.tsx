@@ -9,14 +9,14 @@ import {
   useGetTransactionsQuery,
 } from 'src/generated/graphql';
 
-interface OperationsForCategoriesProps {
+interface Props {
   from?: number;
   to?: number;
   walletIds: string[];
   categoryId: string;
 }
 
-const OperationsForCategories: FC<OperationsForCategoriesProps> = (props) => {
+const OperationsForCategories: FC<Props> = (props) => {
   const { t } = useTranslation();
   const { loading, data } = useGetTransactionsQuery({
     variables: {

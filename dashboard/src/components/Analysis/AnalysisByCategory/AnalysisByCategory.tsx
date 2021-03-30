@@ -10,10 +10,18 @@ import {
   Menu,
   Row,
 } from 'antd';
-import { Axis, Chart, Coordinate, Interaction, Interval, Legend, Tooltip } from 'bizcharts';
+import {
+  Axis,
+  Chart,
+  Coordinate,
+  Interaction,
+  Interval,
+  Legend,
+  Tooltip,
+} from 'bizcharts';
 import { round } from 'lodash';
 import moment from 'moment';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   AnalysByCategoriesQuery,
@@ -21,7 +29,7 @@ import {
   useAnalysByCategoriesQuery,
 } from 'src/generated/graphql';
 import OperationsForCategories from './OperationsForCategories';
-import ranges from '../../misc/DateRanges';
+import ranges from 'src/components/misc/DateRanges';
 
 const cols = {
   percent: {
@@ -30,24 +38,40 @@ const cols = {
 };
 
 function getSum(data?: AnalysByCategoriesQuery) {
-  return data ? data.statisticByCategory.reduce((acc, s) => acc + Math.abs(s.amount), 0) : 1;
+  return data
+    ? data.statisticByCategory.reduce((acc, s) => acc + Math.abs(s.amount), 0)
+    : 1;
 }
 
 export const AnalysisByCategory: FC = () => {
   const { t } = useTranslation();
-  const [from, setFrom] = useState<moment.Moment | null>(moment().subtract(1, 'week'));
+  const [from, setFrom] = useState<moment.Moment | null>(
+    moment().subtract(1, 'week'),
+  );
   const [to, setTo] = useState<moment.Moment | null>(moment());
   const [selected, setSelected] = useState<null | string>(null);
   const [type, setType] = useState(TransactionType.Outcome);
   const [walletIgnoreIds, setWalletIgnoreIds] = useState<string[]>([]);
+  const [walletIds, setWalletIds] = useState<string[]>([]);
   const { data, refetch } = useAnalysByCategoriesQuery({
     variables: {
       from: from?.unix(),
       to: to?.unix(),
       type,
-      walletIds: walletIgnoreIds.length ? walletIgnoreIds : undefined,
+      walletIds: walletIds.length ? walletIds : undefined,
     },
   });
+  useEffect(() => {
+    if (data?.wallets) {
+      setWalletIds(
+        walletIgnoreIds.length
+          ? data.wallets
+              .filter((w) => !walletIgnoreIds.includes(w.id))
+              .map((w) => w.id)
+          : [],
+      );
+    }
+  }, [walletIgnoreIds]);
   const total = getSum(data);
   return (
     <>
@@ -86,10 +110,16 @@ export const AnalysisByCategory: FC = () => {
           <Dropdown
             overlay={() => (
               <Menu>
-                <Menu.Item key="income" onClick={() => setType(TransactionType.Income)}>
+                <Menu.Item
+                  key="income"
+                  onClick={() => setType(TransactionType.Income)}
+                >
                   Income
                 </Menu.Item>
-                <Menu.Item key="outcome" onClick={() => setType(TransactionType.Outcome)}>
+                <Menu.Item
+                  key="outcome"
+                  onClick={() => setType(TransactionType.Outcome)}
+                >
                   Outcome
                 </Menu.Item>
               </Menu>
@@ -133,7 +163,8 @@ export const AnalysisByCategory: FC = () => {
               label={[
                 'count',
                 {
-                  content: (data) => `${data.item}: ${round(data.count, 2)} UAH`,
+                  content: (data) =>
+                    `${data.item}: ${round(data.count, 2)} UAH`,
                 },
               ]}
             />
@@ -154,11 +185,14 @@ export const AnalysisByCategory: FC = () => {
                 from={from?.unix()}
                 to={to?.unix()}
                 walletIds={
-                  data?.wallets.map((w) => w.id).filter((id) => !walletIgnoreIds?.includes(id)) ||
-                  []
+                  data?.wallets
+                    .map((w) => w.id)
+                    .filter((id) => !walletIgnoreIds?.includes(id)) || []
                 }
                 categoryId={
-                  data?.statisticByCategory.find((s) => s.category.id === selected)!.category.id!
+                  data?.statisticByCategory.find(
+                    (s) => s.category.id === selected,
+                  )!.category.id!
                 }
               />
             </Drawer>

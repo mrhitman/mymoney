@@ -11,11 +11,11 @@ export interface LoginFormValues {
   password: string;
 }
 
-interface LoginFormProps {
+interface Props {
   afterLogin: () => void;
 }
 
-const LoginForm: FC<LoginFormProps> = (props) => {
+const LoginForm: FC<Props> = (props) => {
   const [login] = useLoginMutation();
 
   const handleSubmit = async (values: LoginFormValues) => {

@@ -36,10 +36,9 @@ export const config = {
     client: 'postgres',
     connection: {
       connectionString: getEnvVariable('DATABASE_URL'),
-      ssl: {
-        rejectUnauthorized: false,
-      },
-      // Boolean(getEnvVariable('DATABASE_SSL', '1')),
+      ssl: Boolean(+getEnvVariable('DATABASE_SSL', '1'))
+        ? { rejectUnauthorized: false }
+        : false,
     },
     timezone: 'UTC',
     charset: 'utf8',

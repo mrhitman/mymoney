@@ -2,6 +2,7 @@ import { TransactionType } from 'src/transactions/transaction-type';
 
 export interface GetStatisticByCategoryFilter {
   walletIds?: string[];
+  ignoreWalletIds?: string[];
   currencyName?: string;
   type?: TransactionType;
   from?: number;

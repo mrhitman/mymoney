@@ -24,24 +24,25 @@ export const AnalysisByPeriod: FC = () => {
   return (
     <Chart
       padding={[10, 20, 50, 40]}
-      autoFit
+      autoFit={false}
       height={500}
       data={range(70)
         .map((day) => {
           const date = moment().subtract(day, 'd');
           return {
-            date: moment(date || undefined).format('M/D/yyyy'),
+            date: date.format('M/D/yyyy'),
+            unix: date.unix(),
             amount: 0,
             name: 'income',
           };
         })
-        .concat(data?.statisticByPeriod2 || [])
-        .sort((a, b) => {
-          return (
-            moment(a.date, 'M/D/yyyy').unix() -
-            moment(b.date, 'M/D/yyyy').unix()
-          );
-        })}
+        .concat(
+          data?.statisticByPeriod2.map((s) => ({
+            ...s,
+            unix: moment(s.date, 'M/D/yyyy').unix(),
+          })) || [],
+        )
+        .sort((a, b) => a.unix - b.unix)}
       loading={loading}
       scale={{
         amount: {

@@ -37,6 +37,7 @@ export const config = {
     connection: {
       connectionString: getEnvVariable('DATABASE_URL'),
       ssl: Boolean(getEnvVariable('DATABASE_SSL', '1')),
+      rejectUnauthorized: false,
     },
     timezone: 'UTC',
     charset: 'utf8',

@@ -35,6 +35,7 @@ export type ActivePage =
   | 'operations'
   | 'incomes'
   | 'outcomes'
+  | 'transfers'
   | 'analysis'
   | 'analysis-category'
   | 'analysis-currency'
@@ -121,16 +122,16 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
               <Menu.Item key="incomes" icon={<RiseOutlined />}>
                 <Link to="/incomes">{t('incomes')}</Link>
               </Menu.Item>
-              <Menu.Item key="7" icon={<ArrowsAltOutlined />}>
-                {t('transfers')}
+              <Menu.Item key="transfers" icon={<ArrowsAltOutlined />}>
+                <Link to="/transfers">{t('transfers')}</Link>
               </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu
-              key="sub3"
+              key="budget"
               icon={<TableOutlined />}
               title={t('budget')}
             >
-              <Menu.Item key="9" icon={<CarryOutOutlined />}>
+              <Menu.Item key="currentBudget" icon={<CarryOutOutlined />}>
                 <Link to="/budgets/active">{t('current')}</Link>
               </Menu.Item>
               <Menu.Item key="10" icon={<ScheduleOutlined />}>

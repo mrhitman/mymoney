@@ -1,12 +1,12 @@
 import * as Knex from 'knex';
 
 export async function seed(knex: Knex): Promise<any> {
-  await knex('transactions').del();
-  await knex('budgets').del();
-  return knex('currencies')
+  await knex('transaction').del();
+  await knex('budget').del();
+  return knex('currency')
     .del()
     .then(() => {
-      return knex('currencies').insert(
+      return knex('currency').insert(
         [
           ['34684838-1451-52e9-a0e1-277324198bfb', 'AED', '.د.إ', 'UAE Dirham', 784],
           ['5af807c8-8027-5723-95b6-54c3073b12ec', 'AFN', '؋', 'Afghan afghani', 971],

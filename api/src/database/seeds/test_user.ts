@@ -7,15 +7,15 @@ import moment from 'moment';
 import _ from 'lodash';
 
 export async function seed(knex: Knex): Promise<any> {
-  await knex('transactions').del();
-  await knex('users').del();
-  await knex('categories').del();
-  await knex('goals').del();
-  await knex('budgets').del();
-  await knex('wallets').del();
+  await knex('transaction').del();
+  await knex('user').del();
+  await knex('category').del();
+  await knex('goal').del();
+  await knex('budget').del();
+  await knex('wallet').del();
   const password = await bcrypt.hash('1', 10);
   const [first_name, middle_name, last_name] = chance().name({ middle_initial: true }).split(' ');
-  await knex('users').insert({
+  await knex('user').insert({
     first_name,
     middle_name,
     last_name,
@@ -24,7 +24,7 @@ export async function seed(knex: Knex): Promise<any> {
   });
   const userId = await knex
     .select(['id'])
-    .from('users')
+    .from('user')
     .where({ email: 'admin@admin.com' })
     .first<{ id: number }>();
   await Promise.all(
@@ -39,7 +39,7 @@ export async function seed(knex: Knex): Promise<any> {
           is_fixed: true,
           codes: JSON.stringify(category.codes || []),
         })
-        .into('categories'),
+        .into('category'),
     ),
   );
   const categories = (
@@ -57,7 +57,7 @@ export async function seed(knex: Knex): Promise<any> {
             is_fixed: true,
             codes: JSON.stringify(category.codes || []),
           })
-          .into('user_categories')
+          .into('user_category')
           .returning('*'),
       ),
     )
@@ -98,5 +98,5 @@ export async function seed(knex: Knex): Promise<any> {
       ),
       savings: JSON.stringify([]),
     })
-    .into('budgets');
+    .into('budget');
 }

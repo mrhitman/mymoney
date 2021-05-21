@@ -124,6 +124,11 @@ export class AuthService {
     return user && omit(user, ['password']);
   }
 
+  public async getUserByEmail(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    return user && omit(user, ['password']);
+  }
+
   public async changePassword(user: User, password: string) {
     await User.query()
       .update({

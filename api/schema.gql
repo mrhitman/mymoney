@@ -269,6 +269,7 @@ type Query {
 
 type Mutation {
   login(loginData: LoginInput!): Login!
+  signupWithGoogle(idToken: String!): Login!
   register(registerData: RegisterInput!): User!
   recoveryPassword(email: String!): String!
   changePassword(newPassword: String!): String!

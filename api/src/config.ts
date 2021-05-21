@@ -3,7 +3,7 @@ import { get, isNull, isUndefined } from 'lodash';
 
 dotenv.config({ path: process.env.PWD + '/.env' });
 
-function getEnvVariable(name: string, defaultValue?: string) {
+export function getEnvVariable(name: string, defaultValue?: string) {
   const value = get(process.env, name, defaultValue);
 
   if (isNull(value) || isUndefined(value)) {

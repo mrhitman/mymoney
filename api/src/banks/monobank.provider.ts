@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { omit } from 'lodash';
 import Currency from 'src/database/models/currency.model';
@@ -107,9 +107,11 @@ export class MonobankProvider {
         .findOne({ code: account.currencyCode });
 
       const wallet = await Wallet.query()
+        .where({ userId: user.id })
         .whereRaw(`meta ->> 'id' = '${account.id}'`)
         .andWhere({ isImported: true })
         .first();
+
       const walletData = {
         id: wallet?.id || uuid(),
         userId: user.id,
@@ -127,8 +129,10 @@ export class MonobankProvider {
       };
 
       if (wallet) {
+        Logger.log('Import wallet, update', 'MONO');
         await wallet.$query().update(omit(walletData, 'id'));
       } else {
+        Logger.log('Import wallet, create', 'MONO');
         await Wallet.query().insert(walletData);
       }
 
@@ -145,7 +149,8 @@ export class MonobankProvider {
         }
 
         let trx = await Transaction.query()
-          .where({ isImported: true })
+          .where({ userId: user.id })
+          .andWhere({ isImported: true })
           .andWhereRaw(`meta ->> 'id' = '${statement.id}'`)
           .first();
 

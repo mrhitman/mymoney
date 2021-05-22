@@ -5,6 +5,13 @@ mutation Login($email: String!, $password: String!) {
   }
 }
 
+mutation signupWithGoogle($idToken: String!) {
+  signupWithGoogle(idToken: $idToken) {
+    accessToken
+    refreshToken
+  }
+}
+
 mutation RecoveryPassword($email: String!) {
   recoveryPassword(email: $email)
 }

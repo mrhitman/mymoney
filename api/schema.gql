@@ -158,7 +158,7 @@ type BankConnection {
   type: String!
   description: String!
   enabled: Boolean
-  createdAt: String!
+  createdAt: String
   meta: JSON!
 }
 

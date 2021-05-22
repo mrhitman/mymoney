@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -15,22 +16,53 @@ export type Scalars = {
   JSON: any;
 };
 
-export type Currency = {
-  __typename?: 'Currency';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  symbol: Scalars['String'];
-  code: Scalars['Float'];
-  rate: Scalars['Float'];
+export type AddConnectorArgs = {
+  interval: Scalars['Float'];
+  enabled: Scalars['Boolean'];
+  params: Scalars['JSON'];
+  type: Scalars['String'];
+  description: Scalars['String'];
 };
 
-export type IconDto = {
-  __typename?: 'IconDto';
+export type BankConnection = {
+  __typename?: 'BankConnection';
+  id: Scalars['String'];
   type: Scalars['String'];
-  name: Scalars['String'];
-  backgroundColor?: Maybe<Scalars['String']>;
-  color?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
+  enabled?: Maybe<Scalars['Boolean']>;
+  createdAt?: Maybe<Scalars['String']>;
+  meta: Scalars['JSON'];
+};
+
+export type Budget = {
+  __typename?: 'Budget';
+  id: Scalars['String'];
+  outcomes: Array<BudgetCategory>;
+  incomes: Array<BudgetCategory>;
+  date: Scalars['DateTime'];
+  deadline: Scalars['DateTime'];
+};
+
+export type BudgetCategory = {
+  __typename?: 'BudgetCategory';
+  categoryId: Scalars['String'];
+  category: UserCategory;
+  amount: Scalars['Float'];
+  progress: Scalars['Float'];
+};
+
+export type BudgetCategoryCreate = {
+  categoryId: Scalars['String'];
+  amount: Scalars['Float'];
+  progress: Scalars['Float'];
+  /** Recalculate progress from exists transaction in budget period */
+  recalculateProgress?: Maybe<Scalars['Boolean']>;
+};
+
+export type BudgetUpdate = {
+  id: Scalars['ID'];
+  date?: Maybe<Scalars['DateTime']>;
+  deadline?: Maybe<Scalars['DateTime']>;
 };
 
 export type Category = {
@@ -44,153 +76,50 @@ export type Category = {
   codes: Array<Scalars['Float']>;
 };
 
+export type CategoryCreate = {
+  id?: Maybe<Scalars['ID']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  /** Shows is this category ?? */
+  isFixed?: Maybe<Scalars['Boolean']>;
+  baseCategoryId: Scalars['String'];
+  codes?: Maybe<Array<Scalars['Int']>>;
+  icon?: Maybe<Icon>;
+  parent?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Int']>;
+};
+
 export enum CategoryType {
   Income = 'income',
   Outcome = 'outcome',
   Transfer = 'transfer'
 }
 
-export type UserCategory = {
-  __typename?: 'UserCategory';
+export type CategoryUpdate = {
   id: Scalars['ID'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-  categoryId: Scalars['String'];
-  baseCategory: UserCategory;
-  isFixed: Scalars['Boolean'];
-  type?: Maybe<CategoryType>;
-  icon?: Maybe<IconDto>;
-  codes: Array<Scalars['Float']>;
-  parent: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  /** Shows is this category ?? */
+  isFixed?: Maybe<Scalars['Boolean']>;
+  parent?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Int']>;
+  deletedAt?: Maybe<Scalars['Int']>;
 };
 
-export type Pocket = {
-  __typename?: 'Pocket';
-  currencyId: Scalars['String'];
-  amount: Scalars['Float'];
-  currency: Currency;
-};
-
-export type Wallet = {
-  __typename?: 'Wallet';
+export type Currency = {
+  __typename?: 'Currency';
   id: Scalars['ID'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
-  allowNegativeBalance: Scalars['Boolean'];
-  pockets: Array<Pocket>;
-  tags: Array<Scalars['String']>;
-  syncAt: Scalars['Int'];
-  createdAt: Scalars['Int'];
+  symbol: Scalars['String'];
+  code: Scalars['Float'];
+  rate: Scalars['Float'];
 };
-
-export type Transaction = {
-  __typename?: 'Transaction';
-  id: Scalars['ID'];
-  type: TransactionType;
-  categoryId?: Maybe<Scalars['String']>;
-  category: UserCategory;
-  currencyId: Scalars['String'];
-  currency: Currency;
-  sourceWalletId?: Maybe<Scalars['String']>;
-  sourceWallet?: Maybe<Wallet>;
-  destinationWalletId?: Maybe<Scalars['String']>;
-  destinationWallet?: Maybe<Wallet>;
-  amount: Scalars['Float'];
-  fine?: Maybe<Scalars['Float']>;
-  date: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  meta?: Maybe<Scalars['JSON']>;
-  isImported: Scalars['Boolean'];
-  isNecessary: Scalars['Boolean'];
-  createdAt: Scalars['Int'];
-};
-
-export enum TransactionType {
-  Income = 'income',
-  Outcome = 'outcome',
-  Transfer = 'transfer'
-}
-
 
 
 export type GetTransaction = {
   __typename?: 'GetTransaction';
   totalCount: Scalars['Float'];
   items: Array<Transaction>;
-};
-
-export type BudgetCategory = {
-  __typename?: 'BudgetCategory';
-  categoryId: Scalars['String'];
-  category: UserCategory;
-  amount: Scalars['Float'];
-  progress: Scalars['Float'];
-};
-
-export type Budget = {
-  __typename?: 'Budget';
-  id: Scalars['String'];
-  outcomes: Array<BudgetCategory>;
-  incomes: Array<BudgetCategory>;
-  date: Scalars['DateTime'];
-  deadline: Scalars['DateTime'];
-};
-
-/** Statistic info about transactions */
-export type StatisticByCurrency = {
-  __typename?: 'StatisticByCurrency';
-  currencyId: Scalars['String'];
-  currency: Currency;
-  amount: Scalars['Float'];
-};
-
-/** Statistic info about transactions */
-export type StatisticByCategory = {
-  __typename?: 'StatisticByCategory';
-  categoryId: Scalars['String'];
-  category: UserCategory;
-  amount: Scalars['Float'];
-};
-
-/** Statistic info about transactions */
-export type StatisticByPeriod = {
-  __typename?: 'StatisticByPeriod';
-  walletId: Scalars['String'];
-  userId: Scalars['Float'];
-  pockets: Array<Pocket>;
-  createdAt: Scalars['Float'];
-  wallet: Wallet;
-};
-
-/** Statistic info about transactions */
-export type StatisticByPeriod2 = {
-  __typename?: 'StatisticByPeriod2';
-  name: Scalars['String'];
-  amount: Scalars['Float'];
-  date: Scalars['String'];
-};
-
-export type BankConnection = {
-  __typename?: 'BankConnection';
-  id: Scalars['String'];
-  type: Scalars['String'];
-  description: Scalars['String'];
-  enabled?: Maybe<Scalars['Boolean']>;
-  createdAt: Scalars['String'];
-  meta: Scalars['JSON'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  firstName: Scalars['String'];
-  middleName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  imageUrl?: Maybe<Scalars['String']>;
-  additional?: Maybe<Scalars['JSON']>;
-  email: Scalars['String'];
 };
 
 export type Goal = {
@@ -207,11 +136,53 @@ export type Goal = {
   createdAt: Scalars['Int'];
 };
 
+export type GoalCreate = {
+  goal: Scalars['Float'];
+  progress?: Maybe<Scalars['Float']>;
+  name: Scalars['String'];
+  pockets?: Maybe<Array<PocketInput>>;
+  currencyId: Scalars['String'];
+  createdAt?: Maybe<Scalars['Int']>;
+};
+
+export type GoalSave = {
+  toGoalId: Scalars['String'];
+  fromWalletId: Scalars['String'];
+  currencyId: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
 export type GoalSaveResponse = {
   __typename?: 'GoalSaveResponse';
   goal: Goal;
   wallet: Wallet;
 };
+
+export type GoalUpdate = {
+  id: Scalars['ID'];
+  goal?: Maybe<Scalars['Float']>;
+  progress?: Maybe<Scalars['Float']>;
+  currencyId?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  pockets?: Maybe<Array<PocketInput>>;
+  updatedAt?: Maybe<Scalars['Int']>;
+};
+
+export type Icon = {
+  type?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  backgroundColor?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']>;
+};
+
+export type IconDto = {
+  __typename?: 'IconDto';
+  type: Scalars['String'];
+  name: Scalars['String'];
+  backgroundColor?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']>;
+};
+
 
 export type Login = {
   __typename?: 'Login';
@@ -220,147 +191,15 @@ export type Login = {
   profile: User;
 };
 
-export type Refresh = {
-  __typename?: 'Refresh';
-  accessToken: Scalars['ID'];
-  refreshToken: Scalars['String'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  profile: User;
-  wallets: Array<Wallet>;
-  wallet: Wallet;
-  currencies: Array<Currency>;
-  currency: Currency;
-  exchange: Scalars['Float'];
-  categories: Array<UserCategory>;
-  baseCategories: Array<Category>;
-  category: UserCategory;
-  budgets: Array<Budget>;
-  activeBudget: Budget;
-  goals: Array<Goal>;
-  goal: Array<Goal>;
-  /** Not fully implemented yet */
-  export: Scalars['String'];
-  transactions: GetTransaction;
-  transaction: Transaction;
-  statisticByPeriod: Array<StatisticByPeriod>;
-  statisticByPeriod2: Array<StatisticByPeriod2>;
-  /** Statistic grouped by categories */
-  statisticByCategory: Array<StatisticByCategory>;
-  /** Generate statistic by currency */
-  statisticByCurrency: Array<StatisticByCurrency>;
-  connectors: Array<BankConnection>;
-};
-
-
-export type QueryWalletArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryCurrenciesArgs = {
-  name?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryCurrencyArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryExchangeArgs = {
-  to: Scalars['String'];
-  from: Scalars['String'];
-  amount: Scalars['Float'];
-};
-
-
-export type QueryCategoriesArgs = {
-  type?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryCategoryArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryGoalArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryExportArgs = {
-  order?: Maybe<Scalars['String']>;
-  orderBy?: Maybe<Scalars['String']>;
-  amountLteFilter?: Maybe<Scalars['Float']>;
-  amountGteFilter?: Maybe<Scalars['Float']>;
-  search?: Maybe<Scalars['String']>;
-  type?: Maybe<TransactionType>;
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  currencyId?: Maybe<Scalars['String']>;
-  categoryIds?: Maybe<Array<Scalars['String']>>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
-
-export type QueryTransactionsArgs = {
-  order?: Maybe<Scalars['String']>;
-  orderBy?: Maybe<Scalars['String']>;
-  amountLteFilter?: Maybe<Scalars['Float']>;
-  amountGteFilter?: Maybe<Scalars['Float']>;
-  search?: Maybe<Scalars['String']>;
-  offset?: Maybe<Scalars['Float']>;
-  limit?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  currencyId?: Maybe<Scalars['String']>;
-  categoryIds?: Maybe<Array<Scalars['String']>>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
-
-export type QueryTransactionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryStatisticByPeriodArgs = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-  interval?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryStatisticByPeriod2Args = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-};
-
-
-export type QueryStatisticByCategoryArgs = {
-  to?: Maybe<Scalars['Float']>;
-  from?: Maybe<Scalars['Float']>;
-  type?: Maybe<TransactionType>;
-  currencyName?: Maybe<Scalars['String']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-};
-
-
-export type QueryStatisticByCurrencyArgs = {
-  walletIds?: Maybe<Array<Scalars['String']>>;
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   login: Login;
+  signupWithGoogle: Login;
   register: User;
   recoveryPassword: Scalars['String'];
   changePassword: Scalars['String'];
@@ -401,6 +240,11 @@ export type Mutation = {
 
 export type MutationLoginArgs = {
   loginData: LoginInput;
+};
+
+
+export type MutationSignupWithGoogleArgs = {
+  idToken: Scalars['String'];
 };
 
 
@@ -557,9 +401,158 @@ export type MutationDisconnectPrivat24Args = {
   merchant_id: Scalars['String'];
 };
 
-export type LoginInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+export type Pocket = {
+  __typename?: 'Pocket';
+  currencyId: Scalars['String'];
+  amount: Scalars['Float'];
+  currency: Currency;
+};
+
+export type PocketInput = {
+  currencyId: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  profile: User;
+  wallets: Array<Wallet>;
+  wallet: Wallet;
+  currencies: Array<Currency>;
+  currency: Currency;
+  exchange: Scalars['Float'];
+  categories: Array<UserCategory>;
+  baseCategories: Array<Category>;
+  category: UserCategory;
+  budgets: Array<Budget>;
+  activeBudget: Budget;
+  goals: Array<Goal>;
+  goal: Array<Goal>;
+  /** Not fully implemented yet */
+  export: Scalars['String'];
+  transactions: GetTransaction;
+  transaction: Transaction;
+  statisticByPeriod: Array<StatisticByPeriod>;
+  statisticByPeriod2: Array<StatisticByPeriod2>;
+  /** Statistic grouped by categories */
+  statisticByCategory: Array<StatisticByCategory>;
+  /** Generate statistic by currency */
+  statisticByCurrency: Array<StatisticByCurrency>;
+  connectors: Array<BankConnection>;
+};
+
+
+export type QueryWalletArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryCurrenciesArgs = {
+  name?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryCurrencyArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryExchangeArgs = {
+  to: Scalars['String'];
+  from: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
+
+export type QueryCategoriesArgs = {
+  type?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGoalArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryExportArgs = {
+  order?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<Scalars['String']>;
+  amountLteFilter?: Maybe<Scalars['Float']>;
+  amountGteFilter?: Maybe<Scalars['Float']>;
+  search?: Maybe<Scalars['String']>;
+  type?: Maybe<TransactionType>;
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  currencyId?: Maybe<Scalars['String']>;
+  categoryIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryTransactionsArgs = {
+  order?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<Scalars['String']>;
+  amountLteFilter?: Maybe<Scalars['Float']>;
+  amountGteFilter?: Maybe<Scalars['Float']>;
+  search?: Maybe<Scalars['String']>;
+  offset?: Maybe<Scalars['Float']>;
+  limit?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  currencyId?: Maybe<Scalars['String']>;
+  categoryIds?: Maybe<Array<Scalars['String']>>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryTransactionArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryStatisticByPeriodArgs = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  interval?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryStatisticByPeriod2Args = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+};
+
+
+export type QueryStatisticByCategoryArgs = {
+  to?: Maybe<Scalars['Float']>;
+  from?: Maybe<Scalars['Float']>;
+  type?: Maybe<TransactionType>;
+  currencyName?: Maybe<Scalars['String']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryStatisticByCurrencyArgs = {
+  walletIds?: Maybe<Array<Scalars['String']>>;
+};
+
+export type Refresh = {
+  __typename?: 'Refresh';
+  accessToken: Scalars['ID'];
+  refreshToken: Scalars['String'];
+};
+
+export type RefreshInput = {
+  refreshToken: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -572,116 +565,60 @@ export type RegisterInput = {
   password: Scalars['String'];
 };
 
-export type RefreshInput = {
-  refreshToken: Scalars['String'];
-};
-
-export type UserUpdate = {
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  middleName?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-  oldPassword?: Maybe<Scalars['String']>;
-  additional?: Maybe<Scalars['JSON']>;
-};
-
-export type WalletCreate = {
-  id?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  allowNegativeBalance?: Maybe<Scalars['Boolean']>;
-  pockets?: Maybe<Array<PocketInput>>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  createdAt?: Maybe<Scalars['Int']>;
-};
-
-export type PocketInput = {
-  currencyId: Scalars['String'];
-  amount: Scalars['Float'];
-};
-
-export type WalletUpdate = {
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  allowNegativeBalance: Scalars['Boolean'];
-  pockets?: Maybe<Array<PocketInput>>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  updatedAt?: Maybe<Scalars['Int']>;
-};
-
-export type CategoryCreate = {
-  id?: Maybe<Scalars['ID']>;
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  /** Shows is this category ?? */
-  isFixed?: Maybe<Scalars['Boolean']>;
-  baseCategoryId: Scalars['String'];
-  codes?: Maybe<Array<Scalars['Int']>>;
-  icon?: Maybe<Icon>;
-  parent?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Int']>;
-};
-
-export type Icon = {
-  type?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  backgroundColor?: Maybe<Scalars['String']>;
-  color?: Maybe<Scalars['String']>;
-};
-
-export type CategoryUpdate = {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  /** Shows is this category ?? */
-  isFixed?: Maybe<Scalars['Boolean']>;
-  parent?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['Int']>;
-  deletedAt?: Maybe<Scalars['Int']>;
-};
-
-export type BudgetUpdate = {
-  id: Scalars['ID'];
-  date?: Maybe<Scalars['DateTime']>;
-  deadline?: Maybe<Scalars['DateTime']>;
-};
-
-export type BudgetCategoryCreate = {
+/** Statistic info about transactions */
+export type StatisticByCategory = {
+  __typename?: 'StatisticByCategory';
   categoryId: Scalars['String'];
+  category: UserCategory;
   amount: Scalars['Float'];
-  progress: Scalars['Float'];
-  /** Recalculate progress from exists transaction in budget period */
-  recalculateProgress?: Maybe<Scalars['Boolean']>;
 };
 
-export type GoalCreate = {
-  goal: Scalars['Float'];
-  progress?: Maybe<Scalars['Float']>;
+/** Statistic info about transactions */
+export type StatisticByCurrency = {
+  __typename?: 'StatisticByCurrency';
+  currencyId: Scalars['String'];
+  currency: Currency;
+  amount: Scalars['Float'];
+};
+
+/** Statistic info about transactions */
+export type StatisticByPeriod = {
+  __typename?: 'StatisticByPeriod';
+  walletId: Scalars['String'];
+  userId: Scalars['Float'];
+  pockets: Array<Pocket>;
+  createdAt: Scalars['Float'];
+  wallet: Wallet;
+};
+
+/** Statistic info about transactions */
+export type StatisticByPeriod2 = {
+  __typename?: 'StatisticByPeriod2';
   name: Scalars['String'];
-  pockets?: Maybe<Array<PocketInput>>;
-  currencyId: Scalars['String'];
-  createdAt?: Maybe<Scalars['Int']>;
-};
-
-export type GoalUpdate = {
-  id: Scalars['ID'];
-  goal?: Maybe<Scalars['Float']>;
-  progress?: Maybe<Scalars['Float']>;
-  currencyId?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  pockets?: Maybe<Array<PocketInput>>;
-  updatedAt?: Maybe<Scalars['Int']>;
-};
-
-export type GoalSave = {
-  toGoalId: Scalars['String'];
-  fromWalletId: Scalars['String'];
-  currencyId: Scalars['String'];
   amount: Scalars['Float'];
+  date: Scalars['String'];
+};
+
+export type Transaction = {
+  __typename?: 'Transaction';
+  id: Scalars['ID'];
+  type: TransactionType;
+  categoryId?: Maybe<Scalars['String']>;
+  category: UserCategory;
+  currencyId: Scalars['String'];
+  currency: Currency;
+  sourceWalletId?: Maybe<Scalars['String']>;
+  sourceWallet?: Maybe<Wallet>;
+  destinationWalletId?: Maybe<Scalars['String']>;
+  destinationWallet?: Maybe<Wallet>;
+  amount: Scalars['Float'];
+  fine?: Maybe<Scalars['Float']>;
+  date: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  meta?: Maybe<Scalars['JSON']>;
+  isImported: Scalars['Boolean'];
+  isNecessary: Scalars['Boolean'];
+  createdAt: Scalars['Int'];
 };
 
 export type TransactionCreate = {
@@ -700,6 +637,12 @@ export type TransactionCreate = {
   createdAt?: Maybe<Scalars['Int']>;
 };
 
+export enum TransactionType {
+  Income = 'income',
+  Outcome = 'outcome',
+  Transfer = 'transfer'
+}
+
 export type TransactionUpdate = {
   id: Scalars['String'];
   categoryId?: Maybe<Scalars['String']>;
@@ -715,12 +658,76 @@ export type TransactionUpdate = {
   deletedAt?: Maybe<Scalars['Int']>;
 };
 
-export type AddConnectorArgs = {
-  interval: Scalars['Float'];
-  enabled: Scalars['Boolean'];
-  params: Scalars['JSON'];
-  type: Scalars['String'];
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  firstName: Scalars['String'];
+  middleName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  additional?: Maybe<Scalars['JSON']>;
+  email: Scalars['String'];
+};
+
+export type UserCategory = {
+  __typename?: 'UserCategory';
+  id: Scalars['ID'];
+  name: Scalars['String'];
   description: Scalars['String'];
+  categoryId: Scalars['String'];
+  baseCategory: UserCategory;
+  isFixed: Scalars['Boolean'];
+  type?: Maybe<CategoryType>;
+  icon?: Maybe<IconDto>;
+  codes: Array<Scalars['Float']>;
+  parent: Scalars['String'];
+};
+
+export type UserUpdate = {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  middleName?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  oldPassword?: Maybe<Scalars['String']>;
+  additional?: Maybe<Scalars['JSON']>;
+};
+
+export type Wallet = {
+  __typename?: 'Wallet';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  type: Scalars['String'];
+  allowNegativeBalance: Scalars['Boolean'];
+  pockets: Array<Pocket>;
+  tags: Array<Scalars['String']>;
+  syncAt: Scalars['Int'];
+  createdAt: Scalars['Int'];
+};
+
+export type WalletCreate = {
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  allowNegativeBalance?: Maybe<Scalars['Boolean']>;
+  pockets?: Maybe<Array<PocketInput>>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  createdAt?: Maybe<Scalars['Int']>;
+};
+
+export type WalletUpdate = {
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  allowNegativeBalance: Scalars['Boolean'];
+  pockets?: Maybe<Array<PocketInput>>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  updatedAt?: Maybe<Scalars['Int']>;
 };
 
 export type IconFragment = (
@@ -1044,6 +1051,19 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
+    { __typename?: 'Login' }
+    & Pick<Login, 'accessToken' | 'refreshToken'>
+  ) }
+);
+
+export type SignupWithGoogleMutationVariables = Exact<{
+  idToken: Scalars['String'];
+}>;
+
+
+export type SignupWithGoogleMutation = (
+  { __typename?: 'Mutation' }
+  & { signupWithGoogle: (
     { __typename?: 'Login' }
     & Pick<Login, 'accessToken' | 'refreshToken'>
   ) }
@@ -1630,10 +1650,12 @@ ${BudgetFragmentDoc}`;
  * });
  */
 export function useGetActiveBudgetQuery(baseOptions?: Apollo.QueryHookOptions<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>) {
-        return Apollo.useQuery<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>(GetActiveBudgetDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>(GetActiveBudgetDocument, options);
       }
 export function useGetActiveBudgetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>) {
-          return Apollo.useLazyQuery<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>(GetActiveBudgetDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetActiveBudgetQuery, GetActiveBudgetQueryVariables>(GetActiveBudgetDocument, options);
         }
 export type GetActiveBudgetQueryHookResult = ReturnType<typeof useGetActiveBudgetQuery>;
 export type GetActiveBudgetLazyQueryHookResult = ReturnType<typeof useGetActiveBudgetLazyQuery>;
@@ -1665,7 +1687,8 @@ export type UpdateBudgetMutationFn = Apollo.MutationFunction<UpdateBudgetMutatio
  * });
  */
 export function useUpdateBudgetMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBudgetMutation, UpdateBudgetMutationVariables>) {
-        return Apollo.useMutation<UpdateBudgetMutation, UpdateBudgetMutationVariables>(UpdateBudgetDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBudgetMutation, UpdateBudgetMutationVariables>(UpdateBudgetDocument, options);
       }
 export type UpdateBudgetMutationHookResult = ReturnType<typeof useUpdateBudgetMutation>;
 export type UpdateBudgetMutationResult = Apollo.MutationResult<UpdateBudgetMutation>;
@@ -1702,7 +1725,8 @@ export type AddOutcomeBudgetMutationFn = Apollo.MutationFunction<AddOutcomeBudge
  * });
  */
 export function useAddOutcomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>) {
-        return Apollo.useMutation<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>(AddOutcomeBudgetDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddOutcomeBudgetMutation, AddOutcomeBudgetMutationVariables>(AddOutcomeBudgetDocument, options);
       }
 export type AddOutcomeBudgetMutationHookResult = ReturnType<typeof useAddOutcomeBudgetMutation>;
 export type AddOutcomeBudgetMutationResult = Apollo.MutationResult<AddOutcomeBudgetMutation>;
@@ -1739,7 +1763,8 @@ export type AddIncomeBudgetMutationFn = Apollo.MutationFunction<AddIncomeBudgetM
  * });
  */
 export function useAddIncomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>) {
-        return Apollo.useMutation<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>(AddIncomeBudgetDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddIncomeBudgetMutation, AddIncomeBudgetMutationVariables>(AddIncomeBudgetDocument, options);
       }
 export type AddIncomeBudgetMutationHookResult = ReturnType<typeof useAddIncomeBudgetMutation>;
 export type AddIncomeBudgetMutationResult = Apollo.MutationResult<AddIncomeBudgetMutation>;
@@ -1771,7 +1796,8 @@ export type RemoveOutcomeBudgetMutationFn = Apollo.MutationFunction<RemoveOutcom
  * });
  */
 export function useRemoveOutcomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>) {
-        return Apollo.useMutation<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>(RemoveOutcomeBudgetDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveOutcomeBudgetMutation, RemoveOutcomeBudgetMutationVariables>(RemoveOutcomeBudgetDocument, options);
       }
 export type RemoveOutcomeBudgetMutationHookResult = ReturnType<typeof useRemoveOutcomeBudgetMutation>;
 export type RemoveOutcomeBudgetMutationResult = Apollo.MutationResult<RemoveOutcomeBudgetMutation>;
@@ -1803,7 +1829,8 @@ export type RemoveIncomeBudgetMutationFn = Apollo.MutationFunction<RemoveIncomeB
  * });
  */
 export function useRemoveIncomeBudgetMutation(baseOptions?: Apollo.MutationHookOptions<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>) {
-        return Apollo.useMutation<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>(RemoveIncomeBudgetDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveIncomeBudgetMutation, RemoveIncomeBudgetMutationVariables>(RemoveIncomeBudgetDocument, options);
       }
 export type RemoveIncomeBudgetMutationHookResult = ReturnType<typeof useRemoveIncomeBudgetMutation>;
 export type RemoveIncomeBudgetMutationResult = Apollo.MutationResult<RemoveIncomeBudgetMutation>;
@@ -1832,10 +1859,12 @@ export const GetCategoriesDocument = gql`
  * });
  */
 export function useGetCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
-        return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
       }
 export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
-          return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
         }
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
@@ -1867,7 +1896,8 @@ export type AddCategoryMutationFn = Apollo.MutationFunction<AddCategoryMutation,
  * });
  */
 export function useAddCategoryMutation(baseOptions?: Apollo.MutationHookOptions<AddCategoryMutation, AddCategoryMutationVariables>) {
-        return Apollo.useMutation<AddCategoryMutation, AddCategoryMutationVariables>(AddCategoryDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCategoryMutation, AddCategoryMutationVariables>(AddCategoryDocument, options);
       }
 export type AddCategoryMutationHookResult = ReturnType<typeof useAddCategoryMutation>;
 export type AddCategoryMutationResult = Apollo.MutationResult<AddCategoryMutation>;
@@ -1899,7 +1929,8 @@ export type UpdateCategoryMutationFn = Apollo.MutationFunction<UpdateCategoryMut
  * });
  */
 export function useUpdateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>) {
-        return Apollo.useMutation<UpdateCategoryMutation, UpdateCategoryMutationVariables>(UpdateCategoryDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCategoryMutation, UpdateCategoryMutationVariables>(UpdateCategoryDocument, options);
       }
 export type UpdateCategoryMutationHookResult = ReturnType<typeof useUpdateCategoryMutation>;
 export type UpdateCategoryMutationResult = Apollo.MutationResult<UpdateCategoryMutation>;
@@ -1938,10 +1969,12 @@ export const GetBaseCategoriesDocument = gql`
  * });
  */
 export function useGetBaseCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>) {
-        return Apollo.useQuery<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>(GetBaseCategoriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>(GetBaseCategoriesDocument, options);
       }
 export function useGetBaseCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>) {
-          return Apollo.useLazyQuery<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>(GetBaseCategoriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBaseCategoriesQuery, GetBaseCategoriesQueryVariables>(GetBaseCategoriesDocument, options);
         }
 export type GetBaseCategoriesQueryHookResult = ReturnType<typeof useGetBaseCategoriesQuery>;
 export type GetBaseCategoriesLazyQueryHookResult = ReturnType<typeof useGetBaseCategoriesLazyQuery>;
@@ -1970,10 +2003,12 @@ export const GetConnectorsDocument = gql`
  * });
  */
 export function useGetConnectorsQuery(baseOptions?: Apollo.QueryHookOptions<GetConnectorsQuery, GetConnectorsQueryVariables>) {
-        return Apollo.useQuery<GetConnectorsQuery, GetConnectorsQueryVariables>(GetConnectorsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetConnectorsQuery, GetConnectorsQueryVariables>(GetConnectorsDocument, options);
       }
 export function useGetConnectorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetConnectorsQuery, GetConnectorsQueryVariables>) {
-          return Apollo.useLazyQuery<GetConnectorsQuery, GetConnectorsQueryVariables>(GetConnectorsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetConnectorsQuery, GetConnectorsQueryVariables>(GetConnectorsDocument, options);
         }
 export type GetConnectorsQueryHookResult = ReturnType<typeof useGetConnectorsQuery>;
 export type GetConnectorsLazyQueryHookResult = ReturnType<typeof useGetConnectorsLazyQuery>;
@@ -2011,7 +2046,8 @@ export type AddConnectorMutationFn = Apollo.MutationFunction<AddConnectorMutatio
  * });
  */
 export function useAddConnectorMutation(baseOptions?: Apollo.MutationHookOptions<AddConnectorMutation, AddConnectorMutationVariables>) {
-        return Apollo.useMutation<AddConnectorMutation, AddConnectorMutationVariables>(AddConnectorDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddConnectorMutation, AddConnectorMutationVariables>(AddConnectorDocument, options);
       }
 export type AddConnectorMutationHookResult = ReturnType<typeof useAddConnectorMutation>;
 export type AddConnectorMutationResult = Apollo.MutationResult<AddConnectorMutation>;
@@ -2045,10 +2081,12 @@ export const GetCurrenciesDocument = gql`
  * });
  */
 export function useGetCurrenciesQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrenciesQuery, GetCurrenciesQueryVariables>) {
-        return Apollo.useQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(GetCurrenciesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(GetCurrenciesDocument, options);
       }
 export function useGetCurrenciesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrenciesQuery, GetCurrenciesQueryVariables>) {
-          return Apollo.useLazyQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(GetCurrenciesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(GetCurrenciesDocument, options);
         }
 export type GetCurrenciesQueryHookResult = ReturnType<typeof useGetCurrenciesQuery>;
 export type GetCurrenciesLazyQueryHookResult = ReturnType<typeof useGetCurrenciesLazyQuery>;
@@ -2091,10 +2129,12 @@ export const GetFilterGroupDocument = gql`
  * });
  */
 export function useGetFilterGroupQuery(baseOptions?: Apollo.QueryHookOptions<GetFilterGroupQuery, GetFilterGroupQueryVariables>) {
-        return Apollo.useQuery<GetFilterGroupQuery, GetFilterGroupQueryVariables>(GetFilterGroupDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFilterGroupQuery, GetFilterGroupQueryVariables>(GetFilterGroupDocument, options);
       }
 export function useGetFilterGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFilterGroupQuery, GetFilterGroupQueryVariables>) {
-          return Apollo.useLazyQuery<GetFilterGroupQuery, GetFilterGroupQueryVariables>(GetFilterGroupDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFilterGroupQuery, GetFilterGroupQueryVariables>(GetFilterGroupDocument, options);
         }
 export type GetFilterGroupQueryHookResult = ReturnType<typeof useGetFilterGroupQuery>;
 export type GetFilterGroupLazyQueryHookResult = ReturnType<typeof useGetFilterGroupLazyQuery>;
@@ -2123,10 +2163,12 @@ export const GetGoalsDocument = gql`
  * });
  */
 export function useGetGoalsQuery(baseOptions?: Apollo.QueryHookOptions<GetGoalsQuery, GetGoalsQueryVariables>) {
-        return Apollo.useQuery<GetGoalsQuery, GetGoalsQueryVariables>(GetGoalsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetGoalsQuery, GetGoalsQueryVariables>(GetGoalsDocument, options);
       }
 export function useGetGoalsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGoalsQuery, GetGoalsQueryVariables>) {
-          return Apollo.useLazyQuery<GetGoalsQuery, GetGoalsQueryVariables>(GetGoalsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetGoalsQuery, GetGoalsQueryVariables>(GetGoalsDocument, options);
         }
 export type GetGoalsQueryHookResult = ReturnType<typeof useGetGoalsQuery>;
 export type GetGoalsLazyQueryHookResult = ReturnType<typeof useGetGoalsLazyQuery>;
@@ -2158,7 +2200,8 @@ export type AddGoalMutationFn = Apollo.MutationFunction<AddGoalMutation, AddGoal
  * });
  */
 export function useAddGoalMutation(baseOptions?: Apollo.MutationHookOptions<AddGoalMutation, AddGoalMutationVariables>) {
-        return Apollo.useMutation<AddGoalMutation, AddGoalMutationVariables>(AddGoalDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddGoalMutation, AddGoalMutationVariables>(AddGoalDocument, options);
       }
 export type AddGoalMutationHookResult = ReturnType<typeof useAddGoalMutation>;
 export type AddGoalMutationResult = Apollo.MutationResult<AddGoalMutation>;
@@ -2190,7 +2233,8 @@ export type UpdateGoalMutationFn = Apollo.MutationFunction<UpdateGoalMutation, U
  * });
  */
 export function useUpdateGoalMutation(baseOptions?: Apollo.MutationHookOptions<UpdateGoalMutation, UpdateGoalMutationVariables>) {
-        return Apollo.useMutation<UpdateGoalMutation, UpdateGoalMutationVariables>(UpdateGoalDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateGoalMutation, UpdateGoalMutationVariables>(UpdateGoalDocument, options);
       }
 export type UpdateGoalMutationHookResult = ReturnType<typeof useUpdateGoalMutation>;
 export type UpdateGoalMutationResult = Apollo.MutationResult<UpdateGoalMutation>;
@@ -2222,7 +2266,8 @@ export type DeleteGoalMutationFn = Apollo.MutationFunction<DeleteGoalMutation, D
  * });
  */
 export function useDeleteGoalMutation(baseOptions?: Apollo.MutationHookOptions<DeleteGoalMutation, DeleteGoalMutationVariables>) {
-        return Apollo.useMutation<DeleteGoalMutation, DeleteGoalMutationVariables>(DeleteGoalDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteGoalMutation, DeleteGoalMutationVariables>(DeleteGoalDocument, options);
       }
 export type DeleteGoalMutationHookResult = ReturnType<typeof useDeleteGoalMutation>;
 export type DeleteGoalMutationResult = Apollo.MutationResult<DeleteGoalMutation>;
@@ -2256,11 +2301,46 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  * });
  */
 export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
       }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const SignupWithGoogleDocument = gql`
+    mutation signupWithGoogle($idToken: String!) {
+  signupWithGoogle(idToken: $idToken) {
+    accessToken
+    refreshToken
+  }
+}
+    `;
+export type SignupWithGoogleMutationFn = Apollo.MutationFunction<SignupWithGoogleMutation, SignupWithGoogleMutationVariables>;
+
+/**
+ * __useSignupWithGoogleMutation__
+ *
+ * To run a mutation, you first call `useSignupWithGoogleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignupWithGoogleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signupWithGoogleMutation, { data, loading, error }] = useSignupWithGoogleMutation({
+ *   variables: {
+ *      idToken: // value for 'idToken'
+ *   },
+ * });
+ */
+export function useSignupWithGoogleMutation(baseOptions?: Apollo.MutationHookOptions<SignupWithGoogleMutation, SignupWithGoogleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignupWithGoogleMutation, SignupWithGoogleMutationVariables>(SignupWithGoogleDocument, options);
+      }
+export type SignupWithGoogleMutationHookResult = ReturnType<typeof useSignupWithGoogleMutation>;
+export type SignupWithGoogleMutationResult = Apollo.MutationResult<SignupWithGoogleMutation>;
+export type SignupWithGoogleMutationOptions = Apollo.BaseMutationOptions<SignupWithGoogleMutation, SignupWithGoogleMutationVariables>;
 export const RecoveryPasswordDocument = gql`
     mutation RecoveryPassword($email: String!) {
   recoveryPassword(email: $email)
@@ -2286,7 +2366,8 @@ export type RecoveryPasswordMutationFn = Apollo.MutationFunction<RecoveryPasswor
  * });
  */
 export function useRecoveryPasswordMutation(baseOptions?: Apollo.MutationHookOptions<RecoveryPasswordMutation, RecoveryPasswordMutationVariables>) {
-        return Apollo.useMutation<RecoveryPasswordMutation, RecoveryPasswordMutationVariables>(RecoveryPasswordDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RecoveryPasswordMutation, RecoveryPasswordMutationVariables>(RecoveryPasswordDocument, options);
       }
 export type RecoveryPasswordMutationHookResult = ReturnType<typeof useRecoveryPasswordMutation>;
 export type RecoveryPasswordMutationResult = Apollo.MutationResult<RecoveryPasswordMutation>;
@@ -2316,7 +2397,8 @@ export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMut
  * });
  */
 export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
-        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
       }
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
@@ -2345,10 +2427,12 @@ export const GetProfileDocument = gql`
  * });
  */
 export function useGetProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
-        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
       }
 export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
-          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
         }
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
@@ -2380,7 +2464,8 @@ export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutat
  * });
  */
 export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfileMutation, UpdateProfileMutationVariables>) {
-        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
       }
 export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
 export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
@@ -2413,7 +2498,8 @@ export type RefreshMutationFn = Apollo.MutationFunction<RefreshMutation, Refresh
  * });
  */
 export function useRefreshMutation(baseOptions?: Apollo.MutationHookOptions<RefreshMutation, RefreshMutationVariables>) {
-        return Apollo.useMutation<RefreshMutation, RefreshMutationVariables>(RefreshDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RefreshMutation, RefreshMutationVariables>(RefreshDocument, options);
       }
 export type RefreshMutationHookResult = ReturnType<typeof useRefreshMutation>;
 export type RefreshMutationResult = Apollo.MutationResult<RefreshMutation>;
@@ -2453,7 +2539,8 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  * });
  */
 export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
       }
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
@@ -2509,10 +2596,12 @@ export const AnalysByCategoriesDocument = gql`
  * });
  */
 export function useAnalysByCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
-        return Apollo.useQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, options);
       }
 export function useAnalysByCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>) {
-          return Apollo.useLazyQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AnalysByCategoriesQuery, AnalysByCategoriesQueryVariables>(AnalysByCategoriesDocument, options);
         }
 export type AnalysByCategoriesQueryHookResult = ReturnType<typeof useAnalysByCategoriesQuery>;
 export type AnalysByCategoriesLazyQueryHookResult = ReturnType<typeof useAnalysByCategoriesLazyQuery>;
@@ -2547,10 +2636,12 @@ export const GetStatisticByCurrencyDocument = gql`
  * });
  */
 export function useGetStatisticByCurrencyQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
-        return Apollo.useQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, options);
       }
 export function useGetStatisticByCurrencyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>) {
-          return Apollo.useLazyQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStatisticByCurrencyQuery, GetStatisticByCurrencyQueryVariables>(GetStatisticByCurrencyDocument, options);
         }
 export type GetStatisticByCurrencyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyQuery>;
 export type GetStatisticByCurrencyLazyQueryHookResult = ReturnType<typeof useGetStatisticByCurrencyLazyQuery>;
@@ -2594,10 +2685,12 @@ export const GetStatisticByPeriodDocument = gql`
  * });
  */
 export function useGetStatisticByPeriodQuery(baseOptions?: Apollo.QueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
-        return Apollo.useQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, options);
       }
 export function useGetStatisticByPeriodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>) {
-          return Apollo.useLazyQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStatisticByPeriodQuery, GetStatisticByPeriodQueryVariables>(GetStatisticByPeriodDocument, options);
         }
 export type GetStatisticByPeriodQueryHookResult = ReturnType<typeof useGetStatisticByPeriodQuery>;
 export type GetStatisticByPeriodLazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriodLazyQuery>;
@@ -2630,10 +2723,12 @@ export const GetStatisticByPeriod2Document = gql`
  * });
  */
 export function useGetStatisticByPeriod2Query(baseOptions?: Apollo.QueryHookOptions<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>) {
-        return Apollo.useQuery<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>(GetStatisticByPeriod2Document, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>(GetStatisticByPeriod2Document, options);
       }
 export function useGetStatisticByPeriod2LazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>) {
-          return Apollo.useLazyQuery<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>(GetStatisticByPeriod2Document, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStatisticByPeriod2Query, GetStatisticByPeriod2QueryVariables>(GetStatisticByPeriod2Document, options);
         }
 export type GetStatisticByPeriod2QueryHookResult = ReturnType<typeof useGetStatisticByPeriod2Query>;
 export type GetStatisticByPeriod2LazyQueryHookResult = ReturnType<typeof useGetStatisticByPeriod2LazyQuery>;
@@ -2665,7 +2760,8 @@ export type CreateTransactionMutationFn = Apollo.MutationFunction<CreateTransact
  * });
  */
 export function useCreateTransactionMutation(baseOptions?: Apollo.MutationHookOptions<CreateTransactionMutation, CreateTransactionMutationVariables>) {
-        return Apollo.useMutation<CreateTransactionMutation, CreateTransactionMutationVariables>(CreateTransactionDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTransactionMutation, CreateTransactionMutationVariables>(CreateTransactionDocument, options);
       }
 export type CreateTransactionMutationHookResult = ReturnType<typeof useCreateTransactionMutation>;
 export type CreateTransactionMutationResult = Apollo.MutationResult<CreateTransactionMutation>;
@@ -2697,7 +2793,8 @@ export type DeleteTransactionMutationFn = Apollo.MutationFunction<DeleteTransact
  * });
  */
 export function useDeleteTransactionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTransactionMutation, DeleteTransactionMutationVariables>) {
-        return Apollo.useMutation<DeleteTransactionMutation, DeleteTransactionMutationVariables>(DeleteTransactionDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTransactionMutation, DeleteTransactionMutationVariables>(DeleteTransactionDocument, options);
       }
 export type DeleteTransactionMutationHookResult = ReturnType<typeof useDeleteTransactionMutation>;
 export type DeleteTransactionMutationResult = Apollo.MutationResult<DeleteTransactionMutation>;
@@ -2738,10 +2835,12 @@ export const GetCategoriesAndCurrenciesForCreateTrxDocument = gql`
  * });
  */
 export function useGetCategoriesAndCurrenciesForCreateTrxQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>) {
-        return Apollo.useQuery<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>(GetCategoriesAndCurrenciesForCreateTrxDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>(GetCategoriesAndCurrenciesForCreateTrxDocument, options);
       }
 export function useGetCategoriesAndCurrenciesForCreateTrxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>) {
-          return Apollo.useLazyQuery<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>(GetCategoriesAndCurrenciesForCreateTrxDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoriesAndCurrenciesForCreateTrxQuery, GetCategoriesAndCurrenciesForCreateTrxQueryVariables>(GetCategoriesAndCurrenciesForCreateTrxDocument, options);
         }
 export type GetCategoriesAndCurrenciesForCreateTrxQueryHookResult = ReturnType<typeof useGetCategoriesAndCurrenciesForCreateTrxQuery>;
 export type GetCategoriesAndCurrenciesForCreateTrxLazyQueryHookResult = ReturnType<typeof useGetCategoriesAndCurrenciesForCreateTrxLazyQuery>;
@@ -2779,10 +2878,12 @@ ${WalletFragmentDoc}`;
  * });
  */
 export function useGetTransactionQuery(baseOptions: Apollo.QueryHookOptions<GetTransactionQuery, GetTransactionQueryVariables>) {
-        return Apollo.useQuery<GetTransactionQuery, GetTransactionQueryVariables>(GetTransactionDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTransactionQuery, GetTransactionQueryVariables>(GetTransactionDocument, options);
       }
 export function useGetTransactionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTransactionQuery, GetTransactionQueryVariables>) {
-          return Apollo.useLazyQuery<GetTransactionQuery, GetTransactionQueryVariables>(GetTransactionDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTransactionQuery, GetTransactionQueryVariables>(GetTransactionDocument, options);
         }
 export type GetTransactionQueryHookResult = ReturnType<typeof useGetTransactionQuery>;
 export type GetTransactionLazyQueryHookResult = ReturnType<typeof useGetTransactionLazyQuery>;
@@ -2830,10 +2931,12 @@ export const ExportDocument = gql`
  * });
  */
 export function useExportQuery(baseOptions?: Apollo.QueryHookOptions<ExportQuery, ExportQueryVariables>) {
-        return Apollo.useQuery<ExportQuery, ExportQueryVariables>(ExportDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ExportQuery, ExportQueryVariables>(ExportDocument, options);
       }
 export function useExportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExportQuery, ExportQueryVariables>) {
-          return Apollo.useLazyQuery<ExportQuery, ExportQueryVariables>(ExportDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ExportQuery, ExportQueryVariables>(ExportDocument, options);
         }
 export type ExportQueryHookResult = ReturnType<typeof useExportQuery>;
 export type ExportLazyQueryHookResult = ReturnType<typeof useExportLazyQuery>;
@@ -2897,10 +3000,12 @@ ${WalletFragmentDoc}`;
  * });
  */
 export function useGetTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<GetTransactionsQuery, GetTransactionsQueryVariables>) {
-        return Apollo.useQuery<GetTransactionsQuery, GetTransactionsQueryVariables>(GetTransactionsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTransactionsQuery, GetTransactionsQueryVariables>(GetTransactionsDocument, options);
       }
 export function useGetTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTransactionsQuery, GetTransactionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetTransactionsQuery, GetTransactionsQueryVariables>(GetTransactionsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTransactionsQuery, GetTransactionsQueryVariables>(GetTransactionsDocument, options);
         }
 export type GetTransactionsQueryHookResult = ReturnType<typeof useGetTransactionsQuery>;
 export type GetTransactionsLazyQueryHookResult = ReturnType<typeof useGetTransactionsLazyQuery>;
@@ -2953,10 +3058,12 @@ ${WalletFragmentDoc}`;
  * });
  */
 export function useGetWalletTransactionsQuery(baseOptions: Apollo.QueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
-        return Apollo.useQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, options);
       }
 export function useGetWalletTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWalletTransactionsQuery, GetWalletTransactionsQueryVariables>(GetWalletTransactionsDocument, options);
         }
 export type GetWalletTransactionsQueryHookResult = ReturnType<typeof useGetWalletTransactionsQuery>;
 export type GetWalletTransactionsLazyQueryHookResult = ReturnType<typeof useGetWalletTransactionsLazyQuery>;
@@ -2988,7 +3095,8 @@ export type DeleteWalletMutationFn = Apollo.MutationFunction<DeleteWalletMutatio
  * });
  */
 export function useDeleteWalletMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWalletMutation, DeleteWalletMutationVariables>) {
-        return Apollo.useMutation<DeleteWalletMutation, DeleteWalletMutationVariables>(DeleteWalletDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteWalletMutation, DeleteWalletMutationVariables>(DeleteWalletDocument, options);
       }
 export type DeleteWalletMutationHookResult = ReturnType<typeof useDeleteWalletMutation>;
 export type DeleteWalletMutationResult = Apollo.MutationResult<DeleteWalletMutation>;
@@ -3020,7 +3128,8 @@ export type AddWalletMutationFn = Apollo.MutationFunction<AddWalletMutation, Add
  * });
  */
 export function useAddWalletMutation(baseOptions?: Apollo.MutationHookOptions<AddWalletMutation, AddWalletMutationVariables>) {
-        return Apollo.useMutation<AddWalletMutation, AddWalletMutationVariables>(AddWalletDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddWalletMutation, AddWalletMutationVariables>(AddWalletDocument, options);
       }
 export type AddWalletMutationHookResult = ReturnType<typeof useAddWalletMutation>;
 export type AddWalletMutationResult = Apollo.MutationResult<AddWalletMutation>;
@@ -3052,7 +3161,8 @@ export type UpdateWalletMutationFn = Apollo.MutationFunction<UpdateWalletMutatio
  * });
  */
 export function useUpdateWalletMutation(baseOptions?: Apollo.MutationHookOptions<UpdateWalletMutation, UpdateWalletMutationVariables>) {
-        return Apollo.useMutation<UpdateWalletMutation, UpdateWalletMutationVariables>(UpdateWalletDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateWalletMutation, UpdateWalletMutationVariables>(UpdateWalletDocument, options);
       }
 export type UpdateWalletMutationHookResult = ReturnType<typeof useUpdateWalletMutation>;
 export type UpdateWalletMutationResult = Apollo.MutationResult<UpdateWalletMutation>;
@@ -3081,10 +3191,12 @@ export const GetWalletsDocument = gql`
  * });
  */
 export function useGetWalletsQuery(baseOptions?: Apollo.QueryHookOptions<GetWalletsQuery, GetWalletsQueryVariables>) {
-        return Apollo.useQuery<GetWalletsQuery, GetWalletsQueryVariables>(GetWalletsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWalletsQuery, GetWalletsQueryVariables>(GetWalletsDocument, options);
       }
 export function useGetWalletsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletsQuery, GetWalletsQueryVariables>) {
-          return Apollo.useLazyQuery<GetWalletsQuery, GetWalletsQueryVariables>(GetWalletsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWalletsQuery, GetWalletsQueryVariables>(GetWalletsDocument, options);
         }
 export type GetWalletsQueryHookResult = ReturnType<typeof useGetWalletsQuery>;
 export type GetWalletsLazyQueryHookResult = ReturnType<typeof useGetWalletsLazyQuery>;

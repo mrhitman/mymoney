@@ -15,7 +15,7 @@ export class BankConnectionDto {
   @Field({ nullable: true })
   readonly enabled: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   readonly createdAt: string;
 
   @Field(() => graphqlTypeJson)

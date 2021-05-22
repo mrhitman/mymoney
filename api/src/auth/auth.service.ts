@@ -59,11 +59,13 @@ export class AuthService {
   }
 
   public async createUserCategories(user: User) {
+    console.log({ user })
     const count = ((await UserCategory.query()
       .where({ userId: user.id })
       .count({ count: '*' })) as any)[0].count;
 
-    if (count) {
+      console.log( { count })
+    if (Number(count) > 0) {
       return;
     }
 

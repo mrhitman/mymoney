@@ -158,7 +158,7 @@ export class AppResolver {
         ip: context.req.id,
         ips: context.req.ids,
         httpVersion: context.req.httpVersion,
-        host: context.req.host,
+        host: context.req.hostname,
         headers: context.req.headers,
       },
     });

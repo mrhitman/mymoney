@@ -14,7 +14,7 @@ import { StatisticByPeriod2Dto } from './dto/statistic-by-period2.dto';
 
 @Resolver()
 export class StatisticsResolver {
-  constructor(protected readonly service: StatisticsService, private readonly loader: DataLoader) { }
+  constructor(protected readonly service: StatisticsService, private readonly loader: DataLoader) {}
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [StatisticByPeriodDto])
@@ -42,7 +42,10 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => [StatisticByCategoryDto], { description: 'Statistic grouped by categories', complexity: 10 })
+  @Query(() => [StatisticByCategoryDto], {
+    description: 'Statistic grouped by categories',
+    complexity: 10,
+  })
   public async statisticByCategory(
     @CurrentUser() user: User,
     @Args('walletIds', { nullable: true, type: () => [String] }) walletIds: string[],
@@ -65,7 +68,10 @@ export class StatisticsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => String, { description: 'Generate history from transactions', deprecationReason: 'For dev usage' })
+  @Mutation(() => String, {
+    description: 'Generate history from transactions',
+    deprecationReason: 'For dev usage',
+  })
   public async generateHistory(
     @CurrentUser() user: User,
     @Args('walletId') walletId: string,
@@ -76,7 +82,7 @@ export class StatisticsResolver {
       await this.service.generateHistory(user, walletId, clearOldHistory);
       return 'OK';
     } catch (e) {
-      return 'FAIL';
+      return 'FAIL ' + e.message;
     }
   }
 }

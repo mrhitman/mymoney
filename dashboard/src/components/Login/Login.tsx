@@ -9,6 +9,7 @@ import { login as authLogin } from "src/auth";
 export const Login: FC = () => {
   const [redirect, setRedirect] = useState<string | null>(null);
   const [signUpWithGoogle] = useSignupWithGoogleMutation();
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID!;
 
   if (redirect) {
     return <Redirect to={redirect} exact />;
@@ -19,8 +20,7 @@ export const Login: FC = () => {
       <Row>
         <Col>
           <GoogleLogin
-            // eslint-disable-next-line
-            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}
+            clientId={clientId}
             onSuccess={async (response) => {
               if ("getBasicProfile" in response) {
                 const signupResponse = await signUpWithGoogle({
@@ -36,7 +36,7 @@ export const Login: FC = () => {
           />
         </Col>
       </Row>
-      <LoginForm afterLogin={() => setRedirect("/")} />
+      <LoginForm afterLogin={() => requestAnimationFrame(() => setRedirect("/"))} />
     </Row>
   );
 };

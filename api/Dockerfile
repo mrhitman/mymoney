@@ -1,4 +1,4 @@
-FROM node:12-alpine as stage
+FROM node:16-alpine as stage
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
 RUN mkdir /app
@@ -10,11 +10,11 @@ COPY tsconfig.build.json tsconfig.build.json
 COPY tsconfig.json tsconfig.json
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
-RUN npm i -g pnpm@5.9.3
+RUN npm i -g pnpm
 RUN pnpm i
 RUN pnpm run build
 
-FROM node:12-alpine
+FROM node:16-alpine
 RUN npm i -g pnpm
 RUN mkdir /app
 WORKDIR /app

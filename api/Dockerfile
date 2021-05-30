@@ -1,4 +1,4 @@
-FROM node:16-alpine as stage
+FROM node:12-alpine as stage
 RUN apk add --update python make g++\
     && rm -rf /var/cache/apk/*
 RUN mkdir /app
@@ -14,7 +14,7 @@ RUN npm i -g pnpm
 RUN pnpm i
 RUN pnpm run build
 
-FROM node:16-alpine
+FROM node:12-alpine
 RUN npm i -g pnpm
 RUN mkdir /app
 WORKDIR /app

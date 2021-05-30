@@ -10,7 +10,7 @@ COPY tsconfig.build.json tsconfig.build.json
 COPY tsconfig.json tsconfig.json
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
-RUN npm i -g pnpm@5.9.4
+RUN npm i -g pnpm@5.9
 RUN pnpm i
 RUN pnpm run build
 

@@ -84,7 +84,14 @@ const Layout: FC<LayoutProps> = ({ activePage, children }) => {
             <Menu.Item key="2" icon={<SettingOutlined />}>
               <Link to="/settings">{t('settings')}</Link>
             </Menu.Item>
-            <Menu.Item key="3" icon={<LogoutOutlined />} onClick={logout}>
+            <Menu.Item
+              key="3"
+              icon={<LogoutOutlined />}
+              onClick={() => {
+                logout();
+                requestAnimationFrame(() => window.location.reload());
+              }}
+            >
               {t('logout')}
             </Menu.Item>
           </Menu.SubMenu>

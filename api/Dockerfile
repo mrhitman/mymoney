@@ -20,4 +20,4 @@ WORKDIR /app
 COPY --from=stage /app ./
 EXPOSE 4000
 
-CMD pnpm run start:prod
+CMD npm run start:prod

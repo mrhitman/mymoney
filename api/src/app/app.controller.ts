@@ -1,11 +1,23 @@
-import { Body, Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
+import { StatisticsService } from '../statistics/statistics.service';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private statisticService: StatisticsService,
+  ) {}
 
   @Get('/health')
   public healthCheck(): string {
@@ -18,6 +30,7 @@ export class AppController {
     const tokens = await this.authService.login(req.user);
     response.cookie('token', tokens.accessToken, { httpOnly: true });
     response.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
+    await this.statisticService.generateHistoryAll(req.user);
     response.json(tokens);
   }
 

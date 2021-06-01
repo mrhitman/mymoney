@@ -17,6 +17,7 @@ import { RefreshDto } from './dto/refresh.dto';
 import { LoginInput } from './input/login-input';
 import { RefreshInput } from './input/refresh-input';
 import { RegisterInput } from './input/register-input';
+import { StatisticsService } from '../statistics/statistics.service';
 
 @Resolver()
 export class AppResolver {
@@ -25,6 +26,7 @@ export class AppResolver {
     protected jwtService: JwtService,
     private localStrategy: LocalStrategy,
     private mailer: MailerService,
+    private statisticService: StatisticsService,
   ) {}
 
   @Mutation(() => LoginDto)
@@ -102,6 +104,7 @@ export class AppResolver {
     }
 
     const tokens = await this.authService.login(user);
+    this.statisticService.generateHistoryAll(user as User);
 
     context.req.res.cookie('token', tokens.accessToken, { httpOnly: true });
     context.req.res.cookie('refreshToken', tokens.refreshToken, {

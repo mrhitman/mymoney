@@ -94,7 +94,13 @@ export class StatisticsService {
     return statistic.map((item) => pick(item, ['amount', 'name', 'date']));
   }
 
+  public async generateHistoryAll(user: User) {
+    const wallets = await Wallet.query().where({ userId: user.id });
+    return Promise.all(wallets.map(wallet => this.generateHistory(user, wallet.id)));
+  }
+
   public async generateHistory(user: User, walletId: string, clearOldHistory = false) {
+    console.log({ walletId })
     const transactions = await this.getTransactionsByDays(user, walletId);
     const wallet = await Wallet.query()
       .where({

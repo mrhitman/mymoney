@@ -9,6 +9,7 @@ import {
   List,
   Menu,
   Row,
+  Typography,
 } from 'antd';
 import {
   Axis,
@@ -37,9 +38,15 @@ const cols = {
   },
 };
 
-function getSum(data?: AnalysByCategoriesQuery) {
+function getSum(data?: AnalysByCategoriesQuery, disabledCategories?: string[]) {
   return data
-    ? data.statisticByCategory.reduce((acc, s) => acc + Math.abs(s.amount), 0)
+    ? data.statisticByCategory.reduce(
+        (acc, s) =>
+          disabledCategories?.includes(s.category.id)
+            ? acc
+            : acc + Math.abs(s.amount),
+        0,
+      )
     : 1;
 }
 
@@ -53,6 +60,7 @@ export const AnalysisByCategory: FC = () => {
   const [type, setType] = useState(TransactionType.Outcome);
   const [walletIgnoreIds, setWalletIgnoreIds] = useState<string[]>([]);
   const [walletIds, setWalletIds] = useState<string[]>([]);
+  const [disabledCategories, setDisabledCategories] = useState<string[]>([]);
   const { data, refetch } = useAnalysByCategoriesQuery({
     variables: {
       from: from?.unix(),
@@ -72,7 +80,7 @@ export const AnalysisByCategory: FC = () => {
       );
     }
   }, [walletIgnoreIds]);
-  const total = getSum(data);
+  const total = getSum(data, disabledCategories);
   return (
     <>
       <Row gutter={22}>
@@ -134,42 +142,65 @@ export const AnalysisByCategory: FC = () => {
           <Divider />
         </Col>
         <Col span={20}>
-          <Chart
-            height={global.screen.availHeight * 0.75}
-            data={data?.statisticByCategory.map((s) => ({
-              item: t(s.category.name),
-              categoryId: s.category.id,
-              count: round(Math.abs(s.amount), 2),
-              percent: Math.abs(s.amount) / total,
-            }))}
-            onClick={(event: { data: { data: { categoryId: string } } }) =>
-              setSelected(event?.data?.data?.categoryId)
-            }
-            scale={cols}
-            autoFit
-          >
-            <Legend position="top" />
-            <Coordinate type="theta" radius={0.75} />
-            <Tooltip />
-            <Axis visible={false} />
-            <Interval
-              position="percent"
-              adjust="stack"
-              color="item"
-              style={{
-                lineWidth: 1,
-                stroke: '#fff',
-              }}
-              label={[
-                'count',
-                {
-                  content: (data) =>
-                    `${data.item}: ${round(data.count, 2)} UAH`,
-                },
-              ]}
-            />
-            <Interaction type="element-single-selected" />
-          </Chart>
+          <Row justify="center" align="middle">
+            <Typography.Title level={3}>
+              {t('total')}: {total.toFixed(2)} UAH
+            </Typography.Title>
+          </Row>
+          <Row>
+            <Chart
+              height={global.screen.availHeight * 0.75}
+              data={data?.statisticByCategory.map((s) => ({
+                item: t(s.category.name),
+                categoryId: s.category.id,
+                count: round(Math.abs(s.amount), 2),
+                percent: Math.abs(s.amount) / total,
+              }))}
+              onClick={(event: { data: { data: { categoryId: string } } }) =>
+                setSelected(event?.data?.data?.categoryId)
+              }
+              scale={cols}
+              autoFit
+            >
+              <Legend
+                position="right"
+                onChange={(event, chart) => {
+                  if (event) {
+                    const categoryLabel = event.item.name;
+                    const categoryId = (chart as any).options.data.find(
+                      (c: { item: string; categoryId: string }) =>
+                        c.item === categoryLabel,
+                    ).categoryId;
+                    setDisabledCategories(
+                      event.item.unchecked
+                        ? [...disabledCategories, categoryId]
+                        : disabledCategories.filter((id) => id !== categoryId),
+                    );
+                  }
+                }}
+              />
+              <Coordinate type="theta" radius={0.75} />
+              <Tooltip />
+              <Axis visible={false} />
+              <Interval
+                position="percent"
+                adjust="stack"
+                color="item"
+                style={{
+                  lineWidth: 1,
+                  stroke: '#fff',
+                }}
+                label={[
+                  'count',
+                  {
+                    content: (data) =>
+                      `${data.item}: ${round(data.count, 2)} UAH`,
+                  },
+                ]}
+              />
+              <Interaction type="element-single-selected" />
+            </Chart>
+          </Row>
           {selected && (
             <Drawer
               placement="bottom"

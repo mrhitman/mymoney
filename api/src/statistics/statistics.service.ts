@@ -96,7 +96,7 @@ export class StatisticsService {
 
   public async generateHistoryAll(user: User) {
     const wallets = await Wallet.query().where({ userId: user.id });
-    return Promise.all(wallets.map(wallet => this.generateHistory(user, wallet.id)));
+    return Promise.all(wallets.map(wallet => this.generateHistory(user, wallet.id, true)));
   }
 
   public async generateHistory(user: User, walletId: string, clearOldHistory = false) {

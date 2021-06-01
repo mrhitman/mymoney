@@ -167,5 +167,6 @@
   "current": "Текущий",
   "planning": "Планирование",
   "archive": "Архив",
-  "ledgers": "Учет"
+  "ledgers": "Учет",
+  "total": "Сумма"
 }
